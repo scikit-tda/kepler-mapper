@@ -11,61 +11,6 @@ Data Sets and 3D Object Recognition".
 
 KeplerMapper can make use of Scikit-Learn API compatible cluster and scaling algorithms.
 
-## Parameters
-
-**km.KeplerMapper( cluster_algorithm=cluster.DBSCAN(eps=0.5,min_samples=3), nr_cubes=10, overlap_perc=0.1, scaler=preprocessing.MinMaxScaler(), color_function="distance_origin", link_local=False, verbose=1)**
-
-Parameter | Description
---- | ---
-cluster_algorithm | Scikit-Learn API compatible clustering algorithm. The clustering algorithm to use for mapping. *Default = cluster.DBSCAN(eps=0.5,min_samples=3)*
-nr_cubes | Int. The number of cubes/intervals to create. *Default = 10*
-overlap_perc | Float. How much the cubes/intervals overlap (relevant for creating the edges). *Default = 0.1*
-scaler | Scikit-Learn API compatible scaler. Scaler of the data applied before mapping. *Default = preprocessing.MinMaxScaler()*
-color_function | String. The function to color nodes with. Currently only one function available/hardcoded. *Default = "distance_origin"*
-link_local | Bool. Whether to link up local clusters. *Default = False*
-verbose | Int. Verbosity of the mapper. *Default = 0*
-
-**mapper.fit(data)**
-
-Parameter | Description
---- | ---
-data | Numpy Array. The data to fit the mapper on. *Required*                                   
-
-**mapper.map(data, dimension_index=0, dimension_name="")**
-
-Parameter | Description
---- | ---
-data | Numpy Array. The data to map on. *Required*
-dimension_index | Int. Index of dimension to map on. Not yet implemented is '-1' for all dimensions, or a list with multiple dimensions. *Default = 0*
-dimension_name | String or Int. The human-readable name of the dimension to map(s) on. *Default = dimension_index*
-
-**mapper.visualize(complex, path_html="mapper_visualization_output.html")**
-
-Parameter | Description
---- | ---
-complex | Dictionary. The complex dictionary with nodes, edges and meta-information. *Required*
-path_html | File path. Path where to output the .html file *Default = mapper_visualization_output.html*
-
-## Install
-
-The class is currently just one file. Simply dropping it in any directory which Python is able to import from should work.
-
-## Required
-
-These libraries are required to be installed for KeplerMapper to work:
-
-* NumPy
-* Scikit-Learn
-
-KeplerMapper works on both Python 2.7 and Python 3+.
-
-## External resources
-
-These resources are loaded by the visualization output.
-
-* Roboto Webfont (Google)
-* D3.js (Mike Bostock)
-
 ## Usage
 
 ### Python code
@@ -138,6 +83,61 @@ Wrote d3.js graph to 'make_circles_keplermapper_output.html'
 ![Visualization](http://i.imgur.com/nS03AHV.png "Click for large")
 
 Click here for an [interactive version](http://mlwave.github.io/tda/make_circles_keplermapper_output.html).
+
+## Install
+
+The class is currently just one file. Simply dropping it in any directory which Python is able to import from should work.
+
+## Required
+
+These libraries are required to be installed for KeplerMapper to work:
+
+* NumPy
+* Scikit-Learn
+
+KeplerMapper works on both Python 2.7 and Python 3+.
+
+## External resources
+
+These resources are loaded by the visualization output.
+
+* Roboto Webfont (Google)
+* D3.js (Mike Bostock)
+
+## Parameters
+
+**km.KeplerMapper( cluster_algorithm=cluster.DBSCAN(eps=0.5,min_samples=3), nr_cubes=10, overlap_perc=0.1, scaler=preprocessing.MinMaxScaler(), color_function="distance_origin", link_local=False, verbose=1)**
+
+Parameter | Description
+--- | ---
+cluster_algorithm | Scikit-Learn API compatible clustering algorithm. The clustering algorithm to use for mapping. *Default = cluster.DBSCAN(eps=0.5,min_samples=3)*
+nr_cubes | Int. The number of cubes/intervals to create. *Default = 10*
+overlap_perc | Float. How much the cubes/intervals overlap (relevant for creating the edges). *Default = 0.1*
+scaler | Scikit-Learn API compatible scaler. Scaler of the data applied before mapping. *Default = preprocessing.MinMaxScaler()*
+color_function | String. The function to color nodes with. Currently only one function available/hardcoded. *Default = "distance_origin"*
+link_local | Bool. Whether to link up local clusters. *Default = False*
+verbose | Int. Verbosity of the mapper. *Default = 0*
+
+**mapper.fit(data)**
+
+Parameter | Description
+--- | ---
+data | Numpy Array. The data to fit the mapper on. *Required*                                   
+
+**mapper.map(data, dimension_index=0, dimension_name="")**
+
+Parameter | Description
+--- | ---
+data | Numpy Array. The data to map on. *Required*
+dimension_index | Int. Index of dimension to map on. Not yet implemented is '-1' for all dimensions, or a list with multiple dimensions. *Default = 0*
+dimension_name | String or Int. The human-readable name of the dimension to map(s) on. *Default = dimension_index*
+
+**mapper.visualize(complex, path_html="mapper_visualization_output.html")**
+
+Parameter | Description
+--- | ---
+complex | Dictionary. The complex dictionary with nodes, edges and meta-information. *Required*
+path_html | File path. Path where to output the .html file *Default = mapper_visualization_output.html*
 
 ## References
 

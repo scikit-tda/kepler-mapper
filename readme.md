@@ -152,7 +152,7 @@ http://www.ayasdi.com/wp-content/uploads/2015/02/Topological_Methods_for_the_Ana
 > SF Data Mining. "Shape and Meaning."<br/>
 > Anthony Bak
 
-https://www.youtube.com/watch?v=x3Hl85OBuc0
+https://www.youtube.com/watch?v=x3Hl85OBuc0<br/>
 https://www.youtube.com/watch?v=4RNpuZydlKY
 
 > The shape of data<br/>
@@ -195,7 +195,7 @@ http://www.cs.ucsb.edu/~veronika/MAE/mstSingleLinkage_GowerRoss_1969.pdf
 > Scikit-learn: Machine Learning in Python<br/>
 > Pedregosa, F. and Varoquaux, G. and Gramfort, A. and Michel, V. and Thirion, B. and Grisel, O. and Blondel, M. and Prettenhofer, P. and Weiss, R. and Dubourg, V. and Vanderplas, J. and Passos, A. and Cournapeau, D. and Brucher, M. and Perrot, M. and Duchesnay, E.
 
-http://scikit-learn.org/stable/modules/clustering.html
+http://scikit-learn.org/stable/modules/clustering.html<br/>
 http://scikit-learn.org/stable/modules/manifold.html
 
 > Color scales<br/>

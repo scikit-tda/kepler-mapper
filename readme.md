@@ -13,7 +13,7 @@ KeplerMapper can make use of Scikit-Learn API compatible cluster and scaling alg
 
 ## Parameters
 
-**km.KeplerMapper**( cluster_algorithm=cluster.DBSCAN(eps=0.5,min_samples=3), nr_cubes=10, overlap_perc=0.1, scaler=preprocessing.MinMaxScaler(), color_function="distance_origin", link_local=False, verbose=1))
+**km.KeplerMapper( cluster_algorithm=cluster.DBSCAN(eps=0.5,min_samples=3), nr_cubes=10, overlap_perc=0.1, scaler=preprocessing.MinMaxScaler(), color_function="distance_origin", link_local=False, verbose=1)**
 
 Parameter | Description
 --- | ---
@@ -25,13 +25,13 @@ color_function | String. The function to color nodes with. Currently only one fu
 link_local | Bool. Whether to link up local clusters. *Default = False*
 verbose | Int. Verbosity of the mapper. *Default = 0*
 
-**km.KeplerMapper().fit**(data)
+**km.KeplerMapper().fit(data)**
 
 Parameter | Description
 --- | ---
-data | Numpy Array. The data to fit the mapper on. *Required*
+data | Numpy Array. The data to fit the mapper on. *Required*                                   
 
-complex = **km.KeplerMapper().map**(data, dimension_index=0, dimension_name="")
+**complex = km.KeplerMapper().map(data, dimension_index=0, dimension_name="")**
 
 Parameter | Description
 --- | ---

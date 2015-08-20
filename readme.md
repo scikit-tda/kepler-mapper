@@ -13,7 +13,7 @@ KeplerMapper can make use of Scikit-Learn API compatible cluster and scaling alg
 
 ## Parameters
 
-**km.KeplerMapper( cluster_algorithm=cluster.DBSCAN(eps=0.5,min_samples=3), nr_cubes=10, overlap_perc=0.1, scaler=preprocessing.MinMaxScaler(), color_function="distance_origin", link_local=False, verbose=1)**
+**mapper = km.KeplerMapper( cluster_algorithm=cluster.DBSCAN(eps=0.5,min_samples=3), nr_cubes=10, overlap_perc=0.1, scaler=preprocessing.MinMaxScaler(), color_function="distance_origin", link_local=False, verbose=1)**
 
 Parameter | Description
 --- | ---
@@ -25,13 +25,13 @@ color_function | String. The function to color nodes with. Currently only one fu
 link_local | Bool. Whether to link up local clusters. *Default = False*
 verbose | Int. Verbosity of the mapper. *Default = 0*
 
-**km.KeplerMapper().fit(data)**
+**mapper.fit(data)**
 
 Parameter | Description
 --- | ---
 data | Numpy Array. The data to fit the mapper on. *Required*                                   
 
-**complex = km.KeplerMapper().map(data, dimension_index=0, dimension_name="")**
+**complex = mapper.map(data, dimension_index=0, dimension_name="")**
 
 Parameter | Description
 --- | ---
@@ -39,7 +39,7 @@ data | Numpy Array. The data to map on. *Required*
 dimension_index | Int. Index of dimension to map on. Not yet implemented is '-1' for all dimensions, or a list with multiple dimensions. *Default = 0*
 dimension_name | String or Int. The human-readable name of the dimension to map(s) on. *Default = dimension_index*
 
-**km.KeplerMapper().visualize(complex, path_html="mapper_visualization_output.html")**
+**mapper.visualize(complex, path_html="mapper_visualization_output.html")**
 
 Parameter | Description
 --- | ---

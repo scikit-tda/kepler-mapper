@@ -18,7 +18,7 @@ In the `lion` directory you'll find an example of creating simplicial complexes 
 
 ## Cat 
 
-In the `lion` directory you'll find an example of creating simplicial complexes from point cloud data.
+In the `cat` directory you'll find an example of creating simplicial complexes from point cloud data.
 
 `cat-reference.csv` is courtesy of Python Mapper (http://danifold.net/mapper/index.html)
 

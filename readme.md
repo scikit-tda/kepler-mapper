@@ -141,77 +141,77 @@ path_html | File path. Path where to output the .html file *Default = mapper_vis
 
 ## References
 
-> Mapper Algorithm
-> "Topological Methods for the Analysis of High Dimensional Data Sets and 3D Object Recognition"
+> Mapper Algorithm<br/>
+> "Topological Methods for the Analysis of High Dimensional Data Sets and 3D Object Recognition"<br/>
 > Gurjeet Singh, Facundo Mémoli, and Gunnar Carlsson
 
 http://www.ayasdi.com/wp-content/uploads/2015/02/Topological_Methods_for_the_Analysis_of_High_Dimensional_Data_Sets_and_3D_Object_Recognition.pdf
 
-> Topological Data Analysis
-> Stanford Seminar. "Topological Data Analysis: How Ayasdi used TDA to Solve Complex Problems"
-> SF Data Mining. "Shape and Meaning."
+> Topological Data Analysis<br/>
+> Stanford Seminar. "Topological Data Analysis: How Ayasdi used TDA to Solve Complex Problems"<br/>
+> SF Data Mining. "Shape and Meaning."<br/>
 > Anthony Bak
 
 https://www.youtube.com/watch?v=x3Hl85OBuc0
 https://www.youtube.com/watch?v=4RNpuZydlKY
 
-> The shape of data
-> "Conference Talk. The shape of data"
+> The shape of data<br/>
+> "Conference Talk. The shape of data"<br/>
 > Gunnar Carlsson
 
 https://www.youtube.com/watch?v=kctyag2Xi8o
 
-> Business Value, Problems, Algorithms, Computation and User Experience of TDA
-> Data Driven NYC. "Making Data Work"
+> Business Value, Problems, Algorithms, Computation and User Experience of TDA<br/>
+> Data Driven NYC. "Making Data Work"<br/>
 > Gurjeet Singh
 
 https://www.youtube.com/watch?v=UZH5xJXJG2I
 
-> Implementation details and sample data
-> Python Mapper
+> Implementation details and sample data<br/>
+> Python Mapper<br/>
 > Daniel Müller et al.
 
 http://danifold.net/mapper/index.html
 
-> Applied Topology
-> "Elementary Applied Topology"
+> Applied Topology<br/>
+> "Elementary Applied Topology"<br/>
 > R. Ghrist
 
 https://www.math.upenn.edu/~ghrist/notes.html
 
-> Applied Topology
-> "Qualitative data analysis"
+> Applied Topology<br/>
+> "Qualitative data analysis"<br/>
 > Community effort
 
 http://appliedtopology.org/
 
-> Single Linkage Clustering
-> "Minimum Spanning Trees and Single Linkage Cluster Analysis"
+> Single Linkage Clustering<br/>
+> "Minimum Spanning Trees and Single Linkage Cluster Analysis"<br/>
 > J. C. Gower, and G. J. S. Ross
 
 http://www.cs.ucsb.edu/~veronika/MAE/mstSingleLinkage_GowerRoss_1969.pdf
 
-> Clustering and Manifold Learning
-> Scikit-learn: Machine Learning in Python
+> Clustering and Manifold Learning<br/>
+> Scikit-learn: Machine Learning in Python<br/>
 > Pedregosa, F. and Varoquaux, G. and Gramfort, A. and Michel, V. and Thirion, B. and Grisel, O. and Blondel, M. and Prettenhofer, P. and Weiss, R. and Dubourg, V. and Vanderplas, J. and Passos, A. and Cournapeau, D. and Brucher, M. and Perrot, M. and Duchesnay, E.
 
 http://scikit-learn.org/stable/modules/clustering.html
 http://scikit-learn.org/stable/modules/manifold.html
 
-> Color scales
-> "Creating A Custom Hot to Cold Temperature Color Gradient for use with RRDTool"
+> Color scales<br/>
+> "Creating A Custom Hot to Cold Temperature Color Gradient for use with RRDTool"<br/>
 > Dale Reagan
 
 http://web-tech.ga-usa.com/2012/05/creating-a-custom-hot-to-cold-temperature-color-gradient-for-use-with-rrdtool/
 
-> Design
-> Material Design
+> Design<br/>
+> Material Design<br/>
 > Google
 
 https://design.google.com/
 
-> Design
-> Ayasdi Core Product Screenshots
+> Design<br/>
+> Ayasdi Core Product Screenshots<br/>
 > Ayasdi
 
 http://www.ayasdi.com/product/core/

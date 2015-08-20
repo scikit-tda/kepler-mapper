@@ -13,7 +13,7 @@ KeplerMapper can make use of Scikit-Learn API compatible cluster and scaling alg
 
 ## Parameters
 
-**mapper = km.KeplerMapper( cluster_algorithm=cluster.DBSCAN(eps=0.5,min_samples=3), nr_cubes=10, overlap_perc=0.1, scaler=preprocessing.MinMaxScaler(), color_function="distance_origin", link_local=False, verbose=1)**
+**km.KeplerMapper( cluster_algorithm=cluster.DBSCAN(eps=0.5,min_samples=3), nr_cubes=10, overlap_perc=0.1, scaler=preprocessing.MinMaxScaler(), color_function="distance_origin", link_local=False, verbose=1)**
 
 Parameter | Description
 --- | ---
@@ -31,7 +31,7 @@ Parameter | Description
 --- | ---
 data | Numpy Array. The data to fit the mapper on. *Required*                                   
 
-**complex = mapper.map(data, dimension_index=0, dimension_name="")**
+**mapper.map(data, dimension_index=0, dimension_name="")**
 
 Parameter | Description
 --- | ---

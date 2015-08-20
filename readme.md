@@ -169,7 +169,7 @@ https://www.youtube.com/watch?v=UZH5xJXJG2I
 
 > Implementation details and sample data<br/>
 > Python Mapper<br/>
-> Daniel Müller et al.
+> Daniel Müllner and Aravindakshan Babu
 
 http://danifold.net/mapper/index.html
 

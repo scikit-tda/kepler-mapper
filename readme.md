@@ -78,7 +78,8 @@ from sklearn import datasets
 data, labels = datasets.make_circles(n_samples=2000, noise=0.05, factor=0.3)
 
 # Initialize
-mapper = km.KeplerMapper(cluster_algorithm=cluster.DBSCAN(eps=0.1, min_samples=10), nr_cubes=25, overlap_perc=0.55, verbose=1)
+mapper = km.KeplerMapper(cluster_algorithm=cluster.DBSCAN(eps=0.1, min_samples=10), 
+						 nr_cubes=25, overlap_perc=0.55, verbose=1)
 
 # Fit to data
 mapper.fit(data)
@@ -87,7 +88,8 @@ mapper.fit(data)
 complex = mapper.map(data, dimension_index=0, dimension_name="X-axis")
 
 # Visualize it
-mapper.visualize(complex, path_html="make_circles_keplermapper_output.html", title="make_circles(n_samples=5000, noise=0.05, factor=0.3)")
+mapper.visualize(complex, path_html="make_circles_keplermapper_output.html", 
+				 title="make_circles(n_samples=5000, noise=0.05, factor=0.3)")
 ```
 
 ### Console output

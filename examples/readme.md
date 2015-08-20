@@ -12,7 +12,7 @@ In the horse directory you'll find an example of creating simplicial complexes f
 
 In the `lion` directory you'll find an example of creating simplicial complexes from point cloud data.
 
-`horse-reference.csv` is courtesy of Python Mapper (http://danifold.net/mapper/index.html)
+`lion-reference.csv` is courtesy of Python Mapper (http://danifold.net/mapper/index.html)
 
 ![Lion topology](http://i.imgur.com/MlzMsec.png)
 
@@ -20,7 +20,7 @@ In the `lion` directory you'll find an example of creating simplicial complexes 
 
 In the `lion` directory you'll find an example of creating simplicial complexes from point cloud data.
 
-`horse-reference.csv` is courtesy of Python Mapper (http://danifold.net/mapper/index.html)
+`cat-reference.csv` is courtesy of Python Mapper (http://danifold.net/mapper/index.html)
 
 ![Cat topology](http://i.imgur.com/spk7PC4.png)
 

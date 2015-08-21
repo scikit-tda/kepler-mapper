@@ -1,0 +1,232 @@
+from __future__ import division
+import numpy as np
+from collections import defaultdict
+import json
+import itertools
+from sklearn import cluster, preprocessing
+
+class KeplerMapper(object):
+  def __init__(self, cluster_algorithm=cluster.DBSCAN(eps=0.5,min_samples=3), nr_cubes=5, 
+         overlap_perc=0.1, scaler=preprocessing.MinMaxScaler(), color_function="distance_origin", 
+         link_local=False, verbose=1):
+    self.clf = cluster_algorithm
+    self.nr_cubes = nr_cubes
+    self.overlap_perc = overlap_perc
+    self.scaler = scaler
+    self.color_function = color_function
+    self.verbose = verbose
+    self.link_local = link_local
+    
+    self.chunk_dist = []
+    self.overlap_dist = []
+    self.d = []
+    
+    if self.verbose > 0:
+      print("\nnr_cubes = %s \n\noverlap_perc = %s\n\nlink_local = %s\n\nClusterer = %s\n\nScaler = %s\n\n"%(self.nr_cubes, overlap_perc, self.link_local, str(self.clf),str(self.scaler)))
+  
+  def fit(self, X):  
+    # Scaling
+    if self.scaler != None:
+      if self.verbose > 0:
+        print("\n..Scaling\n")
+      scaler = self.scaler
+      X = scaler.fit_transform(X)
+
+    # We chop up the min-max column ranges into 'nr_cubes' parts
+    self.chunk_dist = (np.max(X, axis=0) - np.min(X, axis=0))/self.nr_cubes
+
+    # We calculate the overlapping windows distance 
+    self.overlap_dist = self.overlap_perc * self.chunk_dist
+
+    # We find our starting point
+    self.d = np.min(X, axis=0)
+
+  def map(self, X, dimension_index=0, dimension_name=""):
+    # This maps the data to a simplicial complex. Returns a dictionary with nodes and links.
+    
+    def cube_coordinates_all(nr_cubes, nr_dimensions):
+      # if there are 4 cubes per dimension and 3 dimensions 
+      # return the bottom left coordinates of 64 hypercubes, in a sorted list of Numpy arrays
+      l = []
+      for x in xrange(nr_cubes):
+        l += [x] * nr_dimensions
+      return [np.array(list(f)) for f in sorted(set(itertools.permutations(l,nr_dimensions)))]
+    
+    nodes = defaultdict(list)
+    links = defaultdict(list)
+    complex = {}
+    
+    if self.verbose > 0:
+      print("Mapping on data shaped %s\n"%str(X.shape))
+    
+    # Scaling
+    if self.scaler != None:
+      scaler = self.scaler
+      X = scaler.fit_transform(X)
+    
+    # Initialize Cluster Algorithm
+    clf = self.clf
+    
+    # Prefix'ing the data with ID's
+    ids = np.array([x for x in xrange(X.shape[0])])
+    X = np.c_[ids,X]
+
+    if dimension_index >= 0: # Create intervals for a single dimension 
+      # Slice 'nr_cubes' hypercubes from the array
+      di = dimension_index
+      
+      for i in range(self.nr_cubes):
+        #Interval
+        hypercube = X[ (X[:,di+1] >= self.d[di] + (i * self.chunk_dist[di])) & 
+                (X[:,di+1] < self.d[di] + (i * self.chunk_dist[di]) + self.chunk_dist[di] + self.overlap_dist[di])]
+      
+        # If at least one data point inside the cube
+        if hypercube.shape[0] > 0:
+          if self.verbose > 0:
+            print("There are %s points in cube_%s with starting range %s"%
+        (hypercube.shape[0],i,self.d[di] + (i * self.chunk_dist[di])))
+          # Cluster the data point(s) inside the cube, skipping the id-column
+          clf.fit(hypercube[:,1:])
+          if self.verbose > 0:
+            print("Found %s clusters in cube_%s\n"%(np.unique(clf.labels_[clf.labels_ > -1]).shape[0],i))
+          # Now for every (sample id in cube, predicted cluster label)
+          for a in np.c_[hypercube[:,0],clf.labels_]:
+            if a[1] != -1: #if not predicted as noise
+              cluster_id = str(i)+"_"+str(a[1])
+              nodes[cluster_id].append( int(a[0]) ) 
+        else:
+          if self.verbose > 0:
+            print("Cube %s is empty\n"%i)
+    else:
+      # Cube ALL the dimensions
+      if self.verbose > 0:
+        print("Creating %s hypercubes."%len(cube_coordinates_all(self.nr_cubes,X.shape[1]-1)))
+      for coor in cube_coordinates_all(self.nr_cubes,X.shape[1]-1): # -1 for 'id column'
+        cluster = X[ np.invert(np.any((X[:,1:] >= self.d + (coor * self.chunk_dist)) & (X[:,1:] < self.d + (coor * self.chunk_dist) + self.chunk_dist + self.overlap_dist) == False, axis=1 )) ]
+        # No clustering at all, all data points in the hypercube are added to a cluster node, as if
+        # DBSCAN with infinite eps
+        if len(cluster) > 0:
+          nodes[str(coor[0])+"_"+str(tuple(coor))] = [int(x) for x in list(cluster[:,0])]
+
+    # Create links when clusters from different hypercubes have members with the same sample id.
+    for k in nodes:
+      for kn in nodes:
+        if k != kn:
+          if len(nodes[k] + nodes[kn]) != len(set(nodes[kn]+ nodes[k])):
+            links[k].append( kn )
+            
+          # Create links between local hypercube clusters if setting link_local = True
+          if self.link_local:
+            if k.split("_")[0] == kn.split("_")[0]:
+              links[k].append( kn )
+
+    complex["nodes"] = nodes
+    complex["links"] = links
+    complex["meta"] = dimension_name
+
+    return complex
+
+  def visualize(self, complex, path_html="mapper_visualization_output.html", title="My Data", graph_link_distance=10, graph_gravity=0.15, graph_charge=-120):
+    # Turns the dictionary 'complex' in a html file with d3.js
+    
+    # Format JSON
+    json_s = {}
+    json_s["nodes"] = []
+    json_s["links"] = []
+    k2e = {} # a key to incremental int dict, used for id's when linking
+    
+    for e, k in enumerate(complex["nodes"]):
+      json_s["nodes"].append({"name": str(k), "group": 2 * int(np.log(len(complex["nodes"][k]))), "color": str(k.split("_")[0])})
+      k2e[k] = e
+    for k in complex["links"]:
+      for link in complex["links"][k]:
+        json_s["links"].append({"source": k2e[k], "target":k2e[link],"value":1})
+
+    with open(path_html,"w") as outfile:
+      outfile.write("""<!DOCTYPE html>
+    <meta charset="utf-8">
+    <meta name="generator" content="KeplerMapper">
+	<title>%s | KeplerMapper</title>
+    <link href='http://fonts.googleapis.com/css?family=Roboto:700,300' rel='stylesheet' type='text/css'>
+    <style>
+    * {margin: 0; padding: 0;}
+    html { height: 100%%;}
+    body {background: #111; height: 100%%;}
+    .link { stroke: #999; stroke-opacity: .333;  }
+    .divs div { border-radius: 50%%; background: red; position: absolute; }
+    .divs { position: absolute; top: 0; left: 0; }
+    #holder { width: 100%%; height: 100%%; background: #111;}
+    h1 { padding: 20px; color: #fafafa; text-shadow: 0px 1px #000,0px -1px #000; position: absolute; font: 300 30px Roboto, Sans-serif;}
+    p { position: absolute; opacity: 0.9; width: 220px; top: 80px; left: 20px; display: block; background: #000; line-height: 25px; color: #fafafa; border: 20px solid #000; font: 100 16px Roboto, Sans-serif;}
+    </style>
+    <body>
+    <div id="holder">
+      <h1>%s</h1>
+      <p>
+      <b>Lens</b><br>%s<br><br>
+      <b>Number of cubes</b><br>%s<br><br>
+      <b>Overlap percentage</b><br>%s%%<br><br>
+      <b>Linking locally</b><br>%s<br><br>
+      <b>Color Function</b><br>Distance to min(%s)<br><br>
+      <b>Clusterer</b><br>%s<br><br>
+      <b>Scaler</b><br>%s
+      </p>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+    <script>
+    var width = document.getElementById("holder").offsetWidth-20,
+      height = document.getElementById("holder").offsetHeight-20;
+
+    var color = d3.scale.ordinal()
+      .domain(["0","1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30"])
+      .range(["#FF0000","#FF1400","#FF2800","#FF3c00","#FF5000","#FF6400","#FF7800","#FF8c00","#FFa000","#FFb400","#FFc800","#FFdc00","#FFf000","#fdff00","#b0ff00","#65ff00","#17ff00","#00ff36","#00ff83","#00ffd0","#00e4ff","#00c4ff","#00a4ff","#00a4ff","#0084ff","#0064ff","#0044ff","#0022ff","#0002ff","#0100ff","#0300ff","#0500ff"]);
+
+    var force = d3.layout.force()
+      .charge(%s)
+      .linkDistance(%s)
+      .gravity(%s)
+      .size([width, height]);
+
+    var svg = d3.select("#holder").append("svg")
+      .attr("width", width)
+      .attr("height", height);
+    
+    var divs = d3.select('#holder').append('div')
+      .attr('class', 'divs')
+      .attr('style', function(d) { return 'overflow: hidden; width: ' + width + 'px; height: ' + height + 'px;'; });  
+    
+      graph = %s;
+
+      force
+        .nodes(graph.nodes)
+        .links(graph.links)
+        .start();
+
+      var link = svg.selectAll(".link")
+        .data(graph.links)
+        .enter().append("line")
+        .attr("class", "link")
+        .style("stroke-width", function(d) { return Math.sqrt(d.value); });
+
+      var node = divs.selectAll('div')
+      .data(graph.nodes)
+        .enter().append('div')
+        .call(force.drag);
+      
+      node.append("title")
+        .text(function(d) { return d.name; });
+
+      force.on("tick", function() {
+      link.attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
+
+      node.attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; })
+        .attr('style', function(d) { return 'width: ' + (d.group * 2) + 'px; height: ' + (d.group * 2) + 'px; ' + 'left: '+(d.x-(d.group))+'px; ' + 'top: '+(d.y-(d.group))+'px; background: '+color(d.color)+'; box-shadow: 0px 0px 3px #111; box-shadow: 0px 0px 33px '+color(d.color)+', inset 0px 0px 5px rgba(0, 0, 0, 0.2);'})
+        ;
+      });
+    </script>""".encode("utf-8")%(title,title,complex["meta"],self.nr_cubes,self.overlap_perc*100,self.link_local,complex["meta"],self.clf,self.scaler,graph_charge,graph_link_distance,graph_gravity,json.dumps(json_s)))
+    if self.verbose > 0:
+      print("\nWrote d3.js graph to '%s'"%path_html)

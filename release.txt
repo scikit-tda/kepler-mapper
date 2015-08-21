@@ -1,0 +1,16 @@
+Pre-alpha
+
+v00001
+		Wrote class
+		Wrote documentation
+		Added license
+		
+v00002
+		Added a multi-dimensional mode: use all dimensions.
+		Added case study: 3D point cloud data for animals
+		Added case study: Make circles
+		Added advanced parameters for graph layout settings. Should probably be sliders on the .html page itself.
+		Improved documentation
+		Added disclaimer
+		Added todo
+		Added release log

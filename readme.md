@@ -106,38 +106,63 @@ These resources are loaded by the visualization output.
 
 ## Parameters
 
-**km.KeplerMapper( cluster_algorithm=cluster.DBSCAN(eps=0.5,min_samples=3), nr_cubes=10, overlap_perc=0.1, scaler=preprocessing.MinMaxScaler(), color_function="distance_origin", link_local=False, verbose=1)**
+### Initialize
+
+```python
+mapper = km.KeplerMapper( cluster_algorithm=km.cluster.DBSCAN(eps=0.5,min_samples=3), 
+                 nr_cubes=10, overlap_perc=0.1, scaler=km.preprocessing.MinMaxScaler(), 
+                 color_function="distance_origin", link_local=False, verbose=1)
+```
 
 Parameter | Description
 --- | ---
 cluster_algorithm | Scikit-Learn API compatible clustering algorithm. The clustering algorithm to use for mapping. *Default = cluster.DBSCAN(eps=0.5,min_samples=3)*
 nr_cubes | Int. The number of cubes/intervals to create. *Default = 10*
 overlap_perc | Float. How much the cubes/intervals overlap (relevant for creating the edges). *Default = 0.1*
-scaler | Scikit-Learn API compatible scaler. Scaler of the data applied before mapping. *Default = preprocessing.MinMaxScaler()*
+scaler | Scikit-Learn API compatible scaler. Scaler of the data applied before mapping. Use `None` for no scaling. *Default = preprocessing.MinMaxScaler()*
 color_function | String. The function to color nodes with. Currently only one function available/hardcoded. *Default = "distance_origin"*
 link_local | Bool. Whether to link up local clusters. *Default = False*
 verbose | Int. Verbosity of the mapper. *Default = 0*
 
-**mapper.fit(data)**
+### Fitting
+
+```python
+mapper.fit(data)
+```
 
 Parameter | Description
 --- | ---
 data | Numpy Array. The data to fit the mapper on. *Required*                                   
 
-**mapper.map(data, dimension_index=0, dimension_name="")**
+### Mapping
+
+```python
+complex = mapper.map(data, dimension_index=1, dimension_name="Y-Axis")
+print(complex["nodes"])
+print(complex["links"])
+print(complex["meta"])
+```
 
 Parameter | Description
 --- | ---
 data | Numpy Array. The data to map on. *Required*
-dimension_index | Int. Index of dimension to map on. Not yet implemented is '-1' for all dimensions, or a list with multiple dimensions. *Default = 0*
-dimension_name | String or Int. The human-readable name of the dimension to map(s) on. *Default = dimension_index*
+dimension_index | Int. Index of dimension (feature index) to map on. Set to `-1` to cube all dimensions. Not yet implemented is a list with multiple dimensions. *Default = 0*
+dimension_name | String or Int. The human-readable name of the dimension(s) to map on. *Default = dimension_index*
 
-**mapper.visualize(complex, path_html="mapper_visualization_output.html")**
+### Visualizing
+
+```python
+mapper.visualize(complex, path_html="mapper_visualization_output.html")
+```
 
 Parameter | Description
 --- | ---
-complex | Dictionary. The complex dictionary with nodes, edges and meta-information. *Required*
+complex | Dict. The `complex`-dictionary with nodes, edges and meta-information. *Required*
 path_html | File path. Path where to output the .html file *Default = mapper_visualization_output.html*
+title | String. Document title for use in the outputted .html. *Default = "My Data"*
+graph_link_distance | Int. Global length of links between nodes. *Default = 10*
+graph_charge | Int. The charge between nodes. *Default = -120*
+graph_gravity | Float. A weak geometric constraint similar to a virtual spring connecting each node to the center of the layout's size. Don't you set to negative or it's turtles all the way up. *Default = 0.1*
 
 ## References
 
@@ -197,6 +222,12 @@ http://www.cs.ucsb.edu/~veronika/MAE/mstSingleLinkage_GowerRoss_1969.pdf
 
 http://scikit-learn.org/stable/modules/clustering.html<br/>
 http://scikit-learn.org/stable/modules/manifold.html
+
+> Graphing
+> Grapher
+> Cindy Zhang, Danny Cochran, Diana Suvorova, Curtis Mitchell
+
+https://github.com/ayasdi/grapher
 
 > Color scales<br/>
 > "Creating A Custom Hot to Cold Temperature Color Gradient for use with RRDTool"<br/>

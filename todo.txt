@@ -21,4 +21,7 @@ TODO:
 	Better support for IDs
 	Add novel neural gas mapping technique
 	Turn into an API. Visualizer output to localhost can ask for new json to render graphs with.
+	Add sliders for on-page graph settings (redraw with a new Gravity or LinkDistance)
+	Proper accessible HTML output
+	Better complex["meta"] information
 	Refactor

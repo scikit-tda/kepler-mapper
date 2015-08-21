@@ -23,7 +23,7 @@ from sklearn import datasets
 data, labels = datasets.make_circles(n_samples=2000, noise=0.05, factor=0.3)
 
 # Initialize
-mapper = km.KeplerMapper(cluster_algorithm=cluster.DBSCAN(eps=0.1, min_samples=10), 
+mapper = km.KeplerMapper(cluster_algorithm=km.cluster.DBSCAN(eps=0.1, min_samples=10), 
 						 nr_cubes=25, overlap_perc=0.55, verbose=1)
 
 # Fit to data
@@ -223,8 +223,8 @@ http://www.cs.ucsb.edu/~veronika/MAE/mstSingleLinkage_GowerRoss_1969.pdf
 http://scikit-learn.org/stable/modules/clustering.html<br/>
 http://scikit-learn.org/stable/modules/manifold.html
 
-> Graphing
-> Grapher
+> Graphing<br/>
+> Grapher<br/>
 > Cindy Zhang, Danny Cochran, Diana Suvorova, Curtis Mitchell
 
 https://github.com/ayasdi/grapher

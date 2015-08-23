@@ -30,7 +30,7 @@ mapper = km.KeplerMapper(cluster_algorithm=km.cluster.DBSCAN(eps=0.1, min_sample
 mapper.fit(data)
 
 # Create dictionary called 'complex' with nodes, edges and meta-information
-complex = mapper.map(data, dimension_index=0, dimension_name="X-axis")
+complex = mapper.map(data, dimension_index=[0], dimension_name="X-axis")
 
 # Visualize it
 mapper.visualize(complex, path_html="make_circles_keplermapper_output.html", 

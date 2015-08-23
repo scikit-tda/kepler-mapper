@@ -54,9 +54,7 @@ class KeplerMapper(object):
       for x in xrange(nr_cubes):
         l += [x] * nr_dimensions
       return [np.array(list(f)) for f in sorted(set(itertools.permutations(l,nr_dimensions)))]
-    
-    #print cube_coordinates_all(10, 2)
-    
+ 
     nodes = defaultdict(list)
     links = defaultdict(list)
     complex = {}

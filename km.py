@@ -4,9 +4,10 @@ from collections import defaultdict
 import json
 import itertools
 from sklearn import cluster, preprocessing
+from datetime import datetime
 
 class KeplerMapper(object):
-  def __init__(self, cluster_algorithm=cluster.DBSCAN(eps=0.5,min_samples=3), nr_cubes=5, 
+  def __init__(self, cluster_algorithm=cluster.DBSCAN(eps=0.5,min_samples=3), nr_cubes=10, 
          overlap_perc=0.1, scaler=preprocessing.MinMaxScaler(), color_function="distance_origin", 
          link_local=False, verbose=1):
     self.clf = cluster_algorithm
@@ -41,23 +42,27 @@ class KeplerMapper(object):
     # We find our starting point
     self.d = np.min(X, axis=0)
 
-  def map(self, X, dimension_index=0, dimension_name=""):
+  def map(self, X, dimension_index=[0], dimension_name=""):
     # This maps the data to a simplicial complex. Returns a dictionary with nodes and links.
+    
+    start = datetime.now()
     
     def cube_coordinates_all(nr_cubes, nr_dimensions):
       # if there are 4 cubes per dimension and 3 dimensions 
-      # return the bottom left coordinates of 64 hypercubes, in a sorted list of Numpy arrays
+      # return the bottom left (origin) coordinates of 64 hypercubes, in a sorted list of Numpy arrays
       l = []
       for x in xrange(nr_cubes):
         l += [x] * nr_dimensions
       return [np.array(list(f)) for f in sorted(set(itertools.permutations(l,nr_dimensions)))]
+    
+    #print cube_coordinates_all(10, 2)
     
     nodes = defaultdict(list)
     links = defaultdict(list)
     complex = {}
     
     if self.verbose > 0:
-      print("Mapping on data shaped %s\n"%str(X.shape))
+      print("Mapping on data shaped %s using dimensions %s\n"%(str(X.shape),str(dimension_index)))
     
     # Scaling
     if self.scaler != None:
@@ -71,62 +76,62 @@ class KeplerMapper(object):
     ids = np.array([x for x in xrange(X.shape[0])])
     X = np.c_[ids,X]
 
-    if dimension_index >= 0: # Create intervals for a single dimension 
-      # Slice 'nr_cubes' hypercubes from the array
-      di = dimension_index
+    # Subdivide the data X in intervals/hypercubes with overlap
+    if self.verbose > 0:
+      total_cubes = len(cube_coordinates_all(self.nr_cubes,len(dimension_index)))
+      print("Creating %s hypercubes."%total_cubes)
+    di = np.array(dimension_index)  
+    for i, coor in enumerate(cube_coordinates_all(self.nr_cubes,di.shape[0])): 
+      # Slice the hypercube
+      hypercube = X[ np.invert(np.any((X[:,di+1] >= self.d[di] + (coor * self.chunk_dist[di])) & 
+          (X[:,di+1] < self.d[di] + (coor * self.chunk_dist[di]) + self.chunk_dist[di] + self.overlap_dist[di]) == False, axis=1 )) ]
       
-      for i in range(self.nr_cubes):
-        #Interval
-        hypercube = X[ (X[:,di+1] >= self.d[di] + (i * self.chunk_dist[di])) & 
-                (X[:,di+1] < self.d[di] + (i * self.chunk_dist[di]) + self.chunk_dist[di] + self.overlap_dist[di])]
+      if self.verbose > 1:
+        print("There are %s points in cube_%s / %s with starting range %s"%
+              (hypercube.shape[0],i,total_cubes,self.d[di] + (coor * self.chunk_dist[di])))
       
-        # If at least one data point inside the cube
-        if hypercube.shape[0] > 0:
-          if self.verbose > 0:
-            print("There are %s points in cube_%s with starting range %s"%
-        (hypercube.shape[0],i,self.d[di] + (i * self.chunk_dist[di])))
-          # Cluster the data point(s) inside the cube, skipping the id-column
-          clf.fit(hypercube[:,1:])
-          if self.verbose > 0:
-            print("Found %s clusters in cube_%s\n"%(np.unique(clf.labels_[clf.labels_ > -1]).shape[0],i))
-          # Now for every (sample id in cube, predicted cluster label)
-          for a in np.c_[hypercube[:,0],clf.labels_]:
-            if a[1] != -1: #if not predicted as noise
-              cluster_id = str(i)+"_"+str(a[1])
-              nodes[cluster_id].append( int(a[0]) ) 
-        else:
-          if self.verbose > 0:
-            print("Cube %s is empty\n"%i)
-    else:
-      # Cube ALL the dimensions
-      if self.verbose > 0:
-        print("Creating %s hypercubes."%len(cube_coordinates_all(self.nr_cubes,X.shape[1]-1)))
-      for coor in cube_coordinates_all(self.nr_cubes,X.shape[1]-1): # -1 for 'id column'
-        cluster = X[ np.invert(np.any((X[:,1:] >= self.d + (coor * self.chunk_dist)) & (X[:,1:] < self.d + (coor * self.chunk_dist) + self.chunk_dist + self.overlap_dist) == False, axis=1 )) ]
-        # No clustering at all, all data points in the hypercube are added to a cluster node, as if
-        # DBSCAN with infinite eps
-        if len(cluster) > 0:
-          nodes[str(coor[0])+"_"+str(tuple(coor))] = [int(x) for x in list(cluster[:,0])]
+      # If at least one sample inside the hypercube
+      if hypercube.shape[0] > 0:
+        # Cluster the data point(s) inside the cube, skipping the id-column
+        clf.fit(hypercube[:,1:])
+        
+        if self.verbose > 1:
+          print("Found %s clusters in cube_%s\n"%(np.unique(clf.labels_[clf.labels_ > -1]).shape[0],i))
+        
+        #Now for every (sample id in cube, predicted cluster label)
+        for a in np.c_[hypercube[:,0],clf.labels_]:
+          if a[1] != -1: #if not predicted as noise
+            cluster_id = str(coor[0])+"_"+str(i)+"_"+str(a[1]) # Rudimentary cluster id
+            nodes[cluster_id].append( int(a[0]) ) # Append the member id's as integers
+      else:
+        if self.verbose > 1:
+          print("Cube_%s is empty.\n"%(i))
 
     # Create links when clusters from different hypercubes have members with the same sample id.
     for k in nodes:
       for kn in nodes:
         if k != kn:
-          if len(nodes[k] + nodes[kn]) != len(set(nodes[kn]+ nodes[k])):
+          if len(nodes[k] + nodes[kn]) != len(set(nodes[kn] + nodes[k])): # there are non-unique id's in the union
             links[k].append( kn )
-            
+          
           # Create links between local hypercube clusters if setting link_local = True
           if self.link_local:
             if k.split("_")[0] == kn.split("_")[0]:
               links[k].append( kn )
-
+    # Reporting
+    if self.verbose > 0:
+      nr_links = 0
+      for k in links:
+        nr_links += len(links[k])
+      print("\ncreated %s edges and %s nodes in %s."%(nr_links,len(nodes),str(datetime.now()-start)))
+    
     complex["nodes"] = nodes
     complex["links"] = links
     complex["meta"] = dimension_name
 
     return complex
 
-  def visualize(self, complex, path_html="mapper_visualization_output.html", title="My Data", graph_link_distance=10, graph_gravity=0.15, graph_charge=-120):
+  def visualize(self, complex, path_html="mapper_visualization_output.html", title="My Data", graph_link_distance=30, graph_gravity=0.1, graph_charge=-120):
     # Turns the dictionary 'complex' in a html file with d3.js
     
     # Format JSON
@@ -146,7 +151,7 @@ class KeplerMapper(object):
       outfile.write("""<!DOCTYPE html>
     <meta charset="utf-8">
     <meta name="generator" content="KeplerMapper">
-	<title>%s | KeplerMapper</title>
+  <title>%s | KeplerMapper</title>
     <link href='http://fonts.googleapis.com/css?family=Roboto:700,300' rel='stylesheet' type='text/css'>
     <style>
     * {margin: 0; padding: 0;}

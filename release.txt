@@ -14,3 +14,12 @@ v00002
 		Added disclaimer
 		Added todo
 		Added release log
+		
+v00003
+		Refactored dimension index to use a list of arbitrary dimensions
+		Improved verbosity
+		Added levels of verbosity
+		Decreased number of code lines by using a single approach
+		Added sample to explain local linkage True vs. False
+		Added side-view for animal point-cloud data
+		Added a gallery in the example directory

@@ -137,7 +137,7 @@ data | Numpy Array. The data to fit the mapper on. *Required*
 ### Mapping
 
 ```python
-complex = mapper.map(data, dimension_index=1, dimension_name="Y-Axis")
+complex = mapper.map(data, dimension_index=[0,1], dimension_name="Y-Axis")
 print(complex["nodes"])
 print(complex["links"])
 print(complex["meta"])
@@ -146,7 +146,7 @@ print(complex["meta"])
 Parameter | Description
 --- | ---
 data | Numpy Array. The data to map on. *Required*
-dimension_index | Int. Index of dimension (feature index) to map on. Set to `-1` to cube all dimensions. Not yet implemented is a list with multiple dimensions. *Default = 0*
+dimension_index | List. A list with dimensions (feature indexes) to map on. *Default = [0]*
 dimension_name | String or Int. The human-readable name of the dimension(s) to map on. *Default = dimension_index*
 
 ### Visualizing
@@ -160,9 +160,15 @@ Parameter | Description
 complex | Dict. The `complex`-dictionary with nodes, edges and meta-information. *Required*
 path_html | File path. Path where to output the .html file *Default = mapper_visualization_output.html*
 title | String. Document title for use in the outputted .html. *Default = "My Data"*
-graph_link_distance | Int. Global length of links between nodes. *Default = 10*
-graph_charge | Int. The charge between nodes. *Default = -120*
+graph_link_distance | Int. Global length of links between nodes. Use less for larger graphs. *Default = 30*
+graph_charge | Int. The charge between nodes. Use less negative charge for larger graphs. *Default = -120*
 graph_gravity | Float. A weak geometric constraint similar to a virtual spring connecting each node to the center of the layout's size. Don't you set to negative or it's turtles all the way up. *Default = 0.1*
+
+## Examples
+
+Check the `examples` directory for more.
+
+![Visualization](http://i.imgur.com/OQqHt9R.png "Click for large")
 
 ## References
 

@@ -24,6 +24,18 @@ In the `cat` directory you'll find an example of creating simplicial complexes f
 
 ![Cat topology](http://i.imgur.com/spk7PC4.png)
 
+## Linking locally
+
+With `link_local=True` you can link up the local clusters (clusters in the same hypercube). Below 
+you can see a low-resolution house cat on the left *without local linking* and *with local linking* on 
+the right.
+
+![Cat topology](http://i.imgur.com/Irm8jp4.png)
+
+## Gallery
+
+Check the `gallery` for a variety of images.
+
 ## Soon
 
 Iris, Diabetes 100k, Customer purchase behaviour.

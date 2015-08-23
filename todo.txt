@@ -5,7 +5,6 @@ TODO:
 	Add member expand function on node click
 	Style edge width according to the size of set of shared members
 	Add a bounding box for the force-directed graph
-	Implement a mode between using one dimension and using all dimensions.
 	Implement better and more color functions. Also support for custom color functions.
 	Implement better and more node size functions.
 	Make better suited to model introspection (visualize out-of-fold predictions performance and feature interactions)

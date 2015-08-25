@@ -23,3 +23,10 @@ v00003
 		Added sample to explain local linkage True vs. False
 		Added side-view for animal point-cloud data
 		Added a gallery in the example directory
+
+v00004
+		Added dimensionality reduction
+		Added "digits" case study
+		changed fit to fit_transform and return of data
+		added tooltips
+		added support for custom tooltips

@@ -32,6 +32,15 @@ the right.
 
 ![Cat topology](http://i.imgur.com/Irm8jp4.png)
 
+## Digits
+
+In the `digits` directory you'll find an example of using the `custom_tooltips`-functionality. It also 
+shows the usage of `reducer` with t-SNE to reduce the dimensionality to 2.
+
+![Unsupervised Digits](http://i.imgur.com/t1fuoHX.png)
+
+Note how sub-clusters form for digits with a different slant.
+
 ## Gallery
 
 Check the `gallery` for a variety of images.

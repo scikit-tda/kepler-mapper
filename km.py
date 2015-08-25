@@ -3,12 +3,12 @@ import numpy as np
 from collections import defaultdict
 import json
 import itertools
-from sklearn import cluster, preprocessing
+from sklearn import cluster, preprocessing, manifold
 from datetime import datetime
 
 class KeplerMapper(object):
   def __init__(self, cluster_algorithm=cluster.DBSCAN(eps=0.5,min_samples=3), nr_cubes=10, 
-         overlap_perc=0.1, scaler=preprocessing.MinMaxScaler(), color_function="distance_origin", 
+         overlap_perc=0.1, scaler=preprocessing.MinMaxScaler(), reducer=None, color_function="distance_origin", 
          link_local=False, verbose=1):
     self.clf = cluster_algorithm
     self.nr_cubes = nr_cubes
@@ -17,6 +17,7 @@ class KeplerMapper(object):
     self.color_function = color_function
     self.verbose = verbose
     self.link_local = link_local
+    self.reducer = reducer
     
     self.chunk_dist = []
     self.overlap_dist = []
@@ -25,7 +26,16 @@ class KeplerMapper(object):
     if self.verbose > 0:
       print("\nnr_cubes = %s \n\noverlap_perc = %s\n\nlink_local = %s\n\nClusterer = %s\n\nScaler = %s\n\n"%(self.nr_cubes, overlap_perc, self.link_local, str(self.clf),str(self.scaler)))
   
-  def fit(self, X):  
+  def fit_transform(self, X):
+    # Dimensionality Reduction
+    if self.reducer != None:
+      if self.verbose > 0:
+        self.reducer.set_params(**{"verbose":self.verbose})
+        print("\n..Reducing Dimensionality using: \n\t%s\n"%str(self.reducer))
+        
+      reducer = self.reducer
+      X = reducer.fit_transform(X)
+      
     # Scaling
     if self.scaler != None:
       if self.verbose > 0:
@@ -41,6 +51,8 @@ class KeplerMapper(object):
 
     # We find our starting point
     self.d = np.min(X, axis=0)
+    
+    return X
 
   def map(self, X, dimension_index=[0], dimension_name=""):
     # This maps the data to a simplicial complex. Returns a dictionary with nodes and links.
@@ -54,7 +66,7 @@ class KeplerMapper(object):
       for x in xrange(nr_cubes):
         l += [x] * nr_dimensions
       return [np.array(list(f)) for f in sorted(set(itertools.permutations(l,nr_dimensions)))]
- 
+    
     nodes = defaultdict(list)
     links = defaultdict(list)
     complex = {}
@@ -129,7 +141,7 @@ class KeplerMapper(object):
 
     return complex
 
-  def visualize(self, complex, path_html="mapper_visualization_output.html", title="My Data", graph_link_distance=30, graph_gravity=0.1, graph_charge=-120):
+  def visualize(self, complex, path_html="mapper_visualization_output.html", title="My Data", graph_link_distance=30, graph_gravity=0.1, graph_charge=-120, custom_tooltips=None):
     # Turns the dictionary 'complex' in a html file with d3.js
     
     # Format JSON
@@ -137,9 +149,14 @@ class KeplerMapper(object):
     json_s["nodes"] = []
     json_s["links"] = []
     k2e = {} # a key to incremental int dict, used for id's when linking
-    
+
     for e, k in enumerate(complex["nodes"]):
-      json_s["nodes"].append({"name": str(k), "group": 2 * int(np.log(len(complex["nodes"][k]))), "color": str(k.split("_")[0])})
+      # Tooltip formatting
+      if custom_tooltips != None:
+        tooltip_s = "<h2>Cluster %s</h2>"%k + " ".join([str(f) for f in custom_tooltips[complex["nodes"][k]]])
+      else:
+        tooltip_s = "<h2>Cluster %s</h2>Contains %s members."%(k,len(complex["nodes"][k]))
+      json_s["nodes"].append({"name": str(k), "tooltip": tooltip_s, "group": 2 * int(np.log(len(complex["nodes"][k]))), "color": str(k.split("_")[0])})
       k2e[k] = e
     for k in complex["links"]:
       for link in complex["links"][k]:
@@ -154,13 +171,16 @@ class KeplerMapper(object):
     <style>
     * {margin: 0; padding: 0;}
     html { height: 100%%;}
-    body {background: #111; height: 100%%;}
+    body {background: #111; height: 100%%; font: 100 16px Roboto, Sans-serif;}
     .link { stroke: #999; stroke-opacity: .333;  }
     .divs div { border-radius: 50%%; background: red; position: absolute; }
     .divs { position: absolute; top: 0; left: 0; }
-    #holder { width: 100%%; height: 100%%; background: #111;}
+    #holder { position: relative; width: 100%%; height: 100%%; background: #111;}
     h1 { padding: 20px; color: #fafafa; text-shadow: 0px 1px #000,0px -1px #000; position: absolute; font: 300 30px Roboto, Sans-serif;}
+    h2 { text-shadow: 0px 1px #000,0px -1px #000; font: 700 16px Roboto, Sans-serif;}
     p { position: absolute; opacity: 0.9; width: 220px; top: 80px; left: 20px; display: block; background: #000; line-height: 25px; color: #fafafa; border: 20px solid #000; font: 100 16px Roboto, Sans-serif;}
+    div.tooltip { position: absolute; width: 380px; display: block; padding: 20px; background: #000; border: 0px; border-radius: 3px; pointer-events: none; z-index: 999; color: #FAFAFA;}
+    }
     </style>
     <body>
     <div id="holder">
@@ -194,6 +214,10 @@ class KeplerMapper(object):
       .attr("width", width)
       .attr("height", height);
     
+    var div = d3.select("#holder").append("div")   
+      .attr("class", "tooltip")               
+      .style("opacity", 0.0);
+    
     var divs = d3.select('#holder').append('div')
       .attr('class', 'divs')
       .attr('style', function(d) { return 'overflow: hidden; width: ' + width + 'px; height: ' + height + 'px;'; });  
@@ -214,6 +238,19 @@ class KeplerMapper(object):
       var node = divs.selectAll('div')
       .data(graph.nodes)
         .enter().append('div')
+        .on("mouseover", function(d) {      
+          div.transition()        
+            .duration(200)      
+            .style("opacity", .9);
+          div .html(d.tooltip + "<br/>")  
+            .style("left", (d3.event.pageX + 100) + "px")     
+            .style("top", (d3.event.pageY - 28) + "px");    
+          })                  
+        .on("mouseout", function(d) {       
+          div.transition()        
+            .duration(500)      
+            .style("opacity", 0);   
+        })
         .call(force.drag);
       
       node.append("title")

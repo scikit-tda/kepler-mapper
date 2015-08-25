@@ -26,11 +26,11 @@ data, labels = datasets.make_circles(n_samples=2000, noise=0.05, factor=0.3)
 mapper = km.KeplerMapper(cluster_algorithm=km.cluster.DBSCAN(eps=0.1, min_samples=10), 
 						 nr_cubes=25, overlap_perc=0.55, verbose=1)
 
-# Fit to data
-mapper.fit(data)
+# Fit to and transform the data
+data = mapper.fit_transform(data)
 
 # Create dictionary called 'complex' with nodes, edges and meta-information
-complex = mapper.map(data, dimension_index=[0], dimension_name="X-axis")
+complex = mapper.map(data, dimension_index=0, dimension_name="X-axis")
 
 # Visualize it
 mapper.visualize(complex, path_html="make_circles_keplermapper_output.html", 
@@ -111,7 +111,7 @@ These resources are loaded by the visualization output.
 ```python
 mapper = km.KeplerMapper( cluster_algorithm=km.cluster.DBSCAN(eps=0.5,min_samples=3), 
                  nr_cubes=10, overlap_perc=0.1, scaler=km.preprocessing.MinMaxScaler(), 
-                 color_function="distance_origin", link_local=False, verbose=1)
+				 reducer=None, color_function="distance_origin", link_local=False, verbose=1)
 ```
 
 Parameter | Description
@@ -120,14 +120,15 @@ cluster_algorithm | Scikit-Learn API compatible clustering algorithm. The cluste
 nr_cubes | Int. The number of cubes/intervals to create. *Default = 10*
 overlap_perc | Float. How much the cubes/intervals overlap (relevant for creating the edges). *Default = 0.1*
 scaler | Scikit-Learn API compatible scaler. Scaler of the data applied before mapping. Use `None` for no scaling. *Default = preprocessing.MinMaxScaler()*
+reducer | Scikit-Learn API compatible dimensionality reducer. Dimensionality reduction is applied before mapping. Example `km.manifold.TSNE()` *Default = None*
 color_function | String. The function to color nodes with. Currently only one function available/hardcoded. *Default = "distance_origin"*
 link_local | Bool. Whether to link up local clusters. *Default = False*
 verbose | Int. Verbosity of the mapper. *Default = 0*
 
-### Fitting
+### Fitting and transforming
 
 ```python
-mapper.fit(data)
+data = mapper.fit_transform(data)
 ```
 
 Parameter | Description
@@ -145,7 +146,7 @@ print(complex["meta"])
 
 Parameter | Description
 --- | ---
-data | Numpy Array. The data to map on. *Required*
+data | NumPy Array. The data to map on. *Required*
 dimension_index | List. A list with dimensions (feature indexes) to map on. *Default = [0]*
 dimension_name | String or Int. The human-readable name of the dimension(s) to map on. *Default = dimension_index*
 
@@ -163,6 +164,7 @@ title | String. Document title for use in the outputted .html. *Default = "My Da
 graph_link_distance | Int. Global length of links between nodes. Use less for larger graphs. *Default = 30*
 graph_charge | Int. The charge between nodes. Use less negative charge for larger graphs. *Default = -120*
 graph_gravity | Float. A weak geometric constraint similar to a virtual spring connecting each node to the center of the layout's size. Don't you set to negative or it's turtles all the way up. *Default = 0.1*
+custom_tooltips | NumPy Array. Create custom tooltips for all the node members. You could use the target labels `y` for this. Use `None` for standard tooltips. *Default = None*.
 
 ## Examples
 

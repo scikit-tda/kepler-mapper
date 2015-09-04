@@ -30,3 +30,12 @@ v00004
 		changed fit to fit_transform and return of data
 		added tooltips
 		added support for custom tooltips
+
+Alpha
+		
+v00005
+		Made Python 3 compatible
+		Ability to turn off title, meta and tooltips
+		Ability to set the window height and width of HTML output
+		Added basic support for another color function: average signal
+		De-emphasized link_local functionality, since its current implementation is no good.

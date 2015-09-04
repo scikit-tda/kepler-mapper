@@ -7,7 +7,6 @@ TODO:
 	Implement better and more color functions. Also support for custom color functions.
 	Implement better and more node size functions.
 	Make better suited to model introspection (visualize out-of-fold predictions performance and feature interactions)
-	Make local linking closer to the original paper.
 	Implement cheap dimensionality reduction for extremely high dimensional data (RandomizedPCA)
 	Support for online mapping (Column-Oriented datastore https://users.soe.ucsc.edu/~niejiazhong/slides/chandra.pdf)
 	Add samples to showcase fundamental data shapes: Regression, Clusters, Circular/looping, Y-flares.
@@ -20,5 +19,5 @@ TODO:
 	Add sliders for on-page graph settings (redraw with a new Gravity or LinkDistance)
 	Proper accessible HTML output
 	Better complex["meta"] information
-	Add disable-tooltip functionality
+	Create distribution
 	Refactor

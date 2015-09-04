@@ -5,6 +5,7 @@ import json
 import itertools
 from sklearn import cluster, preprocessing, manifold
 from datetime import datetime
+import sys
 
 class KeplerMapper(object):
   def __init__(self, cluster_algorithm=cluster.DBSCAN(eps=0.5,min_samples=3), nr_cubes=10, 
@@ -30,7 +31,10 @@ class KeplerMapper(object):
     # Dimensionality Reduction
     if self.reducer != None:
       if self.verbose > 0:
-        self.reducer.set_params(**{"verbose":self.verbose})
+        try:    
+          self.reducer.set_params(**{"verbose":self.verbose})
+        except:
+          pass
         print("\n..Reducing Dimensionality using: \n\t%s\n"%str(self.reducer))
         
       reducer = self.reducer
@@ -63,7 +67,7 @@ class KeplerMapper(object):
       # if there are 4 cubes per dimension and 3 dimensions 
       # return the bottom left (origin) coordinates of 64 hypercubes, in a sorted list of Numpy arrays
       l = []
-      for x in xrange(nr_cubes):
+      for x in range(nr_cubes):
         l += [x] * nr_dimensions
       return [np.array(list(f)) for f in sorted(set(itertools.permutations(l,nr_dimensions)))]
     
@@ -83,7 +87,7 @@ class KeplerMapper(object):
     clf = self.clf
     
     # Prefix'ing the data with ID's
-    ids = np.array([x for x in xrange(X.shape[0])])
+    ids = np.array([x for x in range(X.shape[0])])
     X = np.c_[ids,X]
 
     # Subdivide the data X in intervals/hypercubes with overlap
@@ -111,7 +115,7 @@ class KeplerMapper(object):
         #Now for every (sample id in cube, predicted cluster label)
         for a in np.c_[hypercube[:,0],clf.labels_]:
           if a[1] != -1: #if not predicted as noise
-            cluster_id = str(coor[0])+"_"+str(i)+"_"+str(a[1]) # Rudimentary cluster id
+            cluster_id = str(coor[0])+"_"+str(i)+"_"+str(a[1])+"_"+str(coor)+"_"+str(self.d[di] + (coor * self.chunk_dist[di])) # Rudimentary cluster id
             nodes[cluster_id].append( int(a[0]) ) # Append the member id's as integers
       else:
         if self.verbose > 1:
@@ -125,9 +129,12 @@ class KeplerMapper(object):
             links[k].append( kn )
           
           # Create links between local hypercube clusters if setting link_local = True
+          # This is an experimental feature deviating too much from the original mapper algo.
+          # Creates a lot of spurious edges, and should only be used when mapping one or at most two dimensions.
           if self.link_local:
             if k.split("_")[0] == kn.split("_")[0]:
               links[k].append( kn )
+        
     # Reporting
     if self.verbose > 0:
       nr_links = 0
@@ -141,7 +148,7 @@ class KeplerMapper(object):
 
     return complex
 
-  def visualize(self, complex, path_html="mapper_visualization_output.html", title="My Data", graph_link_distance=30, graph_gravity=0.1, graph_charge=-120, custom_tooltips=None):
+  def visualize(self, complex, path_html="mapper_visualization_output.html", title="My Data", graph_link_distance=30, graph_gravity=0.1, graph_charge=-120, custom_tooltips=None, width_html=0, height_html=0, show_tooltips=True, show_title=True, show_meta=True):
     # Turns the dictionary 'complex' in a html file with d3.js
     
     # Format JSON
@@ -154,20 +161,55 @@ class KeplerMapper(object):
       # Tooltip formatting
       if custom_tooltips != None:
         tooltip_s = "<h2>Cluster %s</h2>"%k + " ".join([str(f) for f in custom_tooltips[complex["nodes"][k]]])
+        if self.color_function == "average_signal_cluster":
+          tooltip_i = int(((sum([f for f in custom_tooltips[complex["nodes"][k]]]) / len(custom_tooltips[complex["nodes"][k]])) * 30) )
+          json_s["nodes"].append({"name": str(k), "tooltip": tooltip_s, "group": 2 * int(np.log(len(complex["nodes"][k]))), "color": str(tooltip_i)})
+        else:
+          json_s["nodes"].append({"name": str(k), "tooltip": tooltip_s, "group": 2 * int(np.log(len(complex["nodes"][k]))), "color": str(k.split("_")[0])})
       else:
         tooltip_s = "<h2>Cluster %s</h2>Contains %s members."%(k,len(complex["nodes"][k]))
-      json_s["nodes"].append({"name": str(k), "tooltip": tooltip_s, "group": 2 * int(np.log(len(complex["nodes"][k]))), "color": str(k.split("_")[0])})
+        json_s["nodes"].append({"name": str(k), "tooltip": tooltip_s, "group": 2 * int(np.log(len(complex["nodes"][k]))), "color": str(k.split("_")[0])})
       k2e[k] = e
     for k in complex["links"]:
       for link in complex["links"][k]:
         json_s["links"].append({"source": k2e[k], "target":k2e[link],"value":1})
 
-    with open(path_html,"w") as outfile:
-      outfile.write("""<!DOCTYPE html>
+    # Width and height of graph in HTML output
+    if width_html == 0:
+      width_css = "100%"
+      width_js = 'document.getElementById("holder").offsetWidth-20'
+    else:
+      width_css = "%spx" % width_html
+      width_js = "%s" % width_html
+    if height_html == 0:
+      height_css = "100%"
+      height_js = 'document.getElementById("holder").offsetHeight-20'
+    else:
+      height_css = "%spx" % height_html
+      height_js = "%s" % height_html
+    
+    # Whether to show certain UI elements or not
+    if show_tooltips == False:
+      tooltips_display = "display: none;"
+    else:
+      tooltips_display = ""
+      
+    if show_meta == False:
+      meta_display = "display: none;"
+    else:
+      meta_display = ""
+      
+    if show_title == False:
+      title_display = "display: none;"
+    else:
+      title_display = ""  
+    
+    with open(path_html,"wb") as outfile:
+      html = """<!DOCTYPE html>
     <meta charset="utf-8">
     <meta name="generator" content="KeplerMapper">
-  <title>%s | KeplerMapper</title>
-    <link href='http://fonts.googleapis.com/css?family=Roboto:700,300' rel='stylesheet' type='text/css'>
+    <title>%s | KeplerMapper</title>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:700,300' rel='stylesheet' type='text/css'>
     <style>
     * {margin: 0; padding: 0;}
     html { height: 100%%;}
@@ -175,30 +217,30 @@ class KeplerMapper(object):
     .link { stroke: #999; stroke-opacity: .333;  }
     .divs div { border-radius: 50%%; background: red; position: absolute; }
     .divs { position: absolute; top: 0; left: 0; }
-    #holder { position: relative; width: 100%%; height: 100%%; background: #111;}
-    h1 { padding: 20px; color: #fafafa; text-shadow: 0px 1px #000,0px -1px #000; position: absolute; font: 300 30px Roboto, Sans-serif;}
+    #holder { position: relative; width: %s; height: %s; background: #111; display: block;}
+    h1 { %s padding: 20px; color: #fafafa; text-shadow: 0px 1px #000,0px -1px #000; position: absolute; font: 300 30px Roboto, Sans-serif;}
     h2 { text-shadow: 0px 1px #000,0px -1px #000; font: 700 16px Roboto, Sans-serif;}
-    p { position: absolute; opacity: 0.9; width: 220px; top: 80px; left: 20px; display: block; background: #000; line-height: 25px; color: #fafafa; border: 20px solid #000; font: 100 16px Roboto, Sans-serif;}
-    div.tooltip { position: absolute; width: 380px; display: block; padding: 20px; background: #000; border: 0px; border-radius: 3px; pointer-events: none; z-index: 999; color: #FAFAFA;}
+    .meta {  position: absolute; opacity: 0.9; width: 220px; top: 80px; left: 20px; display: block; %s background: #000; line-height: 25px; color: #fafafa; border: 20px solid #000; font: 100 16px Roboto, Sans-serif;}
+    div.tooltip { position: absolute; width: 380px; display: block; %s padding: 20px; background: #000; border: 0px; border-radius: 3px; pointer-events: none; z-index: 999; color: #FAFAFA;}
     }
     </style>
     <body>
     <div id="holder">
       <h1>%s</h1>
-      <p>
+      <p class="meta">
       <b>Lens</b><br>%s<br><br>
-      <b>Number of cubes</b><br>%s<br><br>
+      <b>Cubes per dimension</b><br>%s<br><br>
       <b>Overlap percentage</b><br>%s%%<br><br>
-      <b>Linking locally</b><br>%s<br><br>
-      <b>Color Function</b><br>Distance to min(%s)<br><br>
+      <!-- <b>Linking locally</b><br>%s<br><br> -->
+      <b>Color Function</b><br>%s( %s )<br><br>
       <b>Clusterer</b><br>%s<br><br>
       <b>Scaler</b><br>%s
       </p>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
     <script>
-    var width = document.getElementById("holder").offsetWidth-20,
-      height = document.getElementById("holder").offsetHeight-20;
+    var width = %s,
+      height = %s;
 
     var color = d3.scale.ordinal()
       .domain(["0","1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30"])
@@ -267,6 +309,7 @@ class KeplerMapper(object):
         .attr('style', function(d) { return 'width: ' + (d.group * 2) + 'px; height: ' + (d.group * 2) + 'px; ' + 'left: '+(d.x-(d.group))+'px; ' + 'top: '+(d.y-(d.group))+'px; background: '+color(d.color)+'; box-shadow: 0px 0px 3px #111; box-shadow: 0px 0px 33px '+color(d.color)+', inset 0px 0px 5px rgba(0, 0, 0, 0.2);'})
         ;
       });
-    </script>""".encode("utf-8")%(title,title,complex["meta"],self.nr_cubes,self.overlap_perc*100,self.link_local,complex["meta"],self.clf,self.scaler,graph_charge,graph_link_distance,graph_gravity,json.dumps(json_s)))
+    </script>"""%(title,width_css, height_css, title_display, meta_display, tooltips_display, title,complex["meta"],self.nr_cubes,self.overlap_perc*100,self.link_local,self.color_function,complex["meta"],str(self.clf),str(self.scaler),width_js,height_js,graph_charge,graph_link_distance,graph_gravity,json.dumps(json_s))
+      outfile.write(html.encode("utf-8"))
     if self.verbose > 0:
       print("\nWrote d3.js graph to '%s'"%path_html)

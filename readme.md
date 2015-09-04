@@ -20,7 +20,7 @@ import km
 
 # Some sample data
 from sklearn import datasets
-data, labels = datasets.make_circles(n_samples=2000, noise=0.05, factor=0.3)
+data, labels = datasets.make_circles(n_samples=5000, noise=0.05, factor=0.3)
 
 # Initialize
 mapper = km.KeplerMapper(cluster_algorithm=km.cluster.DBSCAN(eps=0.1, min_samples=10), 
@@ -30,7 +30,7 @@ mapper = km.KeplerMapper(cluster_algorithm=km.cluster.DBSCAN(eps=0.1, min_sample
 data = mapper.fit_transform(data)
 
 # Create dictionary called 'complex' with nodes, edges and meta-information
-complex = mapper.map(data, dimension_index=0, dimension_name="X-axis")
+complex = mapper.map(data, dimension_index=[0], dimension_name="X-axis")
 
 # Visualize it
 mapper.visualize(complex, path_html="make_circles_keplermapper_output.html", 
@@ -121,8 +121,8 @@ nr_cubes | Int. The number of cubes/intervals to create. *Default = 10*
 overlap_perc | Float. How much the cubes/intervals overlap (relevant for creating the edges). *Default = 0.1*
 scaler | Scikit-Learn API compatible scaler. Scaler of the data applied before mapping. Use `None` for no scaling. *Default = preprocessing.MinMaxScaler()*
 reducer | Scikit-Learn API compatible dimensionality reducer. Dimensionality reduction is applied before mapping. Example `km.manifold.TSNE()` *Default = None*
-color_function | String. The function to color nodes with. Currently only one function available/hardcoded. *Default = "distance_origin"*
-link_local | Bool. Whether to link up local clusters. *Default = False*
+color_function | String. The function to color nodes with. Currently support for only one function available. *Default = "distance_origin"*
+link_local | Bool. Experimental. Whether to link up local clusters. *Default = False*
 verbose | Int. Verbosity of the mapper. *Default = 0*
 
 ### Fitting and transforming
@@ -165,6 +165,11 @@ graph_link_distance | Int. Global length of links between nodes. Use less for la
 graph_charge | Int. The charge between nodes. Use less negative charge for larger graphs. *Default = -120*
 graph_gravity | Float. A weak geometric constraint similar to a virtual spring connecting each node to the center of the layout's size. Don't you set to negative or it's turtles all the way up. *Default = 0.1*
 custom_tooltips | NumPy Array. Create custom tooltips for all the node members. You could use the target labels `y` for this. Use `None` for standard tooltips. *Default = None*.
+show_title | Bool. Whether to show the title. *Default = True*
+show_meta | Bool. Whether to show meta information, like the overlap percentage and the clusterer used. *Default = True*
+show_tooltips | Bool. Whether to show the tooltips on hover. *Default = True*
+width_html | Int. Size in pixels of the graph canvas width. *Default = 0 (full screen width)*
+height_html | Int. Size in pixels of the graph canvas height. *Default = 0 (full screen height)*
 
 ## Examples
 

@@ -120,7 +120,8 @@ verbose | Int. Verbosity of the mapper. *Default = 0*
 Input the data set. Specify a projection/lens type. Output the projected data/lens.
 
 ```python
-projected_data = mapper.fit_transform(data, projection="sum", scaler=km.preprocessing.MinMaxScaler() )
+projected_data = mapper.fit_transform(data, projection="sum", 
+									  scaler=km.preprocessing.MinMaxScaler() )
 ```
 
 Parameter | Description
@@ -132,7 +133,9 @@ scaler | Scikit-Learn API compatible scaler. Scaler of the data applied before m
 ### Mapping
 
 ```python
-topological_network = mapper.map(projected_X, inverse_X=[], clusterer=cluster.DBSCAN(eps=0.5,min_samples=3), nr_cubes=10, overlap_perc=0.1)
+topological_network = mapper.map(projected_X, inverse_X=[], 
+								 clusterer=cluster.DBSCAN(eps=0.5,min_samples=3), 
+								 nr_cubes=10, overlap_perc=0.1)
 
 print(topological_network["nodes"])
 print(topological_network["links"])
@@ -150,7 +153,8 @@ overlap_perc | Float. How much the cubes/intervals overlap (relevant for creatin
 ### Visualizing
 
 ```python
-mapper.visualize(topological_network, path_html="mapper_visualization_output.html")
+mapper.visualize(topological_network, 
+				 path_html="mapper_visualization_output.html")
 ```
 
 Parameter | Description

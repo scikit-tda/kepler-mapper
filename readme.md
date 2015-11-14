@@ -114,7 +114,6 @@ mapper = km.KeplerMapper(verbose=1)
 
 Parameter | Description
 --- | ---
-
 verbose | Int. Verbosity of the mapper. *Default = 0*
 
 ### Fitting and transforming
@@ -140,6 +139,8 @@ print(topological_network["links"])
 print(topological_network["meta"])
 ```
 
+Parameter | Description
+--- | ---
 projected_X | Numpy array. Output from fit_transform. *Required*
 inverse_X | Numpy array or empty list. When empty list, use the projection to cluster on, else use the original data (inverse image).
 clusterer | Scikit-Learn API compatible clustering algorithm. The clustering algorithm to use for mapping. *Default = cluster.DBSCAN(eps=0.5,min_samples=3)*

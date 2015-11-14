@@ -26,8 +26,7 @@ data, labels = datasets.make_circles(n_samples=5000, noise=0.05, factor=0.3)
 mapper = km.KeplerMapper(verbose=1)
 
 # Fit to and transform the data
-projected_data = mapper.fit_transform(data, clusterer=km.cluster.DBSCAN(eps=0.1, min_samples=10), 
-						 nr_cubes=25, overlap_perc=0.55)
+projected_data = mapper.fit_transform(data, projection="sum") # sum of row
 
 # Create dictionary called 'complex' with nodes, edges and meta-information
 complex = mapper.map(projected_data, data)

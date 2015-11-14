@@ -39,3 +39,13 @@ v00005
 		Ability to set the window height and width of HTML output
 		Added basic support for another color function: average signal
 		De-emphasized link_local functionality, since its current implementation is no good.
+		
+v00006  
+		Removed link_local functionality
+		Halved the number of edges drawn (no two-way edges)
+		Added support for clustering on the inverse image
+		Refactored code (see updated documentation)
+		Added code comments
+		Added feature to use reducers/manifold learning/dimensions and stat functions
+		Added 7 projections/lenses from statistics
+		

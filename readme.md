@@ -132,7 +132,7 @@ scaler | Scikit-Learn API compatible scaler. Scaler of the data applied before m
 ### Mapping
 
 ```python
-topological_network = mapper.map(projected_X, inverse_X=[], 
+topological_network = mapper.map(projected_X, inverse_X=None, 
 								 clusterer=cluster.DBSCAN(eps=0.5,min_samples=3), 
 								 nr_cubes=10, overlap_perc=0.1)
 
@@ -144,7 +144,7 @@ print(topological_network["meta"])
 Parameter | Description
 --- | ---
 projected_X | Numpy array. Output from fit_transform. *Required*
-inverse_X | Numpy array or empty list. When empty list, use the projection to cluster on, else use the original data (inverse image).
+inverse_X | Numpy array or `None`. When `None`, cluster on the projection, else cluster on the original data (inverse image).
 clusterer | Scikit-Learn API compatible clustering algorithm. The clustering algorithm to use for mapping. *Default = cluster.DBSCAN(eps=0.5,min_samples=3)*
 nr_cubes | Int. The number of cubes/intervals to create. *Default = 10*
 overlap_perc | Float. How much the cubes/intervals overlap (relevant for creating the edges). *Default = 0.1*
@@ -173,9 +173,23 @@ height_html | Int. Size in pixels of the graph canvas height. *Default = 0 (full
 
 ## Examples
 
+### 3D-point cloud
+
 Check the `examples` directory for more.
 
 ![Visualization](http://i.imgur.com/OQqHt9R.png "Click for large")
+
+### Very noisy datasets
+
+Check the `examples\makecircles` directory for code
+
+![Visualization](http://i.imgur.com/OmETfe5.png "Click for large")
+
+### Dimensionality reduction
+
+t-SNE on 4K images of MNIST dataset.
+
+![Visualization](http://i.imgur.com/eRa9sMH.png "Click for large")
 
 ## References
 
@@ -193,11 +207,19 @@ http://www.ayasdi.com/wp-content/uploads/2015/02/Topological_Methods_for_the_Ana
 https://www.youtube.com/watch?v=x3Hl85OBuc0<br/>
 https://www.youtube.com/watch?v=4RNpuZydlKY
 
+> Projection vs. Inverse image & Examples<br/>
+> MLconf ATL. Topological Learning with Ayasdi<br/>
+> Allison Gilmore
+
+https://www.youtube.com/watch?v=cJ8W0ASsnp0
+
 > The shape of data<br/>
 > "Conference Talk. The shape of data"<br/>
+> Topology and Data<br/>
 > Gunnar Carlsson
 
 https://www.youtube.com/watch?v=kctyag2Xi8o
+http://www.ams.org/images/carlsson-notes.pdf
 
 > Business Value, Problems, Algorithms, Computation and User Experience of TDA<br/>
 > Data Driven NYC. "Making Data Work"<br/>
@@ -235,6 +257,12 @@ http://www.cs.ucsb.edu/~veronika/MAE/mstSingleLinkage_GowerRoss_1969.pdf
 
 http://scikit-learn.org/stable/modules/clustering.html<br/>
 http://scikit-learn.org/stable/modules/manifold.html
+
+> Force-directed Graphing/Clustering<br/>
+> Force-directed Graphs<br/>
+> Mike Bostock, Tim Dwyer, Thomas Jakobsen
+
+http://bl.ocks.org/mbostock/4062045
 
 > Graphing<br/>
 > Grapher<br/>

@@ -20,68 +20,43 @@ import km
 
 # Some sample data
 from sklearn import datasets
-data, labels = datasets.make_circles(n_samples=5000, noise=0.05, factor=0.3)
+data, labels = datasets.make_circles(n_samples=5000, noise=0.03, factor=0.3)
 
 # Initialize
 mapper = km.KeplerMapper(verbose=1)
 
 # Fit to and transform the data
-projected_data = mapper.fit_transform(data, projection="sum") # sum of row
+projected_data = mapper.fit_transform(data, projection=[0,1]) # X-Y axis
 
 # Create dictionary called 'complex' with nodes, edges and meta-information
-complex = mapper.map(projected_data, data)
+complex = mapper.map(projected_data, data, nr_cubes=10)
 
 # Visualize it
 mapper.visualize(complex, path_html="make_circles_keplermapper_output.html", 
-				 title="make_circles(n_samples=5000, noise=0.05, factor=0.3)")
+                 title="make_circles(n_samples=5000, noise=0.03, factor=0.3)")
 ```
 
 ### Console output
 ```
-nr_cubes = 25
+..Projecting data using: [0, 1]
 
-overlap_perc = 0.55
+..Scaling with: MinMaxScaler(copy=True, feature_range=(0, 1))
 
-link_local = False
+Mapping on data shaped (5000L, 2L) using dimensions
 
-Clusterer = DBSCAN(algorithm='auto', eps=0.1, leaf_size=30, metric='euclidean',
-    min_samples=10, p=None, random_state=None)
-	
-Scaler = MinMaxScaler(copy=True, feature_range=(0, 1))
+Creating 1000 hypercubes.
 
-..Scaling
-
-Mapping on data shaped (5000L, 2L)
-
-There are 168 points in cube_0 with starting range 0.0
-Found 1 clusters in cube_0
-
-There are 327 points in cube_1 with starting range 0.04
-Found 1 clusters in cube_1
-
-There are 242 points in cube_2 with starting range 0.08
-Found 1 clusters in cube_2
-
-[... snipped ...]
-
-There are 316 points in cube_22 with starting range 0.88
-Found 1 clusters in cube_22
-
-There are 139 points in cube_23 with starting range 0.92
-Found 1 clusters in cube_23
-
-There are 10 points in cube_24 with starting range 0.96
-Found 0 clusters in cube_24
-
+created 86 edges and 57 nodes in 0:00:03.614000.
 
 Wrote d3.js graph to 'make_circles_keplermapper_output.html'
 ```
 
 ### Visualization output
 
-![Visualization](http://i.imgur.com/nS03AHV.png "Click for large")
+![Visualization](http://i.imgur.com/i3cqQVr.png "Click for large")
 
-Click here for an [interactive version](http://mlwave.github.io/tda/make_circles_keplermapper_output.html).
+Click here for an [interactive version](http://mlwave.github.io/tda/make_circles_keplermapper_output2.html).
+Click here for an older [interactive version](http://mlwave.github.io/tda/make_circles_keplermapper_output.html).
 
 ## Install
 

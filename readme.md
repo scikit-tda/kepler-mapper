@@ -101,7 +101,7 @@ projected_data = mapper.fit_transform(data, projection="sum",
 Parameter | Description
 --- | ---
 data | Numpy Array. The data to fit a projection/lens to. *Required*
-projection | Any of: list with dimension indices. Scikit-learn API compatible manifold learner or dimensionality reducer. A string from ["sum","mean","median","max","min","std","dist_mean"]. *Default = "sum"*                               
+projection | Any of: list with dimension indices. Scikit-learn API compatible manifold learner or dimensionality reducer. A string from ["sum","mean","median","max","min","std","dist_mean", "l2norm"]. *Default = "sum"*                               
 scaler | Scikit-Learn API compatible scaler. Scaler of the data applied before mapping. Use `None` for no scaling. *Default = preprocessing.MinMaxScaler()*
 
 ### Mapping

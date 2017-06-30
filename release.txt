@@ -48,4 +48,9 @@ v00006
 		Added code comments
 		Added feature to use reducers/manifold learning/dimensions and stat functions
 		Added 7 projections/lenses from statistics
-		
+
+v00007
+		Add L2^Norm Lens
+		Add Winsconsin Breast Cancer Data Anomaly Detection Example
+		Fixed bug: k-means with set number of clusters higher than min_cluster_samples
+		Add self.inverse_X for new future feature: transforming on unseen data.

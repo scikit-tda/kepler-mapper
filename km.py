@@ -48,7 +48,7 @@ class KeplerMapper(object):
     #               or a list of dimension indices.
     # scaler:       if None, do no scaling, else apply scaling to the projection
     #               Default: Min-Max scaling
-    
+    self.inverse = X
     self.scaler = scaler
     self.projection = str(projection)
     
@@ -80,7 +80,10 @@ class KeplerMapper(object):
         X = np.min(X, axis=1).reshape((X.shape[0],1))
       if projection == "std": # std of row
         X = np.std(X, axis=1).reshape((X.shape[0],1))
-        
+      if projection == "l2norm":
+        X = np.linalg.norm(X, axis=1).reshape((X.shape[0], 1))
+
+
       if projection == "dist_mean": # Distance of x to mean of X
         X_mean = np.mean(X, axis=0) 
         X = np.sum(np.sqrt((X - X_mean)**2), axis=1).reshape((X.shape[0],1))
@@ -130,13 +133,10 @@ class KeplerMapper(object):
     
     nodes = defaultdict(list)
     links = defaultdict(list)
-    complex = {}
+    graph = {}
     self.nr_cubes = nr_cubes
     self.clusterer = clusterer
     self.overlap_perc = overlap_perc
-    
-    if self.verbose > 0:
-      print("Mapping on data shaped %s using dimensions\n"%(str(projected_X.shape)))
     
     # If inverse image is not provided, we use the projection as the inverse image (suffer projection loss)
     if inverse_X is None:
@@ -165,6 +165,20 @@ class KeplerMapper(object):
       total_cubes = len(cube_coordinates_all(nr_cubes,projected_X.shape[1]))
       print("Creating %s hypercubes."%total_cubes)
 
+    # Algo's like K-Means, have a set number of clusters. We need this number
+    # to adjust for the minimal number of samples inside an interval before
+    # we consider clustering or skipping.
+    cluster_params = self.clusterer.get_params()
+    try:
+      min_cluster_samples = cluster_params["n_clusters"]
+    except:
+      min_cluster_samples = 1
+    if self.verbose > 0:
+      print("Minimal points in hypercube before clustering: %d"%(min_cluster_samples))
+    
+    if self.verbose > 0:
+      print("Mapping on data shaped %s using dimensions\n"%(str(projected_X.shape)))
+
     for i, coor in enumerate(cube_coordinates_all(nr_cubes,di.shape[0])):
       # Slice the hypercube
       hypercube = projected_X[ np.invert(np.any((projected_X[:,di+1] >= self.d[di] + (coor * self.chunk_dist[di])) & 
@@ -174,8 +188,8 @@ class KeplerMapper(object):
         print("There are %s points in cube_%s / %s with starting range %s"%
               (hypercube.shape[0],i,total_cubes,self.d[di] + (coor * self.chunk_dist[di])))
       
-      # If at least one sample inside the hypercube
-      if hypercube.shape[0] > 0:
+      # If at least min_cluster_samples samples inside the hypercube
+      if hypercube.shape[0] >= min_cluster_samples:
         # Cluster the data point(s) in the cube, skipping the id-column
         # Note that we apply clustering on the inverse image (original data samples) that fall inside the cube.
         inverse_x = inverse_X[[int(nn) for nn in hypercube[:,0]]]
@@ -208,11 +222,11 @@ class KeplerMapper(object):
         nr_links += len(links[k])
       print("\ncreated %s edges and %s nodes in %s."%(nr_links,len(nodes),str(datetime.now()-start)))
     
-    complex["nodes"] = nodes
-    complex["links"] = links
-    complex["meta"] = self.projection
+    graph["nodes"] = nodes
+    graph["links"] = links
+    graph["meta"] = self.projection
 
-    return complex
+    return graph
 
   def visualize(self, complex, color_function="", path_html="mapper_visualization_output.html", title="My Data", 
           graph_link_distance=30, graph_gravity=0.1, graph_charge=-120, custom_tooltips=None, width_html=0, 

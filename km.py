@@ -3,9 +3,10 @@ import numpy as np
 from collections import defaultdict
 import json
 import itertools
-from sklearn import cluster, preprocessing, manifold
+from sklearn import cluster, preprocessing, manifold, decomposition
 from datetime import datetime
 import sys
+import inspect
 
 class KeplerMapper(object):
   # With this class you can build topological networks from (high-dimensional) data.
@@ -53,8 +54,8 @@ class KeplerMapper(object):
     self.projection = str(projection)
     
     # Detect if projection is a class (for scikit-learn)
-    if str(type(projection))[1:6] == "class": #TODO: de-ugly-fy
-      reducer = projection
+    try:
+      p = projection.get_params()
       if self.verbose > 0:
         try:    
           projection.set_params(**{"verbose":self.verbose})
@@ -62,6 +63,8 @@ class KeplerMapper(object):
           pass
         print("\n..Projecting data using: \n\t%s\n"%str(projection))
       X = reducer.fit_transform(X)
+    except:
+      pass
     
     # Detect if projection is a string (for standard functions)
     if isinstance(projection, str):
@@ -141,7 +144,10 @@ class KeplerMapper(object):
     # If inverse image is not provided, we use the projection as the inverse image (suffer projection loss)
     if inverse_X is None:
       inverse_X = projected_X
-      
+
+    if self.verbose > 0:
+      print("Mapping on data shaped %s using lens shaped %s\n"%(str(inverse_X.shape), str(projected_X.shape)))  
+
     # We chop up the min-max column ranges into 'nr_cubes' parts
     self.chunk_dist = (np.max(projected_X, axis=0) - np.min(projected_X, axis=0))/nr_cubes
 
@@ -162,7 +168,7 @@ class KeplerMapper(object):
 
     # Subdivide the projected data X in intervals/hypercubes with overlap
     if self.verbose > 0:
-      total_cubes = len(cube_coordinates_all(nr_cubes,projected_X.shape[1]))
+      total_cubes = len(list(cube_coordinates_all(nr_cubes,di.shape[0])))
       print("Creating %s hypercubes."%total_cubes)
 
     # Algo's like K-Means, have a set number of clusters. We need this number
@@ -175,9 +181,6 @@ class KeplerMapper(object):
       min_cluster_samples = 1
     if self.verbose > 0:
       print("Minimal points in hypercube before clustering: %d"%(min_cluster_samples))
-    
-    if self.verbose > 0:
-      print("Mapping on data shaped %s using dimensions\n"%(str(projected_X.shape)))
 
     for i, coor in enumerate(cube_coordinates_all(nr_cubes,di.shape[0])):
       # Slice the hypercube

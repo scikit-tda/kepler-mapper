@@ -166,6 +166,15 @@ t-SNE on 4K images of MNIST dataset.
 
 ![Visualization](http://i.imgur.com/eRa9sMH.png "Click for large")
 
+### Unsupervised Anomaly Detection
+
+Isolation Forest and L^2-Norm lens on Winsconsin Breast Cancer Data.
+
+Check the `examples\breast-cancer` directory for code
+
+![Visualization](http://i.imgur.com/ewjRodK.png "Click for large")
+
+
 ## References
 
 > Mapper Algorithm<br/>

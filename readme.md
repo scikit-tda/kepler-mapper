@@ -176,7 +176,7 @@ Check the `examples\breast-cancer` directory for code
 
 ## Uses & Mentions
 
-- **Jeffrey Seely** maps the monkey motor cortex during reaching movements <br>[Notes on Topological Data Analysis](https://jsseely.github.io/notes/TDA/) [Live Demo](http://www.columbia.edu/~jss2219/tda/m1_na_tt.html)
+- **Jeffrey Seely** maps the monkey motor cortex during reaching movements <br>[Notes on Topological Data Analysis](https://jsseely.github.io/notes/TDA/) and Live Demo](http://www.columbia.edu/~jss2219/tda/m1_na_tt.html)
 - **Svetlana Lockwood** presented Kepler-Mapper at an ACM Workshop <br>[Open Source Software for TDA](http://www.sci.utah.edu/~beiwang/acmbcbworkshop2016/slides/SvetlanaLockwood.pdf)
 - **Abbas H Rizvi et al.** mention Kepler-Mapper in the Nature paper <br>[Single-cell topological RNA-seq analysis reveals insights into cellular differentiation and development](http://www.nature.com/nbt/journal/v35/n6/full/nbt.3854.html)
 - **Jin-Ku Lee et al.** mention Kepler-Mapper in the Nature paper <br>[Spatiotemporal genomic architecture informs precision oncology in glioblastoma](http://palgrave.nature.com/ng/journal/v49/n4/full/ng.3806.html)

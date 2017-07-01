@@ -167,14 +167,9 @@ class KeplerMapper(object):
     projected_X = np.c_[ids,projected_X]
     inverse_X = np.c_[ids,inverse_X]
 
-    # Subdivide the projected data X in intervals/hypercubes with overlap
-    if self.verbose > 0:
-      total_cubes = len(list(cube_coordinates_all(nr_cubes,di.shape[0])))
-      print("Creating %s hypercubes."%total_cubes)
-
     # Algo's like K-Means, have a set number of clusters. We need this number
     # to adjust for the minimal number of samples inside an interval before
-    # we consider clustering or skipping.
+    # we consider clustering or skipping it.
     cluster_params = self.clusterer.get_params()
     try:
       min_cluster_samples = cluster_params["n_clusters"]
@@ -182,6 +177,11 @@ class KeplerMapper(object):
       min_cluster_samples = 1
     if self.verbose > 0:
       print("Minimal points in hypercube before clustering: %d"%(min_cluster_samples))
+
+    # Subdivide the projected data X in intervals/hypercubes with overlap
+    if self.verbose > 0:
+      total_cubes = len(list(cube_coordinates_all(nr_cubes,di.shape[0])))
+      print("Creating %s hypercubes."%total_cubes)
 
     for i, coor in enumerate(cube_coordinates_all(nr_cubes,di.shape[0])):
       # Slice the hypercube

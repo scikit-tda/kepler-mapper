@@ -174,6 +174,17 @@ Check the `examples\breast-cancer` directory for code
 
 ![Visualization](http://i.imgur.com/ewjRodK.png "Click for large")
 
+## Uses & Mentions
+
+- **Jeffrey Seely** maps the monkey motor cortex during reaching movements <br>[Notes on Topological Data Analysis](https://jsseely.github.io/notes/TDA/)
+- **Svetlana Lockwood** presented Kepler-Mapper at an ACM Workshop <br>[Open Source Software for TDA](http://www.sci.utah.edu/~beiwang/acmbcbworkshop2016/slides/SvetlanaLockwood.pdf)
+- **Abbas H Rizvi et al.** mention Kepler-Mapper in the Nature paper <br>[Single-cell topological RNA-seq analysis reveals insights into cellular differentiation and development](http://www.nature.com/nbt/journal/v35/n6/full/nbt.3854.html)
+- **Jin-Ku Lee et al.** mention Kepler-Mapper in the Nature paper <br>[Spatiotemporal genomic architecture informs precision oncology in glioblastoma](http://palgrave.nature.com/ng/journal/v49/n4/full/ng.3806.html)
+- **Natalino Busa** maps credit risk <br>[Predicting Defaulting on Credit Cards](https://www.linkedin.com/pulse/predicting-defaulting-credit-cards-natalino-busa)
+- **Mark Coudriau et al.** maps the Darknet <br>[Topological analysis and visualisation of network monitoring data: Darknet case study](https://hal.inria.fr/hal-01403950/document)
+- **Steve Oudot et al.** from École Polytechnique give a course on TDA using Kepler-Mapper: <br>[INF556 — Topological Data Analysis](https://moodle.polytechnique.fr/enrol/index.php?id=5053)
+- **George Lake et al.** from Universität Zürich use it for teaching data science: <br>[ESC403 Introduction to Data Science](https://s3itwiki.uzh.ch/display/esc403fs2016/ESC403+Introduction+to+Data+Science+-+Spring+2016)
+- **Mikael Vejdemo-Johansson** maps process control systems <br>[TDA as a diagnostics tool for process control systems.](http://cv.mikael.johanssons.org/talks/2016-05-epfl.pdf)
 
 ## References
 

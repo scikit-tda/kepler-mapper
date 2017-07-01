@@ -56,6 +56,7 @@ class KeplerMapper(object):
     # Detect if projection is a class (for scikit-learn)
     try:
       p = projection.get_params()
+      reducer = projection
       if self.verbose > 0:
         try:    
           projection.set_params(**{"verbose":self.verbose})

@@ -103,27 +103,7 @@ Parameter | Description
 data | Numpy Array. The data to fit a projection/lens to. *Required*
 projection | Any of: list with dimension indices. Scikit-learn API compatible manifold learner or dimensionality reducer. A string from ["sum","mean","median","max","min","std","dist_mean","l2norm","knn_distance_n"]. If using `knn_distance_n` write the number of desired neighbors in place of `n`: `knn_distance_5` for summed distances to 5 nearest neighbors. *Default = "sum"*.                                
 scaler | Scikit-Learn API compatible scaler. Scaler of the data applied before mapping. Use `None` for no scaling. *Default = preprocessing.MinMaxScaler()*
-distance_matrix | `False` or any of: ["braycurtis", 
-                           "canberra", 
-                           "chebyshev", 
-                           "cityblock", 
-                           "correlation", 
-                           "cosine", 
-                           "dice", 
-                           "euclidean", 
-                           "hamming", 
-                           "jaccard", 
-                           "kulsinski", 
-                           "mahalanobis", 
-                           "matching", 
-                           "minkowski", 
-                           "rogerstanimoto", 
-                           "russellrao", 
-                           "seuclidean", 
-                           "sokalmichener", 
-                           "sokalsneath", 
-                           "sqeuclidean", 
-                           "yule"]. If `False` do nothing, else create a squared distance matrix with the chosen metric, before applying the projection.
+distance_matrix | `False` or any of: ["braycurtis", "canberra", "chebyshev", "cityblock", "correlation", "cosine", "dice", "euclidean", "hamming", "jaccard", "kulsinski", "mahalanobis", "matching", "minkowski", "rogerstanimoto", "russellrao", "seuclidean", "sokalmichener", "sokalsneath", "sqeuclidean", "yule"]. If `False` do nothing, else create a squared distance matrix with the chosen metric, before applying the projection.
 
 ### Mapping
 

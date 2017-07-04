@@ -95,7 +95,7 @@ Input the data set. Specify a projection/lens type. Output the projected data/le
 
 ```python
 projected_data = mapper.fit_transform(data, projection="sum", 
-									  scaler=km.preprocessing.MinMaxScaler() )
+                                      scaler=km.preprocessing.MinMaxScaler() )
 ```
 
 Parameter | Description
@@ -109,8 +109,8 @@ distance_matrix | `False` or any of: ["braycurtis", "canberra", "chebyshev", "ci
 
 ```python
 topological_network = mapper.map(projected_X, inverse_X=None, 
-								 clusterer=cluster.DBSCAN(eps=0.5,min_samples=3), 
-								 nr_cubes=10, overlap_perc=0.1)
+                                 clusterer=cluster.DBSCAN(eps=0.5,min_samples=3), 
+                                 nr_cubes=10, overlap_perc=0.1)
 
 print(topological_network["nodes"])
 print(topological_network["links"])
@@ -129,7 +129,7 @@ overlap_perc | Float. How much the cubes/intervals overlap (relevant for creatin
 
 ```python
 mapper.visualize(topological_network, 
-				 path_html="mapper_visualization_output.html")
+                 path_html="mapper_visualization_output.html")
 ```
 
 Parameter | Description

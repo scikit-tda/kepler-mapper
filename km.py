@@ -4,6 +4,7 @@ from collections import defaultdict
 import json
 import itertools
 from sklearn import cluster, preprocessing, manifold, decomposition
+from scipy.spatial import distance
 from datetime import datetime
 import sys
 import inspect
@@ -28,7 +29,6 @@ class KeplerMapper(object):
   
   def __init__(self, verbose=2):
     self.verbose = verbose
-    
     self.chunk_dist = []
     self.overlap_dist = []
     self.d = []
@@ -36,7 +36,7 @@ class KeplerMapper(object):
     self.overlap_perc = 0
     self.clusterer = False
 
-  def fit_transform(self, X, projection="sum", scaler=preprocessing.MinMaxScaler()):
+  def fit_transform(self, X, projection="sum", scaler=preprocessing.MinMaxScaler(), distance_matrix=False):
     # Creates the projection/lens from X. 
     #
     # Input:      X. Input features as a numpy array.
@@ -52,7 +52,35 @@ class KeplerMapper(object):
     self.inverse = X
     self.scaler = scaler
     self.projection = str(projection)
+    self.distance_matrix = distance_matrix
     
+    # If distance_matrix is a scipy.spatial.pdist string, we create a square distance matrix 
+    # from the vectors, before applying a projection.
+    if self.distance_matrix in ["braycurtis", 
+                           "canberra", 
+                           "chebyshev", 
+                           "cityblock", 
+                           "correlation", 
+                           "cosine", 
+                           "dice", 
+                           "euclidean", 
+                           "hamming", 
+                           "jaccard", 
+                           "kulsinski", 
+                           "mahalanobis", 
+                           "matching", 
+                           "minkowski", 
+                           "rogerstanimoto", 
+                           "russellrao", 
+                           "seuclidean", 
+                           "sokalmichener", 
+                           "sokalsneath", 
+                           "sqeuclidean", 
+                           "yule"]:
+      X = distance.squareform(distance.pdist(X, metric=distance_matrix))
+      if self.verbose > 0:
+        print("Created distance matrix, shape: %s, with distance metric `%s`"%(X.shape, distance_matrix))
+
     # Detect if projection is a class (for scikit-learn)
     try:
       p = projection.get_params()
@@ -91,6 +119,16 @@ class KeplerMapper(object):
       if projection == "dist_mean": # Distance of x to mean of X
         X_mean = np.mean(X, axis=0) 
         X = np.sum(np.sqrt((X - X_mean)**2), axis=1).reshape((X.shape[0],1))
+
+      if "knn_distance_" in projection:
+        n_neighbors = int(projection.split("_")[2])
+        if self.distance_matrix: # We use the distance matrix for finding neighbors
+          X = np.sum(np.sort(X, axis=1)[:,:n_neighbors], axis=1).reshape((X.shape[0], 1))
+        else:
+          from sklearn import neighbors
+          nn = neighbors.NearestNeighbors(n_neighbors=n_neighbors)
+          nn.fit(X)
+          X = np.sum(nn.kneighbors(X, n_neighbors=n_neighbors, return_distance=True)[0], axis=1).reshape((X.shape[0], 1))
 
     # Detect if projection is a list (with dimension indices)
     if isinstance(projection, list):

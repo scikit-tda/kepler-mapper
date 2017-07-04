@@ -28,11 +28,11 @@ mapper = km.KeplerMapper(verbose=1)
 # Fit to and transform the data
 projected_data = mapper.fit_transform(data, projection=[0,1]) # X-Y axis
 
-# Create dictionary called 'complex' with nodes, edges and meta-information
-complex = mapper.map(projected_data, data, nr_cubes=10)
+# Create dictionary called 'graph' with nodes, edges and meta-information
+graph = mapper.map(projected_data, data, nr_cubes=10)
 
 # Visualize it
-mapper.visualize(complex, path_html="make_circles_keplermapper_output.html", 
+mapper.visualize(graph, path_html="make_circles_keplermapper_output.html", 
                  title="make_circles(n_samples=5000, noise=0.03, factor=0.3)")
 ```
 
@@ -44,7 +44,7 @@ mapper.visualize(complex, path_html="make_circles_keplermapper_output.html",
 
 Mapping on data shaped (5000L, 2L) using dimensions
 
-Creating 1000 hypercubes.
+Creating 100 hypercubes.
 
 created 86 edges and 57 nodes in 0:00:03.614000.
 

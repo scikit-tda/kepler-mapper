@@ -175,6 +175,7 @@ class KeplerMapper(object):
     
     nodes = defaultdict(list)
     links = defaultdict(list)
+    meta = defaultdict(list)
     graph = {}
     self.nr_cubes = nr_cubes
     self.clusterer = clusterer
@@ -245,7 +246,11 @@ class KeplerMapper(object):
         for a in np.c_[hypercube[:,0],clusterer.labels_]:
           if a[1] != -1: #if not predicted as noise
             cluster_id = str(coor[0])+"_"+str(i)+"_"+str(a[1])+"_"+str(coor)+"_"+str(self.d[di] + (coor * self.chunk_dist[di])) # TODO: de-rudimentary-ify
-            nodes[cluster_id].append( int(a[0]) ) # Append the member id's as integers
+            
+            nodes[i].append( int(a[0]) ) # Append the member id's as integers
+
+        cluster_id = i
+        meta[cluster_id] = {"size": hypercube.shape[0], "coordinates": coor}
       else:
         if self.verbose > 1:
           print("Cube_%s is empty.\n"%(i))
@@ -266,7 +271,8 @@ class KeplerMapper(object):
     
     graph["nodes"] = nodes
     graph["links"] = links
-    graph["meta"] = self.projection
+    graph["meta_graph"] = self.projection
+    graph["meta_nodes"] = meta
 
     return graph
 
@@ -302,15 +308,15 @@ class KeplerMapper(object):
     for e, k in enumerate(complex["nodes"]):
       # Tooltip and node color formatting, TODO: de-mess-ify
       if custom_tooltips is not None:
-        tooltip_s = "<h2>Cluster %s</h2>"%k + " ".join([str(f) for f in custom_tooltips[complex["nodes"][k]]])
+        tooltip_s = "<h2>Cluster %s</h2> Contains %s members.<br>%s"%(k,len(complex["nodes"][k]), " ".join([str(f) for f in custom_tooltips[complex["nodes"][k]]]))
         if color_function == "average_signal_cluster":
           tooltip_i = int(((sum([f for f in custom_tooltips[complex["nodes"][k]]]) / len(custom_tooltips[complex["nodes"][k]])) * 30) )
           json_s["nodes"].append({"name": str(k), "tooltip": tooltip_s, "group": 2 * int(np.log(len(complex["nodes"][k]))), "color": str(tooltip_i)})
         else:
-          json_s["nodes"].append({"name": str(k), "tooltip": tooltip_s, "group": 2 * int(np.log(len(complex["nodes"][k]))), "color": str(k.split("_")[0])})
+          json_s["nodes"].append({"name": str(k), "tooltip": tooltip_s, "group": 2 * int(np.log(len(complex["nodes"][k]))), "color": str(complex["meta_nodes"][k]["coordinates"][0])})
       else:
         tooltip_s = "<h2>Cluster %s</h2>Contains %s members."%(k,len(complex["nodes"][k]))
-        json_s["nodes"].append({"name": str(k), "tooltip": tooltip_s, "group": 2 * int(np.log(len(complex["nodes"][k]))), "color": str(k.split("_")[0])})
+        json_s["nodes"].append({"name": str(k), "tooltip": tooltip_s, "group": 2 * int(np.log(len(complex["nodes"][k]))), "color": str(complex["meta_nodes"][k]["coordinates"][0])})
       k2e[k] = e
     for k in complex["links"]:
       for link in complex["links"][k]:
@@ -442,7 +448,22 @@ class KeplerMapper(object):
         .attr('style', function(d) { return 'width: ' + (d.group * 2) + 'px; height: ' + (d.group * 2) + 'px; ' + 'left: '+(d.x-(d.group))+'px; ' + 'top: '+(d.y-(d.group))+'px; background: '+color(d.color)+'; box-shadow: 0px 0px 3px #111; box-shadow: 0px 0px 33px '+color(d.color)+', inset 0px 0px 5px rgba(0, 0, 0, 0.2);'})
         ;
       });
-    </script>"""%(title,width_css, height_css, title_display, meta_display, tooltips_display, title,complex["meta"],self.nr_cubes,self.overlap_perc*100,color_function,complex["meta"],str(self.clusterer),str(self.scaler),width_js,height_js,graph_charge,graph_link_distance,graph_gravity,json.dumps(json_s))
+    </script>"""%(title,width_css, height_css, title_display, meta_display, tooltips_display, title,complex["meta_graph"],self.nr_cubes,self.overlap_perc*100,color_function,complex["meta_graph"],str(self.clusterer),str(self.scaler),width_js,height_js,graph_charge,graph_link_distance,graph_gravity,json.dumps(json_s))
       outfile.write(html.encode("utf-8"))
     if self.verbose > 0:
       print("\nWrote d3.js graph to '%s'"%path_html)
+
+  def data_from_cluster_id(self, cluster_id, graph, data):
+    # Returns the original data of each cluster member for a given cluster ID
+    #
+    # Input: cluster_id. Integer. ID of the cluster.
+    #        graph. Dict. The resulting dictionary after applying map()
+    #        data. Numpy array. Original dataset. Accepts both 1-D and 2-D array.
+    # Output: rows of cluster member data as Numpy array.
+    #
+    if cluster_id in graph["nodes"]:
+      cluster_members = graph["nodes"][cluster_id]
+      cluster_members_data = data[cluster_members]
+      return cluster_members_data
+    else:
+      return np.array([])

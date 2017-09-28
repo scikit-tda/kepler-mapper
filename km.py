@@ -246,11 +246,9 @@ class KeplerMapper(object):
         for a in np.c_[hypercube[:,0],clusterer.labels_]:
           if a[1] != -1: #if not predicted as noise
             cluster_id = str(coor[0])+"_"+str(i)+"_"+str(a[1])+"_"+str(coor)+"_"+str(self.d[di] + (coor * self.chunk_dist[di])) # TODO: de-rudimentary-ify
-            
-            nodes[i].append( int(a[0]) ) # Append the member id's as integers
 
-        cluster_id = i
-        meta[cluster_id] = {"size": hypercube.shape[0], "coordinates": coor}
+            nodes[cluster_id].append( int(a[0]) ) # Append the member id's as integers
+            meta[cluster_id] = {"size": hypercube.shape[0], "coordinates": coor}
       else:
         if self.verbose > 1:
           print("Cube_%s is empty.\n"%(i))

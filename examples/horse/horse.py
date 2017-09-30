@@ -2,13 +2,22 @@ import km
 
 data = km.np.genfromtxt('horse-reference.csv',delimiter=',')
 
-mapper = km.KeplerMapper(cluster_algorithm=km.cluster.DBSCAN(eps=0.3, min_samples=3), nr_cubes=25, link_local=False, overlap_perc=0.7, verbose=1)
+mapper = km.KeplerMapper(verbose=2)
 
-mapper.fit(data)
 
-complex = mapper.map(data, dimension_index=1, dimension_name="Y-axis")
+lens = mapper.fit_transform(data)
 
-mapper.visualize(complex, "horse_keplermapper_output.html", "horse-reference.csv")
+
+graph = mapper.map(lens,
+                   data,
+                   clusterer=km.cluster.DBSCAN(eps=0.2, min_samples=5),
+                   nr_cubes=25,
+                   overlap_perc=0.2)
+
+
+mapper.visualize(graph,
+                 graph_gravity=0.25,
+                 path_html="horse_keplermapper_output.html")
 
 # You may want to visualize the original point cloud data in 3D scatter too
 """

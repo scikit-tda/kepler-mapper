@@ -148,6 +148,20 @@ class KeplerMapper(object):
 
         return X
 
+    # Helper function
+    def _cube_coordinates_all(self, nr_cubes, nr_dimensions):
+        # Helper function to get origin coordinates for our intervals/hypercubes
+        # Useful for looping no matter the number of cubes or dimensions
+        # Example:   	if there are 4 cubes per dimension and 3 dimensions
+        #       		return the bottom left (origin) coordinates of 64 hypercubes,
+        #       		as a sorted list of Numpy arrays
+        # TODO: elegance-ify...
+        l = []
+        for x in range(nr_cubes):
+            l += [x] * nr_dimensions
+        return [np.array(list(f)) for f in sorted(set(itertools.permutations(l, nr_dimensions)))]
+
+
     def map(self, projected_X, inverse_X=None, clusterer=cluster.DBSCAN(eps=0.5, min_samples=3), nr_cubes=10, overlap_perc=0.1):
         # This maps the data to a simplicial complex. Returns a dictionary with nodes and links.
         #
@@ -164,18 +178,6 @@ class KeplerMapper(object):
 
         start = datetime.now()
 
-        # Helper function
-        def cube_coordinates_all(nr_cubes, nr_dimensions):
-            # Helper function to get origin coordinates for our intervals/hypercubes
-            # Useful for looping no matter the number of cubes or dimensions
-            # Example:   	if there are 4 cubes per dimension and 3 dimensions
-            #       		return the bottom left (origin) coordinates of 64 hypercubes,
-            #       		as a sorted list of Numpy arrays
-            # TODO: elegance-ify...
-            l = []
-            for x in range(nr_cubes):
-                l += [x] * nr_dimensions
-            return [np.array(list(f)) for f in sorted(set(itertools.permutations(l, nr_dimensions)))]
 
         nodes = defaultdict(list)
         links = defaultdict(list)
@@ -227,10 +229,10 @@ class KeplerMapper(object):
         # Subdivide the projected data X in intervals/hypercubes with overlap
         if self.verbose > 0:
             total_cubes = len(
-                list(cube_coordinates_all(nr_cubes, di.shape[0])))
+                list(self._cube_coordinates_all(nr_cubes, di.shape[0])))
             print("Creating %s hypercubes." % total_cubes)
 
-        for i, coor in enumerate(cube_coordinates_all(nr_cubes, di.shape[0])):
+        for i, coor in enumerate(self._cube_coordinates_all(nr_cubes, di.shape[0])):
             # Slice the hypercube
             hypercube = projected_X[np.invert(np.any((projected_X[:, di + 1] >= self.d[di] + (coor * self.chunk_dist[di])) &
                                                      (projected_X[:, di + 1] < self.d[di] + (coor * self.chunk_dist[di]) + self.chunk_dist[di] + self.overlap_dist[di]) == False, axis=1))]

@@ -159,7 +159,10 @@ class KeplerMapper(object):
         l = []
         for x in range(nr_cubes):
             l += [x] * nr_dimensions
-        return [np.array(list(f)) for f in sorted(set(itertools.permutations(l, nr_dimensions)))]
+
+        coordinates = [np.array(list(f)) for f in sorted(set(itertools.permutations(l, nr_dimensions)))]
+
+        return coordinates
 
 
     def map(self, projected_X, inverse_X=None, clusterer=cluster.DBSCAN(eps=0.5, min_samples=3), nr_cubes=10, overlap_perc=0.1):
@@ -234,8 +237,11 @@ class KeplerMapper(object):
 
         for i, coor in enumerate(self._cube_coordinates_all(nr_cubes, di.shape[0])):
             # Slice the hypercube
-            hypercube = projected_X[np.invert(np.any((projected_X[:, di + 1] >= self.d[di] + (coor * self.chunk_dist[di])) &
-                                                     (projected_X[:, di + 1] < self.d[di] + (coor * self.chunk_dist[di]) + self.chunk_dist[di] + self.overlap_dist[di]) == False, axis=1))]
+
+            entries = (projected_X[:, di + 1] >= self.d[di] + (coor * self.chunk_dist[di])) & \
+                      (projected_X[:, di + 1] < self.d[di] + (coor * self.chunk_dist[di]) + self.chunk_dist[di] + self.overlap_dist[di])
+
+            hypercube = projected_X[np.invert(np.any(entries == False, axis=1))]
 
             if self.verbose > 1:
                 print("There are %s points in cube_%s / %s with starting range %s" %

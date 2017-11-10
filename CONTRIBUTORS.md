@@ -1,4 +1,4 @@
 # Contributors
 
-* [HJ van Veen](info@mlwave.com)
-* [Nathaniel Saul](nat@saulgill.com)
+* [HJ van Veen](mailto:info@mlwave.com)
+* [Nathaniel Saul](mailto:nat@saulgill.com)

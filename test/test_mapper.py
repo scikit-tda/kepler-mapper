@@ -1,9 +1,8 @@
 import pytest
 import numpy as np
 
-from mapper.km import KeplerMapper
+from kmapper import KeplerMapper
 #from km import KeplerMapper
-
 
 
 def test_lens_size():

@@ -8,5 +8,5 @@ setup(name='mapper',
       author='',
       author_email='',
       url='',
-      packages=['mapper'],
+      packages=['kmapper'],
      )

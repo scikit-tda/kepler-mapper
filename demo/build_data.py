@@ -34,7 +34,7 @@ def badshape():
 if __name__ == "__main__":
     print("Make data")
 
-    data = torus(10,2) + torus(5,0.5, (3,3)) #+ torus(2, 0.2, (10,5), 100)
+    data = torus(10,2, points=2000) + torus(5,0.5, (3,3)) #+ torus(2, 0.2, (10,5), 100)
     xs = [p[0] for p in data]
     ys = [p[1] for p in data]
 

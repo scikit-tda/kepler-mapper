@@ -45,13 +45,13 @@ def make_1d_uniform(lens):
 
     return lens
 
-lens = make_1d_uniform(lens)
+#lens = make_1d_uniform(lens)
 
 graph = mapper.map(lens,
                    data,
-                   clusterer=km.cluster.DBSCAN(eps=2, min_samples=3),
+                   clusterer=km.cluster.DBSCAN(eps=0.3, min_samples=10),
                    nr_cubes=30,
-                   overlap_perc=0.7)
+                   overlap_perc=0.4)
 
 patches_x = []
 patches_y = []

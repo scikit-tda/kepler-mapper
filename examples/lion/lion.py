@@ -1,19 +1,24 @@
-import km
+import os
+import numpy as np
+from kmapper import KeplerMapper
+from sklearn import cluster
 
-data = km.np.genfromtxt('lion-reference.csv',delimiter=',')
+dir_path = os.path.dirname(os.path.realpath(__file__))
 
-mapper = km.KeplerMapper(verbose=1)
+data = np.genfromtxt(os.path.join(dir_path,'lion-reference.csv'),delimiter=',')
+
+mapper = KeplerMapper(verbose=1)
 
 lens = mapper.fit_transform(data)
 
 graph = mapper.map(lens,
                    data,
-                   clusterer=km.cluster.DBSCAN(eps=0.1, min_samples=5),
+                   clusterer=cluster.DBSCAN(eps=0.1, min_samples=5),
                    nr_cubes=10,
                    overlap_perc=0.2)
 
 mapper.visualize(graph,
-                 path_html="lion_keplermapper_output.html")
+                 path_html=os.path.join(dir_path, "lion_keplermapper_output.html"))
 
 # You may want to visualize the original point cloud data in 3D scatter too
 """

@@ -1,13 +1,14 @@
 from __future__ import division
-import numpy as np
-from collections import defaultdict
-import json
-import itertools
-from sklearn import cluster, preprocessing, manifold, decomposition
-from scipy.spatial import distance
-from datetime import datetime
 import sys
 import inspect
+import json
+import itertools
+from collections import defaultdict
+from datetime import datetime
+
+import numpy as np
+from sklearn import cluster, preprocessing, manifold, decomposition
+from scipy.spatial import distance
 
 
 class KeplerMapper(object):

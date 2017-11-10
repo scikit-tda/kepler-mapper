@@ -44,3 +44,5 @@ Temporary Items
 
 __pycache__
 .cache
+build
+venv

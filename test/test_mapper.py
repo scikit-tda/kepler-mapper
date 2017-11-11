@@ -5,6 +5,35 @@ from kmapper import KeplerMapper
 #from km import KeplerMapper
 
 
+class TestLinker():
+    def test_finds_a_link(self):
+        mapper = KeplerMapper()
+
+        groups = {"a": [1,2,3,4], "b":[1,2,3,4]}
+        links = mapper._create_links(groups)
+
+        assert "a" in links
+        assert links["a"] == ["b"]
+
+    def test_no_link(self):
+        mapper = KeplerMapper()
+
+        groups = {"a": [1,2,3,4], "b":[5,6,7]}
+        links = mapper._create_links(groups)
+
+        assert not links
+
+    def test_pass_through_result(self):
+        mapper = KeplerMapper()
+
+        groups = {"a": [1], "b":[2]}
+
+        res = dict()
+        links = mapper._create_links(groups, res)
+
+        assert res == links
+
+
 def test_lens_size():
     mapper = KeplerMapper()
 

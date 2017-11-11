@@ -100,6 +100,7 @@ class KeplerMapper(object):
         self.nr_cubes = 0
         self.overlap_perc = 0
         self.clusterer = False
+        self.projection = None
 
     def fit_transform(self, X, projection="sum", scaler=preprocessing.MinMaxScaler(), distance_matrix=False):
         # Creates the projection/lens from X.
@@ -334,7 +335,7 @@ class KeplerMapper(object):
 
         graph["nodes"] = nodes
         graph["links"] = links
-        graph["meta_graph"] = self.projection
+        graph["meta_graph"] = self.projection if self.projection else "custom"
         graph["meta_nodes"] = meta
 
         # Reporting

@@ -222,27 +222,29 @@ class KeplerMapper(object):
         # to adjust for the minimal number of samples inside an interval before
         # we consider clustering or skipping it.
         cluster_params = self.clusterer.get_params()
-        try:
-            min_cluster_samples = cluster_params["n_clusters"]
-        except:
-            min_cluster_samples = 1
+        min_cluster_samples = cluster_params.get("n_clusters", 1)
+
         if self.verbose > 0:
             print("Minimal points in hypercube before clustering: %d" %
                   (min_cluster_samples))
 
+        cubes = self._cube_coordinates_all(nr_cubes, di.shape[0])
+
         # Subdivide the projected data X in intervals/hypercubes with overlap
         if self.verbose > 0:
             total_cubes = len(
-                list(self._cube_coordinates_all(nr_cubes, di.shape[0])))
+                list(cubes))
             print("Creating %s hypercubes." % total_cubes)
 
-        for i, coor in enumerate(self._cube_coordinates_all(nr_cubes, di.shape[0])):
-            # Slice the hypercube
+        for i, coor in enumerate(cubes):
 
+
+            # Slice the hypercube
             entries = (projected_X[:, di + 1] >= self.d[di] + (coor * self.chunk_dist[di])) & \
                       (projected_X[:, di + 1] < self.d[di] + (coor * self.chunk_dist[di]) + self.chunk_dist[di] + self.overlap_dist[di])
 
             hypercube = projected_X[np.invert(np.any(entries == False, axis=1))]
+
 
             if self.verbose > 1:
                 print("There are %s points in cube_%s / %s with starting range %s" %
@@ -263,6 +265,9 @@ class KeplerMapper(object):
                 # Now for every (sample id in cube, predicted cluster label)
                 for a in np.c_[hypercube[:, 0], clusterer.labels_]:
                     if a[1] != -1:  # if not predicted as noise
+
+
+                        # TODO: user supplied label or, something more readable
                         cluster_id = str(coor[0]) + "_" + str(i) + "_" + str(a[1]) + "_" + str(
                             coor) + "_" + str(self.d[di] + (coor * self.chunk_dist[di]))  # TODO: de-rudimentary-ify
 
@@ -274,27 +279,49 @@ class KeplerMapper(object):
                 if self.verbose > 1:
                     print("Cube_%s is empty.\n" % (i))
 
-        # Create links when clusters from different hypercubes have members with the same sample id.
-        candidates = itertools.combinations(nodes.keys(), 2)
-        for candidate in candidates:
-            # if there are non-unique members in the union
-            if len(nodes[candidate[0]] + nodes[candidate[1]]) != len(set(nodes[candidate[0]] + nodes[candidate[1]])):
-                links[candidate[0]].append(candidate[1])
 
-        # Reporting
-        if self.verbose > 0:
-            nr_links = 0
-            for k in links:
-                nr_links += len(links[k])
-            print("\ncreated %s edges and %s nodes in %s." %
-                  (nr_links, len(nodes), str(datetime.now() - start)))
+        links = self._create_links(nodes, links)
 
         graph["nodes"] = nodes
         graph["links"] = links
         graph["meta_graph"] = self.projection
         graph["meta_nodes"] = meta
 
+        # Reporting
+        if self.verbose > 0:
+            self._summary(graph, start)
+
         return graph
+
+
+    def _summary(self, graph, start):
+        links = graph["links"]
+        nodes = graph["nodes"]
+        nr_links = sum(len(v) for k, v in links.items())
+
+        print("\nCreated %s edges and %s nodes in %s." %
+              (nr_links, len(nodes), str(datetime.now() - start)))
+
+    def _create_links(self, nodes, result=None):
+        """
+            Helper function to find edges of the overlapping clusters.
+
+            TODO: generalize to take nerve.
+        """
+        if result == None:
+            result = defaultdict(list)
+
+
+        # Create links when clusters from different hypercubes have members with the same sample id.
+        candidates = itertools.combinations(nodes.keys(), 2)
+        for candidate in candidates:
+            # if there are non-unique members in the union
+            if len(nodes[candidate[0]] + nodes[candidate[1]]) != len(set(nodes[candidate[0]] + nodes[candidate[1]])):
+                result[candidate[0]].append(candidate[1])
+
+        return result
+
+
 
     def visualize(self, complex, color_function="", path_html="mapper_visualization_output.html", title="My Data",
                   graph_link_distance=30, graph_gravity=0.1, graph_charge=-120, custom_tooltips=None, width_html=0,

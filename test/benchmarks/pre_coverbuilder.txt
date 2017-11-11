@@ -1,0 +1,17 @@
+         1661394 function calls (1618158 primitive calls) in 2.305 seconds
+
+   Ordered by: cumulative time
+   List reduced from 169 to 8 due to restriction <'kmapper'>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+      100    0.218    0.002    2.285    0.023 kmapper.py:162(map)
+      100    0.001    0.000    0.020    0.000 kmapper.py:51(fit_transform)
+      100    0.011    0.000    0.012    0.000 kmapper.py:318(_create_links)
+      875    0.006    0.000    0.006    0.000 kmapper.py:255(<listcomp>)
+      100    0.001    0.000    0.003    0.000 kmapper.py:295(_cube_coordinates_all)
+      100    0.001    0.000    0.002    0.000 kmapper.py:306(<listcomp>)
+      100    0.000    0.000    0.000    0.000 kmapper.py:213(<listcomp>)
+      100    0.000    0.000    0.000    0.000 kmapper.py:210(<listcomp>)
+
+
+

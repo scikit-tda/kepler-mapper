@@ -10,6 +10,69 @@ import numpy as np
 from sklearn import cluster, preprocessing, manifold, decomposition
 from scipy.spatial import distance
 
+class Cover():
+    """ Define a cover scheme
+
+        Should implement `find_entries` that finds all data points in each cube.
+        Should construct cubes that can be iterated over.
+    """
+
+
+    def __init__(self, data, nr_cubes=10, overlap_perc=0.2):
+        self.nr_cubes = nr_cubes
+        self.overlap_perc = overlap_perc
+        self.nr_dimensions = data.shape[0]
+
+        bounds = (np.min(data, axis=0), np.max(data, axis=0))
+
+        # We chop up the min-max column ranges into 'nr_cubes' parts
+        self.chunk_dist = (bounds[1] - bounds[0]) / nr_cubes
+
+        # We calculate the overlapping windows distance
+        self.overlap_dist = overlap_perc * self.chunk_dist
+
+        # We find our starting point
+        self.d = bounds[0]
+
+        # Use a dimension index array on the projected X
+        # (For now this uses the entire dimensionality, but we keep for experimentation)
+        self.di = np.array([x for x in range(data.shape[1])])
+
+    # Helper functions
+    def _cube_coordinates_all(self):
+        # Helper function to get origin coordinates for our intervals/hypercubes
+        # Useful for looping no matter the number of cubes or dimensions
+        # Example:   	if there are 4 cubes per dimension and 3 dimensions
+        #       		return the bottom left (origin) coordinates of 64 hypercubes,
+        #       		as a sorted list of Numpy arrays
+        # TODO: elegance-ify...
+        l = []
+        for x in range(self.nr_cubes):
+            l += [x] * self.nr_dimensions
+
+        coordinates = [np.array(list(f)) for f in sorted(set(itertools.permutations(l, self.nr_dimensions)))]
+
+        return coordinates
+
+
+
+    def find_entries(self, data, coor):
+        # chunk = self.chunk_dist[self.di]
+        # overlap = self.overlap_dist[self.di]
+        #
+        # lower_bound = self.d[self.di] + (coor * chunk)
+        # upper_bound = lower_bound + chunk + overlap
+
+        lower_bound = self.d[self.di] + (coor * self.chunk_dist[self.di])
+        upper_bound = self.d[self.di] + (coor * self.chunk_dist[self.di]) + self.chunk_dist[self.di] + self.overlap_dist[self.di]
+
+        # Slice the hypercube
+        entries = (data[:, self.di + 1] >= lower_bound) & \
+                  (data[:, self.di + 1] < upper_bound)
+
+        hypercube = projected_X[np.invert(np.any(entries == False, axis=1))]
+
+        return hypercube
 
 class KeplerMapper(object):
     # With this class you can build topological networks from (high-dimensional) data.
@@ -29,7 +92,7 @@ class KeplerMapper(object):
     # map:         	Apply Mapper algorithm on this projection and build a simplicial complex
     # visualize:    	Turns the complex dictionary into a HTML/D3.js visualization
 
-    def __init__(self, verbose=2):
+    def __init__(self, verbose=0):
         self.verbose = verbose
         self.chunk_dist = []
         self.overlap_dist = []
@@ -149,23 +212,6 @@ class KeplerMapper(object):
 
         return X
 
-    # Helper function
-    def _cube_coordinates_all(self, nr_cubes, nr_dimensions):
-        # Helper function to get origin coordinates for our intervals/hypercubes
-        # Useful for looping no matter the number of cubes or dimensions
-        # Example:   	if there are 4 cubes per dimension and 3 dimensions
-        #       		return the bottom left (origin) coordinates of 64 hypercubes,
-        #       		as a sorted list of Numpy arrays
-        # TODO: elegance-ify...
-        l = []
-        for x in range(nr_cubes):
-            l += [x] * nr_dimensions
-
-        coordinates = [np.array(list(f)) for f in sorted(set(itertools.permutations(l, nr_dimensions)))]
-
-        return coordinates
-
-
     def map(self, projected_X, inverse_X=None, clusterer=cluster.DBSCAN(eps=0.5, min_samples=3), nr_cubes=10, overlap_perc=0.1):
         # This maps the data to a simplicial complex. Returns a dictionary with nodes and links.
         #
@@ -182,13 +228,14 @@ class KeplerMapper(object):
 
         start = datetime.now()
 
-
         nodes = defaultdict(list)
         links = defaultdict(list)
         meta = defaultdict(list)
         graph = {}
-        self.nr_cubes = nr_cubes
+
         self.clusterer = clusterer
+
+        self.nr_cubes = nr_cubes
         self.overlap_perc = overlap_perc
 
         # If inverse image is not provided, we use the projection as the inverse image (suffer projection loss)
@@ -198,6 +245,8 @@ class KeplerMapper(object):
         if self.verbose > 0:
             print("Mapping on data shaped %s using lens shaped %s\n" %
                   (str(inverse_X.shape), str(projected_X.shape)))
+
+        ### Define codomain cover
 
         # We chop up the min-max column ranges into 'nr_cubes' parts
         self.chunk_dist = (np.max(projected_X, axis=0) -
@@ -217,6 +266,7 @@ class KeplerMapper(object):
         ids = np.array([x for x in range(projected_X.shape[0])])
         projected_X = np.c_[ids, projected_X]
         inverse_X = np.c_[ids, inverse_X]
+
 
         # Algo's like K-Means, have a set number of clusters. We need this number
         # to adjust for the minimal number of samples inside an interval before
@@ -289,18 +339,33 @@ class KeplerMapper(object):
 
         # Reporting
         if self.verbose > 0:
-            self._summary(graph, start)
+            self._summary(graph, str(datetime.now() - start))
 
         return graph
 
+    # Helper functions
+    def _cube_coordinates_all(self, nr_cubes, nr_dimensions):
+        # Helper function to get origin coordinates for our intervals/hypercubes
+        # Useful for looping no matter the number of cubes or dimensions
+        # Example:   	if there are 4 cubes per dimension and 3 dimensions
+        #       		return the bottom left (origin) coordinates of 64 hypercubes,
+        #       		as a sorted list of Numpy arrays
+        # TODO: elegance-ify...
+        l = []
+        for x in range(nr_cubes):
+            l += [x] * nr_dimensions
 
-    def _summary(self, graph, start):
+        coordinates = [np.array(list(f)) for f in sorted(set(itertools.permutations(l, nr_dimensions)))]
+
+        return coordinates
+
+    def _summary(self, graph, time):
         links = graph["links"]
         nodes = graph["nodes"]
         nr_links = sum(len(v) for k, v in links.items())
 
         print("\nCreated %s edges and %s nodes in %s." %
-              (nr_links, len(nodes), str(datetime.now() - start)))
+              (nr_links, len(nodes), time))
 
     def _create_links(self, nodes, result=None):
         """

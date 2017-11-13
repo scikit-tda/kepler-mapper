@@ -18,7 +18,7 @@ data = np.array(j)
 xs = [d[0] for d in data]
 ys = [d[1] for d in data]
 
-mapper = km.KeplerMapper(verbose=10)
+mapper = km.KeplerMapper(verbose=2)
 
 lens = mapper.fit_transform(data, projection=[1])
 
@@ -46,7 +46,7 @@ def make_1d_uniform(lens):
 
     return lens
 
-#lens = make_1d_uniform(lens)
+# lens = make_1d_uniform(lens)
 
 graph = mapper.map(lens,
                    data,
@@ -65,7 +65,7 @@ patches["group"] = []
 # import pdb; pdb.set_trace()
 
 for key, value in list(dict(graph["nodes"]).items()):
-    bucket = int(key.split("_")[0])
+    bucket = int(key.split("_")[0].replace("cube", ""))
     points = np.take(data, value, axis=0)
     hull = np.take(points, ConvexHull(points).vertices, axis=0)
 
@@ -78,8 +78,6 @@ for key, value in list(dict(graph["nodes"]).items()):
 total_bins = len(set(patches["group"]))
 color_choices = itertools.cycle(Accent6)
 
-# import pdb; pdb.set_trace()
-
 colormap = dict(zip(set(patches["group"]), color_choices))
 colors = [colormap[x] for x in patches['group']]
 patches["colors"] = colors
@@ -87,7 +85,7 @@ patches["colors"] = colors
 p = figure(plot_width=800, plot_height=800)
 p.circle(y=ys, x=xs, size=2.5, color="black", alpha=1)
 p.patches(xs="xs", ys="ys", color="colors", alpha=0.5, source=patches)#, color=colors)
-show(p)
+# show(p)
 
 mapper.visualize(graph,
                  path_html="demo/keplermapper_output.html")

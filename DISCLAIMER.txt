@@ -1,0 +1,21 @@
+DISCLAIMER:
+	This code was written for self-study and is not production-ready. It is very 
+	much a work in progress. 
+	
+	This early version is released, because it may be useful to other researchers 
+	and students starting out in topological data science, and to motivate the 
+	author to keep working on it.
+	
+	The author makes no guarantee that this code is: 
+	 - correct,
+     - the right way to do things,	 
+	 - true to the original MAPPER algorithm
+	 - ready for production
+	 
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	THE SOFTWARE.

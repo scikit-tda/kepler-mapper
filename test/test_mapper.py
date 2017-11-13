@@ -6,22 +6,6 @@ from kmapper import KeplerMapper
 from kmapper.kmapper import Cover
 
 
-class TestCuber():
-    def test_cube_count(self):
-        mapper = KeplerMapper()
-        cubes = mapper._cube_coordinates_all(4, 3)
-        assert len(cubes) == 4**3
-
-    def test_cube_dim(self):
-        mapper = KeplerMapper()
-        cubes = mapper._cube_coordinates_all(4, 3)
-        assert all( len(cube) == 3 for cube in cubes)
-
-    def test_single_dim(self):
-        mapper = KeplerMapper()
-        cubes = mapper._cube_coordinates_all(4, 1)
-        assert all( len(cube) == 1 for cube in cubes)
-
 
 class TestLinker():
     def test_finds_a_link(self):
@@ -52,6 +36,28 @@ class TestLinker():
         assert res == links
 
 class TestCover():
+    def test_cube_count(self):
+        data = np.arange(30).reshape(10,3)
+        c = Cover(data, nr_cubes=10)
+        cubes = c.cubes
+
+        assert len(cubes) == 10**3
+
+    def test_cube_dim(self):
+
+        data = np.arange(30).reshape(10,3)
+        c = Cover(data, nr_cubes=10)
+        cubes = c.cubes
+
+        assert all( len(cube) == 3 for cube in cubes)
+
+    def test_single_dim(self):
+        data = np.arange(10).reshape(10,1)
+        c = Cover(data, nr_cubes=10)
+        cubes = c.cubes
+
+        assert all( len(cube) == 1 for cube in cubes)
+
     def test_chunk_dist(self):
         data = np.arange(100).reshape(10,10)
 
@@ -113,13 +119,6 @@ class TestCover():
 
         for i,j in zip(range(9), range(1,10)):
             assert set(entries[i]).union(set(entries[j]))
-
-    def test_dimensions(self):
-        data = np.arange(20).reshape(20,1)
-
-        cover = Cover(data,[0], nr_cubes=10)
-        cubes = cover._cube_coordinates_all()
-
 
 
 def test_lens_size():

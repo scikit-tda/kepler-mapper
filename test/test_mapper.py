@@ -120,19 +120,19 @@ class TestCover():
         for i,j in zip(range(9), range(1,10)):
             assert set(entries[i]).union(set(entries[j]))
 
+class TestLens():
+    def test_lens_size(self):
+        mapper = KeplerMapper()
 
-def test_lens_size():
-    mapper = KeplerMapper()
+        data = np.random.rand(100, 10)
+        lens = mapper.fit_transform(data)
 
-    data = np.random.rand(100, 10)
-    lens = mapper.fit_transform(data)
+        assert lens.shape[0] == data.shape[0]
 
-    assert lens.shape[0] == data.shape[0]
-
-def test_map_custom_lens():
-    # I think that map currently requires fit_transform to be called first
-    mapper = KeplerMapper()
-    data = np.random.rand(100, 2)
-    #import pdb; pdb.set_trace()
-    graph = mapper.map(data)
-    assert graph["meta_graph"] == "custom"
+    def test_map_custom_lens(self):
+        # I think that map currently requires fit_transform to be called first
+        mapper = KeplerMapper()
+        data = np.random.rand(100, 2)
+        #import pdb; pdb.set_trace()
+        graph = mapper.map(data)
+        assert graph["meta_graph"] == "custom"

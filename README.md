@@ -70,7 +70,7 @@ source venv/bin/activate
 
 Install KeplerMapper
 ```
-python setup.py install
+pip install -e .
 ```
 
 

@@ -1,0 +1,23 @@
+TODO:
+- [] Use CSS animations for the div nodes to the remove "jittery" movement.
+- [] Add a curvature to the edges
+- [] Add member expand function on node click
+- [] Style edge width according to the size of set of shared members
+- [] Add a bounding box for the force-directed graph
+- [] Implement better and more color functions. Also support for custom color functions.
+- [] Implement better and more node size functions.
+- [] Make better suited to model introspection (visualize out-of-fold predictions performance and feature interactions)
+- [] Implement cheap dimensionality reduction for extremely high dimensional data (RandomizedPCA)
+- [] Support for online mapping (Column-Oriented datastore https://users.soe.ucsc.edu/~niejiazhong/slides/chandra.pdf)
+- [] Add samples to showcase fundamental data shapes: Regression, Clusters, Circular/looping, Y-flares.
+- [] Create multi-view to compare graphs
+- [] Add an example with a custom (scikit-learn API compatible) clusterer
+- [] Write tests
+- [] Better support for IDs
+- [] Add novel neural gas mapping technique
+- [] Turn into an API. Visualizer output to localhost can ask for new json to render graphs with.
+- [] Add sliders for on-page graph settings (redraw with a new Gravity or LinkDistance)
+- [] Proper accessible HTML output
+- [] Better complex["meta"] information
+- [] Create distribution
+- [] Refactor

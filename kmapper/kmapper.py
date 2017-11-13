@@ -21,7 +21,7 @@ class Cover():
     def __init__(self, data, nr_cubes=10, overlap_perc=0.2):
         self.nr_cubes = nr_cubes
         self.overlap_perc = overlap_perc
-        self.nr_dimensions = data.shape[0]
+        self.nr_dimensions = data.shape[1]
 
         bounds = (np.min(data, axis=0), np.max(data, axis=0))
 
@@ -46,6 +46,7 @@ class Cover():
         #       		return the bottom left (origin) coordinates of 64 hypercubes,
         #       		as a sorted list of Numpy arrays
         # TODO: elegance-ify...
+        # TODO: This breaks for high dimensions
         l = []
         for x in range(self.nr_cubes):
             l += [x] * self.nr_dimensions
@@ -54,23 +55,19 @@ class Cover():
 
         return coordinates
 
-
-
     def find_entries(self, data, coor):
-        # chunk = self.chunk_dist[self.di]
-        # overlap = self.overlap_dist[self.di]
-        #
-        # lower_bound = self.d[self.di] + (coor * chunk)
-        # upper_bound = lower_bound + chunk + overlap
+        chunk = self.chunk_dist[self.di]
+        overlap = self.overlap_dist[self.di]
 
-        lower_bound = self.d[self.di] + (coor * self.chunk_dist[self.di])
-        upper_bound = self.d[self.di] + (coor * self.chunk_dist[self.di]) + self.chunk_dist[self.di] + self.overlap_dist[self.di]
+        lower_bound = self.d[self.di] + (coor * chunk)
+        upper_bound = lower_bound + chunk + overlap
 
         # Slice the hypercube
-        entries = (data[:, self.di + 1] >= lower_bound) & \
-                  (data[:, self.di + 1] < upper_bound)
+        # the +1 accounts for a new column of indices
+        entries = (data[:, self.di] >= lower_bound) & \
+                  (data[:, self.di] < upper_bound)
 
-        hypercube = projected_X[np.invert(np.any(entries == False, axis=1))]
+        hypercube = data[np.invert(np.any(entries == False, axis=1))]
 
         return hypercube
 
@@ -263,6 +260,7 @@ class KeplerMapper(object):
         # (For now this uses the entire dimensionality, but we keep for experimentation)
         di = np.array([x for x in range(projected_X.shape[1])])
 
+        # TODO: move ID to be last column so all indexing works without futz
         # Prefix'ing the data with ID's
         ids = np.array([x for x in range(projected_X.shape[0])])
         projected_X = np.c_[ids, projected_X]

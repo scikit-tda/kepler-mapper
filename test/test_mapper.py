@@ -57,9 +57,15 @@ class TestCover():
 
         cover = Cover(data, 10)
         chunks = list(cover.chunk_dist)
-        for c in chunks:
-            assert c == 9
-        #assert all(i == 9 for i in chunks)
+
+        assert all(i == 9 for i in chunks)
+
+    def test_nr_dimensions(self):
+        data = np.arange(30).reshape(10,3)
+
+        c = Cover(data, 10)
+
+        assert c.nr_dimensions == 3
 
     def test_bound_is_min(self):
         data = np.arange(100).reshape(10,10)
@@ -69,13 +75,46 @@ class TestCover():
         bounds = zip(c.d, range(10))
         assert all(b[0] == b[1] for b in bounds)
 
-    @pytest.mark.skip("This test takes way too long for some reason?")
-    def test_entries(self):
-        data = np.arange(20).reshape(10,2)
+    def test_entries_even(self):
+        data = np.arange(20).reshape(20,1)
 
         cover = Cover(data, 10)
         cubes = cover._cube_coordinates_all()
-        cube = cover.find_entries(data, cubes[0])
+
+        for cube in cubes:
+            entries = cover.find_entries(data, cube)
+
+            assert len(entries) >= 2
+
+    def test_entries_in_correct_cubes(self):
+        data = np.arange(20).reshape(20,1)
+
+        cover = Cover(data, 10)
+        cubes = cover._cube_coordinates_all()
+
+        entries = [cover.find_entries(data, cube) for cube in cubes]
+
+        # inside of each cube is there. Sometimes the edges don't line up.
+        for i in range(10):
+            assert data[2*i] in entries[i]
+            assert data[2*i+1] in entries[i]
+
+    def test_cubes_overlap(self):
+        data = np.arange(20).reshape(20,1)
+
+        cover = Cover(data, 10)
+        cubes = cover._cube_coordinates_all()
+
+
+        entries = []
+        for cube in cubes:
+            # turn singleton lists into individual elements
+            res = [i[0] for i in cover.find_entries(data, cube)]
+            entries.append(res)
+
+        for i,j in zip(range(9), range(1,10)):
+            assert set(entries[i]).union(set(entries[j]))
+
 
 
 

@@ -257,31 +257,31 @@ class KeplerMapper(object):
         ### Define codomain cover
 
         # We chop up the min-max column ranges into 'nr_cubes' parts
-        # self.chunk_dist = (np.max(projected_X, axis=0) -
-        #                    np.min(projected_X, axis=0)) / nr_cubes
-        #
-        # # We calculate the overlapping windows distance
-        # self.overlap_dist = self.overlap_perc * self.chunk_dist
-        #
-        # # We find our starting point
-        # self.d = np.min(projected_X, axis=0)
+        self.chunk_dist = (np.max(projected_X, axis=0) -
+                           np.min(projected_X, axis=0)) / nr_cubes
+
+        # We calculate the overlapping windows distance
+        self.overlap_dist = self.overlap_perc * self.chunk_dist
+
+        # We find our starting point
+        self.d = np.min(projected_X, axis=0)
 
         # Use a dimension index array on the projected X
         # (For now this uses the entire dimensionality, but we keep for experimentation)
         # exclude the indexed dimensions
-        di = np.array([x for x in range(projected_X.shape[1])])+1
+        di = np.array([x for x in range(projected_X.shape[1])])
 
         # TODO: move ID to be last column so all indexing works without futz
         # Prefix'ing the data with ID's
         ids = np.array([x for x in range(projected_X.shape[0])])
         projected_X = np.c_[ids, projected_X]
         inverse_X = np.c_[ids, inverse_X]
-
-        cover = Cover(projected_X,
-                     dimensions=di,
-                     nr_cubes=nr_cubes,
-                     overlap_perc=overlap_perc)
-
+        #
+        # cover = Cover(projected_X,
+        #              dimensions=di,
+        #              nr_cubes=nr_cubes,
+        #              overlap_perc=overlap_perc)
+        #
 
 
         # Algo's like K-Means, have a set number of clusters. We need this number
@@ -294,29 +294,29 @@ class KeplerMapper(object):
             print("Minimal points in hypercube before clustering: %d" %
                   (min_cluster_samples))
 
-        #cubes = self._cube_coordinates_all(nr_cubes, di.shape[0])
-
+        cubes = self._cube_coordinates_all(nr_cubes, di.shape[0])
+        # cubes = cover.cubes
         # Subdivide the projected data X in intervals/hypercubes with overlap
         # if self.verbose > 0:
         #     total_cubes = len(
-        #         list(cubes))
+        #         list(cover.cubes))
         #     print("Creating %s hypercubes." % total_cubes)
 
 
-        for i, coor in enumerate(cover.cubes):#enumerate(cubes):
+        for i, coor in enumerate(cubes):
 
 
             # # Slice the hypercube
-            # entries = (projected_X[:, di + 1] >= self.d[di] + (coor * self.chunk_dist[di])) & \
-            #           (projected_X[:, di + 1] < self.d[di] + (coor * self.chunk_dist[di]) + self.chunk_dist[di] + self.overlap_dist[di])
-            #
-            # hypercube = projected_X[np.invert(np.any(entries == False, axis=1))]
+            entries = (projected_X[:, di + 1] >= self.d[di] + (coor * self.chunk_dist[di])) & \
+                      (projected_X[:, di + 1] < self.d[di] + (coor * self.chunk_dist[di]) + self.chunk_dist[di] + self.overlap_dist[di])
 
-            hypercube = cover.find_entries(projected_X, coor)
+            hypercube = projected_X[np.invert(np.any(entries == False, axis=1))]
 
-            if self.verbose > 1:
-                print("There are %s points in cube_%s / %s with starting range %s" %
-                      (hypercube.shape[0], i, total_cubes, self.d[di] + (coor * self.chunk_dist[di])))
+            # hypercube = cover.find_entries(projected_X, coor)
+
+            # if self.verbose > 1:
+            #     print("There are %s points in cube_%s / %s with starting range %s" %
+            #           (hypercube.shape[0], i, total_cubes, cover.d[di] + (coor * cover.chunk_dist[di])))
 
             # If at least min_cluster_samples samples inside the hypercube
             if hypercube.shape[0] >= min_cluster_samples:
@@ -336,8 +336,10 @@ class KeplerMapper(object):
 
                         # TODO: user supplied label or, something more readable
                         #import pdb; pdb.set_trace()
-                        cluster_id = str(coor[0]) + "_" + str(i) + "_" + str(a[1]) + "_" + str(
-                            coor) + "_" + str(cover.d[di] + (coor * cover.chunk_dist[di]))  # TODO: de-rudimentary-ify
+
+                        cluster_id = f"{i}_{a[1]}"
+                        # cluster_id = str(coor[0]) + "_" + str(i) + "_" + str(a[1]) + "_" + str(
+                            # coor) + "_" + str(cover.d[di] + (coor * cover.chunk_dist[di]))  # TODO: de-rudimentary-ify
 
                         # Append the member id's as integers
                         nodes[cluster_id].append(int(a[0]))

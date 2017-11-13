@@ -1,7 +1,8 @@
 import json
 import itertools
 
-import km
+import kmapper as km
+
 import numpy as np
 from scipy.spatial import ConvexHull
 
@@ -61,7 +62,7 @@ patches["xs"] = []
 patches["ys"] = []
 patches["group"] = []
 
-#import pdb; pdb.set_trace()
+# import pdb; pdb.set_trace()
 
 for key, value in list(dict(graph["nodes"]).items()):
     bucket = int(key.split("_")[0])
@@ -77,9 +78,9 @@ for key, value in list(dict(graph["nodes"]).items()):
 total_bins = len(set(patches["group"]))
 color_choices = itertools.cycle(Accent6)
 
-#import pdb; pdb.set_trace()
+import pdb; pdb.set_trace()
 
-colormap = dict(zip(range(total_bins), color_choices))
+colormap = dict(zip(set(patches["group"]), color_choices))
 colors = [colormap[x] for x in patches['group']]
 patches["colors"] = colors
 

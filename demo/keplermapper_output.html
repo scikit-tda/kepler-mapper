@@ -26,7 +26,7 @@
       <b>Overlap percentage</b><br>40.0%<br><br>
       <b>Color Function</b><br>( [1] )<br><br>
       <b>Clusterer</b><br>DBSCAN(algorithm='auto', eps=0.3, leaf_size=30, metric='euclidean',
-    metric_params=None, min_samples=3, n_jobs=1, p=None)<br><br>
+    metric_params=None, min_samples=10, n_jobs=1, p=None)<br><br>
       <b>Scaler</b><br>MinMaxScaler(copy=True, feature_range=(0, 1))
       </p>
     </div>
@@ -45,16 +45,16 @@
     var svg = d3.select("#holder").append("svg")
       .attr("width", width)
       .attr("height", height);
-    
-    var div = d3.select("#holder").append("div")   
-      .attr("class", "tooltip")               
+
+    var div = d3.select("#holder").append("div")
+      .attr("class", "tooltip")
       .style("opacity", 0.0);
-    
+
     var divs = d3.select('#holder').append('div')
       .attr('class', 'divs')
-      .attr('style', function(d) { return 'overflow: hidden; width: ' + width + 'px; height: ' + height + 'px;'; });  
-    
-      graph = {"nodes": [{"name": "0_0_0.0_[0]_[ 0.]", "tooltip": "<h2>Cluster 0_0_0.0_[0]_[ 0.]</h2>Contains 122 members.", "group": 8, "color": "0"}, {"name": "1_1_0.0_[1]_[ 0.1]", "tooltip": "<h2>Cluster 1_1_0.0_[1]_[ 0.1]</h2>Contains 194 members.", "group": 10, "color": "1"}, {"name": "1_1_2.0_[1]_[ 0.1]", "tooltip": "<h2>Cluster 1_1_2.0_[1]_[ 0.1]</h2>Contains 4 members.", "group": 2, "color": "1"}, {"name": "1_1_1.0_[1]_[ 0.1]", "tooltip": "<h2>Cluster 1_1_1.0_[1]_[ 0.1]</h2>Contains 7 members.", "group": 2, "color": "1"}, {"name": "2_2_0.0_[2]_[ 0.2]", "tooltip": "<h2>Cluster 2_2_0.0_[2]_[ 0.2]</h2>Contains 35 members.", "group": 6, "color": "2"}, {"name": "2_2_7.0_[2]_[ 0.2]", "tooltip": "<h2>Cluster 2_2_7.0_[2]_[ 0.2]</h2>Contains 6 members.", "group": 2, "color": "2"}, {"name": "2_2_1.0_[2]_[ 0.2]", "tooltip": "<h2>Cluster 2_2_1.0_[2]_[ 0.2]</h2>Contains 6 members.", "group": 2, "color": "2"}, {"name": "2_2_4.0_[2]_[ 0.2]", "tooltip": "<h2>Cluster 2_2_4.0_[2]_[ 0.2]</h2>Contains 16 members.", "group": 4, "color": "2"}, {"name": "2_2_3.0_[2]_[ 0.2]", "tooltip": "<h2>Cluster 2_2_3.0_[2]_[ 0.2]</h2>Contains 8 members.", "group": 4, "color": "2"}, {"name": "2_2_2.0_[2]_[ 0.2]", "tooltip": "<h2>Cluster 2_2_2.0_[2]_[ 0.2]</h2>Contains 5 members.", "group": 2, "color": "2"}, {"name": "2_2_6.0_[2]_[ 0.2]", "tooltip": "<h2>Cluster 2_2_6.0_[2]_[ 0.2]</h2>Contains 7 members.", "group": 2, "color": "2"}, {"name": "2_2_5.0_[2]_[ 0.2]", "tooltip": "<h2>Cluster 2_2_5.0_[2]_[ 0.2]</h2>Contains 10 members.", "group": 4, "color": "2"}, {"name": "3_3_2.0_[3]_[ 0.3]", "tooltip": "<h2>Cluster 3_3_2.0_[3]_[ 0.3]</h2>Contains 5 members.", "group": 2, "color": "3"}, {"name": "3_3_0.0_[3]_[ 0.3]", "tooltip": "<h2>Cluster 3_3_0.0_[3]_[ 0.3]</h2>Contains 6 members.", "group": 2, "color": "3"}, {"name": "3_3_1.0_[3]_[ 0.3]", "tooltip": "<h2>Cluster 3_3_1.0_[3]_[ 0.3]</h2>Contains 6 members.", "group": 2, "color": "3"}, {"name": "3_3_3.0_[3]_[ 0.3]", "tooltip": "<h2>Cluster 3_3_3.0_[3]_[ 0.3]</h2>Contains 5 members.", "group": 2, "color": "3"}, {"name": "4_4_0.0_[4]_[ 0.4]", "tooltip": "<h2>Cluster 4_4_0.0_[4]_[ 0.4]</h2>Contains 5 members.", "group": 2, "color": "4"}, {"name": "5_5_0.0_[5]_[ 0.5]", "tooltip": "<h2>Cluster 5_5_0.0_[5]_[ 0.5]</h2>Contains 6 members.", "group": 2, "color": "5"}, {"name": "5_5_2.0_[5]_[ 0.5]", "tooltip": "<h2>Cluster 5_5_2.0_[5]_[ 0.5]</h2>Contains 9 members.", "group": 4, "color": "5"}, {"name": "5_5_4.0_[5]_[ 0.5]", "tooltip": "<h2>Cluster 5_5_4.0_[5]_[ 0.5]</h2>Contains 5 members.", "group": 2, "color": "5"}, {"name": "5_5_1.0_[5]_[ 0.5]", "tooltip": "<h2>Cluster 5_5_1.0_[5]_[ 0.5]</h2>Contains 5 members.", "group": 2, "color": "5"}, {"name": "5_5_3.0_[5]_[ 0.5]", "tooltip": "<h2>Cluster 5_5_3.0_[5]_[ 0.5]</h2>Contains 5 members.", "group": 2, "color": "5"}, {"name": "6_6_0.0_[6]_[ 0.6]", "tooltip": "<h2>Cluster 6_6_0.0_[6]_[ 0.6]</h2>Contains 21 members.", "group": 6, "color": "6"}, {"name": "6_6_5.0_[6]_[ 0.6]", "tooltip": "<h2>Cluster 6_6_5.0_[6]_[ 0.6]</h2>Contains 5 members.", "group": 2, "color": "6"}, {"name": "6_6_1.0_[6]_[ 0.6]", "tooltip": "<h2>Cluster 6_6_1.0_[6]_[ 0.6]</h2>Contains 6 members.", "group": 2, "color": "6"}, {"name": "6_6_2.0_[6]_[ 0.6]", "tooltip": "<h2>Cluster 6_6_2.0_[6]_[ 0.6]</h2>Contains 5 members.", "group": 2, "color": "6"}, {"name": "6_6_4.0_[6]_[ 0.6]", "tooltip": "<h2>Cluster 6_6_4.0_[6]_[ 0.6]</h2>Contains 4 members.", "group": 2, "color": "6"}, {"name": "6_6_3.0_[6]_[ 0.6]", "tooltip": "<h2>Cluster 6_6_3.0_[6]_[ 0.6]</h2>Contains 5 members.", "group": 2, "color": "6"}, {"name": "6_6_6.0_[6]_[ 0.6]", "tooltip": "<h2>Cluster 6_6_6.0_[6]_[ 0.6]</h2>Contains 5 members.", "group": 2, "color": "6"}, {"name": "7_7_0.0_[7]_[ 0.7]", "tooltip": "<h2>Cluster 7_7_0.0_[7]_[ 0.7]</h2>Contains 86 members.", "group": 8, "color": "7"}, {"name": "7_7_2.0_[7]_[ 0.7]", "tooltip": "<h2>Cluster 7_7_2.0_[7]_[ 0.7]</h2>Contains 7 members.", "group": 2, "color": "7"}, {"name": "7_7_8.0_[7]_[ 0.7]", "tooltip": "<h2>Cluster 7_7_8.0_[7]_[ 0.7]</h2>Contains 4 members.", "group": 2, "color": "7"}, {"name": "7_7_10.0_[7]_[ 0.7]", "tooltip": "<h2>Cluster 7_7_10.0_[7]_[ 0.7]</h2>Contains 4 members.", "group": 2, "color": "7"}, {"name": "7_7_1.0_[7]_[ 0.7]", "tooltip": "<h2>Cluster 7_7_1.0_[7]_[ 0.7]</h2>Contains 6 members.", "group": 2, "color": "7"}, {"name": "7_7_4.0_[7]_[ 0.7]", "tooltip": "<h2>Cluster 7_7_4.0_[7]_[ 0.7]</h2>Contains 6 members.", "group": 2, "color": "7"}, {"name": "7_7_9.0_[7]_[ 0.7]", "tooltip": "<h2>Cluster 7_7_9.0_[7]_[ 0.7]</h2>Contains 7 members.", "group": 2, "color": "7"}, {"name": "7_7_3.0_[7]_[ 0.7]", "tooltip": "<h2>Cluster 7_7_3.0_[7]_[ 0.7]</h2>Contains 10 members.", "group": 4, "color": "7"}, {"name": "7_7_5.0_[7]_[ 0.7]", "tooltip": "<h2>Cluster 7_7_5.0_[7]_[ 0.7]</h2>Contains 5 members.", "group": 2, "color": "7"}, {"name": "7_7_6.0_[7]_[ 0.7]", "tooltip": "<h2>Cluster 7_7_6.0_[7]_[ 0.7]</h2>Contains 7 members.", "group": 2, "color": "7"}, {"name": "7_7_7.0_[7]_[ 0.7]", "tooltip": "<h2>Cluster 7_7_7.0_[7]_[ 0.7]</h2>Contains 7 members.", "group": 2, "color": "7"}, {"name": "7_7_11.0_[7]_[ 0.7]", "tooltip": "<h2>Cluster 7_7_11.0_[7]_[ 0.7]</h2>Contains 6 members.", "group": 2, "color": "7"}, {"name": "8_8_0.0_[8]_[ 0.8]", "tooltip": "<h2>Cluster 8_8_0.0_[8]_[ 0.8]</h2>Contains 162 members.", "group": 10, "color": "8"}, {"name": "8_8_1.0_[8]_[ 0.8]", "tooltip": "<h2>Cluster 8_8_1.0_[8]_[ 0.8]</h2>Contains 6 members.", "group": 2, "color": "8"}, {"name": "9_9_1.0_[9]_[ 0.9]", "tooltip": "<h2>Cluster 9_9_1.0_[9]_[ 0.9]</h2>Contains 5 members.", "group": 2, "color": "9"}, {"name": "9_9_0.0_[9]_[ 0.9]", "tooltip": "<h2>Cluster 9_9_0.0_[9]_[ 0.9]</h2>Contains 35 members.", "group": 6, "color": "9"}], "links": [{"source": 0, "target": 1, "value": 1}, {"source": 1, "target": 4, "value": 1}, {"source": 1, "target": 10, "value": 1}, {"source": 18, "target": 27, "value": 1}, {"source": 25, "target": 31, "value": 1}, {"source": 25, "target": 36, "value": 1}, {"source": 26, "target": 36, "value": 1}, {"source": 29, "target": 41, "value": 1}, {"source": 29, "target": 42, "value": 1}, {"source": 41, "target": 44, "value": 1}]};
+      .attr('style', function(d) { return 'overflow: hidden; width: ' + width + 'px; height: ' + height + 'px;'; });
+
+      graph = {"nodes": [{"name": "11_0.0", "tooltip": "<h2>Cluster 11_0.0</h2>Contains 47 members.", "group": 6, "color": "11"}, {"name": "11_1.0", "tooltip": "<h2>Cluster 11_1.0</h2>Contains 15 members.", "group": 4, "color": "11"}, {"name": "12_0.0", "tooltip": "<h2>Cluster 12_0.0</h2>Contains 115 members.", "group": 8, "color": "12"}, {"name": "12_1.0", "tooltip": "<h2>Cluster 12_1.0</h2>Contains 59 members.", "group": 8, "color": "12"}, {"name": "13_0.0", "tooltip": "<h2>Cluster 13_0.0</h2>Contains 47 members.", "group": 6, "color": "13"}, {"name": "13_1.0", "tooltip": "<h2>Cluster 13_1.0</h2>Contains 43 members.", "group": 6, "color": "13"}, {"name": "13_2.0", "tooltip": "<h2>Cluster 13_2.0</h2>Contains 10 members.", "group": 4, "color": "13"}, {"name": "14_0.0", "tooltip": "<h2>Cluster 14_0.0</h2>Contains 32 members.", "group": 6, "color": "14"}, {"name": "14_1.0", "tooltip": "<h2>Cluster 14_1.0</h2>Contains 43 members.", "group": 6, "color": "14"}, {"name": "15_0.0", "tooltip": "<h2>Cluster 15_0.0</h2>Contains 34 members.", "group": 6, "color": "15"}, {"name": "15_1.0", "tooltip": "<h2>Cluster 15_1.0</h2>Contains 37 members.", "group": 6, "color": "15"}, {"name": "16_0.0", "tooltip": "<h2>Cluster 16_0.0</h2>Contains 40 members.", "group": 6, "color": "16"}, {"name": "16_1.0", "tooltip": "<h2>Cluster 16_1.0</h2>Contains 38 members.", "group": 6, "color": "16"}, {"name": "17_0.0", "tooltip": "<h2>Cluster 17_0.0</h2>Contains 35 members.", "group": 6, "color": "17"}, {"name": "17_1.0", "tooltip": "<h2>Cluster 17_1.0</h2>Contains 34 members.", "group": 6, "color": "17"}, {"name": "18_0.0", "tooltip": "<h2>Cluster 18_0.0</h2>Contains 43 members.", "group": 6, "color": "18"}, {"name": "18_1.0", "tooltip": "<h2>Cluster 18_1.0</h2>Contains 43 members.", "group": 6, "color": "18"}, {"name": "19_0.0", "tooltip": "<h2>Cluster 19_0.0</h2>Contains 42 members.", "group": 6, "color": "19"}, {"name": "19_1.0", "tooltip": "<h2>Cluster 19_1.0</h2>Contains 36 members.", "group": 6, "color": "19"}, {"name": "20_0.0", "tooltip": "<h2>Cluster 20_0.0</h2>Contains 32 members.", "group": 6, "color": "20"}, {"name": "20_1.0", "tooltip": "<h2>Cluster 20_1.0</h2>Contains 30 members.", "group": 6, "color": "20"}, {"name": "21_0.0", "tooltip": "<h2>Cluster 21_0.0</h2>Contains 41 members.", "group": 6, "color": "21"}, {"name": "21_1.0", "tooltip": "<h2>Cluster 21_1.0</h2>Contains 30 members.", "group": 6, "color": "21"}, {"name": "22_0.0", "tooltip": "<h2>Cluster 22_0.0</h2>Contains 20 members.", "group": 4, "color": "22"}, {"name": "22_1.0", "tooltip": "<h2>Cluster 22_1.0</h2>Contains 51 members.", "group": 6, "color": "22"}, {"name": "22_2.0", "tooltip": "<h2>Cluster 22_2.0</h2>Contains 11 members.", "group": 4, "color": "22"}, {"name": "23_1.0", "tooltip": "<h2>Cluster 23_1.0</h2>Contains 48 members.", "group": 6, "color": "23"}, {"name": "23_0.0", "tooltip": "<h2>Cluster 23_0.0</h2>Contains 65 members.", "group": 8, "color": "23"}, {"name": "24_0.0", "tooltip": "<h2>Cluster 24_0.0</h2>Contains 84 members.", "group": 8, "color": "24"}, {"name": "24_1.0", "tooltip": "<h2>Cluster 24_1.0</h2>Contains 44 members.", "group": 6, "color": "24"}, {"name": "24_2.0", "tooltip": "<h2>Cluster 24_2.0</h2>Contains 19 members.", "group": 4, "color": "24"}, {"name": "25_0.0", "tooltip": "<h2>Cluster 25_0.0</h2>Contains 84 members.", "group": 8, "color": "25"}], "links": [{"source": 0, "target": 2, "value": 1}, {"source": 1, "target": 3, "value": 1}, {"source": 2, "target": 5, "value": 1}, {"source": 2, "target": 6, "value": 1}, {"source": 3, "target": 4, "value": 1}, {"source": 4, "target": 7, "value": 1}, {"source": 5, "target": 8, "value": 1}, {"source": 7, "target": 10, "value": 1}, {"source": 8, "target": 9, "value": 1}, {"source": 9, "target": 11, "value": 1}, {"source": 10, "target": 12, "value": 1}, {"source": 11, "target": 14, "value": 1}, {"source": 12, "target": 13, "value": 1}, {"source": 13, "target": 15, "value": 1}, {"source": 14, "target": 16, "value": 1}, {"source": 15, "target": 18, "value": 1}, {"source": 16, "target": 17, "value": 1}, {"source": 17, "target": 20, "value": 1}, {"source": 18, "target": 19, "value": 1}, {"source": 19, "target": 21, "value": 1}, {"source": 20, "target": 22, "value": 1}, {"source": 21, "target": 24, "value": 1}, {"source": 22, "target": 25, "value": 1}, {"source": 23, "target": 26, "value": 1}, {"source": 24, "target": 27, "value": 1}, {"source": 26, "target": 28, "value": 1}, {"source": 27, "target": 29, "value": 1}, {"source": 28, "target": 31, "value": 1}]};
       force
         .nodes(graph.nodes)
         .links(graph.links)
@@ -67,21 +67,21 @@
       var node = divs.selectAll('div')
       .data(graph.nodes)
         .enter().append('div')
-        .on("mouseover", function(d) {      
-          div.transition()        
-            .duration(200)      
+        .on("mouseover", function(d) {
+          div.transition()
+            .duration(200)
             .style("opacity", .9);
-          div .html(d.tooltip + "<br/>")  
-            .style("left", (d3.event.pageX + 100) + "px")     
-            .style("top", (d3.event.pageY - 28) + "px");    
-          })                  
-        .on("mouseout", function(d) {       
-          div.transition()        
-            .duration(500)      
-            .style("opacity", 0);   
+          div .html(d.tooltip + "<br/>")
+            .style("left", (d3.event.pageX + 100) + "px")
+            .style("top", (d3.event.pageY - 28) + "px");
+          })
+        .on("mouseout", function(d) {
+          div.transition()
+            .duration(500)
+            .style("opacity", 0);
         })
         .call(force.drag);
-      
+
       node.append("title")
         .text(function(d) { return d.name; });
       force.on("tick", function() {

@@ -50,7 +50,7 @@ def make_1d_uniform(lens):
 
 graph = mapper.map(lens,
                    data,
-                   clusterer=km.cluster.DBSCAN(eps=0.3, min_samples=10),
+                   clusterer=km.cluster.DBSCAN(eps=2, min_samples=10),
                    nr_cubes=30,
                    overlap_perc=0.4)
 
@@ -78,7 +78,7 @@ for key, value in list(dict(graph["nodes"]).items()):
 total_bins = len(set(patches["group"]))
 color_choices = itertools.cycle(Accent6)
 
-import pdb; pdb.set_trace()
+# import pdb; pdb.set_trace()
 
 colormap = dict(zip(set(patches["group"]), color_choices))
 colors = [colormap[x] for x in patches['group']]

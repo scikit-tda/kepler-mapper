@@ -18,10 +18,10 @@ class Cover():
     """
 
 
-    def __init__(self, data, nr_cubes=10, overlap_perc=0.2):
+    def __init__(self, data, dimensions=None, nr_cubes=10, overlap_perc=0.2):
         self.nr_cubes = nr_cubes
         self.overlap_perc = overlap_perc
-        self.nr_dimensions = data.shape[1]
+        # self.nr_dimensions = data.shape[1]
 
         bounds = (np.min(data, axis=0), np.max(data, axis=0))
 
@@ -36,7 +36,16 @@ class Cover():
 
         # Use a dimension index array on the projected X
         # (For now this uses the entire dimensionality, but we keep for experimentation)
-        self.di = np.array([x for x in range(data.shape[1])])
+        if dimensions is None:
+            self.di = np.array(range(data.shape[1]))
+        else:
+            self.di = dimensions
+
+        self.nr_dimensions = len(self.di)
+
+    @property
+    def cubes(self):
+        return self._cube_coordinates_all()
 
     # Helper functions
     def _cube_coordinates_all(self):
@@ -58,7 +67,7 @@ class Cover():
     def find_entries(self, data, coor):
         chunk = self.chunk_dist[self.di]
         overlap = self.overlap_dist[self.di]
-
+        #import pdb; pdb.set_trace()
         lower_bound = self.d[self.di] + (coor * chunk)
         upper_bound = lower_bound + chunk + overlap
 
@@ -233,6 +242,7 @@ class KeplerMapper(object):
 
         self.clusterer = clusterer
 
+
         self.nr_cubes = nr_cubes
         self.overlap_perc = overlap_perc
 
@@ -247,24 +257,31 @@ class KeplerMapper(object):
         ### Define codomain cover
 
         # We chop up the min-max column ranges into 'nr_cubes' parts
-        self.chunk_dist = (np.max(projected_X, axis=0) -
-                           np.min(projected_X, axis=0)) / nr_cubes
-
-        # We calculate the overlapping windows distance
-        self.overlap_dist = self.overlap_perc * self.chunk_dist
-
-        # We find our starting point
-        self.d = np.min(projected_X, axis=0)
+        # self.chunk_dist = (np.max(projected_X, axis=0) -
+        #                    np.min(projected_X, axis=0)) / nr_cubes
+        #
+        # # We calculate the overlapping windows distance
+        # self.overlap_dist = self.overlap_perc * self.chunk_dist
+        #
+        # # We find our starting point
+        # self.d = np.min(projected_X, axis=0)
 
         # Use a dimension index array on the projected X
         # (For now this uses the entire dimensionality, but we keep for experimentation)
-        di = np.array([x for x in range(projected_X.shape[1])])
+        # exclude the indexed dimensions
+        di = np.array([x for x in range(projected_X.shape[1])])+1
 
         # TODO: move ID to be last column so all indexing works without futz
         # Prefix'ing the data with ID's
         ids = np.array([x for x in range(projected_X.shape[0])])
         projected_X = np.c_[ids, projected_X]
         inverse_X = np.c_[ids, inverse_X]
+
+        cover = Cover(projected_X,
+                     dimensions=di,
+                     nr_cubes=nr_cubes,
+                     overlap_perc=overlap_perc)
+
 
 
         # Algo's like K-Means, have a set number of clusters. We need this number
@@ -277,23 +294,25 @@ class KeplerMapper(object):
             print("Minimal points in hypercube before clustering: %d" %
                   (min_cluster_samples))
 
-        cubes = self._cube_coordinates_all(nr_cubes, di.shape[0])
+        #cubes = self._cube_coordinates_all(nr_cubes, di.shape[0])
 
         # Subdivide the projected data X in intervals/hypercubes with overlap
-        if self.verbose > 0:
-            total_cubes = len(
-                list(cubes))
-            print("Creating %s hypercubes." % total_cubes)
-
-        for i, coor in enumerate(cubes):
+        # if self.verbose > 0:
+        #     total_cubes = len(
+        #         list(cubes))
+        #     print("Creating %s hypercubes." % total_cubes)
 
 
-            # Slice the hypercube
-            entries = (projected_X[:, di + 1] >= self.d[di] + (coor * self.chunk_dist[di])) & \
-                      (projected_X[:, di + 1] < self.d[di] + (coor * self.chunk_dist[di]) + self.chunk_dist[di] + self.overlap_dist[di])
+        for i, coor in enumerate(cover.cubes):#enumerate(cubes):
 
-            hypercube = projected_X[np.invert(np.any(entries == False, axis=1))]
 
+            # # Slice the hypercube
+            # entries = (projected_X[:, di + 1] >= self.d[di] + (coor * self.chunk_dist[di])) & \
+            #           (projected_X[:, di + 1] < self.d[di] + (coor * self.chunk_dist[di]) + self.chunk_dist[di] + self.overlap_dist[di])
+            #
+            # hypercube = projected_X[np.invert(np.any(entries == False, axis=1))]
+
+            hypercube = cover.find_entries(projected_X, coor)
 
             if self.verbose > 1:
                 print("There are %s points in cube_%s / %s with starting range %s" %
@@ -315,10 +334,10 @@ class KeplerMapper(object):
                 for a in np.c_[hypercube[:, 0], clusterer.labels_]:
                     if a[1] != -1:  # if not predicted as noise
 
-
                         # TODO: user supplied label or, something more readable
+                        #import pdb; pdb.set_trace()
                         cluster_id = str(coor[0]) + "_" + str(i) + "_" + str(a[1]) + "_" + str(
-                            coor) + "_" + str(self.d[di] + (coor * self.chunk_dist[di]))  # TODO: de-rudimentary-ify
+                            coor) + "_" + str(cover.d[di] + (coor * cover.chunk_dist[di]))  # TODO: de-rudimentary-ify
 
                         # Append the member id's as integers
                         nodes[cluster_id].append(int(a[0]))

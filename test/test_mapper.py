@@ -55,7 +55,7 @@ class TestCover():
     def test_chunk_dist(self):
         data = np.arange(100).reshape(10,10)
 
-        cover = Cover(data, 10)
+        cover = Cover(data, nr_cubes=10)
         chunks = list(cover.chunk_dist)
 
         assert all(i == 9 for i in chunks)
@@ -63,14 +63,14 @@ class TestCover():
     def test_nr_dimensions(self):
         data = np.arange(30).reshape(10,3)
 
-        c = Cover(data, 10)
+        c = Cover(data, nr_cubes=10)
 
         assert c.nr_dimensions == 3
 
     def test_bound_is_min(self):
         data = np.arange(100).reshape(10,10)
 
-        c = Cover(data, 10)
+        c = Cover(data, nr_cubes=10)
 
         bounds = zip(c.d, range(10))
         assert all(b[0] == b[1] for b in bounds)
@@ -78,7 +78,7 @@ class TestCover():
     def test_entries_even(self):
         data = np.arange(20).reshape(20,1)
 
-        cover = Cover(data, 10)
+        cover = Cover(data, nr_cubes=10)
         cubes = cover._cube_coordinates_all()
 
         for cube in cubes:
@@ -89,7 +89,7 @@ class TestCover():
     def test_entries_in_correct_cubes(self):
         data = np.arange(20).reshape(20,1)
 
-        cover = Cover(data, 10)
+        cover = Cover(data, nr_cubes=10)
         cubes = cover._cube_coordinates_all()
 
         entries = [cover.find_entries(data, cube) for cube in cubes]
@@ -102,9 +102,8 @@ class TestCover():
     def test_cubes_overlap(self):
         data = np.arange(20).reshape(20,1)
 
-        cover = Cover(data, 10)
+        cover = Cover(data, nr_cubes=10)
         cubes = cover._cube_coordinates_all()
-
 
         entries = []
         for cube in cubes:
@@ -115,6 +114,11 @@ class TestCover():
         for i,j in zip(range(9), range(1,10)):
             assert set(entries[i]).union(set(entries[j]))
 
+    def test_dimensions(self):
+        data = np.arange(20).reshape(20,1)
+
+        cover = Cover(data,[0], nr_cubes=10)
+        cubes = cover._cube_coordinates_all()
 
 
 
@@ -130,5 +134,6 @@ def test_map_custom_lens():
     # I think that map currently requires fit_transform to be called first
     mapper = KeplerMapper()
     data = np.random.rand(100, 2)
+    #import pdb; pdb.set_trace()
     graph = mapper.map(data)
     assert graph["meta_graph"] == "custom"

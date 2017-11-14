@@ -19,7 +19,7 @@ setup(name='kmapper',
       test_requires=[
         'pytest'
       ],
-
+      python_requires='>=3',
       classifiers=[
         # How mature is this project? Common values are
         #   3 - Alpha

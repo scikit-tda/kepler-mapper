@@ -48,4 +48,4 @@ __pycache__
 .cache
 build
 venv
-mapper.egg-info
+*.egg-info

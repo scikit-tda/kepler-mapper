@@ -1,9 +1,17 @@
+<<<<<<< HEAD
 import os
 import numpy as np
 from kmapper import KeplerMapper
 from sklearn import cluster
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
+=======
+import numpy as np
+import sklearn
+import kmapper as km
+
+data = np.genfromtxt('lion-reference.csv',delimiter=',')
+>>>>>>> packaging
 
 data = np.genfromtxt(os.path.join(dir_path,'lion-reference.csv'),delimiter=',')
 
@@ -13,7 +21,11 @@ lens = mapper.fit_transform(data)
 
 graph = mapper.map(lens,
                    data,
+<<<<<<< HEAD
                    clusterer=cluster.DBSCAN(eps=0.1, min_samples=5),
+=======
+                   clusterer=sklearn.cluster.DBSCAN(eps=0.1, min_samples=5),
+>>>>>>> packaging
                    nr_cubes=10,
                    overlap_perc=0.2)
 

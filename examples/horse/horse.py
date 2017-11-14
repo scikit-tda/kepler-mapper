@@ -1,6 +1,8 @@
-import km
+import numpy as np
+import sklearn
+import kmapper as km
 
-data = km.np.genfromtxt('horse-reference.csv',delimiter=',')
+data = np.genfromtxt('horse-reference.csv',delimiter=',')
 
 mapper = km.KeplerMapper(verbose=2)
 
@@ -10,8 +12,8 @@ lens = mapper.fit_transform(data)
 
 graph = mapper.map(lens,
                    data,
-                   clusterer=km.cluster.DBSCAN(eps=0.2, min_samples=5),
-                   nr_cubes=25,
+                   clusterer=sklearn.cluster.DBSCAN(eps=0.1, min_samples=5),
+                   nr_cubes=30,
                    overlap_perc=0.2)
 
 

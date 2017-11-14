@@ -41,3 +41,11 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+
+# Python dev files
+__pycache__
+.cache
+build
+venv
+*.egg-info

@@ -2,11 +2,11 @@
 
 > Nature uses as little as possible of anything. - Johannes Kepler
 
-This is a class containing a mapping algorithm in Python. KeplerMapper can be used for 
-visualization of high-dimensional data and 3D point cloud data. 
+This is a class containing a mapping algorithm in Python. KeplerMapper can be used for
+visualization of high-dimensional data and 3D point cloud data.
 
-KeplerMapper employs approaches based on the MAPPER algorithm (Singh et al.) as first 
-described in the paper "Topological Methods for the Analysis of High Dimensional 
+KeplerMapper employs approaches based on the MAPPER algorithm (Singh et al.) as first
+described in the paper "Topological Methods for the Analysis of High Dimensional
 Data Sets and 3D Object Recognition".
 
 KeplerMapper can make use of Scikit-Learn API compatible cluster and scaling algorithms.
@@ -16,7 +16,7 @@ KeplerMapper can make use of Scikit-Learn API compatible cluster and scaling alg
 ### Python code
 ```python
 # Import the class
-import km
+import kmapper as km
 
 # Some sample data
 from sklearn import datasets
@@ -32,7 +32,7 @@ projected_data = mapper.fit_transform(data, projection=[0,1]) # X-Y axis
 graph = mapper.map(projected_data, data, nr_cubes=10)
 
 # Visualize it
-mapper.visualize(graph, path_html="make_circles_keplermapper_output.html", 
+mapper.visualize(graph, path_html="make_circles_keplermapper_output.html",
                  title="make_circles(n_samples=5000, noise=0.03, factor=0.3)")
 ```
 
@@ -59,6 +59,20 @@ Click here for an [interactive version](http://mlwave.github.io/tda/make_circles
 Click here for an older [interactive version](http://mlwave.github.io/tda/make_circles_keplermapper_output.html).
 
 ## Install
+
+The package is not currently in the Python Package Index. To install in a virtual environment,
+
+Setup your virtual environment. On Linux with modern Python, run the following commands
+```
+python -m venv venv
+source venv/bin/activate
+```
+
+Install KeplerMapper
+```
+pip install -e .
+```
+
 
 The class is currently just one file. Simply dropping it in any directory which Python is able to import from should work.
 
@@ -94,7 +108,7 @@ verbose | Int. Verbosity of the mapper. *Default = 0*
 Input the data set. Specify a projection/lens type. Output the projected data/lens.
 
 ```python
-projected_data = mapper.fit_transform(data, projection="sum", 
+projected_data = mapper.fit_transform(data, projection="sum",
                                       scaler=km.preprocessing.MinMaxScaler() )
 ```
 
@@ -108,8 +122,8 @@ distance_matrix | `False` or any of: ["braycurtis", "canberra", "chebyshev", "ci
 ### Mapping
 
 ```python
-topological_network = mapper.map(projected_X, inverse_X=None, 
-                                 clusterer=cluster.DBSCAN(eps=0.5,min_samples=3), 
+topological_network = mapper.map(projected_X, inverse_X=None,
+                                 clusterer=cluster.DBSCAN(eps=0.5,min_samples=3),
                                  nr_cubes=10, overlap_perc=0.1)
 
 print(topological_network["nodes"])
@@ -128,7 +142,7 @@ overlap_perc | Float. How much the cubes/intervals overlap (relevant for creatin
 ### Visualizing
 
 ```python
-mapper.visualize(topological_network, 
+mapper.visualize(topological_network,
                  path_html="mapper_visualization_output.html")
 ```
 

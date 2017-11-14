@@ -1,20 +1,23 @@
+import io
+import sys
+import base64
+
 import numpy as np
 import sklearn
 from sklearn import datasets
 import kmapper as km
 
+try:
+    from scipy.misc import imsave, toimage
+except ImportError as e:
+    print("imsave requires you to install pillow. Run `pip install pillow` and then try again.")
+    sys.exit()
+
+
 # Load digits dat
 data, labels = datasets.load_digits().data, datasets.load_digits().target
 
 # Create images for a custom tooltip array
-import io
-try:
-    from scipy.misc import imsave, toimage
-except ImportError as e:
-    raise("imsave requires you to install pillow. Run `pip install pillow` and then try again.")
-
-import base64
-
 tooltip_s = []
 for image_data in data:
     output = io.BytesIO()

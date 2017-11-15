@@ -10,6 +10,75 @@ import numpy as np
 from sklearn import cluster, preprocessing, manifold, decomposition
 from scipy.spatial import distance
 
+class Cover():
+    """ Define a cover scheme
+
+        Should implement `find_entries` that finds all data points in each cube.
+        Should construct cubes that can be iterated over.
+    """
+
+
+    def __init__(self, data, dimensions=None, nr_cubes=10, overlap_perc=0.2):
+        self.nr_cubes = nr_cubes
+        self.overlap_perc = overlap_perc
+        # self.nr_dimensions = data.shape[1]
+
+        bounds = (np.min(data, axis=0), np.max(data, axis=0))
+
+        # We chop up the min-max column ranges into 'nr_cubes' parts
+        self.chunk_dist = (bounds[1] - bounds[0]) / nr_cubes
+
+        # We calculate the overlapping windows distance
+        self.overlap_dist = overlap_perc * self.chunk_dist
+
+        # We find our starting point
+        self.d = bounds[0]
+
+        # Use a dimension index array on the projected X
+        # (For now this uses the entire dimensionality, but we keep for experimentation)
+        if dimensions is None:
+            self.di = np.array(range(data.shape[1]))
+        else:
+            self.di = dimensions
+
+        self.nr_dimensions = len(self.di)
+
+    @property
+    def cubes(self):
+        return self._cube_coordinates_all()
+
+    # Helper functions
+    def _cube_coordinates_all(self):
+        # Helper function to get origin coordinates for our intervals/hypercubes
+        # Useful for looping no matter the number of cubes or dimensions
+        # Example:   	if there are 4 cubes per dimension and 3 dimensions
+        #       		return the bottom left (origin) coordinates of 64 hypercubes,
+        #       		as a sorted list of Numpy arrays
+        # TODO: elegance-ify...
+        # TODO: This breaks for high dimensions
+        l = []
+        for x in range(self.nr_cubes):
+            l += [x] * self.nr_dimensions
+
+        coordinates = [np.array(list(f)) for f in sorted(set(itertools.permutations(l, self.nr_dimensions)))]
+
+        return coordinates
+
+    def find_entries(self, data, coor):
+        chunk = self.chunk_dist[self.di]
+        overlap = self.overlap_dist[self.di]
+        #import pdb; pdb.set_trace()
+        lower_bound = self.d[self.di] + (coor * chunk)
+        upper_bound = lower_bound + chunk + overlap
+
+        # Slice the hypercube
+        # the +1 accounts for a new column of indices
+        entries = (data[:, self.di] >= lower_bound) & \
+                  (data[:, self.di] < upper_bound)
+
+        hypercube = data[np.invert(np.any(entries == False, axis=1))]
+
+        return hypercube
 
 class KeplerMapper(object):
     # With this class you can build topological networks from (high-dimensional) data.
@@ -29,7 +98,7 @@ class KeplerMapper(object):
     # map:         	Apply Mapper algorithm on this projection and build a simplicial complex
     # visualize:    	Turns the complex dictionary into a HTML/D3.js visualization
 
-    def __init__(self, verbose=2):
+    def __init__(self, verbose=0):
         self.verbose = verbose
         self.chunk_dist = []
         self.overlap_dist = []
@@ -37,6 +106,7 @@ class KeplerMapper(object):
         self.nr_cubes = 0
         self.overlap_perc = 0
         self.clusterer = False
+        self.projection = None
 
     def fit_transform(self, X, projection="sum", scaler=preprocessing.MinMaxScaler(), distance_matrix=False):
         # Creates the projection/lens from X.
@@ -149,23 +219,6 @@ class KeplerMapper(object):
 
         return X
 
-    # Helper function
-    def _cube_coordinates_all(self, nr_cubes, nr_dimensions):
-        # Helper function to get origin coordinates for our intervals/hypercubes
-        # Useful for looping no matter the number of cubes or dimensions
-        # Example:   	if there are 4 cubes per dimension and 3 dimensions
-        #       		return the bottom left (origin) coordinates of 64 hypercubes,
-        #       		as a sorted list of Numpy arrays
-        # TODO: elegance-ify...
-        l = []
-        for x in range(nr_cubes):
-            l += [x] * nr_dimensions
-
-        coordinates = [np.array(list(f)) for f in sorted(set(itertools.permutations(l, nr_dimensions)))]
-
-        return coordinates
-
-
     def map(self, projected_X, inverse_X=None, clusterer=cluster.DBSCAN(eps=0.5, min_samples=3), nr_cubes=10, overlap_perc=0.1):
         # This maps the data to a simplicial complex. Returns a dictionary with nodes and links.
         #
@@ -182,14 +235,12 @@ class KeplerMapper(object):
 
         start = datetime.now()
 
-
         nodes = defaultdict(list)
         links = defaultdict(list)
         meta = defaultdict(list)
         graph = {}
-        self.nr_cubes = nr_cubes
+
         self.clusterer = clusterer
-        self.overlap_perc = overlap_perc
 
         # If inverse image is not provided, we use the projection as the inverse image (suffer projection loss)
         if inverse_X is None:
@@ -199,57 +250,51 @@ class KeplerMapper(object):
             print("Mapping on data shaped %s using lens shaped %s\n" %
                   (str(inverse_X.shape), str(projected_X.shape)))
 
-        # We chop up the min-max column ranges into 'nr_cubes' parts
-        self.chunk_dist = (np.max(projected_X, axis=0) -
-                           np.min(projected_X, axis=0)) / nr_cubes
-
-        # We calculate the overlapping windows distance
-        self.overlap_dist = self.overlap_perc * self.chunk_dist
-
-        # We find our starting point
-        self.d = np.min(projected_X, axis=0)
-
-        # Use a dimension index array on the projected X
-        # (For now this uses the entire dimensionality, but we keep for experimentation)
-        di = np.array([x for x in range(projected_X.shape[1])])
-
         # Prefix'ing the data with ID's
         ids = np.array([x for x in range(projected_X.shape[0])])
         projected_X = np.c_[ids, projected_X]
         inverse_X = np.c_[ids, inverse_X]
 
+        # Use a dimension index array on the projected X
+        # (For now this uses the entire dimensionality, but we keep for experimentation)
+        # exclude the index column
+        di = np.array(range(1, projected_X.shape[1]))
+
+        ### Define codomain cover
+        #   - once there are more types of covers, this will be user set
+        cover = Cover(projected_X,
+                     dimensions=di,
+                     nr_cubes=nr_cubes,
+                     overlap_perc=overlap_perc)
+        cubes = cover.cubes
+
         # Algo's like K-Means, have a set number of clusters. We need this number
         # to adjust for the minimal number of samples inside an interval before
         # we consider clustering or skipping it.
         cluster_params = self.clusterer.get_params()
-        try:
-            min_cluster_samples = cluster_params["n_clusters"]
-        except:
-            min_cluster_samples = 1
-        if self.verbose > 0:
+        min_cluster_samples = cluster_params.get("n_clusters", 1)
+
+        if self.verbose > 1:
             print("Minimal points in hypercube before clustering: %d" %
                   (min_cluster_samples))
 
         # Subdivide the projected data X in intervals/hypercubes with overlap
         if self.verbose > 0:
-            total_cubes = len(
-                list(self._cube_coordinates_all(nr_cubes, di.shape[0])))
+            cubes = list(cubes) # extract list from generator
+            total_cubes = len(cubes)
             print("Creating %s hypercubes." % total_cubes)
 
-        for i, coor in enumerate(self._cube_coordinates_all(nr_cubes, di.shape[0])):
-            # Slice the hypercube
-
-            entries = (projected_X[:, di + 1] >= self.d[di] + (coor * self.chunk_dist[di])) & \
-                      (projected_X[:, di + 1] < self.d[di] + (coor * self.chunk_dist[di]) + self.chunk_dist[di] + self.overlap_dist[di])
-
-            hypercube = projected_X[np.invert(np.any(entries == False, axis=1))]
+        for i, coor in enumerate(cubes):
+            ### Slice the hypercube
+            hypercube = cover.find_entries(projected_X, coor)
 
             if self.verbose > 1:
                 print("There are %s points in cube_%s / %s with starting range %s" %
-                      (hypercube.shape[0], i, total_cubes, self.d[di] + (coor * self.chunk_dist[di])))
+                      (hypercube.shape[0], i, total_cubes, cover.d[di] + (coor * cover.chunk_dist[di])))
 
             # If at least min_cluster_samples samples inside the hypercube
             if hypercube.shape[0] >= min_cluster_samples:
+
                 # Cluster the data point(s) in the cube, skipping the id-column
                 # Note that we apply clustering on the inverse image (original data samples) that fall inside the cube.
                 inverse_x = inverse_X[[int(nn) for nn in hypercube[:, 0]]]
@@ -260,11 +305,15 @@ class KeplerMapper(object):
                     print("Found %s clusters in cube_%s\n" % (
                         np.unique(clusterer.labels_[clusterer.labels_ > -1]).shape[0], i))
 
+                # TODO: I think this loop could be improved by turning inside out:
+                #           - partition points according to each cluster
                 # Now for every (sample id in cube, predicted cluster label)
                 for a in np.c_[hypercube[:, 0], clusterer.labels_]:
                     if a[1] != -1:  # if not predicted as noise
-                        cluster_id = str(coor[0]) + "_" + str(i) + "_" + str(a[1]) + "_" + str(
-                            coor) + "_" + str(self.d[di] + (coor * self.chunk_dist[di]))  # TODO: de-rudimentary-ify
+
+                        # TODO: allow user supplied label
+                        #   - where all those extra values necessary?
+                        cluster_id = "cube{}_cluster{}".format(i, int(a[1]))
 
                         # Append the member id's as integers
                         nodes[cluster_id].append(int(a[0]))
@@ -274,27 +323,45 @@ class KeplerMapper(object):
                 if self.verbose > 1:
                     print("Cube_%s is empty.\n" % (i))
 
+        # TODO: create a `nerve builder` class that determines how nerve is built
+        links = self._create_links(nodes, links)
+
+        graph["nodes"] = nodes
+        graph["links"] = links
+        graph["meta_graph"] = self.projection if self.projection else "custom"
+        graph["meta_nodes"] = meta
+
+        # Reporting
+        if self.verbose > 0:
+            self._summary(graph, str(datetime.now() - start))
+
+        return graph
+
+    def _summary(self, graph, time):
+        links = graph["links"]
+        nodes = graph["nodes"]
+        nr_links = sum(len(v) for k, v in links.items())
+
+        print("\nCreated %s edges and %s nodes in %s." %
+              (nr_links, len(nodes), time))
+
+    def _create_links(self, nodes, result=None):
+        """
+            Helper function to find edges of the overlapping clusters.
+
+            TODO: generalize to take nerve.
+        """
+        if result == None:
+            result = defaultdict(list)
+
         # Create links when clusters from different hypercubes have members with the same sample id.
         candidates = itertools.combinations(nodes.keys(), 2)
         for candidate in candidates:
             # if there are non-unique members in the union
             if len(nodes[candidate[0]] + nodes[candidate[1]]) != len(set(nodes[candidate[0]] + nodes[candidate[1]])):
-                links[candidate[0]].append(candidate[1])
+                result[candidate[0]].append(candidate[1])
 
-        # Reporting
-        if self.verbose > 0:
-            nr_links = 0
-            for k in links:
-                nr_links += len(links[k])
-            print("\ncreated %s edges and %s nodes in %s." %
-                  (nr_links, len(nodes), str(datetime.now() - start)))
-
-        graph["nodes"] = nodes
-        graph["links"] = links
-        graph["meta_graph"] = self.projection
-        graph["meta_nodes"] = meta
-
-        return graph
+        return result
 
     def visualize(self, complex, color_function="", path_html="mapper_visualization_output.html", title="My Data",
                   graph_link_distance=30, graph_gravity=0.1, graph_charge=-120, custom_tooltips=None, width_html=0,

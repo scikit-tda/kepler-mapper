@@ -4,7 +4,7 @@ v00001
 		Wrote class
 		Wrote documentation
 		Added license
-		
+
 v00002
 		Added a multi-dimensional mode: use all dimensions.
 		Added case study: 3D point cloud data for animals
@@ -14,7 +14,7 @@ v00002
 		Added disclaimer
 		Added todo
 		Added release log
-		
+
 v00003
 		Refactored dimension index to use a list of arbitrary dimensions
 		Improved verbosity
@@ -32,15 +32,15 @@ v00004
 		added support for custom tooltips
 
 Alpha
-		
+
 v00005
 		Made Python 3 compatible
 		Ability to turn off title, meta and tooltips
 		Ability to set the window height and width of HTML output
 		Added basic support for another color function: average signal
 		De-emphasized link_local functionality, since its current implementation is no good.
-		
-v00006  
+
+v00006
 		Removed link_local functionality
 		Halved the number of edges drawn (no two-way edges)
 		Added support for clustering on the inverse image
@@ -54,3 +54,14 @@ v00007
 		Add Winsconsin Breast Cancer Data Anomaly Detection Example
 		Fixed bug: k-means with set number of clusters higher than min_cluster_samples
 		Add self.inverse_X for new future feature: transforming on unseen data.
+
+v00008
+v00009
+
+0.2.1
+		Convert versioning scheme to major.minor.micro
+		Restructure library to be compatible with PyPi installation
+		Minor bug fixes
+		Include preliminary unit test suite
+		Refactor, extract helper classes and helper functions
+		

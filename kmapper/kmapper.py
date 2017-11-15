@@ -241,6 +241,8 @@ class KeplerMapper(object):
         graph = {}
 
         self.clusterer = clusterer
+        self.nr_cubes = nr_cubes
+        self.overlap_perc = overlap_perc
 
         # If inverse image is not provided, we use the projection as the inverse image (suffer projection loss)
         if inverse_X is None:

@@ -107,7 +107,6 @@ class KeplerMapper(object):
         self.overlap_perc = 0
         self.clusterer = False
         self.projection = None
-        self.scaler = None
 
     def fit_transform(self, X, projection="sum", scaler=preprocessing.MinMaxScaler(), distance_matrix=False):
         # Creates the projection/lens from X.

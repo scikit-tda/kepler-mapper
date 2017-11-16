@@ -6,6 +6,18 @@ from kmapper import KeplerMapper
 from kmapper.kmapper import Cover
 
 
+class TestVisualize():
+    def test_visualize_standalone(self):
+        # visualize will run on a fresh mapper object
+        mapper = KeplerMapper()
+
+        data = np.random.rand(100, 10)
+        lens = mapper.fit_transform(data, projection=[0])
+        graph = mapper.map(lens, data)
+
+        new_mapper = KeplerMapper()
+        viz = new_mapper.visualize(graph)
+
 
 class TestLinker():
     def test_finds_a_link(self):

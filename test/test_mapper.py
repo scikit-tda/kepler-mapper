@@ -47,6 +47,7 @@ class TestLinker():
 
         assert res == links
 
+
 class TestCover():
     def test_cube_count(self):
         data = np.arange(30).reshape(10,3)
@@ -132,7 +133,9 @@ class TestCover():
         for i,j in zip(range(9), range(1,10)):
             assert set(entries[i]).union(set(entries[j]))
 
+
 class TestLens():
+    # TODO: most of these tests only accomodate the default option. They need to be extended to incorporate all possible transforms.
     def test_lens_size(self):
         mapper = KeplerMapper()
 
@@ -148,3 +151,14 @@ class TestLens():
         #import pdb; pdb.set_trace()
         graph = mapper.map(data)
         assert graph["meta_graph"] == "custom"
+
+    def test_projection(self):
+        atol = 0.1 # accomodate scaling, values are in (0,1), but will be scaled slightly
+
+        mapper = KeplerMapper()
+        data = np.random.rand(100, 5)
+        lens = mapper.fit_transform(data, projection=[0,1])
+        np.testing.assert_allclose(lens, data[:,:2], atol=atol)
+
+        lens = mapper.fit_transform(data, projection=[0])
+        np.testing.assert_allclose(lens, data[:,:1], atol=atol)

@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/MLWave/kepler-mapper.svg?branch=master)](https://travis-ci.org/MLWave/kepler-mapper)
 # KeplerMapper <img align="right" width="40" height="40" src="http://i.imgur.com/axOG6GJ.jpg">
 
 > Nature uses as little as possible of anything. - Johannes Kepler
@@ -74,7 +75,7 @@ pip install -e .
 ```
 
 
-The class is currently just one file. Simply dropping it in any directory which Python is able to import from should work.
+The class is currently just one file. Simply dropping `kmapper/kmapper.py` in any directory which Python is able to import from should work.
 
 ## Required
 

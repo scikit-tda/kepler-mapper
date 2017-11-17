@@ -301,7 +301,7 @@ http://www.ayasdi.com/product/core/
 
 ## Disclaimer
 
-See disclaimer.txt for more. Basically this is a work in progress to familiarize myself with topological data analysis. The details of the algorithm implementations may be lacking. I'll gladly accept feedback and pull requests to make it more robust. You can contact me at info@mlwave.com or by opening an issue.
+Standard MIT disclaimer applies, see `DISCLAIMER.md` for full text. Development status is Alpha.
 
 ## Cite
 

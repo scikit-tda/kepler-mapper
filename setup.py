@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(name='kmapper',
-      version='0.2.1',
+      version='1.0.1',
       description='Python implementation of mapper algorithm for Topological Data Analysis.',
       long_description='Python implementation of mapper algorithm. This implementation is intended to integrate into scikit-learn and be easily extendible.',
       author='HJ van Veen, Nathaniel Saul',
@@ -19,7 +19,7 @@ setup(name='kmapper',
       test_requires=[
         'pytest'
       ],
-      python_requires='>=3',
+      python_requires='>=2.7,!=3.1,!=3.2,!=3.3',
       classifiers=[
         # How mature is this project? Common values are
         #   3 - Alpha

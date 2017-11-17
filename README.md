@@ -205,6 +205,7 @@ Check the `examples\breast-cancer` directory for code
 - **Steve Oudot et al.** from École Polytechnique give a course on TDA using Kepler-Mapper: <br>[INF556 — Topological Data Analysis](https://moodle.polytechnique.fr/enrol/index.php?id=5053)
 - **George Lake et al.** from Universität Zürich use it for teaching data science: <br>[ESC403 Introduction to Data Science](https://s3itwiki.uzh.ch/display/esc403fs2016/ESC403+Introduction+to+Data+Science+-+Spring+2016)
 - **Mikael Vejdemo-Johansson** maps process control systems <br>[TDA as a diagnostics tool for process control systems.](http://cv.mikael.johanssons.org/talks/2016-05-epfl.pdf)
+- **Lertwittayatrai et al.** mention KeplerMapper in the paper <br>[Extracting Insights from the Topology of the JavaScript Package Ecosystem](https://arxiv.org/abs/1710.00446)
 
 ## References
 

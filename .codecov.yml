@@ -6,7 +6,7 @@
 coverage:
   precision: 2
   round: down
-  range: 70...100
+  range: 10...100
 
   status:
     # Learn more at http://docs.codecov.io/docs/codecov-yaml

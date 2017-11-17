@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/MLWave/kepler-mapper.svg?branch=master)](https://travis-ci.org/MLWave/kepler-mapper)
+[![Build Status](https://travis-ci.org/MLWave/kepler-mapper.svg?branch=master)](https://travis-ci.org/MLWave/kepler-mapper) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1002378.svg)](https://doi.org/10.5281/zenodo.1002378)
 # KeplerMapper <img align="right" width="40" height="40" src="http://i.imgur.com/axOG6GJ.jpg">
 
 > Nature uses as little as possible of anything. - Johannes Kepler

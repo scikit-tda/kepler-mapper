@@ -1,4 +1,5 @@
 # Contributors
 
-* [HJ van Veen](mailto:info@mlwave.com)
+* [Hendrik Jacob van Veen](mailto:henkvanveen@gmail.com)
 * [Nathaniel Saul](mailto:nat@saulgill.com)
+* Roj

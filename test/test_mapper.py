@@ -26,8 +26,8 @@ class TestLinker():
         groups = {"a": [1,2,3,4], "b":[1,2,3,4]}
         links = mapper._create_links(groups)
 
-        assert "a" in links
-        assert links["a"] == ["b"]
+        assert "a" in links or "b" in links
+        assert links["a"] == ["b"] or links["b"] == ["a"]
 
     def test_no_link(self):
         mapper = KeplerMapper()

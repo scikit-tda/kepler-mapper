@@ -16,4 +16,4 @@ coverage:
 
 comment:
   layout: "header, diff"
-behavior: default  # update if exists else create new
+# behavior: default  # update if exists else create new

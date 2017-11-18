@@ -221,35 +221,35 @@ Check the `examples\breast-cancer` directory for code
 - **Gurjeet Singh, Facundo Mémoli, and Gunnar Carlsson** Mapper Algorithm <br>
 [Topological Methods for the Analysis of High Dimensional Data Sets and 3D Object Recognition](http://www.ayasdi.com/wp-content/uploads/2015/02/Topological_Methods_for_the_Analysis_of_High_Dimensional_Data_Sets_and_3D_Object_Recognition.pdf)
 - **Anthony Bak** Topological Data Analysis<br>
-Stanford Seminar. ["Topological Data Analysis: How Ayasdi used TDA to Solve Complex Problems"](https://www.youtube.com/watch?v=x3Hl85OBuc0)<br>
-SF Data Mining. ["Shape and Meaning."](https://www.youtube.com/watch?v=4RNpuZydlKY)<br>
+Stanford Seminar. [Topological Data Analysis: How Ayasdi used TDA to Solve Complex Problems](https://www.youtube.com/watch?v=x3Hl85OBuc0)<br>
+SF Data Mining. [Shape and Meaning.](https://www.youtube.com/watch?v=4RNpuZydlKY)<br>
 - **Allison Gilmore** Projection vs. Inverse Image & Examples<br>
  MLconf ATL. [Topological Learning with Ayasdi](https://www.youtube.com/watch?v=cJ8W0ASsnp0)
 - **Gunnar Carlsson** The shape of data<br>
-Conference Talk. ["The shape of data"](https://www.youtube.com/watch?v=kctyag2Xi8o)<br>
+Conference Talk. [The shape of data](https://www.youtube.com/watch?v=kctyag2Xi8o)<br>
 [Topology and Data](http://www.ams.org/images/carlsson-notes.pdf)
 - **Gurjeet Singh** Business Value, Problems, Algorithms, Computation and User Experience of TDA<br/>
-Data Driven NYC. ["Making Data Work"](https://www.youtube.com/watch?v=UZH5xJXJG2I)
+Data Driven NYC. [Making Data Work](https://www.youtube.com/watch?v=UZH5xJXJG2I).
 - **Daniel Müllner and Aravindakshan Babu** Implementation details and sample data<br/>
 [Python Mapper](http://danifold.net/mapper/index.html)
 - **R. Ghrist** Applied Topology<br/>
-["Elementary Applied Topology"](https://www.math.upenn.edu/~ghrist/notes.html)
+[Elementary Applied Topology](https://www.math.upenn.edu/~ghrist/notes.html)
 - **Community effort** "Qualitative data analysis"<br>
 [Applied Topology.org](http://appliedtopology.org/)
-- **J. C. Gower, and G. J. S. Ross** Single Linkage Clustering
-["Minimum Spanning Trees and Single Linkage Cluster Analysis"](http://www.cs.ucsb.edu/~veronika/MAE/mstSingleLinkage_GowerRoss_1969.pdf)
+- **J. C. Gower, and G. J. S. Ross** Single Linkage Clustering>br>
+[Minimum Spanning Trees and Single Linkage Cluster Analysis](http://www.cs.ucsb.edu/~veronika/MAE/mstSingleLinkage_GowerRoss_1969.pdf)
 - **Pedregosa, F. and Varoquaux, G. and Gramfort, A. and Michel, V. and Thirion, B. and Grisel, O. and Blondel, M. and Prettenhofer, P. and Weiss, R. and Dubourg, V. and Vanderplas, J. and Passos, A. and Cournapeau, D. and Brucher, M. and Perrot, M. and Duchesnay, E.** API, Clustering, and Manifold Learning<br/>
 [Scikit-learn: Machine Learning in Python](http://scikit-learn.org/)
 - **Mike Bostock, Tim Dwyer, Thomas Jakobsen** Force-directed Graphing/Clustering<br/>
 [Force-directed Graphs](http://bl.ocks.org/mbostock/4062045)
 - **Cindy Zhang, Danny Cochran, Diana Suvorova, Curtis Mitchell** Graphing<br>
-["Grapher"](https://github.com/ayasdi/grapher)
+[Grapher](https://github.com/ayasdi/grapher)
 - **Dale Reagan** Color scales<br>
-["Creating A Custom Hot to Cold Temperature Color Gradient for use with RRDTool"](http://web-tech.ga-usa.com/2012/05/creating-a-custom-hot-to-cold-temperature-color-gradient-for-use-with-rrdtool/)
+[Creating A Custom Hot to Cold Temperature Color Gradient for use with RRDTool](http://web-tech.ga-usa.com/2012/05/creating-a-custom-hot-to-cold-temperature-color-gradient-for-use-with-rrdtool/)
 - **Google** Design<br>
-["Material Design"](https://design.google.com/)
+[Material Design](https://design.google.com/)
 - **Ayasdi** Design<br>
-["Ayasdi Core Demonstration"](http://www.ayasdi.com/product/core/)
+[Ayasdi Core Demonstration](http://www.ayasdi.com/product/core/)
 
 ## Disclaimer
 

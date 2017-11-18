@@ -1,3 +1,4 @@
+[![PyPI version](https://badge.fury.io/py/kmapper.svg)](https://badge.fury.io/py/kmapper)
 [![Build Status](https://travis-ci.org/MLWave/kepler-mapper.svg?branch=master)](https://travis-ci.org/MLWave/kepler-mapper)
 [![Codecov](https://codecov.io/gh/mlwave/kepler-mapper/branch/master/graph/badge.svg)](https://codecov.io/gh/mlwave/kepler-mapper)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1054444.svg)](https://doi.org/10.5281/zenodo.1054444)
@@ -16,7 +17,44 @@ Data Sets and 3D Object Recognition".
 
 KeplerMapper can make use of Scikit-Learn API compatible cluster and scaling algorithms.
 
+## Install
+
+### Dependencies
+
+KeplerMapper requires:
+
+  - Python (>= 2.7 or >= 3.3)
+  - NumPy
+  - Scikit-learn
+
+Running some of the examples requires:
+
+  - matplotlib
+
+Visualizations load external resources:
+
+  - Roboto Webfont (Google)
+  - D3.js (Mike Bostock)
+
+
+### Installation
+
+Install KeplerMapper with pip:
+
+```
+pip install kmapper
+```
+
+To install from source:
+```
+git clone https://github.com/MLWave/kepler-mapper
+cd kepler-mapper
+pip install -e .
+```
+
 ## Usage
+
+KeplerMapper adopts the scikit-learn API as much as possible, so it should feel very familiar to anyone who has used these libraries.
 
 ### Python code
 ```python
@@ -63,39 +101,10 @@ Wrote d3.js graph to 'make_circles_keplermapper_output.html'
 Click here for an [interactive version](http://mlwave.github.io/tda/make_circles_keplermapper_output2.html).
 Click here for an older [interactive version](http://mlwave.github.io/tda/make_circles_keplermapper_output.html).
 
-## Install
-
-The package is not currently in the Python Package Index. To install in a virtual environment,
-
-Setup your virtual environment. On Linux with modern Python, run the following commands
-```
-python -m venv venv
-source venv/bin/activate
-```
-
-Install KeplerMapper
-```
-pip install -e .
-```
 
 
 The class is currently just one file. Simply dropping `kmapper/kmapper.py` in any directory which Python is able to import from should work.
 
-## Required
-
-These libraries are required to be installed for KeplerMapper to work:
-
-* NumPy
-* Scikit-Learn
-
-KeplerMapper works on both Python 2.7 and Python 3+.
-
-## External resources
-
-These resources are loaded by the visualization output.
-
-* Roboto Webfont (Google)
-* D3.js (Mike Bostock)
 
 ## Parameters
 

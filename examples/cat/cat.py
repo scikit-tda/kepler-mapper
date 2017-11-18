@@ -4,7 +4,7 @@ import kmapper as km
 
 data = np.genfromtxt('cat-reference.csv',delimiter=',')
 
-mapper = km.KeplerMapper()
+mapper = km.KeplerMapper(verbose=2)
 
 
 lens = mapper.fit_transform(data)

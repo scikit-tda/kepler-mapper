@@ -4,9 +4,7 @@ import kmapper as km
 
 data = np.genfromtxt('lion-reference.csv',delimiter=',')
 
-data = np.genfromtxt(os.path.join(dir_path,'lion-reference.csv'),delimiter=',')
-
-mapper = KeplerMapper(verbose=1)
+mapper = km.KeplerMapper(verbose=1)
 
 lens = mapper.fit_transform(data)
 
@@ -17,7 +15,7 @@ graph = mapper.map(lens,
                    overlap_perc=0.2)
 
 mapper.visualize(graph,
-                 path_html=os.path.join(dir_path, "lion_keplermapper_output.html"))
+                 path_html="lion_keplermapper_output.html")
 
 # You may want to visualize the original point cloud data in 3D scatter too
 """

@@ -236,7 +236,7 @@ Data Driven NYC. [Making Data Work](https://www.youtube.com/watch?v=UZH5xJXJG2I)
 [Elementary Applied Topology](https://www.math.upenn.edu/~ghrist/notes.html)
 - **Community effort** "Qualitative data analysis"<br>
 [Applied Topology.org](http://appliedtopology.org/)
-- **J. C. Gower, and G. J. S. Ross** Single Linkage Clustering>br>
+- **J. C. Gower, and G. J. S. Ross** Single Linkage Clustering<br>
 [Minimum Spanning Trees and Single Linkage Cluster Analysis](http://www.cs.ucsb.edu/~veronika/MAE/mstSingleLinkage_GowerRoss_1969.pdf)
 - **Pedregosa, F. and Varoquaux, G. and Gramfort, A. and Michel, V. and Thirion, B. and Grisel, O. and Blondel, M. and Prettenhofer, P. and Weiss, R. and Dubourg, V. and Vanderplas, J. and Passos, A. and Cournapeau, D. and Brucher, M. and Perrot, M. and Duchesnay, E.** API, Clustering, and Manifold Learning<br/>
 [Scikit-learn: Machine Learning in Python](http://scikit-learn.org/)

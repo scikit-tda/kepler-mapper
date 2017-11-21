@@ -150,7 +150,8 @@ class TestLens():
         data = np.random.rand(100, 2)
         #import pdb; pdb.set_trace()
         graph = mapper.map(data)
-        assert graph["meta_graph"] == "custom"
+        assert graph["meta_data"]["projection"] == "custom"
+        assert graph["meta_data"]["scaler"] == "None"
 
     def test_projection(self):
         atol = 0.1 # accomodate scaling, values are in (0,1), but will be scaled slightly

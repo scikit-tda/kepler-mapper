@@ -103,9 +103,9 @@ class KeplerMapper(object):
         self.chunk_dist = []
         self.overlap_dist = []
         self.d = []
-        self.nr_cubes = 0
-        self.overlap_perc = 0
-        self.clusterer = False
+        # self.nr_cubes = 0
+        # self.overlap_perc = 0
+        # self.clusterer = False
         self.projection = None
         self.scaler = None
 
@@ -241,10 +241,6 @@ class KeplerMapper(object):
         meta = defaultdict(list)
         graph = {}
 
-        self.clusterer = clusterer
-        self.nr_cubes = nr_cubes
-        self.overlap_perc = overlap_perc
-
         # If inverse image is not provided, we use the projection as the inverse image (suffer projection loss)
         if inverse_X is None:
             inverse_X = projected_X
@@ -274,7 +270,7 @@ class KeplerMapper(object):
         # Algo's like K-Means, have a set number of clusters. We need this number
         # to adjust for the minimal number of samples inside an interval before
         # we consider clustering or skipping it.
-        cluster_params = self.clusterer.get_params()
+        cluster_params = clusterer.get_params()
         min_cluster_samples = cluster_params.get("n_clusters", 1)
 
         if self.verbose > 1:
@@ -331,7 +327,13 @@ class KeplerMapper(object):
 
         graph["nodes"] = nodes
         graph["links"] = links
-        graph["meta_graph"] = self.projection if self.projection else "custom"
+        graph["meta_data"] = {
+            "projection": self.projection if self.projection else "custom",
+            "nr_cubes": nr_cubes,
+            "overlap_perc": overlap_perc,
+            "clusterer": str(clusterer),
+            "scaler": str(self.scaler)
+        }
         graph["meta_nodes"] = meta
 
         # Reporting
@@ -394,6 +396,8 @@ class KeplerMapper(object):
         json_s["nodes"] = []
         json_s["links"] = []
         k2e = {}  # a key to incremental int dict, used for id's when linking
+
+        meta_data = complex["meta_data"]
 
         for e, k in enumerate(complex["nodes"]):
             # Tooltip and node color formatting, TODO: de-mess-ify
@@ -545,7 +549,7 @@ class KeplerMapper(object):
         .attr('style', function(d) { return 'width: ' + (d.group * 2) + 'px; height: ' + (d.group * 2) + 'px; ' + 'left: '+(d.x-(d.group))+'px; ' + 'top: '+(d.y-(d.group))+'px; background: '+color(d.color)+'; box-shadow: 0px 0px 3px #111; box-shadow: 0px 0px 33px '+color(d.color)+', inset 0px 0px 5px rgba(0, 0, 0, 0.2);'})
         ;
       });
-    </script>""" % (title, width_css, height_css, title_display, meta_display, tooltips_display, title, complex["meta_graph"], self.nr_cubes, self.overlap_perc * 100, color_function, complex["meta_graph"], str(self.clusterer), str(self.scaler), width_js, height_js, graph_charge, graph_link_distance, graph_gravity, json.dumps(json_s))
+    </script>""" % (title, width_css, height_css, title_display, meta_display, tooltips_display, title, meta_data["projection"], meta_data['nr_cubes'], meta_data['overlap_perc'] * 100, color_function, meta_data["projection"], meta_data["clusterer"], meta_data["scaler"], width_js, height_js, graph_charge, graph_link_distance, graph_gravity, json.dumps(json_s))
             outfile.write(html.encode("utf-8"))
         if self.verbose > 0:
             print("\nWrote d3.js graph to '%s'" % path_html)

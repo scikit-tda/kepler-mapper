@@ -370,7 +370,7 @@ class KeplerMapper(object):
 
     def visualize(self, complex, color_function="", path_html="mapper_visualization_output.html", title="My Data",
                   graph_link_distance=30, graph_gravity=0.1, graph_charge=-120, custom_tooltips=None, width_html=0,
-                  height_html=0, show_tooltips=True, show_title=True, show_meta=True):
+                  height_html=0, show_tooltips=True, show_title=True, show_meta=True, save_file=True):
         # Turns the dictionary 'complex' in a html file with d3.js
         #
         # Input:      complex. Dictionary (output from calling .map())
@@ -453,106 +453,110 @@ class KeplerMapper(object):
         else:
             title_display = ""
 
-        with open(path_html, "wb") as outfile:
-            html = """<!DOCTYPE html>
-    <meta charset="utf-8">
-    <meta name="generator" content="KeplerMapper">
-    <title>%s | KeplerMapper</title>
-    <link href='https://fonts.googleapis.com/css?family=Roboto:700,300' rel='stylesheet' type='text/css'>
-    <style>
-    * {margin: 0; padding: 0;}
-    html { height: 100%%;}
-    body {background: #111; height: 100%%; font: 100 16px Roboto, Sans-serif;}
-    .link { stroke: #999; stroke-opacity: .333;  }
-    .divs div { border-radius: 50%%; background: red; position: absolute; }
-    .divs { position: absolute; top: 0; left: 0; }
-    #holder { position: relative; width: %s; height: %s; background: #111; display: block;}
-    h1 { %s padding: 20px; color: #fafafa; text-shadow: 0px 1px #000,0px -1px #000; position: absolute; font: 300 30px Roboto, Sans-serif;}
-    h2 { text-shadow: 0px 1px #000,0px -1px #000; font: 700 16px Roboto, Sans-serif;}
-    .meta {  position: absolute; opacity: 0.9; width: 220px; top: 80px; left: 20px; display: block; %s background: #000; line-height: 25px; color: #fafafa; border: 20px solid #000; font: 100 16px Roboto, Sans-serif;}
-    div.tooltip { position: absolute; width: 380px; display: block; %s padding: 20px; background: #000; border: 0px; border-radius: 3px; pointer-events: none; z-index: 999; color: #FAFAFA;}
-    }
-    </style>
-    <body>
-    <div id="holder">
-      <h1>%s</h1>
-      <p class="meta">
-      <b>Lens</b><br>%s<br><br>
-      <b>Cubes per dimension</b><br>%s<br><br>
-      <b>Overlap percentage</b><br>%s%%<br><br>
-      <b>Color Function</b><br>%s( %s )<br><br>
-      <b>Clusterer</b><br>%s<br><br>
-      <b>Scaler</b><br>%s
-      </p>
-    </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
-    <script>
-    var width = %s,
-      height = %s;
-    var color = d3.scale.ordinal()
-      .domain(["0","1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30"])
-      .range(["#FF0000","#FF1400","#FF2800","#FF3c00","#FF5000","#FF6400","#FF7800","#FF8c00","#FFa000","#FFb400","#FFc800","#FFdc00","#FFf000","#fdff00","#b0ff00","#65ff00","#17ff00","#00ff36","#00ff83","#00ffd0","#00e4ff","#00c4ff","#00a4ff","#00a4ff","#0084ff","#0064ff","#0044ff","#0022ff","#0002ff","#0100ff","#0300ff","#0500ff"]);
-    var force = d3.layout.force()
-      .charge(%s)
-      .linkDistance(%s)
-      .gravity(%s)
-      .size([width, height]);
-    var svg = d3.select("#holder").append("svg")
-      .attr("width", width)
-      .attr("height", height);
+        html = """<!DOCTYPE html>
+            <meta charset="utf-8">
+            <meta name="generator" content="KeplerMapper">
+            <title>%s | KeplerMapper</title>
+            <link href='https://fonts.googleapis.com/css?family=Roboto:700,300' rel='stylesheet' type='text/css'>
+            <style>
+            * {margin: 0; padding: 0;}
+            html { height: 100%%;}
+            body {background: #111; height: 100%%; font: 100 16px Roboto, Sans-serif;}
+                .link { stroke: #999; stroke-opacity: .333;  }
+                .divs div { border-radius: 50%%; background: red; position: absolute; }
+                .divs { position: absolute; top: 0; left: 0; }
+            #holder { position: relative; width: %s; height: %s; background: #111; display: block;}
+            h1 { %s padding: 20px; color: #fafafa; text-shadow: 0px 1px #000,0px -1px #000; position: absolute; font: 300 30px Roboto, Sans-serif;}
+            h2 { text-shadow: 0px 1px #000,0px -1px #000; font: 700 16px Roboto, Sans-serif;}
+                .meta {  position: absolute; opacity: 0.9; width: 220px; top: 80px; left: 20px; display: block; %s background: #000; line-height: 25px; color: #fafafa; border: 20px solid #000; font: 100 16px Roboto, Sans-serif;}
+            div.tooltip { position: absolute; width: 380px; display: block; %s padding: 20px; background: #000; border: 0px; border-radius: 3px; pointer-events: none; z-index: 999; color: #FAFAFA;}
+            }
+            </style>
+            <body>
+            <div id="holder">
+            <h1>%s</h1>
+            <p class="meta">
+            <b>Lens</b><br>%s<br><br>
+            <b>Cubes per dimension</b><br>%s<br><br>
+            <b>Overlap percentage</b><br>%s%%<br><br>
+            <b>Color Function</b><br>%s( %s )<br><br>
+            <b>Clusterer</b><br>%s<br><br>
+            <b>Scaler</b><br>%s
+            </p>
+            </div>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+            <script>
+            var width = %s,
+            height = %s;
+            var color = d3.scale.ordinal()
+                .domain(["0","1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30"])
+                .range(["#FF0000","#FF1400","#FF2800","#FF3c00","#FF5000","#FF6400","#FF7800","#FF8c00","#FFa000","#FFb400","#FFc800","#FFdc00","#FFf000","#fdff00","#b0ff00","#65ff00","#17ff00","#00ff36","#00ff83","#00ffd0","#00e4ff","#00c4ff","#00a4ff","#00a4ff","#0084ff","#0064ff","#0044ff","#0022ff","#0002ff","#0100ff","#0300ff","#0500ff"]);
+            var force = d3.layout.force()
+                .charge(%s)
+                .linkDistance(%s)
+                .gravity(%s)
+                .size([width, height]);
+            var svg = d3.select("#holder").append("svg")
+                .attr("width", width)
+                .attr("height", height);
 
-    var div = d3.select("#holder").append("div")
-      .attr("class", "tooltip")
-      .style("opacity", 0.0);
+            var div = d3.select("#holder").append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0.0);
 
-    var divs = d3.select('#holder').append('div')
-      .attr('class', 'divs')
-      .attr('style', function(d) { return 'overflow: hidden; width: ' + width + 'px; height: ' + height + 'px;'; });
+            var divs = d3.select('#holder').append('div')
+                .attr('class', 'divs')
+                .attr('style', function(d) { return 'overflow: hidden; width: ' + width + 'px; height: ' + height + 'px;'; });
 
-      graph = %s;
-      force
-        .nodes(graph.nodes)
-        .links(graph.links)
-        .start();
-      var link = svg.selectAll(".link")
-        .data(graph.links)
-        .enter().append("line")
-        .attr("class", "link")
-        .style("stroke-width", function(d) { return Math.sqrt(d.value); });
-      var node = divs.selectAll('div')
-      .data(graph.nodes)
-        .enter().append('div')
-        .on("mouseover", function(d) {
-          div.transition()
-            .duration(200)
-            .style("opacity", .9);
-          div .html(d.tooltip + "<br/>")
-            .style("left", (d3.event.pageX + 100) + "px")
-            .style("top", (d3.event.pageY - 28) + "px");
-          })
-        .on("mouseout", function(d) {
-          div.transition()
-            .duration(500)
-            .style("opacity", 0);
-        })
-        .call(force.drag);
+            graph = %s;
+            force
+                .nodes(graph.nodes)
+                .links(graph.links)
+                .start();
+            var link = svg.selectAll(".link")
+                .data(graph.links)
+                .enter().append("line")
+                .attr("class", "link")
+                .style("stroke-width", function(d) { return Math.sqrt(d.value); });
+            var node = divs.selectAll('div')
+                .data(graph.nodes)
+                .enter().append('div')
+                .on("mouseover", function(d) {
+            div.transition()
+                .duration(200)
+                .style("opacity", .9);
+            div.html(d.tooltip + "<br/>")
+                .style("left", (d3.event.pageX + 100) + "px")
+                .style("top", (d3.event.pageY - 28) + "px");
+            })
+                .on("mouseout", function(d) {
+            div.transition()
+                .duration(500)
+                .style("opacity", 0);
+            })
+            .call(force.drag);
 
-      node.append("title")
-        .text(function(d) { return d.name; });
-      force.on("tick", function() {
-      link.attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.y; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; });
-      node.attr("cx", function(d) { return d.x; })
-        .attr("cy", function(d) { return d.y; })
-        .attr('style', function(d) { return 'width: ' + (d.group * 2) + 'px; height: ' + (d.group * 2) + 'px; ' + 'left: '+(d.x-(d.group))+'px; ' + 'top: '+(d.y-(d.group))+'px; background: '+color(d.color)+'; box-shadow: 0px 0px 3px #111; box-shadow: 0px 0px 33px '+color(d.color)+', inset 0px 0px 5px rgba(0, 0, 0, 0.2);'})
-        ;
-      });
-    </script>""" % (title, width_css, height_css, title_display, meta_display, tooltips_display, title, meta_data["projection"], meta_data['nr_cubes'], meta_data['overlap_perc'] * 100, color_function, meta_data["projection"], meta_data["clusterer"], meta_data["scaler"], width_js, height_js, graph_charge, graph_link_distance, graph_gravity, json.dumps(json_s))
-            outfile.write(html.encode("utf-8"))
-        if self.verbose > 0:
-            print("\nWrote d3.js graph to '%s'" % path_html)
+            node.append("title")
+                .text(function(d) { return d.name; });
+            force.on("tick", function() {
+            link.attr("x1", function(d) { return d.source.x; })
+                .attr("y1", function(d) { return d.source.y; })
+                .attr("x2", function(d) { return d.target.x; })
+                .attr("y2", function(d) { return d.target.y; });
+            node.attr("cx", function(d) { return d.x; })
+                .attr("cy", function(d) { return d.y; })
+                .attr('style', function(d) { return 'width: ' + (d.group * 2) + 'px; height: ' + (d.group * 2) + 'px; ' + 'left: '+(d.x-(d.group))+'px; ' + 'top: '+(d.y-(d.group))+'px; background: '+color(d.color)+'; box-shadow: 0px 0px 3px #111; box-shadow: 0px 0px 33px '+color(d.color)+', inset 0px 0px 5px rgba(0, 0, 0, 0.2);'})
+            ;
+            });
+            </script>""" % (title, width_css, height_css, title_display, meta_display, tooltips_display, title, meta_data["projection"], meta_data['nr_cubes'], meta_data['overlap_perc'] * 100, color_function, meta_data["projection"], meta_data["clusterer"], meta_data["scaler"], width_js, height_js, graph_charge, graph_link_distance, graph_gravity, json.dumps(json_s))
+
+        if save_file:
+            with open(path_html, "wb") as outfile:
+                outfile.write(html.encode("utf-8"))
+            if self.verbose > 0:
+                print("\nWrote d3.js graph to '%s'" % path_html)
+
+        return html
 
     def data_from_cluster_id(self, cluster_id, graph, data):
         # Returns the original data of each cluster member for a given cluster ID

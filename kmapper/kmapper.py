@@ -10,13 +10,16 @@ import numpy as np
 from sklearn import cluster, preprocessing, manifold, decomposition
 from scipy.spatial import distance
 
+
 class Cover():
-    """ Define a cover scheme
+    """Helper class that defines the default covering scheme
 
-        Should implement `find_entries` that finds all data points in each cube.
-        Should construct cubes that can be iterated over.
+    functions
+    ---------
+    cubes:          @property, returns an iterable of all bins in the cover.
+    find_entries:   Find all entries in the input data that are in the given cube.
+
     """
-
 
     def __init__(self, data, dimensions=None, nr_cubes=10, overlap_perc=0.2):
         self.nr_cubes = nr_cubes
@@ -43,6 +46,27 @@ class Cover():
 
         self.nr_dimensions = len(self.di)
 
+    def find_entries(self, data, cube):
+        """Find all entries in data that are in the given cube
+
+        Input:      data, cube (an item from the list of cubes provided by `cover.cubes`)
+        Output:     all entries in data that are in cube.
+        """
+
+        chunk = self.chunk_dist[self.di]
+        overlap = self.overlap_dist[self.di]
+        lower_bound = self.d[self.di] + (cube * chunk)
+        upper_bound = lower_bound + chunk + overlap
+
+        # Slice the hypercube
+        # the +1 accounts for a new column of indices
+        entries = (data[:, self.di] >= lower_bound) & \
+                  (data[:, self.di] < upper_bound)
+
+        hypercube = data[np.invert(np.any(entries == False, axis=1))]
+
+        return hypercube
+
     @property
     def cubes(self):
         return self._cube_coordinates_all()
@@ -60,68 +84,53 @@ class Cover():
         for x in range(self.nr_cubes):
             l += [x] * self.nr_dimensions
 
-        coordinates = [np.array(list(f)) for f in sorted(set(itertools.permutations(l, self.nr_dimensions)))]
+        coordinates = [np.array(list(f)) for f in sorted(
+            set(itertools.permutations(l, self.nr_dimensions)))]
 
         return coordinates
 
-    def find_entries(self, data, coor):
-        chunk = self.chunk_dist[self.di]
-        overlap = self.overlap_dist[self.di]
-        #import pdb; pdb.set_trace()
-        lower_bound = self.d[self.di] + (coor * chunk)
-        upper_bound = lower_bound + chunk + overlap
-
-        # Slice the hypercube
-        # the +1 accounts for a new column of indices
-        entries = (data[:, self.di] >= lower_bound) & \
-                  (data[:, self.di] < upper_bound)
-
-        hypercube = data[np.invert(np.any(entries == False, axis=1))]
-
-        return hypercube
 
 class KeplerMapper(object):
-    # With this class you can build topological networks from (high-dimensional) data.
-    #
-    # 1)   	Fit a projection/lens/function to a dataset and transform it.
-    #     	For instance "mean_of_row(x) for x in X"
-    # 2)   	Map this projection with overlapping intervals/hypercubes.
-    #    		Cluster the points inside the interval
-    #    		(Note: we cluster on the inverse image/original data to lessen projection loss).
-    #    		If two clusters/nodes have the same members (due to the overlap), then:
-    #    		connect these with an edge.
-    # 3)  	Visualize the network using HTML and D3.js.
-    #
-    # functions
-    # ---------
-    # fit_transform:   Create a projection (lens) from a dataset
-    # map:         	Apply Mapper algorithm on this projection and build a simplicial complex
-    # visualize:    	Turns the complex dictionary into a HTML/D3.js visualization
+    """With this class you can build topological networks from (high-dimensional) data.
+
+    1)   	Fit a projection/lens/function to a dataset and transform it.
+                For instance "mean_of_row(x) for x in X"
+    2)   	Map this projection with overlapping intervals/hypercubes.
+                Cluster the points inside the interval
+                (Note: we cluster on the inverse image/original data to lessen projection loss).
+                If two clusters/nodes have the same members (due to the overlap), then:
+                connect these with an edge.
+    3)  	Visualize the network using HTML and D3.js.
+
+    functions
+    ---------
+    fit_transform:   Create a projection (lens) from a dataset
+    map:         	Apply Mapper algorithm on this projection and build a simplicial complex
+    visualize:    	Turns the complex dictionary into a HTML/D3.js visualization
+    """
 
     def __init__(self, verbose=0):
         self.verbose = verbose
         self.chunk_dist = []
         self.overlap_dist = []
         self.d = []
-        # self.nr_cubes = 0
-        # self.overlap_perc = 0
-        # self.clusterer = False
         self.projection = None
         self.scaler = None
 
     def fit_transform(self, X, projection="sum", scaler=preprocessing.MinMaxScaler(), distance_matrix=False):
-        # Creates the projection/lens from X.
-        #
-        # Input:      X. Input features as a numpy array.
-        # Output:     projected_X. original data transformed to a projection (lens).
-        #
-        # parameters
-        # ----------
-        # projection:   Projection parameter is either a string,
-        #               a scikit class with fit_transform, like manifold.TSNE(),
-        #               or a list of dimension indices.
-        # scaler:       if None, do no scaling, else apply scaling to the projection
-        #               Default: Min-Max scaling
+        """Creates the projection/lens from X.
+
+        Input:      X. Input features as a numpy array.
+        Output:     projected_X. original data transformed to a projection (lens).
+
+        parameters
+        ----------
+        projection:   Projection parameter is either a string,
+                      a scikit class with fit_transform, like manifold.TSNE(),
+                      or a list of dimension indices.
+        scaler:       if None, do no scaling, else apply scaling to the projection
+                      Default: Min-Max scaling
+        """
         self.inverse = X
         self.scaler = scaler
         self.projection = str(projection)
@@ -221,18 +230,19 @@ class KeplerMapper(object):
         return X
 
     def map(self, projected_X, inverse_X=None, clusterer=cluster.DBSCAN(eps=0.5, min_samples=3), nr_cubes=10, overlap_perc=0.1):
-        # This maps the data to a simplicial complex. Returns a dictionary with nodes and links.
-        #
-        # Input:    projected_X. A Numpy array with the projection/lens.
-        # Output:    complex. A dictionary with "nodes", "links" and "meta information"
-        #
-        # parameters
-        # ----------
-        # projected_X  	projected_X. A Numpy array with the projection/lens. Required.
-        # inverse_X    	Numpy array or None. If None then the projection itself is used for clustering.
-        # clusterer    	Scikit-learn API compatible clustering algorithm. Default: DBSCAN
-        # nr_cubes    	Int. The number of intervals/hypercubes to create.
-        # overlap_perc  Float. The percentage of overlap "between" the intervals/hypercubes.
+        """This maps the data to a simplicial complex. Returns a dictionary with nodes and links.
+
+        Input:    projected_X. A Numpy array with the projection/lens.
+        Output:    complex. A dictionary with "nodes", "links" and "meta information"
+
+        parameters
+        ----------
+        projected_X  	projected_X. A Numpy array with the projection/lens. Required.
+        inverse_X    	Numpy array or None. If None then the projection itself is used for clustering.
+        clusterer    	Scikit-learn API compatible clustering algorithm. Default: DBSCAN
+        nr_cubes    	Int. The number of intervals/hypercubes to create.
+        overlap_perc  Float. The percentage of overlap "between" the intervals/hypercubes.
+        """
 
         start = datetime.now()
 
@@ -259,12 +269,12 @@ class KeplerMapper(object):
         # exclude the index column
         di = np.array(range(1, projected_X.shape[1]))
 
-        ### Define codomain cover
+        # Define codomain cover
         #   - once there are more types of covers, this will be user set
         cover = Cover(projected_X,
-                     dimensions=di,
-                     nr_cubes=nr_cubes,
-                     overlap_perc=overlap_perc)
+                      dimensions=di,
+                      nr_cubes=nr_cubes,
+                      overlap_perc=overlap_perc)
         cubes = cover.cubes
 
         # Algo's like K-Means, have a set number of clusters. We need this number
@@ -279,17 +289,17 @@ class KeplerMapper(object):
 
         # Subdivide the projected data X in intervals/hypercubes with overlap
         if self.verbose > 0:
-            cubes = list(cubes) # extract list from generator
+            cubes = list(cubes)  # extract list from generator
             total_cubes = len(cubes)
             print("Creating %s hypercubes." % total_cubes)
 
-        for i, coor in enumerate(cubes):
-            ### Slice the hypercube
-            hypercube = cover.find_entries(projected_X, coor)
+        for i, cube in enumerate(cubes):
+            # Slice the hypercube
+            hypercube = cover.find_entries(projected_X, cube)
 
             if self.verbose > 1:
                 print("There are %s points in cube_%s / %s with starting range %s" %
-                      (hypercube.shape[0], i, total_cubes, cover.d[di] + (coor * cover.chunk_dist[di])))
+                      (hypercube.shape[0], i, total_cubes, cover.d[di] + (cube * cover.chunk_dist[di])))
 
             # If at least min_cluster_samples samples inside the hypercube
             if hypercube.shape[0] >= min_cluster_samples:
@@ -317,7 +327,7 @@ class KeplerMapper(object):
                         # Append the member id's as integers
                         nodes[cluster_id].append(int(a[0]))
                         meta[cluster_id] = {
-                            "size": hypercube.shape[0], "coordinates": coor}
+                            "size": hypercube.shape[0], "coordinates": cube}
             else:
                 if self.verbose > 1:
                     print("Cube_%s is empty.\n" % (i))
@@ -371,26 +381,26 @@ class KeplerMapper(object):
     def visualize(self, complex, color_function="", path_html="mapper_visualization_output.html", title="My Data",
                   graph_link_distance=30, graph_gravity=0.1, graph_charge=-120, custom_tooltips=None, width_html=0,
                   height_html=0, show_tooltips=True, show_title=True, show_meta=True, save_file=True):
-        # Turns the dictionary 'complex' in a html file with d3.js
-        #
-        # Input:      complex. Dictionary (output from calling .map())
-        # Output:      a HTML page saved as a file in 'path_html'.
-        #
-        # parameters
-        # ----------
-        # color_function    	string. Not fully implemented. Default: "" (distance to origin)
-        # path_html        		file path as string. Where to save the HTML page.
-        # title          		string. HTML page document title and first heading.
-        # graph_link_distance  	int. Edge length.
-        # graph_gravity     	float. "Gravity" to center of layout.
-        # graph_charge      	int. charge between nodes.
-        # custom_tooltips   	None or Numpy Array. You could use "y"-label array for this.
-        # width_html        	int. Width of canvas. Default: 0 (full width)
-        # height_html       	int. Height of canvas. Default: 0 (full height)
-        # show_tooltips     	bool. default:True
-        # show_title      		bool. default:True
-        # show_meta        		bool. default:True
+        """Turns the dictionary 'complex' in a html file with d3.js
 
+        Input:      complex. Dictionary (output from calling .map())
+        Output:      a HTML page saved as a file in 'path_html'.
+
+        parameters
+        ----------
+        color_function    	string. Not fully implemented. Default: "" (distance to origin)
+        path_html        		file path as string. Where to save the HTML page.
+        title          		string. HTML page document title and first heading.
+        graph_link_distance  	int. Edge length.
+        graph_gravity     	float. "Gravity" to center of layout.
+        graph_charge      	int. charge between nodes.
+        custom_tooltips   	None or Numpy Array. You could use "y"-label array for this.
+        width_html        	int. Width of canvas. Default: 0 (full width)
+        height_html       	int. Height of canvas. Default: 0 (full height)
+        show_tooltips     	bool. default:True
+        show_title      		bool. default:True
+        show_meta        		bool. default:True
+        """
         # Format JSON for D3 graph
         json_s = {}
         json_s["nodes"] = []
@@ -454,101 +464,101 @@ class KeplerMapper(object):
             title_display = ""
 
         html = """<!DOCTYPE html>
-            <meta charset="utf-8">
-            <meta name="generator" content="KeplerMapper">
-            <title>%s | KeplerMapper</title>
-            <link href='https://fonts.googleapis.com/css?family=Roboto:700,300' rel='stylesheet' type='text/css'>
-            <style>
-            * {margin: 0; padding: 0;}
-            html { height: 100%%;}
-            body {background: #111; height: 100%%; font: 100 16px Roboto, Sans-serif;}
-                .link { stroke: #999; stroke-opacity: .333;  }
-                .divs div { border-radius: 50%%; background: red; position: absolute; }
-                .divs { position: absolute; top: 0; left: 0; }
-            #holder { position: relative; width: %s; height: %s; background: #111; display: block;}
-            h1 { %s padding: 20px; color: #fafafa; text-shadow: 0px 1px #000,0px -1px #000; position: absolute; font: 300 30px Roboto, Sans-serif;}
-            h2 { text-shadow: 0px 1px #000,0px -1px #000; font: 700 16px Roboto, Sans-serif;}
-                .meta {  position: absolute; opacity: 0.9; width: 220px; top: 80px; left: 20px; display: block; %s background: #000; line-height: 25px; color: #fafafa; border: 20px solid #000; font: 100 16px Roboto, Sans-serif;}
-            div.tooltip { position: absolute; width: 380px; display: block; %s padding: 20px; background: #000; border: 0px; border-radius: 3px; pointer-events: none; z-index: 999; color: #FAFAFA;}
-            }
-            </style>
-            <body>
-            <div id="holder">
-            <h1>%s</h1>
-            <p class="meta">
-            <b>Lens</b><br>%s<br><br>
-            <b>Cubes per dimension</b><br>%s<br><br>
-            <b>Overlap percentage</b><br>%s%%<br><br>
-            <b>Color Function</b><br>%s( %s )<br><br>
-            <b>Clusterer</b><br>%s<br><br>
-            <b>Scaler</b><br>%s
-            </p>
-            </div>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
-            <script>
-            var width = %s,
-            height = %s;
-            var color = d3.scale.ordinal()
-                .domain(["0","1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30"])
-                .range(["#FF0000","#FF1400","#FF2800","#FF3c00","#FF5000","#FF6400","#FF7800","#FF8c00","#FFa000","#FFb400","#FFc800","#FFdc00","#FFf000","#fdff00","#b0ff00","#65ff00","#17ff00","#00ff36","#00ff83","#00ffd0","#00e4ff","#00c4ff","#00a4ff","#00a4ff","#0084ff","#0064ff","#0044ff","#0022ff","#0002ff","#0100ff","#0300ff","#0500ff"]);
-            var force = d3.layout.force()
-                .charge(%s)
-                .linkDistance(%s)
-                .gravity(%s)
-                .size([width, height]);
-            var svg = d3.select("#holder").append("svg")
-                .attr("width", width)
-                .attr("height", height);
+    <meta charset="utf-8">
+    <meta name="generator" content="KeplerMapper">
+    <title>%s | KeplerMapper</title>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:700,300' rel='stylesheet' type='text/css'>
+    <style>
+    * {margin: 0; padding: 0;}
+    html { height: 100%%;}
+    body {background: #111; height: 100%%; font: 100 16px Roboto, Sans-serif;}
+    .link { stroke: #999; stroke-opacity: .333;  }
+    .divs div { border-radius: 50%%; background: red; position: absolute; }
+    .divs { position: absolute; top: 0; left: 0; }
+    #holder { position: relative; width: %s; height: %s; background: #111; display: block;}
+    h1 { %s padding: 20px; color: #fafafa; text-shadow: 0px 1px #000,0px -1px #000; position: absolute; font: 300 30px Roboto, Sans-serif;}
+    h2 { text-shadow: 0px 1px #000,0px -1px #000; font: 700 16px Roboto, Sans-serif;}
+    .meta {  position: absolute; opacity: 0.9; width: 220px; top: 80px; left: 20px; display: block; %s background: #000; line-height: 25px; color: #fafafa; border: 20px solid #000; font: 100 16px Roboto, Sans-serif;}
+    div.tooltip { position: absolute; width: 380px; display: block; %s padding: 20px; background: #000; border: 0px; border-radius: 3px; pointer-events: none; z-index: 999; color: #FAFAFA;}
+    }
+    </style>
+    <body>
+    <div id="holder">
+    <h1>%s</h1>
+    <p class="meta">
+    <b>Lens</b><br>%s<br><br>
+    <b>Cubes per dimension</b><br>%s<br><br>
+    <b>Overlap percentage</b><br>%s%%<br><br>
+    <b>Color Function</b><br>%s( %s )<br><br>
+    <b>Clusterer</b><br>%s<br><br>
+    <b>Scaler</b><br>%s
+    </p>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+    <script>
+    var width = %s,
+    height = %s;
+    var color = d3.scale.ordinal()
+    .domain(["0","1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30"])
+    .range(["#FF0000","#FF1400","#FF2800","#FF3c00","#FF5000","#FF6400","#FF7800","#FF8c00","#FFa000","#FFb400","#FFc800","#FFdc00","#FFf000","#fdff00","#b0ff00","#65ff00","#17ff00","#00ff36","#00ff83","#00ffd0","#00e4ff","#00c4ff","#00a4ff","#00a4ff","#0084ff","#0064ff","#0044ff","#0022ff","#0002ff","#0100ff","#0300ff","#0500ff"]);
+    var force = d3.layout.force()
+    .charge(%s)
+    .linkDistance(%s)
+    .gravity(%s)
+    .size([width, height]);
+    var svg = d3.select("#holder").append("svg")
+    .attr("width", width)
+    .attr("height", height);
 
-            var div = d3.select("#holder").append("div")
-                .attr("class", "tooltip")
-                .style("opacity", 0.0);
+    var div = d3.select("#holder").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0.0);
 
-            var divs = d3.select('#holder').append('div')
-                .attr('class', 'divs')
-                .attr('style', function(d) { return 'overflow: hidden; width: ' + width + 'px; height: ' + height + 'px;'; });
+    var divs = d3.select('#holder').append('div')
+    .attr('class', 'divs')
+    .attr('style', function(d) { return 'overflow: hidden; width: ' + width + 'px; height: ' + height + 'px;'; });
 
-            graph = %s;
-            force
-                .nodes(graph.nodes)
-                .links(graph.links)
-                .start();
-            var link = svg.selectAll(".link")
-                .data(graph.links)
-                .enter().append("line")
-                .attr("class", "link")
-                .style("stroke-width", function(d) { return Math.sqrt(d.value); });
-            var node = divs.selectAll('div')
-                .data(graph.nodes)
-                .enter().append('div')
-                .on("mouseover", function(d) {
-            div.transition()
-                .duration(200)
-                .style("opacity", .9);
-            div.html(d.tooltip + "<br/>")
-                .style("left", (d3.event.pageX + 100) + "px")
-                .style("top", (d3.event.pageY - 28) + "px");
-            })
-                .on("mouseout", function(d) {
-            div.transition()
-                .duration(500)
-                .style("opacity", 0);
-            })
-            .call(force.drag);
+    graph = %s;
+    force
+    .nodes(graph.nodes)
+    .links(graph.links)
+    .start();
+    var link = svg.selectAll(".link")
+    .data(graph.links)
+    .enter().append("line")
+    .attr("class", "link")
+    .style("stroke-width", function(d) { return Math.sqrt(d.value); });
+    var node = divs.selectAll('div')
+    .data(graph.nodes)
+    .enter().append('div')
+    .on("mouseover", function(d) {
+    div.transition()
+    .duration(200)
+    .style("opacity", .9);
+    div.html(d.tooltip + "<br/>")
+    .style("left", (d3.event.pageX + 100) + "px")
+    .style("top", (d3.event.pageY - 28) + "px");
+    })
+    .on("mouseout", function(d) {
+    div.transition()
+    .duration(500)
+    .style("opacity", 0);
+    })
+    .call(force.drag);
 
-            node.append("title")
-                .text(function(d) { return d.name; });
-            force.on("tick", function() {
-            link.attr("x1", function(d) { return d.source.x; })
-                .attr("y1", function(d) { return d.source.y; })
-                .attr("x2", function(d) { return d.target.x; })
-                .attr("y2", function(d) { return d.target.y; });
-            node.attr("cx", function(d) { return d.x; })
-                .attr("cy", function(d) { return d.y; })
-                .attr('style', function(d) { return 'width: ' + (d.group * 2) + 'px; height: ' + (d.group * 2) + 'px; ' + 'left: '+(d.x-(d.group))+'px; ' + 'top: '+(d.y-(d.group))+'px; background: '+color(d.color)+'; box-shadow: 0px 0px 3px #111; box-shadow: 0px 0px 33px '+color(d.color)+', inset 0px 0px 5px rgba(0, 0, 0, 0.2);'})
-            ;
-            });
-            </script>""" % (title, width_css, height_css, title_display, meta_display, tooltips_display, title, meta_data["projection"], meta_data['nr_cubes'], meta_data['overlap_perc'] * 100, color_function, meta_data["projection"], meta_data["clusterer"], meta_data["scaler"], width_js, height_js, graph_charge, graph_link_distance, graph_gravity, json.dumps(json_s))
+    node.append("title")
+    .text(function(d) { return d.name; });
+    force.on("tick", function() {
+    link.attr("x1", function(d) { return d.source.x; })
+    .attr("y1", function(d) { return d.source.y; })
+    .attr("x2", function(d) { return d.target.x; })
+    .attr("y2", function(d) { return d.target.y; });
+    node.attr("cx", function(d) { return d.x; })
+    .attr("cy", function(d) { return d.y; })
+    .attr('style', function(d) { return 'width: ' + (d.group * 2) + 'px; height: ' + (d.group * 2) + 'px; ' + 'left: '+(d.x-(d.group))+'px; ' + 'top: '+(d.y-(d.group))+'px; background: '+color(d.color)+'; box-shadow: 0px 0px 3px #111; box-shadow: 0px 0px 33px '+color(d.color)+', inset 0px 0px 5px rgba(0, 0, 0, 0.2);'})
+    ;
+    });
+    </script>""" % (title, width_css, height_css, title_display, meta_display, tooltips_display, title, meta_data["projection"], meta_data['nr_cubes'], meta_data['overlap_perc'] * 100, color_function, meta_data["projection"], meta_data["clusterer"], meta_data["scaler"], width_js, height_js, graph_charge, graph_link_distance, graph_gravity, json.dumps(json_s))
 
         if save_file:
             with open(path_html, "wb") as outfile:
@@ -559,13 +569,13 @@ class KeplerMapper(object):
         return html
 
     def data_from_cluster_id(self, cluster_id, graph, data):
-        # Returns the original data of each cluster member for a given cluster ID
-        #
-        # Input: cluster_id. Integer. ID of the cluster.
-        #        graph. Dict. The resulting dictionary after applying map()
-        #        data. Numpy array. Original dataset. Accepts both 1-D and 2-D array.
-        # Output: rows of cluster member data as Numpy array.
-        #
+        """Returns the original data of each cluster member for a given cluster ID
+
+        Input: cluster_id. Integer. ID of the cluster.
+               graph. Dict. The resulting dictionary after applying map()
+               data. Numpy array. Original dataset. Accepts both 1-D and 2-D array.
+        Output: rows of cluster member data as Numpy array.
+        """
         if cluster_id in graph["nodes"]:
             cluster_members = graph["nodes"][cluster_id]
             cluster_members_data = data[cluster_members]

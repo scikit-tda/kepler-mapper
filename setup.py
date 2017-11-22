@@ -4,7 +4,7 @@ from distutils.core import setup
 
 setup(name='kmapper',
       version='1.0.1',
-      description='Python implementation of mapper algorithm for Topological Data Analysis.',
+      description=  'Python implementation of mapper algorithm for Topological Data Analysis.',
       long_description='Python implementation of mapper algorithm. This implementation is intended to integrate into scikit-learn and be easily extendible.',
       author='HJ van Veen, Nathaniel Saul',
       author_email='info@mlwave.com, nat@saulgill.com',

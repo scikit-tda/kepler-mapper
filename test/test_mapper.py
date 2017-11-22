@@ -71,6 +71,9 @@ class TestVisualize():
 
 
 class TestLinker():
+    # TODO: eventually we will make linker its own class that will be able to
+    #       construct general simplicial complexes and
+    #       something suitable for computing persistent homology
     def test_finds_a_link(self):
         mapper = KeplerMapper()
 
@@ -101,6 +104,32 @@ class TestLinker():
 
 class TestLens():
     # TODO: most of these tests only accomodate the default option. They need to be extended to incorporate all possible transforms.
+
+
+    # one test for each option supported
+    def test_str_options(self):
+        mapper = KeplerMapper()
+
+        data = np.random.rand(100, 10)
+
+        options = [
+            ['sum', np.sum],
+            ['mean', np.mean],
+            ['median', np.median],
+            ['max', np.max],
+            ['min', np.min],
+            ['std', np.std],
+            ['l2norm', np.linalg.norm]
+        ]
+
+        first_point = data[0]
+        last_point = data[-1]
+        for tag, func in options:
+            lens = mapper.fit_transform(data, projection=tag, scaler=None)
+            assert lens[0] == func(first_point)
+            assert lens[-1] == func(last_point)
+
+
     def test_lens_size(self):
         mapper = KeplerMapper()
 

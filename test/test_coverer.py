@@ -9,7 +9,6 @@ from sklearn import datasets
 
 
 class TestCover():
-
     def test_multibins(self):
         data = np.arange(30).reshape(10, 3)
         c = Cover(nr_cubes=[5, 10])
@@ -102,7 +101,6 @@ class TestCover():
 
         for i, j in zip(range(9), range(1, 10)):
             assert set(entries[i]).union(set(entries[j]))
-
 
 
 def test_BasicCover():

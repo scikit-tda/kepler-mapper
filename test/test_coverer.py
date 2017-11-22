@@ -79,7 +79,6 @@ class TestCover():
         cover = Cover(nr_cubes=10)
         cubes = cover.define_bins(data)
         cubes = list(cubes)
-        # import pdb; pdb.set_trace()
         entries = [cover.find_entries(data, cube) for cube in cubes]
 
         # inside of each cube is there. Sometimes the edges don't line up.

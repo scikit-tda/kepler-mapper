@@ -113,7 +113,6 @@ class TestLens():
         # I think that map currently requires fit_transform to be called first
         mapper = KeplerMapper()
         data = np.random.rand(100, 2)
-        #import pdb; pdb.set_trace()
         graph = mapper.map(data)
         assert graph["meta_data"]["projection"] == "custom"
         assert graph["meta_data"]["scaler"] == "None"

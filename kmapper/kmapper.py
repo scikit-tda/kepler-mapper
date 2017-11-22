@@ -5,6 +5,7 @@ import json
 import itertools
 from collections import defaultdict
 from datetime import datetime
+import warnings
 
 import numpy as np
 from sklearn import cluster, preprocessing, manifold, decomposition
@@ -21,9 +22,7 @@ class Cover():
     """
 
     def __init__(self, nr_cubes=10, overlap_perc=0.2):
-
         self.nr_cubes = nr_cubes
-        # import pdb; pdb.set_trace()
         self.overlap_perc = overlap_perc
 
     def define_bins(self, data):
@@ -232,7 +231,9 @@ class KeplerMapper(object):
             projected_X,
             inverse_X=None,
             clusterer=cluster.DBSCAN(eps=0.5, min_samples=3),
-            coverer=Cover(nr_cubes=10, overlap_perc=0.1)):
+            nr_cubes=10,
+            overlap_perc=0.1,
+            coverer=None):
         """This maps the data to a simplicial complex. Returns a dictionary with nodes and links.
 
         Input:    projected_X. A Numpy array with the projection/lens.
@@ -257,6 +258,12 @@ class KeplerMapper(object):
         # If inverse image is not provided, we use the projection as the inverse image (suffer projection loss)
         if inverse_X is None:
             inverse_X = projected_X
+
+        if coverer is None:
+            coverer = Cover(nr_cubes=nr_cubes,
+                            overlap_perc=overlap_perc)
+        else:
+            warnings.warn("Explicitly passing in nr_cubes and overlap_perc will be deprecated in future releases. Please supply Cover object.", DeprecationWarning)
 
         if self.verbose > 0:
             print("Mapping on data shaped %s using lens shaped %s\n" %

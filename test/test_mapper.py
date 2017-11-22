@@ -7,17 +7,48 @@ from kmapper.kmapper import Cover
 
 
 class TestVisualize():
-    def test_visualize_standalone(self):
-        # visualize will run on a fresh mapper object
+    def test_visualize_standalone_same(self, tmpdir):
+        """ ensure that the visualization is not dependent on the actual mapper object.
+        """
         mapper = KeplerMapper()
 
-        data = np.random.rand(100, 10)
+        file = tmpdir.join('output.html')
+
+        data = np.random.rand(1000, 10)
         lens = mapper.fit_transform(data, projection=[0])
         graph = mapper.map(lens, data)
+        viz1 = mapper.visualize(graph, path_html=file.strpath)
 
         new_mapper = KeplerMapper()
-        viz = new_mapper.visualize(graph)
+        viz2 = new_mapper.visualize(graph, path_html= file.strpath)
 
+        assert viz1 == viz2
+
+    def test_file_written(self, tmpdir):
+        mapper = KeplerMapper()
+
+        file = tmpdir.join('output.html')
+
+        data = np.random.rand(1000, 10)
+        lens = mapper.fit_transform(data, projection=[0])
+        graph = mapper.map(lens, data)
+        viz = mapper.visualize(graph, path_html=file.strpath)
+
+        assert file.read() == viz
+        assert len(tmpdir.listdir()) == 1, "file was written to"
+
+    def test_file_not_written(self, tmpdir):
+        mapper = KeplerMapper()
+
+        file = tmpdir.join('output.html')
+
+        data = np.random.rand(1000, 10)
+        lens = mapper.fit_transform(data, projection=[0])
+        graph = mapper.map(lens, data)
+        viz = mapper.visualize(graph, path_html=file.strpath, save_file=False)
+
+        assert len(tmpdir.listdir()) == 0, "file was never written to"
+        # assert file.read() != viz
 
 class TestLinker():
     def test_finds_a_link(self):
@@ -150,7 +181,8 @@ class TestLens():
         data = np.random.rand(100, 2)
         #import pdb; pdb.set_trace()
         graph = mapper.map(data)
-        assert graph["meta_graph"] == "custom"
+        assert graph["meta_data"]["projection"] == "custom"
+        assert graph["meta_data"]["scaler"] == "None"
 
     def test_projection(self):
         atol = 0.1 # accomodate scaling, values are in (0,1), but will be scaled slightly

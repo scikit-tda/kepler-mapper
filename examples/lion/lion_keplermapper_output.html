@@ -45,15 +45,12 @@
     var svg = d3.select("#holder").append("svg")
       .attr("width", width)
       .attr("height", height);
-
     var div = d3.select("#holder").append("div")
       .attr("class", "tooltip")
       .style("opacity", 0.0);
-
     var divs = d3.select('#holder').append('div')
       .attr('class', 'divs')
       .attr('style', function(d) { return 'overflow: hidden; width: ' + width + 'px; height: ' + height + 'px;'; });
-
       graph = {"nodes": [{"name": "cube0_cluster0", "tooltip": "<h2>Cluster cube0_cluster0</h2>Contains 294 members.", "group": 10, "color": "0"}, {"name": "cube0_cluster1", "tooltip": "<h2>Cluster cube0_cluster1</h2>Contains 65 members.", "group": 8, "color": "0"}, {"name": "cube1_cluster0", "tooltip": "<h2>Cluster cube1_cluster0</h2>Contains 192 members.", "group": 10, "color": "1"}, {"name": "cube1_cluster1", "tooltip": "<h2>Cluster cube1_cluster1</h2>Contains 83 members.", "group": 8, "color": "1"}, {"name": "cube1_cluster2", "tooltip": "<h2>Cluster cube1_cluster2</h2>Contains 148 members.", "group": 8, "color": "1"}, {"name": "cube2_cluster0", "tooltip": "<h2>Cluster cube2_cluster0</h2>Contains 412 members.", "group": 12, "color": "2"}, {"name": "cube3_cluster0", "tooltip": "<h2>Cluster cube3_cluster0</h2>Contains 272 members.", "group": 10, "color": "3"}, {"name": "cube3_cluster1", "tooltip": "<h2>Cluster cube3_cluster1</h2>Contains 105 members.", "group": 8, "color": "3"}, {"name": "cube4_cluster0", "tooltip": "<h2>Cluster cube4_cluster0</h2>Contains 550 members.", "group": 12, "color": "4"}, {"name": "cube5_cluster0", "tooltip": "<h2>Cluster cube5_cluster0</h2>Contains 594 members.", "group": 12, "color": "5"}, {"name": "cube6_cluster0", "tooltip": "<h2>Cluster cube6_cluster0</h2>Contains 288 members.", "group": 10, "color": "6"}, {"name": "cube7_cluster0", "tooltip": "<h2>Cluster cube7_cluster0</h2>Contains 394 members.", "group": 10, "color": "7"}, {"name": "cube8_cluster0", "tooltip": "<h2>Cluster cube8_cluster0</h2>Contains 1510 members.", "group": 14, "color": "8"}, {"name": "cube9_cluster0", "tooltip": "<h2>Cluster cube9_cluster0</h2>Contains 1004 members.", "group": 12, "color": "9"}], "links": [{"source": 0, "target": 3, "value": 1}, {"source": 1, "target": 4, "value": 1}, {"source": 2, "target": 5, "value": 1}, {"source": 3, "target": 5, "value": 1}, {"source": 4, "target": 5, "value": 1}, {"source": 5, "target": 6, "value": 1}, {"source": 6, "target": 8, "value": 1}, {"source": 7, "target": 8, "value": 1}, {"source": 8, "target": 9, "value": 1}, {"source": 9, "target": 10, "value": 1}, {"source": 10, "target": 11, "value": 1}, {"source": 11, "target": 12, "value": 1}, {"source": 12, "target": 13, "value": 1}]};
       force
         .nodes(graph.nodes)
@@ -81,7 +78,6 @@
             .style("opacity", 0);
         })
         .call(force.drag);
-
       node.append("title")
         .text(function(d) { return d.name; });
       force.on("tick", function() {

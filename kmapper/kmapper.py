@@ -10,13 +10,16 @@ import numpy as np
 from sklearn import cluster, preprocessing, manifold, decomposition
 from scipy.spatial import distance
 
+
 class Cover():
-    """ Define a cover scheme
+    """Helper class that defines the default covering scheme
 
-        Should implement `find_entries` that finds all data points in each cube.
-        Should construct cubes that can be iterated over.
+    functions
+    ---------
+    cubes:          @property, returns an iterable of all bins in the cover.
+    find_entries:   Find all entries in the input data that are in the given cube.
+
     """
-
 
     def __init__(self, data, dimensions=None, nr_cubes=10, overlap_perc=0.2):
         self.nr_cubes = nr_cubes
@@ -43,6 +46,27 @@ class Cover():
 
         self.nr_dimensions = len(self.di)
 
+    def find_entries(self, data, cube):
+        """Find all entries in data that are in the given cube
+
+        Input:      data, cube (an item from the list of cubes provided by `cover.cubes`)
+        Output:     all entries in data that are in cube.
+        """
+
+        chunk = self.chunk_dist[self.di]
+        overlap = self.overlap_dist[self.di]
+        lower_bound = self.d[self.di] + (cube * chunk)
+        upper_bound = lower_bound + chunk + overlap
+
+        # Slice the hypercube
+        # the +1 accounts for a new column of indices
+        entries = (data[:, self.di] >= lower_bound) & \
+                  (data[:, self.di] < upper_bound)
+
+        hypercube = data[np.invert(np.any(entries == False, axis=1))]
+
+        return hypercube
+
     @property
     def cubes(self):
         return self._cube_coordinates_all()
@@ -60,68 +84,53 @@ class Cover():
         for x in range(self.nr_cubes):
             l += [x] * self.nr_dimensions
 
-        coordinates = [np.array(list(f)) for f in sorted(set(itertools.permutations(l, self.nr_dimensions)))]
+        coordinates = [np.array(list(f)) for f in sorted(
+            set(itertools.permutations(l, self.nr_dimensions)))]
 
         return coordinates
 
-    def find_entries(self, data, coor):
-        chunk = self.chunk_dist[self.di]
-        overlap = self.overlap_dist[self.di]
-        #import pdb; pdb.set_trace()
-        lower_bound = self.d[self.di] + (coor * chunk)
-        upper_bound = lower_bound + chunk + overlap
-
-        # Slice the hypercube
-        # the +1 accounts for a new column of indices
-        entries = (data[:, self.di] >= lower_bound) & \
-                  (data[:, self.di] < upper_bound)
-
-        hypercube = data[np.invert(np.any(entries == False, axis=1))]
-
-        return hypercube
 
 class KeplerMapper(object):
-    # With this class you can build topological networks from (high-dimensional) data.
-    #
-    # 1)   	Fit a projection/lens/function to a dataset and transform it.
-    #     	For instance "mean_of_row(x) for x in X"
-    # 2)   	Map this projection with overlapping intervals/hypercubes.
-    #    		Cluster the points inside the interval
-    #    		(Note: we cluster on the inverse image/original data to lessen projection loss).
-    #    		If two clusters/nodes have the same members (due to the overlap), then:
-    #    		connect these with an edge.
-    # 3)  	Visualize the network using HTML and D3.js.
-    #
-    # functions
-    # ---------
-    # fit_transform:   Create a projection (lens) from a dataset
-    # map:         	Apply Mapper algorithm on this projection and build a simplicial complex
-    # visualize:    	Turns the complex dictionary into a HTML/D3.js visualization
+    """With this class you can build topological networks from (high-dimensional) data.
+
+    1)   	Fit a projection/lens/function to a dataset and transform it.
+                For instance "mean_of_row(x) for x in X"
+    2)   	Map this projection with overlapping intervals/hypercubes.
+                Cluster the points inside the interval
+                (Note: we cluster on the inverse image/original data to lessen projection loss).
+                If two clusters/nodes have the same members (due to the overlap), then:
+                connect these with an edge.
+    3)  	Visualize the network using HTML and D3.js.
+
+    functions
+    ---------
+    fit_transform:   Create a projection (lens) from a dataset
+    map:         	Apply Mapper algorithm on this projection and build a simplicial complex
+    visualize:    	Turns the complex dictionary into a HTML/D3.js visualization
+    """
 
     def __init__(self, verbose=0):
         self.verbose = verbose
         self.chunk_dist = []
         self.overlap_dist = []
         self.d = []
-        self.nr_cubes = 0
-        self.overlap_perc = 0
-        self.clusterer = False
         self.projection = None
         self.scaler = None
 
     def fit_transform(self, X, projection="sum", scaler=preprocessing.MinMaxScaler(), distance_matrix=False):
-        # Creates the projection/lens from X.
-        #
-        # Input:      X. Input features as a numpy array.
-        # Output:     projected_X. original data transformed to a projection (lens).
-        #
-        # parameters
-        # ----------
-        # projection:   Projection parameter is either a string,
-        #               a scikit class with fit_transform, like manifold.TSNE(),
-        #               or a list of dimension indices.
-        # scaler:       if None, do no scaling, else apply scaling to the projection
-        #               Default: Min-Max scaling
+        """Creates the projection/lens from X.
+
+        Input:      X. Input features as a numpy array.
+        Output:     projected_X. original data transformed to a projection (lens).
+
+        parameters
+        ----------
+        projection:   Projection parameter is either a string,
+                      a scikit class with fit_transform, like manifold.TSNE(),
+                      or a list of dimension indices.
+        scaler:       if None, do no scaling, else apply scaling to the projection
+                      Default: Min-Max scaling
+        """
         self.inverse = X
         self.scaler = scaler
         self.projection = str(projection)
@@ -221,18 +230,19 @@ class KeplerMapper(object):
         return X
 
     def map(self, projected_X, inverse_X=None, clusterer=cluster.DBSCAN(eps=0.5, min_samples=3), nr_cubes=10, overlap_perc=0.1):
-        # This maps the data to a simplicial complex. Returns a dictionary with nodes and links.
-        #
-        # Input:    projected_X. A Numpy array with the projection/lens.
-        # Output:    complex. A dictionary with "nodes", "links" and "meta information"
-        #
-        # parameters
-        # ----------
-        # projected_X  	projected_X. A Numpy array with the projection/lens. Required.
-        # inverse_X    	Numpy array or None. If None then the projection itself is used for clustering.
-        # clusterer    	Scikit-learn API compatible clustering algorithm. Default: DBSCAN
-        # nr_cubes    	Int. The number of intervals/hypercubes to create.
-        # overlap_perc  Float. The percentage of overlap "between" the intervals/hypercubes.
+        """This maps the data to a simplicial complex. Returns a dictionary with nodes and links.
+
+        Input:    projected_X. A Numpy array with the projection/lens.
+        Output:    complex. A dictionary with "nodes", "links" and "meta information"
+
+        parameters
+        ----------
+        projected_X  	projected_X. A Numpy array with the projection/lens. Required.
+        inverse_X    	Numpy array or None. If None then the projection itself is used for clustering.
+        clusterer    	Scikit-learn API compatible clustering algorithm. Default: DBSCAN
+        nr_cubes    	Int. The number of intervals/hypercubes to create.
+        overlap_perc  Float. The percentage of overlap "between" the intervals/hypercubes.
+        """
 
         start = datetime.now()
 
@@ -240,10 +250,6 @@ class KeplerMapper(object):
         links = defaultdict(list)
         meta = defaultdict(list)
         graph = {}
-
-        self.clusterer = clusterer
-        self.nr_cubes = nr_cubes
-        self.overlap_perc = overlap_perc
 
         # If inverse image is not provided, we use the projection as the inverse image (suffer projection loss)
         if inverse_X is None:
@@ -263,18 +269,18 @@ class KeplerMapper(object):
         # exclude the index column
         di = np.array(range(1, projected_X.shape[1]))
 
-        ### Define codomain cover
+        # Define codomain cover
         #   - once there are more types of covers, this will be user set
         cover = Cover(projected_X,
-                     dimensions=di,
-                     nr_cubes=nr_cubes,
-                     overlap_perc=overlap_perc)
+                      dimensions=di,
+                      nr_cubes=nr_cubes,
+                      overlap_perc=overlap_perc)
         cubes = cover.cubes
 
         # Algo's like K-Means, have a set number of clusters. We need this number
         # to adjust for the minimal number of samples inside an interval before
         # we consider clustering or skipping it.
-        cluster_params = self.clusterer.get_params()
+        cluster_params = clusterer.get_params()
         min_cluster_samples = cluster_params.get("n_clusters", 1)
 
         if self.verbose > 1:
@@ -283,17 +289,17 @@ class KeplerMapper(object):
 
         # Subdivide the projected data X in intervals/hypercubes with overlap
         if self.verbose > 0:
-            cubes = list(cubes) # extract list from generator
+            cubes = list(cubes)  # extract list from generator
             total_cubes = len(cubes)
             print("Creating %s hypercubes." % total_cubes)
 
-        for i, coor in enumerate(cubes):
-            ### Slice the hypercube
-            hypercube = cover.find_entries(projected_X, coor)
+        for i, cube in enumerate(cubes):
+            # Slice the hypercube
+            hypercube = cover.find_entries(projected_X, cube)
 
             if self.verbose > 1:
                 print("There are %s points in cube_%s / %s with starting range %s" %
-                      (hypercube.shape[0], i, total_cubes, cover.d[di] + (coor * cover.chunk_dist[di])))
+                      (hypercube.shape[0], i, total_cubes, cover.d[di] + (cube * cover.chunk_dist[di])))
 
             # If at least min_cluster_samples samples inside the hypercube
             if hypercube.shape[0] >= min_cluster_samples:
@@ -321,7 +327,7 @@ class KeplerMapper(object):
                         # Append the member id's as integers
                         nodes[cluster_id].append(int(a[0]))
                         meta[cluster_id] = {
-                            "size": hypercube.shape[0], "coordinates": coor}
+                            "size": hypercube.shape[0], "coordinates": cube}
             else:
                 if self.verbose > 1:
                     print("Cube_%s is empty.\n" % (i))
@@ -331,7 +337,13 @@ class KeplerMapper(object):
 
         graph["nodes"] = nodes
         graph["links"] = links
-        graph["meta_graph"] = self.projection if self.projection else "custom"
+        graph["meta_data"] = {
+            "projection": self.projection if self.projection else "custom",
+            "nr_cubes": nr_cubes,
+            "overlap_perc": overlap_perc,
+            "clusterer": str(clusterer),
+            "scaler": str(self.scaler)
+        }
         graph["meta_nodes"] = meta
 
         # Reporting
@@ -368,32 +380,34 @@ class KeplerMapper(object):
 
     def visualize(self, complex, color_function="", path_html="mapper_visualization_output.html", title="My Data",
                   graph_link_distance=30, graph_gravity=0.1, graph_charge=-120, custom_tooltips=None, width_html=0,
-                  height_html=0, show_tooltips=True, show_title=True, show_meta=True):
-        # Turns the dictionary 'complex' in a html file with d3.js
-        #
-        # Input:      complex. Dictionary (output from calling .map())
-        # Output:      a HTML page saved as a file in 'path_html'.
-        #
-        # parameters
-        # ----------
-        # color_function    	string. Not fully implemented. Default: "" (distance to origin)
-        # path_html        		file path as string. Where to save the HTML page.
-        # title          		string. HTML page document title and first heading.
-        # graph_link_distance  	int. Edge length.
-        # graph_gravity     	float. "Gravity" to center of layout.
-        # graph_charge      	int. charge between nodes.
-        # custom_tooltips   	None or Numpy Array. You could use "y"-label array for this.
-        # width_html        	int. Width of canvas. Default: 0 (full width)
-        # height_html       	int. Height of canvas. Default: 0 (full height)
-        # show_tooltips     	bool. default:True
-        # show_title      		bool. default:True
-        # show_meta        		bool. default:True
+                  height_html=0, show_tooltips=True, show_title=True, show_meta=True, save_file=True):
+        """Turns the dictionary 'complex' in a html file with d3.js
 
+        Input:      complex. Dictionary (output from calling .map())
+        Output:      a HTML page saved as a file in 'path_html'.
+
+        parameters
+        ----------
+        color_function    	string. Not fully implemented. Default: "" (distance to origin)
+        path_html        		file path as string. Where to save the HTML page.
+        title          		string. HTML page document title and first heading.
+        graph_link_distance  	int. Edge length.
+        graph_gravity     	float. "Gravity" to center of layout.
+        graph_charge      	int. charge between nodes.
+        custom_tooltips   	None or Numpy Array. You could use "y"-label array for this.
+        width_html        	int. Width of canvas. Default: 0 (full width)
+        height_html       	int. Height of canvas. Default: 0 (full height)
+        show_tooltips     	bool. default:True
+        show_title      		bool. default:True
+        show_meta        		bool. default:True
+        """
         # Format JSON for D3 graph
         json_s = {}
         json_s["nodes"] = []
         json_s["links"] = []
         k2e = {}  # a key to incremental int dict, used for id's when linking
+
+        meta_data = complex["meta_data"]
 
         for e, k in enumerate(complex["nodes"]):
             # Tooltip and node color formatting, TODO: de-mess-ify
@@ -449,8 +463,7 @@ class KeplerMapper(object):
         else:
             title_display = ""
 
-        with open(path_html, "wb") as outfile:
-            html = """<!DOCTYPE html>
+        html = """<!DOCTYPE html>
     <meta charset="utf-8">
     <meta name="generator" content="KeplerMapper">
     <title>%s | KeplerMapper</title>
@@ -496,15 +509,12 @@ class KeplerMapper(object):
     var svg = d3.select("#holder").append("svg")
       .attr("width", width)
       .attr("height", height);
-
     var div = d3.select("#holder").append("div")
       .attr("class", "tooltip")
       .style("opacity", 0.0);
-
     var divs = d3.select('#holder').append('div')
       .attr('class', 'divs')
       .attr('style', function(d) { return 'overflow: hidden; width: ' + width + 'px; height: ' + height + 'px;'; });
-
       graph = %s;
       force
         .nodes(graph.nodes)
@@ -532,7 +542,6 @@ class KeplerMapper(object):
             .style("opacity", 0);
         })
         .call(force.drag);
-
       node.append("title")
         .text(function(d) { return d.name; });
       force.on("tick", function() {
@@ -545,19 +554,24 @@ class KeplerMapper(object):
         .attr('style', function(d) { return 'width: ' + (d.group * 2) + 'px; height: ' + (d.group * 2) + 'px; ' + 'left: '+(d.x-(d.group))+'px; ' + 'top: '+(d.y-(d.group))+'px; background: '+color(d.color)+'; box-shadow: 0px 0px 3px #111; box-shadow: 0px 0px 33px '+color(d.color)+', inset 0px 0px 5px rgba(0, 0, 0, 0.2);'})
         ;
       });
-    </script>""" % (title, width_css, height_css, title_display, meta_display, tooltips_display, title, complex["meta_graph"], self.nr_cubes, self.overlap_perc * 100, color_function, complex["meta_graph"], str(self.clusterer), str(self.scaler), width_js, height_js, graph_charge, graph_link_distance, graph_gravity, json.dumps(json_s))
-            outfile.write(html.encode("utf-8"))
-        if self.verbose > 0:
-            print("\nWrote d3.js graph to '%s'" % path_html)
+    </script>""" % (title, width_css, height_css, title_display, meta_display, tooltips_display, title, meta_data["projection"], meta_data['nr_cubes'], meta_data['overlap_perc'] * 100, color_function, meta_data["projection"], meta_data["clusterer"], meta_data["scaler"], width_js, height_js, graph_charge, graph_link_distance, graph_gravity, json.dumps(json_s))
+
+        if save_file:
+            with open(path_html, "wb") as outfile:
+                outfile.write(html.encode("utf-8"))
+            if self.verbose > 0:
+                print("\nWrote d3.js graph to '%s'" % path_html)
+
+        return html
 
     def data_from_cluster_id(self, cluster_id, graph, data):
-        # Returns the original data of each cluster member for a given cluster ID
-        #
-        # Input: cluster_id. Integer. ID of the cluster.
-        #        graph. Dict. The resulting dictionary after applying map()
-        #        data. Numpy array. Original dataset. Accepts both 1-D and 2-D array.
-        # Output: rows of cluster member data as Numpy array.
-        #
+        """Returns the original data of each cluster member for a given cluster ID
+
+        Input: cluster_id. Integer. ID of the cluster.
+               graph. Dict. The resulting dictionary after applying map()
+               data. Numpy array. Original dataset. Accepts both 1-D and 2-D array.
+        Output: rows of cluster member data as Numpy array.
+        """
         if cluster_id in graph["nodes"]:
             cluster_members = graph["nodes"][cluster_id]
             cluster_members_data = data[cluster_members]

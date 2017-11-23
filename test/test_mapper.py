@@ -126,8 +126,8 @@ class TestLens():
         last_point = data[-1]
         for tag, func in options:
             lens = mapper.fit_transform(data, projection=tag, scaler=None)
-            assert lens[0][0] == func(first_point)
-            assert lens[-1][0] == func(last_point)
+            np.testing.assert_almost_equal(lens[0][0], func(first_point))
+            np.testing.assert_almost_equal(lens[-1][0], func(last_point))
 
 
     def test_lens_size(self):

@@ -241,11 +241,18 @@ class KeplerMapper(object):
 
         parameters
         ----------
-        projected_X  	projected_X. A Numpy array with the projection/lens. Required.
-        inverse_X    	Numpy array or None. If None then the projection itself is used for clustering.
-        clusterer    	Scikit-learn API compatible clustering algorithm. Default: DBSCAN
-        nr_cubes    	Int. The number of intervals/hypercubes to create.
-        overlap_perc  Float. The percentage of overlap "between" the intervals/hypercubes.
+        projected_X:    projected_X. A Numpy array with the projection/lens.
+                        Required.
+        inverse_X:      Numpy array or None. If None then the projection itself
+                        is used for clustering.
+        clusterer:      Scikit-learn API compatible clustering algorithm.
+                        Default: DBSCAN
+        nr_cubes:       Int. The number of intervals/hypercubes to create.
+                        (DeprecationWarning, define Cover explicitly in future versions)
+        overlap_perc:   Float. The percentage of overlap "between" the intervals/hypercubes.
+                        (DeprecationWarning, define Cover explicitly in future versions)
+        coverer:        Cover scheme for lens. Instance of kmapper. Cover providing
+                        methods `define_bins` and `find_entries`.
         """
 
         start = datetime.now()
@@ -263,7 +270,8 @@ class KeplerMapper(object):
             coverer = Cover(nr_cubes=nr_cubes,
                             overlap_perc=overlap_perc)
         else:
-            warnings.warn("Explicitly passing in nr_cubes and overlap_perc will be deprecated in future releases. Please supply Cover object.", DeprecationWarning)
+            warnings.warn(
+                "Explicitly passing in nr_cubes and overlap_perc will be deprecated in future releases. Please supply Cover object.", DeprecationWarning)
 
         if self.verbose > 0:
             print("Mapping on data shaped %s using lens shaped %s\n" %

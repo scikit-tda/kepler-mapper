@@ -13,8 +13,7 @@ lens = mapper.fit_transform(data)
 graph = mapper.map(lens,
                    data,
                    clusterer=sklearn.cluster.DBSCAN(eps=0.1, min_samples=5),
-                   nr_cubes=30,
-                   overlap_perc=0.2)
+                   coverer=km.Cover(30, 0.2))
 
 
 mapper.visualize(graph,

@@ -10,6 +10,7 @@ import numpy as np
 from sklearn import cluster, preprocessing, manifold, decomposition
 from scipy.spatial import distance
 
+from .nerve import GraphNerve
 
 class Cover():
     """Helper class that defines the default covering scheme
@@ -116,6 +117,7 @@ class KeplerMapper(object):
         self.d = []
         self.projection = None
         self.scaler = None
+        self._create_links = None
 
     def fit_transform(self, X, projection="sum", scaler=preprocessing.MinMaxScaler(), distance_matrix=False):
         """Creates the projection/lens from X.
@@ -229,7 +231,7 @@ class KeplerMapper(object):
 
         return X
 
-    def map(self, projected_X, inverse_X=None, clusterer=cluster.DBSCAN(eps=0.5, min_samples=3), nr_cubes=10, overlap_perc=0.1):
+    def map(self, projected_X, inverse_X=None, clusterer=cluster.DBSCAN(eps=0.5, min_samples=3), nr_cubes=10, overlap_perc=0.1, nerve=GraphNerve):
         """This maps the data to a simplicial complex. Returns a dictionary with nodes and links.
 
         Input:    projected_X. A Numpy array with the projection/lens.
@@ -332,11 +334,11 @@ class KeplerMapper(object):
                 if self.verbose > 1:
                     print("Cube_%s is empty.\n" % (i))
 
-        # TODO: create a `nerve builder` class that determines how nerve is built
-        links = self._create_links(nodes, links)
+        links, simplices = nerve(nodes, links)
 
         graph["nodes"] = nodes
         graph["links"] = links
+        graph["simplices"] = simplices
         graph["meta_data"] = {
             "projection": self.projection if self.projection else "custom",
             "nr_cubes": nr_cubes,
@@ -360,23 +362,6 @@ class KeplerMapper(object):
         print("\nCreated %s edges and %s nodes in %s." %
               (nr_links, len(nodes), time))
 
-    def _create_links(self, nodes, result=None):
-        """
-            Helper function to find edges of the overlapping clusters.
-
-            TODO: generalize to take nerve.
-        """
-        if result == None:
-            result = defaultdict(list)
-
-        # Create links when clusters from different hypercubes have members with the same sample id.
-        candidates = itertools.combinations(nodes.keys(), 2)
-        for candidate in candidates:
-            # if there are non-unique members in the union
-            if len(nodes[candidate[0]] + nodes[candidate[1]]) != len(set(nodes[candidate[0]] + nodes[candidate[1]])):
-                result[candidate[0]].append(candidate[1])
-
-        return result
 
     def visualize(self, complex, color_function="", path_html="mapper_visualization_output.html", title="My Data",
                   graph_link_distance=30, graph_gravity=0.1, graph_charge=-120, custom_tooltips=None, width_html=0,

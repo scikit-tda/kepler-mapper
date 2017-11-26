@@ -3,7 +3,7 @@ import numpy as np
 
 
 from kmapper import KeplerMapper
-
+from kmapper import GraphNerve
 
 class TestLogging():
     """ Simple tests that confirm map completes at each logging level
@@ -75,29 +75,26 @@ class TestLinker():
     #       construct general simplicial complexes and
     #       something suitable for computing persistent homology
     def test_finds_a_link(self):
-        mapper = KeplerMapper()
-
-        groups = {"a": [1, 2, 3, 4], "b": [1, 2, 3, 4]}
-        links = mapper._create_links(groups)
+        nerve = GraphNerve()
+        groups = {"a": [1,2,3,4], "b":[1,2,3,4]}
+        links, _ = nerve(groups)
 
         assert "a" in links or "b" in links
         assert links["a"] == ["b"] or links["b"] == ["a"]
 
     def test_no_link(self):
-        mapper = KeplerMapper()
+        nerve = GraphNerve()
+        groups = {"a": [1,2,3,4], "b":[5,6,7]}
 
-        groups = {"a": [1, 2, 3, 4], "b": [5, 6, 7]}
-        links = mapper._create_links(groups)
-
+        links, _ = nerve(groups)
         assert not links
 
     def test_pass_through_result(self):
-        mapper = KeplerMapper()
-
-        groups = {"a": [1], "b": [2]}
+        nerve = GraphNerve()
+        groups = {"a": [1], "b":[2]}
 
         res = dict()
-        links = mapper._create_links(groups, res)
+        links, _ = nerve(groups)
 
         assert res == links
 

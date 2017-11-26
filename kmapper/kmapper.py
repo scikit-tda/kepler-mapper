@@ -11,6 +11,7 @@ import numpy as np
 from sklearn import cluster, preprocessing, manifold, decomposition
 from scipy.spatial import distance
 
+from .nerve import GraphNerve
 
 class Cover():
     """Helper class that defines the default covering scheme
@@ -233,7 +234,8 @@ class KeplerMapper(object):
             clusterer=cluster.DBSCAN(eps=0.5, min_samples=3),
             nr_cubes=None,
             overlap_perc=None,
-            coverer=Cover(nr_cubes=10, overlap_perc=0.1)):
+            coverer=Cover(nr_cubes=10, overlap_perc=0.1),
+            nerve=GraphNerve()):
         """This maps the data to a simplicial complex. Returns a dictionary with nodes and links.
 
         Input:    projected_X. A Numpy array with the projection/lens.
@@ -253,12 +255,12 @@ class KeplerMapper(object):
                         (DeprecationWarning, define Cover explicitly in future versions)
         coverer:        Cover scheme for lens. Instance of kmapper. Cover providing
                         methods `define_bins` and `find_entries`.
+        nerve           Nerve builder implementing __call__(nodes) API
         """
 
         start = datetime.now()
 
         nodes = defaultdict(list)
-        links = defaultdict(list)
         meta = defaultdict(list)
         graph = {}
 
@@ -347,11 +349,11 @@ class KeplerMapper(object):
                 if self.verbose > 1:
                     print("Cube_%s is empty.\n" % (i))
 
-        # TODO: create a `nerve builder` class that determines how nerve is built
-        links = self._create_links(nodes, links)
+        links, simplices = nerve(nodes)
 
         graph["nodes"] = nodes
         graph["links"] = links
+        graph["simplices"] = simplices
         graph["meta_data"] = {
             "projection": self.projection if self.projection else "custom",
             "nr_cubes": coverer.nr_cubes,
@@ -368,6 +370,7 @@ class KeplerMapper(object):
         return graph
 
     def _summary(self, graph, time):
+        # TODO: this summary is relevant to the type of Nerve being built.
         links = graph["links"]
         nodes = graph["nodes"]
         nr_links = sum(len(v) for k, v in links.items())
@@ -375,23 +378,6 @@ class KeplerMapper(object):
         print("\nCreated %s edges and %s nodes in %s." %
               (nr_links, len(nodes), time))
 
-    def _create_links(self, nodes, result=None):
-        """
-            Helper function to find edges of the overlapping clusters.
-
-            TODO: generalize to take nerve.
-        """
-        if result == None:
-            result = defaultdict(list)
-
-        # Create links when clusters from different hypercubes have members with the same sample id.
-        candidates = itertools.combinations(nodes.keys(), 2)
-        for candidate in candidates:
-            # if there are non-unique members in the union
-            if len(nodes[candidate[0]] + nodes[candidate[1]]) != len(set(nodes[candidate[0]] + nodes[candidate[1]])):
-                result[candidate[0]].append(candidate[1])
-
-        return result
 
     def visualize(self, complex, color_function="", path_html="mapper_visualization_output.html", title="My Data",
                   graph_link_distance=30, graph_gravity=0.1, graph_charge=-120, custom_tooltips=None, width_html=0,

@@ -1,13 +1,12 @@
 import pytest
+import warnings
 import numpy as np
+from sklearn import datasets
 
 import kmapper as km
 
 from kmapper.kmapper import Cover
 
-from sklearn import datasets
-
-import warnings
 
 class TestAPIMaintenance():
     def test_warn_old_api(self):

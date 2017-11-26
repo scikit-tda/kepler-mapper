@@ -7,13 +7,69 @@ from kmapper.kmapper import Cover
 
 from sklearn import datasets
 
+import warnings
+
+class TestAPIMaintenance():
+    def test_warn_old_api(self):
+        """ Confirm old api works but throws warning """
+
+        mapper = km.KeplerMapper()
+        data = np.random.rand(100, 10)
+        lens = mapper.fit_transform(data)
+
+        with pytest.deprecated_call():
+            graph = mapper.map(lens, data, nr_cubes=10)
+
+        with pytest.deprecated_call():
+            graph = mapper.map(lens, data, overlap_perc=10)
+
+        with pytest.deprecated_call():
+            graph = mapper.map(lens, data, nr_cubes=10, overlap_perc=0.1)
+
+    def test_new_api_old_defaults(self):
+        mapper = km.KeplerMapper()
+        data = np.random.rand(100, 10)
+        lens = mapper.fit_transform(data)
+
+        _ = mapper.map(lens, data, nr_cubes=10)
+        c2 = mapper.coverer
+
+        assert c2.overlap_perc == 0.1
+
+        _ = mapper.map(lens, data, overlap_perc=0.1)
+        c2 = mapper.coverer
+
+    def test_no_warn_normally(self, recwarn):
+        """ Confirm that deprecation warnings behave as expected"""
+        mapper = km.KeplerMapper()
+        data = np.random.rand(100, 10)
+        lens = mapper.fit_transform(data)
+
+        warnings.simplefilter('always')
+        graph = mapper.map(lens, data)
+
+        assert len(recwarn) == 0
+        assert DeprecationWarning not in recwarn
+
 
 class TestCover():
-    def test_multibins(self):
+
+    def test_diff_overlap_per_dim(self):
+        data = np.random.rand(100,10)
+        c = Cover(overlap_perc=[2,10])
+
+
+    def test_define_diff_bins_per_dim(self):
         data = np.arange(30).reshape(10, 3)
         c = Cover(nr_cubes=[5, 10])
         cubes = c.define_bins(data)
         assert len(list(cubes)) == 5 * 10
+
+    def test_find_entries_runs_with_diff_bins(self):
+        data = np.arange(30).reshape(10, 3)
+        c = Cover(nr_cubes=[5, 10])
+        cubes = list(c.define_bins(data))
+        _ = c.find_entries(data, cubes[0])
 
     def test_cube_count(self):
         data = np.arange(30).reshape(10, 3)

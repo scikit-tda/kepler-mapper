@@ -231,9 +231,9 @@ class KeplerMapper(object):
             projected_X,
             inverse_X=None,
             clusterer=cluster.DBSCAN(eps=0.5, min_samples=3),
-            nr_cubes=10,
-            overlap_perc=0.1,
-            coverer=None):
+            nr_cubes=None,
+            overlap_perc=None,
+            coverer=Cover(nr_cubes=10, overlap_perc=0.1)):
         """This maps the data to a simplicial complex. Returns a dictionary with nodes and links.
 
         Input:    projected_X. A Numpy array with the projection/lens.
@@ -266,12 +266,18 @@ class KeplerMapper(object):
         if inverse_X is None:
             inverse_X = projected_X
 
-        if coverer is None:
-            coverer = Cover(nr_cubes=nr_cubes,
+        if nr_cubes is not None or overlap_perc is not None:
+            # If user supplied nr_cubes or overlap_perc,
+            # use old defaults instead of new Cover
+            nr_cubes = nr_cubes or 10
+            overlap_perc = overlap_perc or 0.1
+            self.coverer = Cover(nr_cubes=nr_cubes,
                             overlap_perc=overlap_perc)
-        else:
+
             warnings.warn(
                 "Explicitly passing in nr_cubes and overlap_perc will be deprecated in future releases. Please supply Cover object.", DeprecationWarning)
+        else:
+            self.coverer = coverer
 
         if self.verbose > 0:
             print("Mapping on data shaped %s using lens shaped %s\n" %
@@ -282,6 +288,7 @@ class KeplerMapper(object):
         projected_X = np.c_[ids, projected_X]
         inverse_X = np.c_[ids, inverse_X]
 
+        # Cover scheme defines a list of elements
         bins = coverer.define_bins(projected_X)
 
         # Algo's like K-Means, have a set number of clusters. We need this number
@@ -301,7 +308,8 @@ class KeplerMapper(object):
             print("Creating %s hypercubes." % total_bins)
 
         for i, cube in enumerate(bins):
-            # Slice the hypercube
+            # Slice the hypercube:
+            #  gather all entries in this element of the cover
             hypercube = coverer.find_entries(projected_X, cube)
 
             if self.verbose > 1:

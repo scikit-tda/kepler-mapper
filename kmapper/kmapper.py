@@ -117,7 +117,6 @@ class KeplerMapper(object):
         self.d = []
         self.projection = None
         self.scaler = None
-        self._create_links = None
 
     def fit_transform(self, X, projection="sum", scaler=preprocessing.MinMaxScaler(), distance_matrix=False):
         """Creates the projection/lens from X.

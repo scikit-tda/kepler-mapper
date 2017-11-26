@@ -21,16 +21,20 @@ class GraphNerve(Nerve):
     """
     Creates the 1-skeleton of the Mapper complex.
     """
-    def __call__(self, nodes, links):
-        """
-            Helper function to find edges of the overlapping clusters.
+    def __call__(self, nodes):
+        """Helper function to find edges of the overlapping clusters.
 
-            TODO: generalize to take nerve.
+        Input
+        nodes:  A dictionary with entires {node id}:{list of ids in node}
+
+        Output
+        edges: A 1-skeleton of the nerve (intersecting  nodes)
+        simplicies: Complete list of simplices
+
+        TODO: generalize to take nerve.
         """
-        if links is None:
-            result = defaultdict(list)
-        else:
-            result = links
+
+        result = defaultdict(list)
 
         # Create links when clusters from different hypercubes have members with the same sample id.
         candidates = itertools.combinations(nodes.keys(), 2)
@@ -39,4 +43,5 @@ class GraphNerve(Nerve):
             if len(nodes[candidate[0]] + nodes[candidate[1]]) != len(set(nodes[candidate[0]] + nodes[candidate[1]])):
                 result[candidate[0]].append(candidate[1])
 
-        return result, [[n] for n in nodes] + [[x] + result[x] for x in result]
+        simplices = [[n] for n in nodes] + [[x] + result[x] for x in result]
+        return result, simplices

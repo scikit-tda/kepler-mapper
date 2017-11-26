@@ -243,12 +243,12 @@ class KeplerMapper(object):
         clusterer    	Scikit-learn API compatible clustering algorithm. Default: DBSCAN
         nr_cubes    	Int. The number of intervals/hypercubes to create.
         overlap_perc  Float. The percentage of overlap "between" the intervals/hypercubes.
+        nerve           Nerve builder implementing __call__(nodes) API.
         """
 
         start = datetime.now()
 
         nodes = defaultdict(list)
-        links = defaultdict(list)
         meta = defaultdict(list)
         graph = {}
 
@@ -333,7 +333,7 @@ class KeplerMapper(object):
                 if self.verbose > 1:
                     print("Cube_%s is empty.\n" % (i))
 
-        links, simplices = nerve(nodes, links)
+        links, simplices = nerve(nodes)
 
         graph["nodes"] = nodes
         graph["links"] = links
@@ -354,6 +354,7 @@ class KeplerMapper(object):
         return graph
 
     def _summary(self, graph, time):
+        # TODO: this summary is relevant to the type of Nerve being built.
         links = graph["links"]
         nodes = graph["nodes"]
         nr_links = sum(len(v) for k, v in links.items())

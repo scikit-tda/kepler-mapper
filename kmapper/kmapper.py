@@ -271,8 +271,8 @@ class KeplerMapper(object):
         if nr_cubes is not None or overlap_perc is not None:
             # If user supplied nr_cubes or overlap_perc,
             # use old defaults instead of new Cover
-            nr_cubes = nr_cubes or 10
-            overlap_perc = overlap_perc or 0.1
+            nr_cubes = nr_cubes if nr_cubes else 10
+            overlap_perc = overlap_perc if overlap_perc else 0.1
             self.coverer = Cover(nr_cubes=nr_cubes,
                             overlap_perc=overlap_perc)
 
@@ -291,7 +291,7 @@ class KeplerMapper(object):
         inverse_X = np.c_[ids, inverse_X]
 
         # Cover scheme defines a list of elements
-        bins = coverer.define_bins(projected_X)
+        bins = self.coverer.define_bins(projected_X)
 
         # Algo's like K-Means, have a set number of clusters. We need this number
         # to adjust for the minimal number of samples inside an interval before
@@ -312,7 +312,7 @@ class KeplerMapper(object):
         for i, cube in enumerate(bins):
             # Slice the hypercube:
             #  gather all entries in this element of the cover
-            hypercube = coverer.find_entries(projected_X, cube)
+            hypercube = self.coverer.find_entries(projected_X, cube)
 
             if self.verbose > 1:
                 print("There are %s points in cube_%s / %s" %
@@ -356,8 +356,8 @@ class KeplerMapper(object):
         graph["simplices"] = simplices
         graph["meta_data"] = {
             "projection": self.projection if self.projection else "custom",
-            "nr_cubes": coverer.nr_cubes,
-            "overlap_perc": coverer.overlap_perc,
+            "nr_cubes": self.coverer.nr_cubes,
+            "overlap_perc": self.coverer.overlap_perc,
             "clusterer": str(clusterer),
             "scaler": str(self.scaler)
         }
@@ -464,6 +464,13 @@ class KeplerMapper(object):
         else:
             title_display = ""
 
+        # Account for overlap_perc being singleton or list
+        if type(meta_data['overlap_perc']) != list:
+            overlap_perc = [meta_data['overlap_perc']]
+        else:
+            overlap_perc = meta_data['overlap_perc']
+        overlap_perc = ", ".join("{}%".format(int(overlap * 100)) for overlap in overlap_perc)
+
         html = """<!DOCTYPE html>
     <meta charset="utf-8">
     <meta name="generator" content="KeplerMapper">
@@ -489,7 +496,7 @@ class KeplerMapper(object):
       <p class="meta">
       <b>Lens</b><br>%s<br><br>
       <b>Cubes per dimension</b><br>%s<br><br>
-      <b>Overlap percentage</b><br>%s%%<br><br>
+      <b>Overlap percentage</b><br>%s<br><br>
       <b>Color Function</b><br>%s( %s )<br><br>
       <b>Clusterer</b><br>%s<br><br>
       <b>Scaler</b><br>%s
@@ -555,7 +562,7 @@ class KeplerMapper(object):
         .attr('style', function(d) { return 'width: ' + (d.group * 2) + 'px; height: ' + (d.group * 2) + 'px; ' + 'left: '+(d.x-(d.group))+'px; ' + 'top: '+(d.y-(d.group))+'px; background: '+color(d.color)+'; box-shadow: 0px 0px 3px #111; box-shadow: 0px 0px 33px '+color(d.color)+', inset 0px 0px 5px rgba(0, 0, 0, 0.2);'})
         ;
       });
-    </script>""" % (title, width_css, height_css, title_display, meta_display, tooltips_display, title, meta_data["projection"], meta_data['nr_cubes'], meta_data['overlap_perc'] * 100, color_function, meta_data["projection"], meta_data["clusterer"], meta_data["scaler"], width_js, height_js, graph_charge, graph_link_distance, graph_gravity, json.dumps(json_s))
+    </script>""" % (title, width_css, height_css, title_display, meta_display, tooltips_display, title, meta_data["projection"], meta_data['nr_cubes'], overlap_perc, color_function, meta_data["projection"], meta_data["clusterer"], meta_data["scaler"], width_js, height_js, graph_charge, graph_link_distance, graph_gravity, json.dumps(json_s))
 
         if save_file:
             with open(path_html, "wb") as outfile:

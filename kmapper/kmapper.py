@@ -378,7 +378,8 @@ class KeplerMapper(object):
         print("\nCreated %s edges and %s nodes in %s." %
               (nr_links, len(nodes), time))
 
-    def visualize(graph, 
+    def visualize(self,
+                  graph, 
                   color_function=None, 
                   custom_tooltips=None, 
                   custom_meta=None, 

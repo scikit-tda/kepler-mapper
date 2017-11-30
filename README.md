@@ -215,7 +215,7 @@ Check the `examples\breast-cancer` directory for code
 - **George Lake et al.** from Universität Zürich use it for teaching data science: <br>[ESC403 Introduction to Data Science](https://s3itwiki.uzh.ch/display/esc403fs2016/ESC403+Introduction+to+Data+Science+-+Spring+2016)
 - **Mikael Vejdemo-Johansson** maps process control systems <br>[TDA as a diagnostics tool for process control systems.](http://cv.mikael.johanssons.org/talks/2016-05-epfl.pdf)
 - **Lertwittayatrai et al.** mention KeplerMapper in the paper <br>[Extracting Insights from the Topology of the JavaScript Package Ecosystem](https://arxiv.org/abs/1710.00446)
-- **Jeffrey Ray et al.** review KeplerMapper as state-of-the-art in Advances in Intelligent Networking and Collaborative Systems: <br>
+- **Jeffrey Ray et al.** review KeplerMapper in Advances in Intelligent Networking and Collaborative Systems: <br>
 [A Survey of Topological Data Analysis (TDA) Methods Implemented in Python](https://www.springerprofessional.de/en/a-survey-of-topological-data-analysis-tda-methods-implemented-in/14221146)
 
 ## References
@@ -245,11 +245,11 @@ Data Driven NYC. [Making Data Work](https://www.youtube.com/watch?v=UZH5xJXJG2I)
 - **Stéfan van der Walt, S. Chris Colbert and Gaël Varoquaux**. Scientific Computing in Python<br>
 [The NumPy Array: A Structure for Efficient Numerical Computation](https://hal.inria.fr/inria-00564007/document)
 - **Guido van Rossum** Python<br>
-[https://ir.cwi.nl/pub/5007/05007D.pdf](Python Tutorial, Technical Report CS-R9526)
+[Python Tutorial, Technical Report CS-R9526](https://ir.cwi.nl/pub/5007/05007D.pdf)
 - **Mike Bostock, Tim Dwyer, Thomas Jakobsen** Force-directed Graphing/Clustering<br/>
 [Force-directed Graphs](http://bl.ocks.org/mbostock/4062045)
-- *eyaler* Zoom/Pan/Drag/Highlight
-[eyaler's Github](https://github.com/eyaler)<br>
+- **eyaler** Zoom/Pan/Drag/Highlight<br>
+[eyaler's Github](https://github.com/eyaler)
 - **Cindy Zhang, Danny Cochran, Diana Suvorova, Curtis Mitchell** Graphing<br>
 [Grapher](https://github.com/ayasdi/grapher)
 - **Dale Reagan** Color scales<br>

@@ -395,7 +395,7 @@ class KeplerMapper(object):
 
         def _init_color_function(graph, color_function):
             # If no color_function provided we color by row order in data set
-            n_samples = np.max(np.array(graph["nodes"].values()).ravel())
+            n_samples = np.max([i for s in graph["nodes"].values() for i in s])
             if color_function is None:
                 color_function = np.arange(n_samples).reshape(-1, 1)
             # MinMax Scaling to be friendly to non-scaled input.

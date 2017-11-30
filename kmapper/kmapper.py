@@ -401,7 +401,7 @@ class KeplerMapper(object):
             ##from scipy.stats import rankdata
             ##color_function = rankdata(color_function)   
             scaler = preprocessing.MinMaxScaler()
-            color_function = scaler.fit_transform(color_function)
+            color_function = scaler.fit_transform(color_function).ravel()
             return color_function
 
         def _format_cluster_statistics(member_ids, inverse_X, inverse_X_names):

@@ -396,7 +396,7 @@ class KeplerMapper(object):
             # If no color_function provided we color by row order in data set
             n_samples = sum([len(v) for v in graph["nodes"].values()])
             if color_function is None:
-                color_function = np.arange(n_samples)
+                color_function = np.arange(n_samples).reshape(-1, 1)
             # MinMax Scaling to be friendly to non-scaled input.
             ##from scipy.stats import rankdata
             ##color_function = rankdata(color_function)   

@@ -217,6 +217,8 @@ Check the `examples\breast-cancer` directory for code
 - **Lertwittayatrai et al.** mention KeplerMapper in the paper <br>[Extracting Insights from the Topology of the JavaScript Package Ecosystem](https://arxiv.org/abs/1710.00446)
 - **Jeffrey Ray et al.** review KeplerMapper in Advances in Intelligent Networking and Collaborative Systems: <br>
 [A Survey of Topological Data Analysis (TDA) Methods Implemented in Python](https://www.springerprofessional.de/en/a-survey-of-topological-data-analysis-tda-methods-implemented-in/14221146)
+- **Wei Guo et al.** succesfully use KeplerMapper in prediction of manufacturing systems: <br>
+[Identification of key features using topological data analysis foraccurate prediction of manufacturing system outputs](https://www.researchgate.net/publication/314185934_Identification_of_Key_Features_Using_Topological_Data_Analysis_for_Accurate_Prediction_of_Manufacturing_System_Outputs)
 
 ## References
 

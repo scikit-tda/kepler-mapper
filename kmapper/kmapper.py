@@ -11,7 +11,7 @@ import numpy as np
 from sklearn import cluster, preprocessing, manifold, decomposition
 from scipy.spatial import distance
 
-from .nerve import GraphNerve
+from nerve import GraphNerve
 
 class Cover():
     """Helper class that defines the default covering scheme
@@ -378,199 +378,608 @@ class KeplerMapper(object):
         print("\nCreated %s edges and %s nodes in %s." %
               (nr_links, len(nodes), time))
 
+    def visualize(self,
+                  graph, 
+                  color_function=None, 
+                  custom_tooltips=None, 
+                  custom_meta=None, 
+                  path_html="mapper_visualization_output.html", 
+                  title="My Data",
+                  save_file=True,
+                  inverse_X=None,
+                  inverse_X_names=[],
+                  projected_X=None,
+                  projected_X_names=[]):
 
-    def visualize(self, complex, color_function="", path_html="mapper_visualization_output.html", title="My Data",
-                  graph_link_distance=30, graph_gravity=0.1, graph_charge=-120, custom_tooltips=None, width_html=0,
-                  height_html=0, show_tooltips=True, show_title=True, show_meta=True, save_file=True):
-        """Turns the dictionary 'complex' in a html file with d3.js
+        # TODO: NetworkX to Graph Conversion
 
-        Input:      complex. Dictionary (output from calling .map())
-        Output:      a HTML page saved as a file in 'path_html'.
-
-        parameters
-        ----------
-        color_function    	string. Not fully implemented. Default: "" (distance to origin)
-        path_html        		file path as string. Where to save the HTML page.
-        title          		string. HTML page document title and first heading.
-        graph_link_distance  	int. Edge length.
-        graph_gravity     	float. "Gravity" to center of layout.
-        graph_charge      	int. charge between nodes.
-        custom_tooltips   	None or Numpy Array. You could use "y"-label array for this.
-        width_html        	int. Width of canvas. Default: 0 (full width)
-        height_html       	int. Height of canvas. Default: 0 (full height)
-        show_tooltips     	bool. default:True
-        show_title      		bool. default:True
-        show_meta        		bool. default:True
-        """
-        # Format JSON for D3 graph
-        json_s = {}
-        json_s["nodes"] = []
-        json_s["links"] = []
-        k2e = {}  # a key to incremental int dict, used for id's when linking
-
-        meta_data = complex["meta_data"]
-
-        for e, k in enumerate(complex["nodes"]):
-            # Tooltip and node color formatting, TODO: de-mess-ify
-            if custom_tooltips is not None:
-                tooltip_s = "<h2>Cluster %s</h2> Contains %s members.<br>%s" % (k, len(
-                    complex["nodes"][k]), " ".join([str(f) for f in custom_tooltips[complex["nodes"][k]]]))
-                if color_function == "average_signal_cluster":
-                    tooltip_i = int(((sum([f for f in custom_tooltips[complex["nodes"][k]]]
-                                          ) / len(custom_tooltips[complex["nodes"][k]])) * 30))
-                    json_s["nodes"].append({"name": str(k), "tooltip": tooltip_s, "group": 2 * int(
-                        np.log(len(complex["nodes"][k]))), "color": str(tooltip_i)})
-                else:
-                    json_s["nodes"].append({"name": str(k), "tooltip": tooltip_s, "group": 2 * int(np.log(
-                        len(complex["nodes"][k]))), "color": str(complex["meta_nodes"][k]["coordinates"][0])})
+        def _init_color_function(graph, color_function):
+            # If no color_function provided we color by row order in data set
+            # Reshaping to 2-D array is required for sklearn 0.19
+            n_samples = np.max([i for s in graph["nodes"].values() for i in s]) + 1
+            if color_function is None:
+                color_function = np.arange(n_samples).reshape(-1, 1)
             else:
-                tooltip_s = "<h2>Cluster %s</h2>Contains %s members." % (
-                    k, len(complex["nodes"][k]))
-                json_s["nodes"].append({"name": str(k), "tooltip": tooltip_s, "group": 2 * int(np.log(
-                    len(complex["nodes"][k]))), "color": str(complex["meta_nodes"][k]["coordinates"][0])})
-            k2e[k] = e
-        for k in complex["links"]:
-            for link in complex["links"][k]:
-                json_s["links"].append(
-                    {"source": k2e[k], "target": k2e[link], "value": 1})
+                color_function = color_function.reshape(-1, 1)
+            # MinMax Scaling to be friendly to non-scaled input.   
+            scaler = preprocessing.MinMaxScaler()
+            color_function = scaler.fit_transform(color_function).ravel()
+            return color_function
 
-        # Width and height of graph in HTML output
-        if width_html == 0:
-            width_css = "100%"
-            width_js = 'document.getElementById("holder").offsetWidth-20'
-        else:
-            width_css = "%spx" % width_html
-            width_js = "%s" % width_html
-        if height_html == 0:
-            height_css = "100%"
-            height_js = 'document.getElementById("holder").offsetHeight-20'
-        else:
-            height_css = "%spx" % height_html
-            height_js = "%s" % height_html
+        def _format_cluster_statistics(member_ids, inverse_X, inverse_X_names):
+            cluster_stats = ""
+            if inverse_X is not None:
+                # List vs. numpy handling: cast to numpy array
+                if isinstance(inverse_X_names, list):
+                    inverse_X_names = np.array(inverse_X_names)
+                # Defaults when providing no inverse_X_names
+                if inverse_X_names.shape[0] == 0:
+                    inverse_X_names = np.array(["f_%s"%(i) for i in range(
+                                                              inverse_X.shape[1])])
 
-        # Whether to show certain UI elements or not
-        if show_tooltips == False:
-            tooltips_display = "display: none;"
-        else:
-            tooltips_display = ""
+                cluster_X_mean = np.mean(inverse_X[member_ids], axis=0)
+                inverse_X_mean = np.mean(inverse_X, axis=0)
+                inverse_X_std = np.std(inverse_X, axis=0)
+                above_mean = cluster_X_mean > inverse_X_mean
+                std_m = np.sqrt((cluster_X_mean - inverse_X_mean)**2) / inverse_X_std
 
-        if show_meta == False:
-            meta_display = "display: none;"
-        else:
-            meta_display = ""
+                stats = sorted([(s,f,i,c,a,v) for s,f,i,c,a,v in zip(std_m, 
+                                                                 inverse_X_names,
+                                                                 np.mean(inverse_X, axis=0),
+                                                                 cluster_X_mean,
+                                                                 above_mean,
+                                                                 np.std(inverse_X, axis=0))], 
+                                                                   reverse=True)
+                above_stats = [a for a in stats if a[4] == True]
+                below_stats = [a for a in stats if a[4] == False]
+                
+                if len(above_stats) > 0:
+                    cluster_stats += "<h3>Above Average</h3><table><tr><th>Feature</th>" \
+                                     + "<th style='width:50px;'><small>Mean</small></th>" \
+                                     + "<th style='width:50px'><small>STD</small></th></tr>"
+                    for s,f,i,c,a,v in above_stats[:5]:
+                        cluster_stats += "<tr><td>%s</td><td><small>%s</small></td>"%(f, round(c,3)) \
+                                       + "<td class='std'><small>%sx</small></td></tr>"%(round(s,1))
+                    cluster_stats += "</table>"
+                if len(below_stats) > 0:
+                    cluster_stats += "<h3>Below Average</h3><table><tr><th>Feature</th>" \
+                                     + "<th style='width:50px;'><small>Mean</small></th>" \
+                                     + "<th style='width:50px'><small>STD</small></th></tr>"
+                    for s,f,i,c,a,v in below_stats[:5]:
+                        cluster_stats += "<tr><td>%s</td><td><small>%s</small></td>"%(f, round(c,3)) \
+                                       + "<td class='std'><small>%sx</small></td></tr>"%(round(s,1))
+                    cluster_stats += "</table>"
+            cluster_stats += "<h3>Size</h3><p>%s</p>"%(len(member_ids))
+            return "%s"%(str(cluster_stats))
+            
+        def _format_projection_statistics(member_ids, projected_X, projected_X_names):
+            projection_stats = ""
+            if projected_X is not None:
+                projection_stats += "<h3>Projection</h3><table><tr><th>Lens</th><th style='width:50px;'>" \
+                                    + "<small>Mean</small></th><th style='width:50px;'><small>Max</small></th>" \
+                                    + "<th style='width:50px;'><small>Min</small></th></tr>"
+                if isinstance(projected_X_names, list):
+                    projected_X_names = np.array(projected_X_names)
+                # Create defaults when providing no projected_X_names
+                if projected_X_names.shape[0] == 0:
+                    projected_X_names = np.array(["p_%s"%(i) for i in range(projected_X.shape[1])])
 
-        if show_title == False:
-            title_display = "display: none;"
-        else:
-            title_display = ""
+                means_v = np.mean(projected_X[member_ids], axis=0)
+                maxs_v = np.max(projected_X[member_ids], axis=0)
+                mins_v = np.min(projected_X[member_ids], axis=0)
 
-        # Account for overlap_perc being singleton or list
-        if type(meta_data['overlap_perc']) != list:
-            overlap_perc = [meta_data['overlap_perc']]
-        else:
-            overlap_perc = meta_data['overlap_perc']
-        overlap_perc = ", ".join("{}%".format(int(overlap * 100)) for overlap in overlap_perc)
+                for name, mean_v, max_v, min_v in zip(projected_X_names, 
+                                                      means_v, 
+                                                      maxs_v, 
+                                                      mins_v):
+                    projection_stats += "<tr><td>%s</td><td><small>%s</small></td><td><small>%s</small>"%(name, 
+                                                                                                          round(mean_v, 3), 
+                                                                                                          round(max_v, 3)) \
+                                      + "</td><td><small>%s</small></td></tr>"%(round(min_v, 3))
+                projection_stats += "</table>"
+            return projection_stats
 
-        html = """<!DOCTYPE html>
-    <meta charset="utf-8">
-    <meta name="generator" content="KeplerMapper">
-    <title>%s | KeplerMapper</title>
-    <link href='https://fonts.googleapis.com/css?family=Roboto:700,300' rel='stylesheet' type='text/css'>
-    <style>
-    * {margin: 0; padding: 0;}
-    html { height: 100%%;}
-    body {background: #111; height: 100%%; font: 100 16px Roboto, Sans-serif;}
-    .link { stroke: #999; stroke-opacity: .333;  }
-    .divs div { border-radius: 50%%; background: red; position: absolute; }
-    .divs { position: absolute; top: 0; left: 0; }
-    #holder { position: relative; width: %s; height: %s; background: #111; display: block;}
-    h1 { %s padding: 20px; color: #fafafa; text-shadow: 0px 1px #000,0px -1px #000; position: absolute; font: 300 30px Roboto, Sans-serif;}
-    h2 { text-shadow: 0px 1px #000,0px -1px #000; font: 700 16px Roboto, Sans-serif;}
-    .meta {  position: absolute; opacity: 0.9; width: 220px; top: 80px; left: 20px; display: block; %s background: #000; line-height: 25px; color: #fafafa; border: 20px solid #000; font: 100 16px Roboto, Sans-serif;}
-    div.tooltip { position: absolute; width: 380px; display: block; %s padding: 20px; background: #000; border: 0px; border-radius: 3px; pointer-events: none; z-index: 999; color: #FAFAFA;}
-    }
-    </style>
-    <body>
-    <div id="holder">
-      <h1>%s</h1>
-      <p class="meta">
-      <b>Lens</b><br>%s<br><br>
-      <b>Cubes per dimension</b><br>%s<br><br>
-      <b>Overlap percentage</b><br>%s<br><br>
-      <b>Color Function</b><br>%s( %s )<br><br>
-      <b>Clusterer</b><br>%s<br><br>
-      <b>Scaler</b><br>%s
-      </p>
-    </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
-    <script>
-    var width = %s,
-      height = %s;
-    var color = d3.scale.ordinal()
-      .domain(["0","1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30"])
-      .range(["#FF0000","#FF1400","#FF2800","#FF3c00","#FF5000","#FF6400","#FF7800","#FF8c00","#FFa000","#FFb400","#FFc800","#FFdc00","#FFf000","#fdff00","#b0ff00","#65ff00","#17ff00","#00ff36","#00ff83","#00ffd0","#00e4ff","#00c4ff","#00a4ff","#00a4ff","#0084ff","#0064ff","#0044ff","#0022ff","#0002ff","#0100ff","#0300ff","#0500ff"]);
-    var force = d3.layout.force()
-      .charge(%s)
-      .linkDistance(%s)
-      .gravity(%s)
-      .size([width, height]);
-    var svg = d3.select("#holder").append("svg")
-      .attr("width", width)
-      .attr("height", height);
-    var div = d3.select("#holder").append("div")
-      .attr("class", "tooltip")
-      .style("opacity", 0.0);
-    var divs = d3.select('#holder').append('div')
-      .attr('class', 'divs')
-      .attr('style', function(d) { return 'overflow: hidden; width: ' + width + 'px; height: ' + height + 'px;'; });
-      graph = %s;
-      force
-        .nodes(graph.nodes)
-        .links(graph.links)
-        .start();
-      var link = svg.selectAll(".link")
-        .data(graph.links)
-        .enter().append("line")
-        .attr("class", "link")
-        .style("stroke-width", function(d) { return Math.sqrt(d.value); });
-      var node = divs.selectAll('div')
-      .data(graph.nodes)
-        .enter().append('div')
-        .on("mouseover", function(d) {
-          div.transition()
-            .duration(200)
-            .style("opacity", .9);
-          div .html(d.tooltip + "<br/>")
-            .style("left", (d3.event.pageX + 100) + "px")
-            .style("top", (d3.event.pageY - 28) + "px");
-          })
-        .on("mouseout", function(d) {
-          div.transition()
-            .duration(500)
-            .style("opacity", 0);
+        def _format_tooltip(member_ids, custom_tooltips, inverse_X, 
+                            inverse_X_names, projected_X, projected_X_names):
+            
+            tooltip = _format_projection_statistics(member_ids, projected_X, projected_X_names)
+            tooltip += _format_cluster_statistics(member_ids, inverse_X, inverse_X_names)
+
+            if custom_tooltips is not None:
+                tooltip += "<h3>Members</h3>"
+                for custom_tooltip in custom_tooltips[member_ids]:
+                    tooltip += "%s "%(custom_tooltip)
+            return tooltip
+
+        def _format_meta(graph, custom_meta):
+            meta = ""
+            if custom_meta is not None:
+                for k, v in custom_meta:
+                    meta += "<h3>%s</h3>\n<p>%s</p>\n"%(k, v)
+            meta += "<h3>Nodes</h3><p>%s</p>"%(len(graph["nodes"]))
+            meta += "<h3>Edges</h3><p>%s</p>"%(sum([len(l) for l in graph["links"].values()]))
+            meta += "<h3>Total Samples</h3><p>%s</p>"%(sum([len(l) for l in graph["nodes"].values()]))
+            n = [l for l in graph["nodes"].values()]
+            n_unique = len(set([i for s in n for i in s]))
+            meta += "<h3>Unique Samples</h3><p>%s</p>"%(n_unique)
+            return meta
+
+        def _color_function(member_ids, color_function):
+            return int(np.mean(color_function[member_ids]) * 30)
+
+        def _size_node(member_ids):
+            return int(np.log(len(member_ids) + 1) + 1)
+
+        def _type_node():
+            return "circle"
+
+        def _size_link_width(graph, node_id, linked_node_id):
+            return 1
+
+        def _dict_to_json(graph, color_function, inverse_X, 
+                          inverse_X_names, projected_X, projected_X_names):
+            json_dict = {"nodes": [], "links": []}
+            node_id_to_num = {}
+            for i, (node_id, member_ids) in enumerate(graph["nodes"].items()):
+                node_id_to_num[node_id] = i
+                n = { "id": "",
+                      "name": "node_id",
+                      "color": _color_function(member_ids, color_function),
+                      "type": _type_node(),
+                      "size": _size_node(member_ids),
+                      "tooltip": _format_tooltip(member_ids, 
+                                                 custom_tooltips, 
+                                                 inverse_X, 
+                                                 inverse_X_names, 
+                                                 projected_X, 
+                                                 projected_X_names)}
+                json_dict["nodes"].append(n)
+            for i, (node_id, linked_node_ids) in enumerate(graph["links"].items()):
+                for linked_node_id in linked_node_ids:
+                    l = { "source": node_id_to_num[node_id], 
+                         "target": node_id_to_num[linked_node_id],
+                         "width": _size_link_width(graph, node_id, linked_node_id)}
+                    json_dict["links"].append(l)
+            return json.dumps(json_dict)
+
+        def _color_function_distribution(graph, color_function):
+            bin_colors = { 0: "#FF2800",
+                           1: "#FF6400",
+                           2: "#FFa000",
+                           3: "#FFdc00",
+                           4: "#b0ff00",
+                           5: "#00ff36",
+                           6: "#00e4ff",
+                           7: "#0084ff",
+                           8: "#0022ff",
+                           9: "#0300ff" }
+
+            dist = '  <h3>Distribution</h3>\n  <div id="histogram">\n'
+            buckets = defaultdict(float)
+            
+            for i, (node_id, member_ids) in enumerate(graph["nodes"].items()):
+                # round to color range value to nearest 3 multiple
+                k = int(round(_color_function(member_ids, color_function) / 3.0))
+                buckets[k] += len(member_ids)
+
+            # TODO: Fix color-range length of 31 (prob not the best idea to pick
+            #       prime numbers for equidistant binning...)
+            buckets[9] += buckets[10]
+
+            max_bucket_value = max(buckets.values())
+            sum_bucket_value = sum(list(set(buckets.values())))
+            for bucket_id in range(10):
+                bucket_value = buckets[bucket_id]
+                height = int(((bucket_value / max_bucket_value) * 100) + 5)
+                perc = round((bucket_value / sum_bucket_value) * 100.,1)
+                dist += '    <div class="bin" style="height: %spx; background:%s">\n'%(height,
+                                                                                       bin_colors[bucket_id]) + \
+                        '      <div>%s%%</div>\n'%(perc) + \
+                        '    </div>\n'
+            dist += '  </div>'
+            return dist
+
+        color_function = _init_color_function(graph, color_function)
+        json_graph = _dict_to_json(graph, color_function, inverse_X, inverse_X_names, projected_X, projected_X_names)
+        color_distribution = _color_function_distribution(graph, color_function)
+        meta = _format_meta(graph, custom_meta)
+
+        template = """<!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="generator" content="KeplerMapper">
+        <title>%s | KeplerMapper</title>
+        <link rel="icon" type="image/png" href="https://i.imgur.com/2eZcTZn.png" />
+        <link href='https://fonts.googleapis.com/css?family=Roboto+Mono:700,300' 
+              rel='stylesheet' type='text/css'>
+        <style>
+          * {margin: 0; padding: 0;}
+          html, body {height: 100%%;}
+          body {font-family: "Roboto Mono", "Helvetica", sans-serif; font-size:14px;}
+          #display {color: #95A5A6; background: #212121;}
+          #print {color: #000; background: #FFF;}
+          h1 {font-size: 21px; font-weight: 300; font-weight: 300;}
+          h2 {font-size: 18px; padding-bottom: 20px; font-weight: 300;}
+          h3 {font-size: 14px; font-weight: 700; text-transform: uppercase;}
+          #meta h3 { float: left; padding-right: 8px;}
+          p, #tooltip h3, ol, ul, table {padding-bottom: 20px;}
+          ol, ul {padding-left: 20px;}
+          ol b {display: block;}
+          a {color: #16a085; text-decoration: none;}
+          a:hover {color: #2ecc71;}
+          #header {height: 35px; padding: 20px; position: absolute; top: 0; left: 0; right: 0; 
+                   z-index: 9999;}
+          #display #header {background: #111111; box-shadow: 0px 0px 4px #000}
+          #print #header {background: #FFF;}
+          #canvas {height: 100%%; width: 100%%; display: block;}
+          #tooltip {position: absolute; top: 75px; left: 0; bottom: 0;  
+                    width: 320px; padding: 20px; overflow: auto; display: none;}
+          #display #tooltip {background: #191919;}
+          #print #tooltip {background: #FFF;}
+          #meta {position: absolute; top: 75px; right: 0; bottom: 0; 
+                 width: 320px; padding: 20px; overflow: auto;}
+          #display #meta {background: #191919;}
+          #print #meta {background: #FFF; }
+          #meta_control, #tooltip_control {position: absolute; right: 20px;}
+          #meta::-webkit-scrollbar, #tooltip::-webkit-scrollbar {width: 1em;}
+          #meta::-webkit-scrollbar-track, #tooltip::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);}
+          #meta::-webkit-scrollbar-thumb, #tooltip::-webkit-scrollbar-thumb {
+            background-color: darkgrey; outline: 1px solid slategrey;}
+          #histogram { display: block; height: 100px; padding-top: 50px; clear: both;}
+          #display #histogram {opacity: 0.68;}
+          .bin {width: 30px; float: left;}
+          .bin div { font-size: 10px; display: block; width: 35px; margin-top: -30px; 
+                     text-align: right; margin-left:-3px;
+                     -webkit-transform: rotate(-90deg); -moz-transform: rotate(-90deg); 
+                     -ms-transform: rotate(-90deg); -o-transform: rotate(-90deg);}
+          #histogram:hover {opacity:1.;}
+          #display .circle {stroke-opacity:0.18; stroke-width: 7px; stroke: #000;}
+          #print .circle {stroke-opacity:1; stroke-width: 2px; stroke: #000; 
+                          stroke-linecap: round;}
+          #print .link {stroke: #000;}
+          #display .link {stroke: rgba(160,160,160, 0.5);}
+          table { border-collapse: collapse; display: table; width: 100%%; margin-bottom:20px;}
+          td, th { padding: 5px; text-align: left;}
+          #display th { background: #212121}
+          td { border-bottom: 1px solid #111;}
+        </style>
+      </head>
+      <body id="display">
+        <div id="header">
+          <noscript><b>Requires JavaScript (d3.js) for visualizations</b></noscript>
+          <h1>%s</h1>
+        </div>
+        <div id="canvas">
+
+        </div>
+        <div id="tooltip">
+          <div id="tooltip_control">
+            <a href="#"><small>[-]</small></a>
+          </div>
+          <h2>Cluster Meta</h2>
+          <div id="tooltip_content">
+          
+          </div>
+        </div>
+        <div id="meta">
+          <div id="meta_control">
+            <a href="#"><small>[-]</small></a>
+          </div>
+          <h2>Graph Meta</h2>
+          %s
+          %s
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+        <script>
+        // Height and width settings
+        var canvas_height = window.innerHeight - 5;
+        document.getElementById("canvas").style.height = canvas_height + "px";          
+        var width = document.getElementById("canvas").offsetWidth;
+        var height = document.getElementById("canvas").offsetHeight;
+        var w = width;
+        var h = height;
+        
+        // We draw the graph in SVG
+        var svg = d3.select("#canvas").append("svg")
+                  .attr("width", width)
+                  .attr("height", height);
+
+        var focus_node = null, highlight_node = null;
+        var text_center = false;
+        var outline = false;
+
+        // Size for zooming
+        var size = d3.scale.pow().exponent(1)
+                   .domain([1,100])
+                   .range([8,24]);
+
+        // Show/Hide Functionality
+        d3.select("#tooltip_control").on("click", function() {
+          d3.select("#tooltip").style("display", "none");
         })
-        .call(force.drag);
-      node.append("title")
-        .text(function(d) { return d.name; });
-      force.on("tick", function() {
-      link.attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.y; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; });
-      node.attr("cx", function(d) { return d.x; })
-        .attr("cy", function(d) { return d.y; })
-        .attr('style', function(d) { return 'width: ' + (d.group * 2) + 'px; height: ' + (d.group * 2) + 'px; ' + 'left: '+(d.x-(d.group))+'px; ' + 'top: '+(d.y-(d.group))+'px; background: '+color(d.color)+'; box-shadow: 0px 0px 3px #111; box-shadow: 0px 0px 33px '+color(d.color)+', inset 0px 0px 5px rgba(0, 0, 0, 0.2);'})
-        ;
-      });
-    </script>""" % (title, width_css, height_css, title_display, meta_display, tooltips_display, title, meta_data["projection"], meta_data['nr_cubes'], overlap_perc, color_function, meta_data["projection"], meta_data["clusterer"], meta_data["scaler"], width_js, height_js, graph_charge, graph_link_distance, graph_gravity, json.dumps(json_s))
+        d3.select("#meta_control").on("click", function() {
+          d3.select("#meta").style("display", "none");
+        })
 
+        // Color settings: Ordinal Scale of ["0"-"30"] hot-to-cold
+        var color = d3.scale.ordinal() 
+                    .domain(["0","1", "2", "3", "4", "5", "6", "7", "8", "9", "10", 
+                             "11", "12", "13","14","15","16","17","18","19","20",
+                             "21","22","23","24","25","26","27","28","29","30"])
+                    .range(["#FF0000","#FF1400","#FF2800","#FF3c00","#FF5000","#FF6400",
+                            "#FF7800","#FF8c00","#FFa000","#FFb400","#FFc800","#FFdc00",
+                            "#FFf000","#fdff00","#b0ff00","#65ff00","#17ff00","#00ff36",
+                            "#00ff83","#00ffd0","#00e4ff","#00c4ff","#00a4ff","#00a4ff",
+                            "#0084ff","#0064ff","#0044ff","#0022ff","#0002ff","#0100ff",
+                            "#0300ff","#0500ff"]);
+        // Force settings
+        var force = d3.layout.force()
+                    .linkDistance(5)
+                    .gravity(0.2)
+                    .charge(-1200)
+                    .size([w,h]);
+
+        // Variety of variable inits
+        var highlight_color = "blue";
+        var highlight_trans = 0.1;        
+        var default_node_color = "#ccc";
+        var default_node_color = "rgba(160,160,160, 0.5)";
+        var default_link_color = "rgba(160,160,160, 0.5)";
+        var nominal_base_node_size = 8;
+        var nominal_text_size = 15;
+        var max_text_size = 24;
+        var nominal_stroke = 1.;
+        var max_stroke = 4.5;
+        var max_base_node_size = 36;
+        var min_zoom = 0.1;
+        var max_zoom = 7;
+        var zoom = d3.behavior.zoom().scaleExtent([min_zoom,max_zoom])
+        var g = svg.append("g");
+        
+        svg.style("cursor","move");
+
+        graph = %s;
+            
+        force
+          .nodes(graph.nodes)
+          .links(graph.links)
+          .start();
+
+        var link = g.selectAll(".link")
+                    .data(graph.links)
+                    .enter().append("line")
+                    .attr("class", "link")
+                    .style("stroke-width", function(d) { return d.w * nominal_stroke; })
+                    .style("stroke-width", function(d) { return d.w * nominal_stroke; })
+                    //.style("stroke", function(d) { 
+                    //  if (isNumber(d.score) && d.score>=0) return color(d.score);
+                    //  else return default_link_color; })
+
+        var node = g.selectAll(".node")
+                    .data(graph.nodes)
+                    .enter().append("g")
+                    .attr("class", "node")
+                    .call(force.drag)
+
+        node.on("dblclick.zoom", function(d) { d3.event.stopPropagation();
+          var dcx = (window.innerWidth/2-d.x*zoom.scale());
+          var dcy = (window.innerHeight/2-d.y*zoom.scale());
+          zoom.translate([dcx,dcy]);
+          g.attr("transform", "translate("+ dcx + "," + dcy  + ")scale(" + zoom.scale() + ")");
+        });
+
+        var tocolor = "fill";
+        var towhite = "stroke";
+        if (outline) {
+          tocolor = "stroke"
+          towhite = "fill"
+        }
+
+        // Drop-shadow Filter
+        var svg = d3.select("svg");
+        var defs = svg.append("defs");
+        var dropShadowFilter = defs.append('svg:filter')
+          .attr('id', 'drop-shadow')
+          .attr('filterUnits', "userSpaceOnUse")
+          .attr('width', '250%%')
+          .attr('height', '250%%');
+        dropShadowFilter.append('svg:feGaussianBlur')
+          .attr('in', 'SourceGraphic')
+          .attr('stdDeviation', 12)
+          .attr('result', 'blur-out');
+        dropShadowFilter.append('svg:feColorMatrix')
+          .attr('in', 'blur-out')
+          .attr('type', 'hueRotate')
+          .attr('values', 0)
+          .attr('result', 'color-out');
+        dropShadowFilter.append('svg:feOffset')
+          .attr('in', 'color-out')
+          .attr('dx', 0)
+          .attr('dy', 0)
+          .attr('result', 'the-shadow');
+        dropShadowFilter.append('svg:feComponentTransfer')
+          .attr('type', 'linear')
+          .attr('slope', 0.2)
+          .attr('result', 'shadow-opacity');
+        dropShadowFilter.append('svg:feBlend')
+          .attr('in', 'SourceGraphic')
+          .attr('in2', 'the-shadow')
+          .attr('mode', 'normal');
+
+      var circle = node.append("path")
+        .attr("d", d3.svg.symbol()
+        .size(function(d) { return d.size * 50; })
+        .type(function(d) { return d.type; }))
+        .attr("class", "circle")
+        .style(tocolor, function(d) { 
+          return color(d.color);
+        })
+        //.style("filter", "url(#drop-shadow)");
+
+      var text = g.selectAll(".text")
+        .data(graph.nodes)
+        .enter().append("text")
+        .attr("dy", ".35em")
+        .style("font-family", "Roboto")
+        .style("font-weight", "400")
+        .style("color", "#2C3E50")
+        .style("font-size", nominal_text_size + "px")
+
+      if (text_center)
+        text.text(function(d) { return d.id; })
+        .style("text-anchor", "middle");
+      else 
+        text.attr("dx", function(d) {return (size(d.size)||nominal_base_node_size);})
+        .text(function(d) { return '\u2002'+d.id; });
+      
+      // Mouse events
+      node.on("mouseover", function(d) {
+        set_highlight(d);
+        console.log("node hober");
+
+        d3.select("#tooltip").style("display", "block");
+        d3.select("#tooltip_content").html(d.tooltip + "<br/>");
+        }).on("mousedown", function(d) { 
+        d3.event.stopPropagation();
+        focus_node = d;
+        if (highlight_node === null) set_highlight(d)
+      }).on("mouseout", function(d) {
+        console.log("mouseout");
+        exit_highlight();
+      });
+
+      d3.select(window).on("mouseup", function() {
+        if (focus_node!==null){
+          focus_node = null;
+        }
+        if (highlight_node === null) exit_highlight();
+      });
+
+      // Node highlighting logic
+      function exit_highlight(){
+        highlight_node = null;
+        if (focus_node===null){
+          svg.style("cursor","move"); 
+        }
+      }
+
+      function set_highlight(d){
+        svg.style("cursor","pointer");
+        if (focus_node!==null) d = focus_node;
+      }
+
+      // Zoom logic
+      zoom.on("zoom", function() {
+        var stroke = nominal_stroke;
+        var base_radius = nominal_base_node_size;
+        if (nominal_base_node_size*zoom.scale()>max_base_node_size) {
+          base_radius = max_base_node_size/zoom.scale();}
+        circle.attr("d", d3.svg.symbol()
+          .size(function(d) { return d.size * 50; })
+          .type(function(d) { return d.type; }))
+        if (!text_center) text.attr("dx", function(d) { 
+          return (size(d.size)*base_radius/nominal_base_node_size||base_radius); });
+                
+        var text_size = nominal_text_size;
+        if (nominal_text_size*zoom.scale()>max_text_size) {
+          text_size = max_text_size/zoom.scale(); }
+        text.style("font-size",text_size + "px");
+
+        g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+      });
+
+      svg.call(zoom);   
+      resize();
+      d3.select(window).on("resize", resize);
+
+      // Animation per tick
+      force.on("tick", function() {
+        node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+        text.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+        link.attr("x1", function(d) { return d.source.x; })
+          .attr("y1", function(d) { return d.source.y; })
+          .attr("x2", function(d) { return d.target.x; })
+          .attr("y2", function(d) { return d.target.y; });
+        node.attr("cx", function(d) { return d.x; })
+          .attr("cy", function(d) { return d.y; });
+      });
+
+      // Resizing window and redraws
+      function resize() {
+        var width = window.innerWidth, height = window.innerHeight;
+        var width = document.getElementById("canvas").offsetWidth;
+        var height = document.getElementById("canvas").offsetHeight;
+        svg.attr("width", width).attr("height", height);
+        
+        force.size([force.size()[0]+(width-w)/zoom.scale(),
+                    force.size()[1]+(height-h)/zoom.scale()]).resume();
+        w = width;
+        h = height;
+      }
+
+      function isNumber(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
+      }
+
+      // Key press events
+      window.addEventListener("keydown", function (event) {
+      if (event.defaultPrevented) {
+        return; // Do nothing if the event was already processed
+      }
+        switch (event.key) {
+          case "s":
+            // Do something for "s" key press.
+            node.style("filter", "url(#drop-shadow)");
+            break;
+          case "c":
+            // Do something for "s" key press.
+            node.style("filter", null);
+            break;
+          case "p":
+            // Do something for "p" key press.
+            d3.select("body").attr('id', null).attr('id', "print")
+            break;
+          case "d":
+            // Do something for "d" key press.
+            d3.select("body").attr('id', null).attr('id', "display")
+            break;
+          case "z":
+            force.gravity(0.)
+                 .charge(0.);
+            resize();
+            break
+          case "m":
+            force.gravity(0.07)
+                 .charge(-1);
+            resize();
+            break
+          case "e":
+            force.gravity(0.4)
+                 .charge(-600);
+              
+            resize();
+            break
+          default:
+            return; // Quit when this doesn't handle the key event.
+        }
+        // Cancel the default action to avoid it being handled twice
+        event.preventDefault();
+      }, true);
+      </script>
+      </body>
+    </html>"""%(title,
+                title,
+                meta, 
+                color_distribution, 
+                json_graph)
         if save_file:
             with open(path_html, "wb") as outfile:
-                outfile.write(html.encode("utf-8"))
-            if self.verbose > 0:
-                print("\nWrote d3.js graph to '%s'" % path_html)
-
-        return html
+                if self.verbose > 0:
+                    print("Wrote visualization to: %s"%(path_html))
+                outfile.write(template.encode("utf-8"))
+        return template
 
     def data_from_cluster_id(self, cluster_id, graph, data):
         """Returns the original data of each cluster member for a given cluster ID

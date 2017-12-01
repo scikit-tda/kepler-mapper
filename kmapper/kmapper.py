@@ -437,14 +437,16 @@ class KeplerMapper(object):
                                      + "<th style='width:50px;'><small>Mean</small></th>" \
                                      + "<th style='width:50px'><small>STD</small></th></tr>"
                     for s,f,i,c,a,v in above_stats[:5]:
-                        cluster_stats += "<tr><td>%s</td><td><small>%s</small></td><td class='std'><small>%sx</small></td></tr>"%(f, round(c,3), round(s,1))
+                        cluster_stats += "<tr><td>%s</td><td><small>%s</small></td>"%(f, round(c,3)) \
+                                       + "<td class='std'><small>%sx</small></td></tr>"%(round(s,1))
                     cluster_stats += "</table>"
                 if len(below_stats) > 0:
                     cluster_stats += "<h3>Below Average</h3><table><tr><th>Feature</th>" \
                                      + "<th style='width:50px;'><small>Mean</small></th>" \
                                      + "<th style='width:50px'><small>STD</small></th></tr>"
                     for s,f,i,c,a,v in below_stats[:5]:
-                        cluster_stats += "<tr><td>%s</td><td><small>%s</small></td><td class='std'><small>%sx</small></td></tr>"%(f, round(c,3), round(s,1))
+                        cluster_stats += "<tr><td>%s</td><td><small>%s</small></td>"%(f, round(c,3)) \
+                                       + "<td class='std'><small>%sx</small></td></tr>"%(round(s,1))
                     cluster_stats += "</table>"
             cluster_stats += "<h3>Size</h3><p>%s</p>"%(len(member_ids))
             return "%s"%(str(cluster_stats))
@@ -469,11 +471,15 @@ class KeplerMapper(object):
                                                       means_v, 
                                                       maxs_v, 
                                                       mins_v):
-                    projection_stats += "<tr><td>%s</td><td><small>%s</small></td><td><small>%s</small></td><td><small>%s</small></td></tr>"%(name, round(mean_v, 3), round(max_v, 3), round(min_v, 3))
+                    projection_stats += "<tr><td>%s</td><td><small>%s</small></td><td><small>%s</small>"%(name, 
+                                                                                                          round(mean_v, 3), 
+                                                                                                          round(max_v, 3)) \
+                                      + "</td><td><small>%s</small></td></tr>"%(round(min_v, 3))
                 projection_stats += "</table>"
             return projection_stats
 
-        def _format_tooltip(member_ids, custom_tooltips, inverse_X, inverse_X_names, projected_X, projected_X_names):
+        def _format_tooltip(member_ids, custom_tooltips, inverse_X, 
+                            inverse_X_names, projected_X, projected_X_names):
             
             tooltip = _format_projection_statistics(member_ids, projected_X, projected_X_names)
             tooltip += _format_cluster_statistics(member_ids, inverse_X, inverse_X_names)
@@ -509,7 +515,8 @@ class KeplerMapper(object):
         def _size_link_width(graph, node_id, linked_node_id):
             return 1
 
-        def _dict_to_json(graph, color_function, inverse_X, inverse_X_names, projected_X, projected_X_names):
+        def _dict_to_json(graph, color_function, inverse_X, 
+                          inverse_X_names, projected_X, projected_X_names):
             json_dict = {"nodes": [], "links": []}
             node_id_to_num = {}
             for i, (node_id, member_ids) in enumerate(graph["nodes"].items()):
@@ -520,11 +527,11 @@ class KeplerMapper(object):
                       "type": _type_node(),
                       "size": _size_node(member_ids),
                       "tooltip": _format_tooltip(member_ids, 
-                                                   custom_tooltips, 
-                                                   inverse_X, 
-                                                   inverse_X_names, 
-                                                   projected_X, 
-                                                   projected_X_names)}
+                                                 custom_tooltips, 
+                                                 inverse_X, 
+                                                 inverse_X_names, 
+                                                 projected_X, 
+                                                 projected_X_names)}
                 json_dict["nodes"].append(n)
             for i, (node_id, linked_node_ids) in enumerate(graph["links"].items()):
                 for linked_node_id in linked_node_ids:
@@ -583,16 +590,17 @@ class KeplerMapper(object):
         <meta name="generator" content="KeplerMapper">
         <title>%s | KeplerMapper</title>
         <link rel="icon" type="image/png" href="https://i.imgur.com/2eZcTZn.png" />
-        <link href='https://fonts.googleapis.com/css?family=Roboto+Mono:700,300' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Roboto+Mono:700,300' 
+              rel='stylesheet' type='text/css'>
         <style>
           * {margin: 0; padding: 0;}
           html, body {height: 100%%;}
-          body { font-family: "Roboto Mono", "Helvetica", sans-serif; font-size:14px; }
+          body {font-family: "Roboto Mono", "Helvetica", sans-serif; font-size:14px;}
           #display {color: #95A5A6; background: #212121;}
           #print {color: #000; background: #FFF;}
-          h1 {font-size: 21px; font-weight: 300; font-weight: 300; }
+          h1 {font-size: 21px; font-weight: 300; font-weight: 300;}
           h2 {font-size: 18px; padding-bottom: 20px; font-weight: 300;}
-          h3 {font-size: 14px; font-weight: 700; text-transform: uppercase; }
+          h3 {font-size: 14px; font-weight: 700; text-transform: uppercase;}
           #meta h3 { float: left; padding-right: 8px;}
           p, #tooltip h3, ol, ul, table {padding-bottom: 20px;}
           ol, ul {padding-left: 20px;}
@@ -600,7 +608,7 @@ class KeplerMapper(object):
           a {color: #16a085; text-decoration: none;}
           a:hover {color: #2ecc71;}
           #header {height: 35px; padding: 20px; position: absolute; top: 0; left: 0; right: 0; 
-                   z-index: 9999; }
+                   z-index: 9999;}
           #display #header {background: #111111; box-shadow: 0px 0px 4px #000}
           #print #header {background: #FFF;}
           #canvas {height: 100%%; width: 100%%; display: block;}
@@ -610,7 +618,7 @@ class KeplerMapper(object):
           #print #tooltip {background: #FFF;}
           #meta {position: absolute; top: 75px; right: 0; bottom: 0; 
                  width: 320px; padding: 20px; overflow: auto;}
-          #display #meta {background: #191919; }
+          #display #meta {background: #191919;}
           #print #meta {background: #FFF; }
           #meta_control, #tooltip_control {position: absolute; right: 20px;}
           #meta::-webkit-scrollbar, #tooltip::-webkit-scrollbar {width: 1em;}
@@ -622,18 +630,19 @@ class KeplerMapper(object):
           #display #histogram {opacity: 0.68;}
           .bin {width: 30px; float: left;}
           .bin div { font-size: 10px; display: block; width: 35px; margin-top: -30px; 
-                      text-align: right; margin-left:-3px;
-                      -webkit-transform: rotate(-90deg); -moz-transform: rotate(-90deg); 
-                      -ms-transform: rotate(-90deg); -o-transform: rotate(-90deg);}
+                     text-align: right; margin-left:-3px;
+                     -webkit-transform: rotate(-90deg); -moz-transform: rotate(-90deg); 
+                     -ms-transform: rotate(-90deg); -o-transform: rotate(-90deg);}
           #histogram:hover {opacity:1.;}
           #display .circle {stroke-opacity:0.18; stroke-width: 7px; stroke: #000;}
-          #print .circle {stroke-opacity:1; stroke-width: 2px; stroke: #000; stroke-linecap: round}
+          #print .circle {stroke-opacity:1; stroke-width: 2px; stroke: #000; 
+                          stroke-linecap: round;}
           #print .link {stroke: #000;}
           #display .link {stroke: rgba(160,160,160, 0.5);}
           table { border-collapse: collapse; display: table; width: 100%%; margin-bottom:20px;}
           td, th { padding: 5px; text-align: left;}
           #display th { background: #212121}
-          td { border-bottom: 1px solid #111; }
+          td { border-bottom: 1px solid #111;}
         </style>
       </head>
       <body id="display">
@@ -864,14 +873,17 @@ class KeplerMapper(object):
       zoom.on("zoom", function() {
         var stroke = nominal_stroke;
         var base_radius = nominal_base_node_size;
-        if (nominal_base_node_size*zoom.scale()>max_base_node_size) base_radius = max_base_node_size/zoom.scale();
+        if (nominal_base_node_size*zoom.scale()>max_base_node_size) {
+          base_radius = max_base_node_size/zoom.scale();}
         circle.attr("d", d3.svg.symbol()
           .size(function(d) { return d.size * 50; })
           .type(function(d) { return d.type; }))
-        if (!text_center) text.attr("dx", function(d) { return (size(d.size)*base_radius/nominal_base_node_size||base_radius); });
+        if (!text_center) text.attr("dx", function(d) { 
+          return (size(d.size)*base_radius/nominal_base_node_size||base_radius); });
                 
         var text_size = nominal_text_size;
-        if (nominal_text_size*zoom.scale()>max_text_size) text_size = max_text_size/zoom.scale();
+        if (nominal_text_size*zoom.scale()>max_text_size) {
+          text_size = max_text_size/zoom.scale(); }
         text.style("font-size",text_size + "px");
 
         g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
@@ -900,7 +912,8 @@ class KeplerMapper(object):
         var height = document.getElementById("canvas").offsetHeight;
         svg.attr("width", width).attr("height", height);
         
-        force.size([force.size()[0]+(width-w)/zoom.scale(),force.size()[1]+(height-h)/zoom.scale()]).resume();
+        force.size([force.size()[0]+(width-w)/zoom.scale(),
+                    force.size()[1]+(height-h)/zoom.scale()]).resume();
         w = width;
         h = height;
       }

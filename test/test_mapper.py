@@ -85,15 +85,12 @@ class TestNerve():
         links, simplices = nerve(groups)
 
         # all vertices are simplices
-        assert all(k in simplices for k in groups)
+        assert all([[k] in simplices for k in groups])
 
         # graph should be a -- b -- c
-        assert "c" not in links["a"]
-        assert "b" in links["a"]
-        assert "a" in links["b"]
-        assert "c" in links["b"]
-        assert "a" not in links["c"]
-        assert "b" in links["c"]
+        assert "c" not in links["a"] and "a" not in links["c"]
+        assert "b" in links["a"] or "a" in links["b"]
+        assert "c" in links["b"] or "b" in links["c"]
 
 
     def test_min_intersection(self):
@@ -103,15 +100,12 @@ class TestNerve():
         links, simplices = nerve(groups)
 
         # all vertices are simplices
-        assert all(k in simplices for k in groups)
+        assert all([[k] in simplices for k in groups])
 
         # graph should be a -- b    c
-        assert "c" not in links["a"]
-        assert "b" in links["a"]
-        assert "a" in links["b"]
-        assert "c" not in links["b"]
-        assert "a" not in links["c"]
-        assert "b" not in links["c"]
+        assert "c" not in links["a"] and "a" not in links["c"]
+        assert "b" in links["a"] or "a" in links["b"]
+        assert "c" not in links["b"] and "b" not in links["c"]
 
 
 

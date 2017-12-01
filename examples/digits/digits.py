@@ -41,8 +41,7 @@ projected_data = mapper.fit_transform(data,
 # Create the graph (we cluster on the projected data and suffer projection loss)
 graph = mapper.map(projected_data,
                    clusterer=sklearn.cluster.DBSCAN(eps=0.3, min_samples=15),
-                   nr_cubes=35,
-                   overlap_perc=0.9)
+                   coverer=km.Cover(35, 0.9))
 
 # Create the visualizations (increased the graph_gravity for a tighter graph-look.)
 

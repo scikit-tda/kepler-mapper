@@ -1,4 +1,4 @@
 from .kmapper import KeplerMapper
 from .kmapper import cluster
-from .nerve import GraphNerve
-
+from .kmapper import Cover
+from .kmapper import GraphNerve

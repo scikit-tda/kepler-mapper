@@ -5,6 +5,7 @@ import json
 import itertools
 from collections import defaultdict
 from datetime import datetime
+import warnings
 
 import numpy as np
 from sklearn import cluster, preprocessing, manifold, decomposition
@@ -19,76 +20,72 @@ class Cover():
     ---------
     cubes:          @property, returns an iterable of all bins in the cover.
     find_entries:   Find all entries in the input data that are in the given cube.
-
     """
 
-    def __init__(self, data, dimensions=None, nr_cubes=10, overlap_perc=0.2):
+    def __init__(self, nr_cubes=10, overlap_perc=0.2):
         self.nr_cubes = nr_cubes
         self.overlap_perc = overlap_perc
-        # self.nr_dimensions = data.shape[1]
 
-        bounds = (np.min(data, axis=0), np.max(data, axis=0))
+    def define_bins(self, data):
+        """
+        Helper function to get origin coordinates for our intervals/hypercubes
+        Useful for looping no matter the number of cubes or dimensions
+        Example:   	if there are 4 cubes per dimension and 3 dimensions
+                        return the bottom left (origin) coordinates of 64 hypercubes,
+                        as a sorted list of Numpy arrays
+
+        This function must assume that the first column of data are indices.
+        """
+
+        indexless_data = data[:, 1:]
+        bounds = (np.min(indexless_data, axis=0),
+                  np.max(indexless_data, axis=0))
 
         # We chop up the min-max column ranges into 'nr_cubes' parts
-        self.chunk_dist = (bounds[1] - bounds[0]) / nr_cubes
+        self.chunk_dist = (bounds[1] - bounds[0]) / self.nr_cubes
 
         # We calculate the overlapping windows distance
-        self.overlap_dist = overlap_perc * self.chunk_dist
+        self.overlap_dist = self.overlap_perc * self.chunk_dist
 
         # We find our starting point
         self.d = bounds[0]
 
         # Use a dimension index array on the projected X
         # (For now this uses the entire dimensionality, but we keep for experimentation)
-        if dimensions is None:
-            self.di = np.array(range(data.shape[1]))
-        else:
-            self.di = dimensions
-
+        self.di = np.array(range(1, data.shape[1]))
         self.nr_dimensions = len(self.di)
 
-    def find_entries(self, data, cube):
+        if type(self.nr_cubes) is not list:
+            cubes = [self.nr_cubes] * self.nr_dimensions
+        else:
+            assert len(self.nr_cubes) == self.nr_dimensions, "There are {} ({}) dimensions specified but {} dimensions needing specification. If you supply specific number of cubes for each dimension, please supply the correct number.".format(
+                len(self.nr_cubes), self.nr_cubes, self.nr_dimensions)
+            cubes = self.nr_cubes
+
+        coordinates = map(np.asarray, itertools.product(
+            *(range(i) for i in cubes)))
+
+        return coordinates
+
+    def find_entries(self, data, cube, verbose=0):
         """Find all entries in data that are in the given cube
 
         Input:      data, cube (an item from the list of cubes provided by `cover.cubes`)
         Output:     all entries in data that are in cube.
         """
 
-        chunk = self.chunk_dist[self.di]
-        overlap = self.overlap_dist[self.di]
-        lower_bound = self.d[self.di] + (cube * chunk)
+        chunk = self.chunk_dist
+        overlap = self.overlap_dist
+        lower_bound = self.d + (cube * chunk)
         upper_bound = lower_bound + chunk + overlap
 
         # Slice the hypercube
-        # the +1 accounts for a new column of indices
         entries = (data[:, self.di] >= lower_bound) & \
                   (data[:, self.di] < upper_bound)
 
         hypercube = data[np.invert(np.any(entries == False, axis=1))]
 
         return hypercube
-
-    @property
-    def cubes(self):
-        return self._cube_coordinates_all()
-
-    # Helper functions
-    def _cube_coordinates_all(self):
-        # Helper function to get origin coordinates for our intervals/hypercubes
-        # Useful for looping no matter the number of cubes or dimensions
-        # Example:   	if there are 4 cubes per dimension and 3 dimensions
-        #       		return the bottom left (origin) coordinates of 64 hypercubes,
-        #       		as a sorted list of Numpy arrays
-        # TODO: elegance-ify...
-        # TODO: This breaks for high dimensions
-        l = []
-        for x in range(self.nr_cubes):
-            l += [x] * self.nr_dimensions
-
-        coordinates = [np.array(list(f)) for f in sorted(
-            set(itertools.permutations(l, self.nr_dimensions)))]
-
-        return coordinates
 
 
 class KeplerMapper(object):
@@ -180,6 +177,7 @@ class KeplerMapper(object):
             pass
 
         # Detect if projection is a string (for standard functions)
+        # TODO: test each one of these projections
         if isinstance(projection, str):
             if self.verbose > 0:
                 print("\n..Projecting data using: %s" % (projection))
@@ -230,7 +228,14 @@ class KeplerMapper(object):
 
         return X
 
-    def map(self, projected_X, inverse_X=None, clusterer=cluster.DBSCAN(eps=0.5, min_samples=3), nr_cubes=10, overlap_perc=0.1, nerve=GraphNerve()):
+    def map(self,
+            projected_X,
+            inverse_X=None,
+            clusterer=cluster.DBSCAN(eps=0.5, min_samples=3),
+            nr_cubes=None,
+            overlap_perc=None,
+            coverer=Cover(nr_cubes=10, overlap_perc=0.1),
+            nerve=GraphNerve()):
         """This maps the data to a simplicial complex. Returns a dictionary with nodes and links.
 
         Input:    projected_X. A Numpy array with the projection/lens.
@@ -238,12 +243,19 @@ class KeplerMapper(object):
 
         parameters
         ----------
-        projected_X  	projected_X. A Numpy array with the projection/lens. Required.
-        inverse_X    	Numpy array or None. If None then the projection itself is used for clustering.
-        clusterer    	Scikit-learn API compatible clustering algorithm. Default: DBSCAN
-        nr_cubes    	Int. The number of intervals/hypercubes to create.
-        overlap_perc  Float. The percentage of overlap "between" the intervals/hypercubes.
-        nerve           Nerve builder implementing __call__(nodes) API.
+        projected_X:    projected_X. A Numpy array with the projection/lens.
+                        Required.
+        inverse_X:      Numpy array or None. If None then the projection itself
+                        is used for clustering.
+        clusterer:      Scikit-learn API compatible clustering algorithm.
+                        Default: DBSCAN
+        nr_cubes:       Int. The number of intervals/hypercubes to create.
+                        (DeprecationWarning, define Cover explicitly in future versions)
+        overlap_perc:   Float. The percentage of overlap "between" the intervals/hypercubes.
+                        (DeprecationWarning, define Cover explicitly in future versions)
+        coverer:        Cover scheme for lens. Instance of kmapper. Cover providing
+                        methods `define_bins` and `find_entries`.
+        nerve           Nerve builder implementing __call__(nodes) API
         """
 
         start = datetime.now()
@@ -256,6 +268,19 @@ class KeplerMapper(object):
         if inverse_X is None:
             inverse_X = projected_X
 
+        if nr_cubes is not None or overlap_perc is not None:
+            # If user supplied nr_cubes or overlap_perc,
+            # use old defaults instead of new Cover
+            nr_cubes = nr_cubes if nr_cubes else 10
+            overlap_perc = overlap_perc if overlap_perc else 0.1
+            self.coverer = Cover(nr_cubes=nr_cubes,
+                            overlap_perc=overlap_perc)
+
+            warnings.warn(
+                "Explicitly passing in nr_cubes and overlap_perc will be deprecated in future releases. Please supply Cover object.", DeprecationWarning)
+        else:
+            self.coverer = coverer
+
         if self.verbose > 0:
             print("Mapping on data shaped %s using lens shaped %s\n" %
                   (str(inverse_X.shape), str(projected_X.shape)))
@@ -265,18 +290,8 @@ class KeplerMapper(object):
         projected_X = np.c_[ids, projected_X]
         inverse_X = np.c_[ids, inverse_X]
 
-        # Use a dimension index array on the projected X
-        # (For now this uses the entire dimensionality, but we keep for experimentation)
-        # exclude the index column
-        di = np.array(range(1, projected_X.shape[1]))
-
-        # Define codomain cover
-        #   - once there are more types of covers, this will be user set
-        cover = Cover(projected_X,
-                      dimensions=di,
-                      nr_cubes=nr_cubes,
-                      overlap_perc=overlap_perc)
-        cubes = cover.cubes
+        # Cover scheme defines a list of elements
+        bins = self.coverer.define_bins(projected_X)
 
         # Algo's like K-Means, have a set number of clusters. We need this number
         # to adjust for the minimal number of samples inside an interval before
@@ -290,17 +305,18 @@ class KeplerMapper(object):
 
         # Subdivide the projected data X in intervals/hypercubes with overlap
         if self.verbose > 0:
-            cubes = list(cubes)  # extract list from generator
-            total_cubes = len(cubes)
-            print("Creating %s hypercubes." % total_cubes)
+            bins = list(bins)  # extract list from generator
+            total_bins = len(bins)
+            print("Creating %s hypercubes." % total_bins)
 
-        for i, cube in enumerate(cubes):
-            # Slice the hypercube
-            hypercube = cover.find_entries(projected_X, cube)
+        for i, cube in enumerate(bins):
+            # Slice the hypercube:
+            #  gather all entries in this element of the cover
+            hypercube = self.coverer.find_entries(projected_X, cube)
 
             if self.verbose > 1:
-                print("There are %s points in cube_%s / %s with starting range %s" %
-                      (hypercube.shape[0], i, total_cubes, cover.d[di] + (cube * cover.chunk_dist[di])))
+                print("There are %s points in cube_%s / %s" %
+                      (hypercube.shape[0], i, total_bins))
 
             # If at least min_cluster_samples samples inside the hypercube
             if hypercube.shape[0] >= min_cluster_samples:
@@ -340,8 +356,8 @@ class KeplerMapper(object):
         graph["simplices"] = simplices
         graph["meta_data"] = {
             "projection": self.projection if self.projection else "custom",
-            "nr_cubes": nr_cubes,
-            "overlap_perc": overlap_perc,
+            "nr_cubes": self.coverer.nr_cubes,
+            "overlap_perc": self.coverer.overlap_perc,
             "clusterer": str(clusterer),
             "scaler": str(self.scaler)
         }
@@ -448,6 +464,13 @@ class KeplerMapper(object):
         else:
             title_display = ""
 
+        # Account for overlap_perc being singleton or list
+        if type(meta_data['overlap_perc']) != list:
+            overlap_perc = [meta_data['overlap_perc']]
+        else:
+            overlap_perc = meta_data['overlap_perc']
+        overlap_perc = ", ".join("{}%".format(int(overlap * 100)) for overlap in overlap_perc)
+
         html = """<!DOCTYPE html>
     <meta charset="utf-8">
     <meta name="generator" content="KeplerMapper">
@@ -473,7 +496,7 @@ class KeplerMapper(object):
       <p class="meta">
       <b>Lens</b><br>%s<br><br>
       <b>Cubes per dimension</b><br>%s<br><br>
-      <b>Overlap percentage</b><br>%s%%<br><br>
+      <b>Overlap percentage</b><br>%s<br><br>
       <b>Color Function</b><br>%s( %s )<br><br>
       <b>Clusterer</b><br>%s<br><br>
       <b>Scaler</b><br>%s
@@ -539,7 +562,7 @@ class KeplerMapper(object):
         .attr('style', function(d) { return 'width: ' + (d.group * 2) + 'px; height: ' + (d.group * 2) + 'px; ' + 'left: '+(d.x-(d.group))+'px; ' + 'top: '+(d.y-(d.group))+'px; background: '+color(d.color)+'; box-shadow: 0px 0px 3px #111; box-shadow: 0px 0px 33px '+color(d.color)+', inset 0px 0px 5px rgba(0, 0, 0, 0.2);'})
         ;
       });
-    </script>""" % (title, width_css, height_css, title_display, meta_display, tooltips_display, title, meta_data["projection"], meta_data['nr_cubes'], meta_data['overlap_perc'] * 100, color_function, meta_data["projection"], meta_data["clusterer"], meta_data["scaler"], width_js, height_js, graph_charge, graph_link_distance, graph_gravity, json.dumps(json_s))
+    </script>""" % (title, width_css, height_css, title_display, meta_display, tooltips_display, title, meta_data["projection"], meta_data['nr_cubes'], overlap_perc, color_function, meta_data["projection"], meta_data["clusterer"], meta_data["scaler"], width_js, height_js, graph_charge, graph_link_distance, graph_gravity, json.dumps(json_s))
 
         if save_file:
             with open(path_html, "wb") as outfile:

@@ -11,7 +11,7 @@ import numpy as np
 from sklearn import cluster, preprocessing, manifold, decomposition
 from scipy.spatial import distance
 
-from .nerve import GraphNerve
+from nerve import GraphNerve
 
 class Cover():
     """Helper class that defines the default covering scheme
@@ -395,12 +395,13 @@ class KeplerMapper(object):
 
         def _init_color_function(graph, color_function):
             # If no color_function provided we color by row order in data set
+            # Reshaping to 2-D array is required for sklearn 0.19
             n_samples = np.max([i for s in graph["nodes"].values() for i in s]) + 1
             if color_function is None:
                 color_function = np.arange(n_samples).reshape(-1, 1)
-            # MinMax Scaling to be friendly to non-scaled input.
-            ##from scipy.stats import rankdata
-            ##color_function = rankdata(color_function)   
+            else:
+                color_function = color_function.reshape(-1, 1)
+            # MinMax Scaling to be friendly to non-scaled input.   
             scaler = preprocessing.MinMaxScaler()
             color_function = scaler.fit_transform(color_function).ravel()
             return color_function

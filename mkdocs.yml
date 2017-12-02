@@ -1,7 +1,0 @@
-site_name: KeplerMapper
-pages:
-    - Home: index.md
-    - About: about.md
-    - Usage: usage.md
-    - Examples: examples.md
-theme: readthedocs

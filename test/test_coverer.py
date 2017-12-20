@@ -5,7 +5,7 @@ from sklearn import datasets
 
 import kmapper as km
 
-from kmapper.kmapper import Cover
+from kmapper.cover import Cover
 
 
 class TestAPIMaintenance():

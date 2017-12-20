@@ -75,18 +75,18 @@ force
 var link = g.selectAll(".link")
             .data(graph.links)
             .enter().append("line")
-            .attr("class", "link")
-            .style("stroke-width", function(d) { return d.w * nominal_stroke; })
-            .style("stroke-width", function(d) { return d.w * nominal_stroke; })
-            //.style("stroke", function(d) {
-            //  if (isNumber(d.score) && d.score>=0) return color(d.score);
-            //  else return default_link_color; })
+              .attr("class", "link")
+              .style("stroke-width", function(d) { return d.w * nominal_stroke; })
+              .style("stroke-width", function(d) { return d.w * nominal_stroke; })
+              //.style("stroke", function(d) {
+              //  if (isNumber(d.score) && d.score>=0) return color(d.score);
+              //  else return default_link_color; })
 
 var node = g.selectAll(".node")
             .data(graph.nodes)
             .enter().append("g")
-            .attr("class", "node")
-            .call(force.drag);
+              .attr("class", "node")
+              .call(force.drag);
 
 node.on("dblclick.zoom", function(d) { d3.event.stopPropagation();
   var dcx = (window.innerWidth/2-d.x*zoom.scale());
@@ -135,8 +135,8 @@ dropShadowFilter.append('svg:feBlend')
 
 var circle = node.append("path")
   .attr("d", d3.svg.symbol()
-  .size(function(d) { return d.size * 50; })
-  .type(function(d) { return d.type; }))
+    .size(function(d) { return d.size * 50; })
+    .type(function(d) { return d.type; }))
   .attr("class", "circle")
   .style(tocolor, function(d) {
     return color(d.color);});
@@ -145,11 +145,11 @@ var circle = node.append("path")
 var text = g.selectAll(".text")
   .data(graph.nodes)
   .enter().append("text")
-  .attr("dy", ".35em")
-  .style("font-family", "Roboto")
-  .style("font-weight", "400")
-  .style("color", "#2C3E50")
-  .style("font-size", nominal_text_size + "px");
+    .attr("dy", ".35em")
+    .style("font-family", "Roboto")
+    .style("font-weight", "400")
+    .style("color", "#2C3E50")
+    .style("font-size", nominal_text_size + "px");
 
 if (text_center) {
   text.text(function(d) { return d.id; })
@@ -162,24 +162,24 @@ if (text_center) {
 // Mouse events
 node.on("mouseover", function(d) {
   set_highlight(d);
-console.log("node hober");
+  console.log("node hober");
 
-d3.select("#tooltip").style("display", "block");
-d3.select("#tooltip_content").html(d.tooltip + "<br/>");
-}).on("mousedown", function(d) {
-  d3.event.stopPropagation();
-  focus_node = d;
-  if (highlight_node === null) set_highlight(d)
-}).on("mouseout", function(d) {
-  console.log("mouseout");
-  exit_highlight();
-});
+  d3.select("#tooltip").style("display", "block");
+  d3.select("#tooltip_content").html(d.tooltip + "<br/>");
+  }).on("mousedown", function(d) {
+    d3.event.stopPropagation();
+    focus_node = d;
+    if (highlight_node === null) set_highlight(d)
+  }).on("mouseout", function(d) {
+    console.log("mouseout");
+    exit_highlight();
+  });
 
-d3.select(window).on("mouseup", function() {
-  if (focus_node!==null){
-    focus_node = null;
-  }
-  if (highlight_node === null) exit_highlight();
+  d3.select(window).on("mouseup", function() {
+    if (focus_node!==null){
+      focus_node = null;
+    }
+    if (highlight_node === null) exit_highlight();
 });
 
 // Node highlighting logic
@@ -191,8 +191,8 @@ function exit_highlight(){
 }
 
 function set_highlight(d){
-svg.style("cursor","pointer");
-if (focus_node!==null) d = focus_node;
+  svg.style("cursor","pointer");
+  if (focus_node!==null) d = focus_node;
 }
 
 // Zoom logic

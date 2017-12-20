@@ -28,7 +28,6 @@ class TestLogging():
 class TestLens():
     # TODO: most of these tests only accomodate the default option. They need to be extended to incorporate all possible transforms.
 
-
     # one test for each option supported
     def test_str_options(self):
         mapper = KeplerMapper()
@@ -51,7 +50,6 @@ class TestLens():
             lens = mapper.fit_transform(data, projection=tag, scaler=None)
             np.testing.assert_almost_equal(lens[0][0], func(first_point))
             np.testing.assert_almost_equal(lens[-1][0], func(last_point))
-
 
     def test_lens_size(self):
         mapper = KeplerMapper()
@@ -84,6 +82,7 @@ class TestLens():
 
 class TestAPIMaintenance():
     """ These tests just confirm that new api changes are backwards compatible"""
+
     def test_warn_old_api(self):
         """ Confirm old api works but throws warning """
 

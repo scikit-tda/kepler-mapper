@@ -8,11 +8,9 @@ from kmapper.cover import Cover
 
 
 class TestCover():
-
     def test_diff_overlap_per_dim(self):
-        data = np.random.rand(100,10)
-        c = Cover(overlap_perc=[2,10])
-
+        data = np.random.rand(100, 10)
+        c = Cover(overlap_perc=[2, 10])
 
     def test_define_diff_bins_per_dim(self):
         data = np.arange(30).reshape(10, 3)

@@ -4,9 +4,10 @@ from kmapper import KeplerMapper
 
 from kmapper.visuals import init_color_function
 
+
 class TestVisualHelpers():
     def test_color_function_type(self):
-        nodes = {"a":[1,2,3], "b": [4,5,6]}
+        nodes = {"a": [1, 2, 3], "b": [4, 5, 6]}
         graph = {"nodes": nodes}
 
         color_function = init_color_function(graph)
@@ -16,7 +17,7 @@ class TestVisualHelpers():
         assert max(color_function) == 1
 
     def test_color_function_scaled(self):
-        nodes = {"a":[1,2,3], "b": [4,5,6]}
+        nodes = {"a": [1, 2, 3], "b": [4, 5, 6]}
         graph = {"nodes": nodes}
 
         color_function = init_color_function(graph)
@@ -25,7 +26,7 @@ class TestVisualHelpers():
         assert max(color_function) == 1
 
     def test_color_function_size(self):
-        nodes = {"a":[1,2,3], "b": [4,5,6,7,8,9]}
+        nodes = {"a": [1, 2, 3], "b": [4, 5, 6, 7, 8, 9]}
         graph = {"nodes": nodes}
 
         color_function = init_color_function(graph)

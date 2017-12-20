@@ -1,5 +1,6 @@
 from __future__ import division
 import sys
+import os
 import inspect
 import json
 import itertools
@@ -11,7 +12,9 @@ import numpy as np
 from sklearn import cluster, preprocessing, manifold, decomposition
 from scipy.spatial import distance
 
-from nerve import GraphNerve
+from .nerve import GraphNerve
+
+from jinja2 import Environment, FileSystemLoader, Template
 
 class Cover():
     """Helper class that defines the default covering scheme
@@ -379,11 +382,11 @@ class KeplerMapper(object):
               (nr_links, len(nodes), time))
 
     def visualize(self,
-                  graph, 
-                  color_function=None, 
-                  custom_tooltips=None, 
-                  custom_meta=None, 
-                  path_html="mapper_visualization_output.html", 
+                  graph,
+                  color_function=None,
+                  custom_tooltips=None,
+                  custom_meta=None,
+                  path_html="mapper_visualization_output.html",
                   title="My Data",
                   save_file=True,
                   inverse_X=None,
@@ -401,7 +404,7 @@ class KeplerMapper(object):
                 color_function = np.arange(n_samples).reshape(-1, 1)
             else:
                 color_function = color_function.reshape(-1, 1)
-            # MinMax Scaling to be friendly to non-scaled input.   
+            # MinMax Scaling to be friendly to non-scaled input.
             scaler = preprocessing.MinMaxScaler()
             color_function = scaler.fit_transform(color_function).ravel()
             return color_function
@@ -423,16 +426,16 @@ class KeplerMapper(object):
                 above_mean = cluster_X_mean > inverse_X_mean
                 std_m = np.sqrt((cluster_X_mean - inverse_X_mean)**2) / inverse_X_std
 
-                stats = sorted([(s,f,i,c,a,v) for s,f,i,c,a,v in zip(std_m, 
+                stats = sorted([(s,f,i,c,a,v) for s,f,i,c,a,v in zip(std_m,
                                                                  inverse_X_names,
                                                                  np.mean(inverse_X, axis=0),
                                                                  cluster_X_mean,
                                                                  above_mean,
-                                                                 np.std(inverse_X, axis=0))], 
+                                                                 np.std(inverse_X, axis=0))],
                                                                    reverse=True)
                 above_stats = [a for a in stats if a[4] == True]
                 below_stats = [a for a in stats if a[4] == False]
-                
+
                 if len(above_stats) > 0:
                     cluster_stats += "<h3>Above Average</h3><table><tr><th>Feature</th>" \
                                      + "<th style='width:50px;'><small>Mean</small></th>" \
@@ -451,7 +454,7 @@ class KeplerMapper(object):
                     cluster_stats += "</table>"
             cluster_stats += "<h3>Size</h3><p>%s</p>"%(len(member_ids))
             return "%s"%(str(cluster_stats))
-            
+
         def _format_projection_statistics(member_ids, projected_X, projected_X_names):
             projection_stats = ""
             if projected_X is not None:
@@ -468,20 +471,20 @@ class KeplerMapper(object):
                 maxs_v = np.max(projected_X[member_ids], axis=0)
                 mins_v = np.min(projected_X[member_ids], axis=0)
 
-                for name, mean_v, max_v, min_v in zip(projected_X_names, 
-                                                      means_v, 
-                                                      maxs_v, 
+                for name, mean_v, max_v, min_v in zip(projected_X_names,
+                                                      means_v,
+                                                      maxs_v,
                                                       mins_v):
-                    projection_stats += "<tr><td>%s</td><td><small>%s</small></td><td><small>%s</small>"%(name, 
-                                                                                                          round(mean_v, 3), 
+                    projection_stats += "<tr><td>%s</td><td><small>%s</small></td><td><small>%s</small>"%(name,
+                                                                                                          round(mean_v, 3),
                                                                                                           round(max_v, 3)) \
                                       + "</td><td><small>%s</small></td></tr>"%(round(min_v, 3))
                 projection_stats += "</table>"
             return projection_stats
 
-        def _format_tooltip(member_ids, custom_tooltips, inverse_X, 
+        def _format_tooltip(member_ids, custom_tooltips, inverse_X,
                             inverse_X_names, projected_X, projected_X_names):
-            
+
             tooltip = _format_projection_statistics(member_ids, projected_X, projected_X_names)
             tooltip += _format_cluster_statistics(member_ids, inverse_X, inverse_X_names)
 
@@ -516,7 +519,7 @@ class KeplerMapper(object):
         def _size_link_width(graph, node_id, linked_node_id):
             return 1
 
-        def _dict_to_json(graph, color_function, inverse_X, 
+        def _dict_to_json(graph, color_function, inverse_X,
                           inverse_X_names, projected_X, projected_X_names):
             json_dict = {"nodes": [], "links": []}
             node_id_to_num = {}
@@ -527,16 +530,16 @@ class KeplerMapper(object):
                       "color": _color_function(member_ids, color_function),
                       "type": _type_node(),
                       "size": _size_node(member_ids),
-                      "tooltip": _format_tooltip(member_ids, 
-                                                 custom_tooltips, 
-                                                 inverse_X, 
-                                                 inverse_X_names, 
-                                                 projected_X, 
+                      "tooltip": _format_tooltip(member_ids,
+                                                 custom_tooltips,
+                                                 inverse_X,
+                                                 inverse_X_names,
+                                                 projected_X,
                                                  projected_X_names)}
                 json_dict["nodes"].append(n)
             for i, (node_id, linked_node_ids) in enumerate(graph["links"].items()):
                 for linked_node_id in linked_node_ids:
-                    l = { "source": node_id_to_num[node_id], 
+                    l = { "source": node_id_to_num[node_id],
                          "target": node_id_to_num[linked_node_id],
                          "width": _size_link_width(graph, node_id, linked_node_id)}
                     json_dict["links"].append(l)
@@ -556,7 +559,7 @@ class KeplerMapper(object):
 
             dist = '  <h3>Distribution</h3>\n  <div id="histogram">\n'
             buckets = defaultdict(float)
-            
+
             for i, (node_id, member_ids) in enumerate(graph["nodes"].items()):
                 # round to color range value to nearest 3 multiple
                 k = int(round(_color_function(member_ids, color_function) / 3.0))
@@ -584,402 +587,25 @@ class KeplerMapper(object):
         color_distribution = _color_function_distribution(graph, color_function)
         meta = _format_meta(graph, custom_meta)
 
-        template = """<!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="utf-8">
-        <meta name="generator" content="KeplerMapper">
-        <title>%s | KeplerMapper</title>
-        <link rel="icon" type="image/png" href="https://i.imgur.com/2eZcTZn.png" />
-        <link href='https://fonts.googleapis.com/css?family=Roboto+Mono:700,300' 
-              rel='stylesheet' type='text/css'>
-        <style>
-          * {margin: 0; padding: 0;}
-          html, body {height: 100%%;}
-          body {font-family: "Roboto Mono", "Helvetica", sans-serif; font-size:14px;}
-          #display {color: #95A5A6; background: #212121;}
-          #print {color: #000; background: #FFF;}
-          h1 {font-size: 21px; font-weight: 300; font-weight: 300;}
-          h2 {font-size: 18px; padding-bottom: 20px; font-weight: 300;}
-          h3 {font-size: 14px; font-weight: 700; text-transform: uppercase;}
-          #meta h3 { float: left; padding-right: 8px;}
-          p, #tooltip h3, ol, ul, table {padding-bottom: 20px;}
-          ol, ul {padding-left: 20px;}
-          ol b {display: block;}
-          a {color: #16a085; text-decoration: none;}
-          a:hover {color: #2ecc71;}
-          #header {height: 35px; padding: 20px; position: absolute; top: 0; left: 0; right: 0; 
-                   z-index: 9999;}
-          #display #header {background: #111111; box-shadow: 0px 0px 4px #000}
-          #print #header {background: #FFF;}
-          #canvas {height: 100%%; width: 100%%; display: block;}
-          #tooltip {position: absolute; top: 75px; left: 0; bottom: 0;  
-                    width: 320px; padding: 20px; overflow: auto; display: none;}
-          #display #tooltip {background: #191919;}
-          #print #tooltip {background: #FFF;}
-          #meta {position: absolute; top: 75px; right: 0; bottom: 0; 
-                 width: 320px; padding: 20px; overflow: auto;}
-          #display #meta {background: #191919;}
-          #print #meta {background: #FFF; }
-          #meta_control, #tooltip_control {position: absolute; right: 20px;}
-          #meta::-webkit-scrollbar, #tooltip::-webkit-scrollbar {width: 1em;}
-          #meta::-webkit-scrollbar-track, #tooltip::-webkit-scrollbar-track {
-            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);}
-          #meta::-webkit-scrollbar-thumb, #tooltip::-webkit-scrollbar-thumb {
-            background-color: darkgrey; outline: 1px solid slategrey;}
-          #histogram { display: block; height: 100px; padding-top: 50px; clear: both;}
-          #display #histogram {opacity: 0.68;}
-          .bin {width: 30px; float: left;}
-          .bin div { font-size: 10px; display: block; width: 35px; margin-top: -30px; 
-                     text-align: right; margin-left:-3px;
-                     -webkit-transform: rotate(-90deg); -moz-transform: rotate(-90deg); 
-                     -ms-transform: rotate(-90deg); -o-transform: rotate(-90deg);}
-          #histogram:hover {opacity:1.;}
-          #display .circle {stroke-opacity:0.18; stroke-width: 7px; stroke: #000;}
-          #print .circle {stroke-opacity:1; stroke-width: 2px; stroke: #000; 
-                          stroke-linecap: round;}
-          #print .link {stroke: #000;}
-          #display .link {stroke: rgba(160,160,160, 0.5);}
-          table { border-collapse: collapse; display: table; width: 100%%; margin-bottom:20px;}
-          td, th { padding: 5px; text-align: left;}
-          #display th { background: #212121}
-          td { border-bottom: 1px solid #111;}
-        </style>
-      </head>
-      <body id="display">
-        <div id="header">
-          <noscript><b>Requires JavaScript (d3.js) for visualizations</b></noscript>
-          <h1>%s</h1>
-        </div>
-        <div id="canvas">
+        # Find the module absolute path and locate templates
+        module_root = os.path.dirname(__file__)
+        env = Environment(loader=FileSystemLoader(module_root))
 
-        </div>
-        <div id="tooltip">
-          <div id="tooltip_control">
-            <a href="#"><small>[-]</small></a>
-          </div>
-          <h2>Cluster Meta</h2>
-          <div id="tooltip_content">
-          
-          </div>
-        </div>
-        <div id="meta">
-          <div id="meta_control">
-            <a href="#"><small>[-]</small></a>
-          </div>
-          <h2>Graph Meta</h2>
-          %s
-          %s
-        </div>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
-        <script>
-        // Height and width settings
-        var canvas_height = window.innerHeight - 5;
-        document.getElementById("canvas").style.height = canvas_height + "px";          
-        var width = document.getElementById("canvas").offsetWidth;
-        var height = document.getElementById("canvas").offsetHeight;
-        var w = width;
-        var h = height;
-        
-        // We draw the graph in SVG
-        var svg = d3.select("#canvas").append("svg")
-                  .attr("width", width)
-                  .attr("height", height);
+        # Render the Jinja template, filling fields as appropriate
+        template = env.get_template('template.html').render(
+            title=title,
+            meta=meta,
+            color_distribution=color_distribution,
+            script_path=module_root+'/template.js',
+            json_graph=json_graph)
 
-        var focus_node = null, highlight_node = null;
-        var text_center = false;
-        var outline = false;
-
-        // Size for zooming
-        var size = d3.scale.pow().exponent(1)
-                   .domain([1,100])
-                   .range([8,24]);
-
-        // Show/Hide Functionality
-        d3.select("#tooltip_control").on("click", function() {
-          d3.select("#tooltip").style("display", "none");
-        })
-        d3.select("#meta_control").on("click", function() {
-          d3.select("#meta").style("display", "none");
-        })
-
-        // Color settings: Ordinal Scale of ["0"-"30"] hot-to-cold
-        var color = d3.scale.ordinal() 
-                    .domain(["0","1", "2", "3", "4", "5", "6", "7", "8", "9", "10", 
-                             "11", "12", "13","14","15","16","17","18","19","20",
-                             "21","22","23","24","25","26","27","28","29","30"])
-                    .range(["#FF0000","#FF1400","#FF2800","#FF3c00","#FF5000","#FF6400",
-                            "#FF7800","#FF8c00","#FFa000","#FFb400","#FFc800","#FFdc00",
-                            "#FFf000","#fdff00","#b0ff00","#65ff00","#17ff00","#00ff36",
-                            "#00ff83","#00ffd0","#00e4ff","#00c4ff","#00a4ff","#00a4ff",
-                            "#0084ff","#0064ff","#0044ff","#0022ff","#0002ff","#0100ff",
-                            "#0300ff","#0500ff"]);
-        // Force settings
-        var force = d3.layout.force()
-                    .linkDistance(5)
-                    .gravity(0.2)
-                    .charge(-1200)
-                    .size([w,h]);
-
-        // Variety of variable inits
-        var highlight_color = "blue";
-        var highlight_trans = 0.1;        
-        var default_node_color = "#ccc";
-        var default_node_color = "rgba(160,160,160, 0.5)";
-        var default_link_color = "rgba(160,160,160, 0.5)";
-        var nominal_base_node_size = 8;
-        var nominal_text_size = 15;
-        var max_text_size = 24;
-        var nominal_stroke = 1.;
-        var max_stroke = 4.5;
-        var max_base_node_size = 36;
-        var min_zoom = 0.1;
-        var max_zoom = 7;
-        var zoom = d3.behavior.zoom().scaleExtent([min_zoom,max_zoom])
-        var g = svg.append("g");
-        
-        svg.style("cursor","move");
-
-        graph = %s;
-            
-        force
-          .nodes(graph.nodes)
-          .links(graph.links)
-          .start();
-
-        var link = g.selectAll(".link")
-                    .data(graph.links)
-                    .enter().append("line")
-                    .attr("class", "link")
-                    .style("stroke-width", function(d) { return d.w * nominal_stroke; })
-                    .style("stroke-width", function(d) { return d.w * nominal_stroke; })
-                    //.style("stroke", function(d) { 
-                    //  if (isNumber(d.score) && d.score>=0) return color(d.score);
-                    //  else return default_link_color; })
-
-        var node = g.selectAll(".node")
-                    .data(graph.nodes)
-                    .enter().append("g")
-                    .attr("class", "node")
-                    .call(force.drag)
-
-        node.on("dblclick.zoom", function(d) { d3.event.stopPropagation();
-          var dcx = (window.innerWidth/2-d.x*zoom.scale());
-          var dcy = (window.innerHeight/2-d.y*zoom.scale());
-          zoom.translate([dcx,dcy]);
-          g.attr("transform", "translate("+ dcx + "," + dcy  + ")scale(" + zoom.scale() + ")");
-        });
-
-        var tocolor = "fill";
-        var towhite = "stroke";
-        if (outline) {
-          tocolor = "stroke"
-          towhite = "fill"
-        }
-
-        // Drop-shadow Filter
-        var svg = d3.select("svg");
-        var defs = svg.append("defs");
-        var dropShadowFilter = defs.append('svg:filter')
-          .attr('id', 'drop-shadow')
-          .attr('filterUnits', "userSpaceOnUse")
-          .attr('width', '250%%')
-          .attr('height', '250%%');
-        dropShadowFilter.append('svg:feGaussianBlur')
-          .attr('in', 'SourceGraphic')
-          .attr('stdDeviation', 12)
-          .attr('result', 'blur-out');
-        dropShadowFilter.append('svg:feColorMatrix')
-          .attr('in', 'blur-out')
-          .attr('type', 'hueRotate')
-          .attr('values', 0)
-          .attr('result', 'color-out');
-        dropShadowFilter.append('svg:feOffset')
-          .attr('in', 'color-out')
-          .attr('dx', 0)
-          .attr('dy', 0)
-          .attr('result', 'the-shadow');
-        dropShadowFilter.append('svg:feComponentTransfer')
-          .attr('type', 'linear')
-          .attr('slope', 0.2)
-          .attr('result', 'shadow-opacity');
-        dropShadowFilter.append('svg:feBlend')
-          .attr('in', 'SourceGraphic')
-          .attr('in2', 'the-shadow')
-          .attr('mode', 'normal');
-
-      var circle = node.append("path")
-        .attr("d", d3.svg.symbol()
-        .size(function(d) { return d.size * 50; })
-        .type(function(d) { return d.type; }))
-        .attr("class", "circle")
-        .style(tocolor, function(d) { 
-          return color(d.color);
-        })
-        //.style("filter", "url(#drop-shadow)");
-
-      var text = g.selectAll(".text")
-        .data(graph.nodes)
-        .enter().append("text")
-        .attr("dy", ".35em")
-        .style("font-family", "Roboto")
-        .style("font-weight", "400")
-        .style("color", "#2C3E50")
-        .style("font-size", nominal_text_size + "px")
-
-      if (text_center)
-        text.text(function(d) { return d.id; })
-        .style("text-anchor", "middle");
-      else 
-        text.attr("dx", function(d) {return (size(d.size)||nominal_base_node_size);})
-        .text(function(d) { return '\u2002'+d.id; });
-      
-      // Mouse events
-      node.on("mouseover", function(d) {
-        set_highlight(d);
-        console.log("node hober");
-
-        d3.select("#tooltip").style("display", "block");
-        d3.select("#tooltip_content").html(d.tooltip + "<br/>");
-        }).on("mousedown", function(d) { 
-        d3.event.stopPropagation();
-        focus_node = d;
-        if (highlight_node === null) set_highlight(d)
-      }).on("mouseout", function(d) {
-        console.log("mouseout");
-        exit_highlight();
-      });
-
-      d3.select(window).on("mouseup", function() {
-        if (focus_node!==null){
-          focus_node = null;
-        }
-        if (highlight_node === null) exit_highlight();
-      });
-
-      // Node highlighting logic
-      function exit_highlight(){
-        highlight_node = null;
-        if (focus_node===null){
-          svg.style("cursor","move"); 
-        }
-      }
-
-      function set_highlight(d){
-        svg.style("cursor","pointer");
-        if (focus_node!==null) d = focus_node;
-      }
-
-      // Zoom logic
-      zoom.on("zoom", function() {
-        var stroke = nominal_stroke;
-        var base_radius = nominal_base_node_size;
-        if (nominal_base_node_size*zoom.scale()>max_base_node_size) {
-          base_radius = max_base_node_size/zoom.scale();}
-        circle.attr("d", d3.svg.symbol()
-          .size(function(d) { return d.size * 50; })
-          .type(function(d) { return d.type; }))
-        if (!text_center) text.attr("dx", function(d) { 
-          return (size(d.size)*base_radius/nominal_base_node_size||base_radius); });
-                
-        var text_size = nominal_text_size;
-        if (nominal_text_size*zoom.scale()>max_text_size) {
-          text_size = max_text_size/zoom.scale(); }
-        text.style("font-size",text_size + "px");
-
-        g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-      });
-
-      svg.call(zoom);   
-      resize();
-      d3.select(window).on("resize", resize);
-
-      // Animation per tick
-      force.on("tick", function() {
-        node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-        text.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-        link.attr("x1", function(d) { return d.source.x; })
-          .attr("y1", function(d) { return d.source.y; })
-          .attr("x2", function(d) { return d.target.x; })
-          .attr("y2", function(d) { return d.target.y; });
-        node.attr("cx", function(d) { return d.x; })
-          .attr("cy", function(d) { return d.y; });
-      });
-
-      // Resizing window and redraws
-      function resize() {
-        var width = window.innerWidth, height = window.innerHeight;
-        var width = document.getElementById("canvas").offsetWidth;
-        var height = document.getElementById("canvas").offsetHeight;
-        svg.attr("width", width).attr("height", height);
-        
-        force.size([force.size()[0]+(width-w)/zoom.scale(),
-                    force.size()[1]+(height-h)/zoom.scale()]).resume();
-        w = width;
-        h = height;
-      }
-
-      function isNumber(n) {
-        return !isNaN(parseFloat(n)) && isFinite(n);
-      }
-
-      // Key press events
-      window.addEventListener("keydown", function (event) {
-      if (event.defaultPrevented) {
-        return; // Do nothing if the event was already processed
-      }
-        switch (event.key) {
-          case "s":
-            // Do something for "s" key press.
-            node.style("filter", "url(#drop-shadow)");
-            break;
-          case "c":
-            // Do something for "s" key press.
-            node.style("filter", null);
-            break;
-          case "p":
-            // Do something for "p" key press.
-            d3.select("body").attr('id', null).attr('id', "print")
-            break;
-          case "d":
-            // Do something for "d" key press.
-            d3.select("body").attr('id', null).attr('id', "display")
-            break;
-          case "z":
-            force.gravity(0.)
-                 .charge(0.);
-            resize();
-            break
-          case "m":
-            force.gravity(0.07)
-                 .charge(-1);
-            resize();
-            break
-          case "e":
-            force.gravity(0.4)
-                 .charge(-600);
-              
-            resize();
-            break
-          default:
-            return; // Quit when this doesn't handle the key event.
-        }
-        // Cancel the default action to avoid it being handled twice
-        event.preventDefault();
-      }, true);
-      </script>
-      </body>
-    </html>"""%(title,
-                title,
-                meta, 
-                color_distribution, 
-                json_graph)
         if save_file:
             with open(path_html, "wb") as outfile:
                 if self.verbose > 0:
                     print("Wrote visualization to: %s"%(path_html))
                 outfile.write(template.encode("utf-8"))
         return template
+
 
     def data_from_cluster_id(self, cluster_id, graph, data):
         """Returns the original data of each cluster member for a given cluster ID

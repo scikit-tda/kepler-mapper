@@ -592,11 +592,12 @@ class KeplerMapper(object):
         env = Environment(loader=FileSystemLoader(module_root))
 
         # Render the Jinja template, filling fields as appropriate
-        template = env.get_template('template.html').render(
+        template = env.get_template('visual/base.html').render(
             title=title,
             meta=meta,
             color_distribution=color_distribution,
-            script_path=module_root+'/template.js',
+            script_path=module_root+'/visual/kmapper.js',
+            css_path=module_root+'/visual/style.css',
             json_graph=json_graph)
 
         if save_file:

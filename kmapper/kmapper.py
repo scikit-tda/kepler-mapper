@@ -588,16 +588,16 @@ class KeplerMapper(object):
         meta = _format_meta(graph, custom_meta)
 
         # Find the module absolute path and locate templates
-        module_root = os.path.dirname(__file__)
+        module_root = os.path.join(os.path.dirname(__file__), 'templates')
+
         env = Environment(loader=FileSystemLoader(module_root))
+        env.globals['STATIC_PREFIX'] = os.path.join(module_root, "static")
 
         # Render the Jinja template, filling fields as appropriate
-        template = env.get_template('visual/base.html').render(
+        template = env.get_template('base.html').render(
             title=title,
             meta=meta,
             color_distribution=color_distribution,
-            script_path=module_root+'/visual/kmapper.js',
-            css_path=module_root+'/visual/style.css',
             json_graph=json_graph)
 
         if save_file:

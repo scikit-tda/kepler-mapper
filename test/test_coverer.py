@@ -1,56 +1,10 @@
 import pytest
-import warnings
 import numpy as np
 from sklearn import datasets
 
-import kmapper as km
+from kmapper import KeplerMapper
 
 from kmapper.cover import Cover
-
-
-class TestAPIMaintenance():
-    def test_warn_old_api(self):
-        """ Confirm old api works but throws warning """
-
-        mapper = km.KeplerMapper()
-        data = np.random.rand(100, 10)
-        lens = mapper.fit_transform(data)
-
-        with pytest.deprecated_call():
-            graph = mapper.map(lens, data, nr_cubes=10)
-
-        with pytest.deprecated_call():
-            graph = mapper.map(lens, data, overlap_perc=10)
-
-        with pytest.deprecated_call():
-            graph = mapper.map(lens, data, nr_cubes=10, overlap_perc=0.1)
-
-    def test_new_api_old_defaults(self):
-        mapper = km.KeplerMapper()
-        data = np.random.rand(100, 10)
-        lens = mapper.fit_transform(data)
-
-        _ = mapper.map(lens, data, nr_cubes=10)
-        c2 = mapper.coverer
-
-        assert c2.overlap_perc == 0.1
-
-        _ = mapper.map(lens, data, overlap_perc=0.1)
-        c2 = mapper.coverer
-
-        assert c2.nr_cubes == 10
-
-    def test_no_warn_normally(self, recwarn):
-        """ Confirm that deprecation warnings behave as expected"""
-        mapper = km.KeplerMapper()
-        data = np.random.rand(100, 10)
-        lens = mapper.fit_transform(data)
-
-        warnings.simplefilter('always')
-        graph = mapper.map(lens, data)
-
-        assert len(recwarn) == 0
-        assert DeprecationWarning not in recwarn
 
 
 class TestCover():
@@ -162,7 +116,7 @@ class TestCover():
 def test_BasicCover():
     # TODO: add a mock that asserts the cover was called appropriately.. or test number of cubes etc.
     data, _ = datasets.make_circles()
-    mapper = km.KeplerMapper()
+    mapper = KeplerMapper()
     graph = mapper.map(data)
     mapper.visualize(graph)
 

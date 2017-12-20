@@ -5,7 +5,7 @@ import json
 from collections import defaultdict
 
 
-def init_color_function(graph, color_function):
+def init_color_function(graph, color_function=None):
     # If no color_function provided we color by row order in data set
     # Reshaping to 2-D array is required for sklearn 0.19
     n_samples = np.max([i for s in graph["nodes"].values() for i in s]) + 1

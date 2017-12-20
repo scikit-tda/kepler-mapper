@@ -215,6 +215,10 @@ Check the `examples\breast-cancer` directory for code
 - **George Lake et al.** from Universität Zürich use it for teaching data science: <br>[ESC403 Introduction to Data Science](https://s3itwiki.uzh.ch/display/esc403fs2016/ESC403+Introduction+to+Data+Science+-+Spring+2016)
 - **Mikael Vejdemo-Johansson** maps process control systems <br>[TDA as a diagnostics tool for process control systems.](http://cv.mikael.johanssons.org/talks/2016-05-epfl.pdf)
 - **Lertwittayatrai et al.** mention KeplerMapper in the paper <br>[Extracting Insights from the Topology of the JavaScript Package Ecosystem](https://arxiv.org/abs/1710.00446)
+- **Jeffrey Ray et al.** review KeplerMapper in Advances in Intelligent Networking and Collaborative Systems: <br>
+[A Survey of Topological Data Analysis (TDA) Methods Implemented in Python](https://www.springerprofessional.de/en/a-survey-of-topological-data-analysis-tda-methods-implemented-in/14221146)
+- **Wei Guo et al.** succesfully use KeplerMapper in prediction of manufacturing systems: <br>
+[Identification of key features using topological data analysis for accurate prediction of manufacturing system outputs](https://www.researchgate.net/publication/314185934_Identification_of_Key_Features_Using_Topological_Data_Analysis_for_Accurate_Prediction_of_Manufacturing_System_Outputs)
 
 ## References
 
@@ -240,8 +244,14 @@ Data Driven NYC. [Making Data Work](https://www.youtube.com/watch?v=UZH5xJXJG2I)
 [Minimum Spanning Trees and Single Linkage Cluster Analysis](http://www.cs.ucsb.edu/~veronika/MAE/mstSingleLinkage_GowerRoss_1969.pdf)
 - **Pedregosa, F. and Varoquaux, G. and Gramfort, A. and Michel, V. and Thirion, B. and Grisel, O. and Blondel, M. and Prettenhofer, P. and Weiss, R. and Dubourg, V. and Vanderplas, J. and Passos, A. and Cournapeau, D. and Brucher, M. and Perrot, M. and Duchesnay, E.** API, Clustering, and Manifold Learning<br/>
 [Scikit-learn: Machine Learning in Python](http://scikit-learn.org/)
+- **Stéfan van der Walt, S. Chris Colbert and Gaël Varoquaux**. Scientific Computing in Python<br>
+[The NumPy Array: A Structure for Efficient Numerical Computation](https://hal.inria.fr/inria-00564007/document)
+- **Guido van Rossum** Python<br>
+[Python Tutorial, Technical Report CS-R9526](https://ir.cwi.nl/pub/5007/05007D.pdf)
 - **Mike Bostock, Tim Dwyer, Thomas Jakobsen** Force-directed Graphing/Clustering<br/>
 [Force-directed Graphs](http://bl.ocks.org/mbostock/4062045)
+- **eyaler** Zoom/Pan/Drag/Highlight<br>
+[eyaler's Github](https://github.com/eyaler)
 - **Cindy Zhang, Danny Cochran, Diana Suvorova, Curtis Mitchell** Graphing<br>
 [Grapher](https://github.com/ayasdi/grapher)
 - **Dale Reagan** Color scales<br>

@@ -10,8 +10,8 @@
   <link rel="icon" type="image/png" href="https://i.imgur.com/2eZcTZn.png" />
   <link href='https://fonts.googleapis.com/css?family=Roboto+Mono:700,300' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="{{ STATIC_PREFIX }}/style.css">
+  <style> {{ css_text }} </style>
 
-<!-- <style src="{{ STATIC_PREFIX }}css/screen.css"></style> -->
 </head>
 
 <body id="display">
@@ -39,7 +39,8 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
-  <script src='{{ STATIC_PREFIX }}/kmapper.js'></script>
+
+  <script>{{ js_text }}</script>
 </body>
 
 </html>

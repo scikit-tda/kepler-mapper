@@ -2,7 +2,7 @@ Usage
 =====
 
 KeplerMapper adopts the scikit-learn API as much as possible, so it should feel very familiar to anyone who has used these libraries.
-  
+
 Python code
 ~~~~~~~~~~~
 

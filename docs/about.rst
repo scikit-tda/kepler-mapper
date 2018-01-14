@@ -1,20 +1,36 @@
 About
 ======
 
-This project started out as a learning endeavor, but has since grown to so much more.
+This project started out as a learning endeavor, but has since grown to so much more. If you would like to contribute, please open a github issue first: https://github.com/MLWave/kepler-mapper.
 
 Disclaimer
 ----------
 
 Standard MIT disclaimer applies, see ``DISCLAIMER.md`` for full text.
+
 Development status is Alpha.
 
 Cite
 ----
 
-Nathaniel Saul, & Hendrik Jacob van Veen. (2017, November 17).
+Hendrik Jacob van Veen, and Nathaniel Saul. (2017, November 17).
 MLWave/kepler-mapper: 186f (Version 1.0.1). Zenodo.
 http://doi.org/10.5281/zenodo.1054444
+
+
+
+Bibtex entry:
+
+
+::
+
+    @MISC {,
+        author       = "Hendrik Jacob van Veen, and Nathaniel Saul",
+        title        = "KeplerMapper",
+        howpublished = "http://doi.org/10.5281/zenodo.1054444",
+        month        = "nov",
+        year         = "2017"
+    }
 
 
 Uses & Mentions

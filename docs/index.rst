@@ -7,7 +7,7 @@
 
 KeplerMapper
 ===================
-|logo|
+
 
     Nature uses as little as possible of anything. - Johannes Kepler
 
@@ -24,17 +24,9 @@ User Guide / Tutorial
   about
   setup
   basic_usage
+  reference
   examples
 
-API Reference
--------------
-
-  api
-  basic_api
-
-.. toctree::
-
-  api
 
 Indices and tables
 ==================
@@ -44,10 +36,6 @@ Indices and tables
 * :ref:`search`
 
 
-.. |logo| image:: http://i.imgur.com/axOG6GJ.jpg
-   :height: 40px
-   :width: 40px
-   :align: right
 .. |PyPI version| image:: https://badge.fury.io/py/kmapper.svg
    :target: https://badge.fury.io/py/kmapper
 .. |Build Status| image:: https://travis-ci.org/MLWave/kepler-mapper.svg?branch=master

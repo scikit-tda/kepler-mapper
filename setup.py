@@ -14,7 +14,8 @@ setup(name='kmapper',
       install_requires=[
         'scikit-learn',
         'numpy',
-        'scipy'
+        'scipy',
+        'Jinja2'
       ],
       test_requires=[
         'pytest'

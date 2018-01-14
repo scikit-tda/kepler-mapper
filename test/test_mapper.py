@@ -1,9 +1,9 @@
 import pytest
 import numpy as np
 
-
+import warnings
 from kmapper import KeplerMapper
-from kmapper import GraphNerve
+
 
 class TestLogging():
     """ Simple tests that confirm map completes at each logging level
@@ -25,83 +25,8 @@ class TestLogging():
         graph = mapper.map(data)
 
 
-class TestVisualize():
-    def test_visualize_standalone_same(self, tmpdir):
-        """ ensure that the visualization is not dependent on the actual mapper object.
-        """
-        mapper = KeplerMapper()
-
-        file = tmpdir.join('output.html')
-
-        data = np.random.rand(1000, 10)
-        lens = mapper.fit_transform(data, projection=[0])
-        graph = mapper.map(lens, data)
-        viz1 = mapper.visualize(graph, path_html=file.strpath)
-
-        new_mapper = KeplerMapper()
-        viz2 = new_mapper.visualize(graph, path_html=file.strpath)
-
-        assert viz1 == viz2
-
-    def test_file_written(self, tmpdir):
-        mapper = KeplerMapper()
-
-        file = tmpdir.join('output.html')
-
-        data = np.random.rand(1000, 10)
-        lens = mapper.fit_transform(data, projection=[0])
-        graph = mapper.map(lens, data)
-        viz = mapper.visualize(graph, path_html=file.strpath)
-
-        assert file.read() == viz
-        assert len(tmpdir.listdir()) == 1, "file was written to"
-
-    def test_file_not_written(self, tmpdir):
-        mapper = KeplerMapper()
-
-        file = tmpdir.join('output.html')
-
-        data = np.random.rand(1000, 10)
-        lens = mapper.fit_transform(data, projection=[0])
-        graph = mapper.map(lens, data)
-        viz = mapper.visualize(graph, path_html=file.strpath, save_file=False)
-
-        assert len(tmpdir.listdir()) == 0, "file was never written to"
-        # assert file.read() != viz
-
-
-class TestLinker():
-    # TODO: eventually we will make linker its own class that will be able to
-    #       construct general simplicial complexes and
-    #       something suitable for computing persistent homology
-    def test_finds_a_link(self):
-        nerve = GraphNerve()
-        groups = {"a": [1,2,3,4], "b":[1,2,3,4]}
-        links, _ = nerve(groups)
-
-        assert "a" in links or "b" in links
-        assert links["a"] == ["b"] or links["b"] == ["a"]
-
-    def test_no_link(self):
-        nerve = GraphNerve()
-        groups = {"a": [1,2,3,4], "b":[5,6,7]}
-
-        links, _ = nerve(groups)
-        assert not links
-
-    def test_pass_through_result(self):
-        nerve = GraphNerve()
-        groups = {"a": [1], "b":[2]}
-
-        res = dict()
-        links, _ = nerve(groups)
-
-        assert res == links
-
-
 class TestLens():
     # TODO: most of these tests only accomodate the default option. They need to be extended to incorporate all possible transforms.
-
 
     # one test for each option supported
     def test_str_options(self):
@@ -125,7 +50,6 @@ class TestLens():
             lens = mapper.fit_transform(data, projection=tag, scaler=None)
             np.testing.assert_almost_equal(lens[0][0], func(first_point))
             np.testing.assert_almost_equal(lens[-1][0], func(last_point))
-
 
     def test_lens_size(self):
         mapper = KeplerMapper()
@@ -154,3 +78,50 @@ class TestLens():
 
         lens = mapper.fit_transform(data, projection=[0])
         np.testing.assert_allclose(lens, data[:, :1], atol=atol)
+
+
+class TestAPIMaintenance():
+    """ These tests just confirm that new api changes are backwards compatible"""
+
+    def test_warn_old_api(self):
+        """ Confirm old api works but throws warning """
+
+        mapper = KeplerMapper()
+        data = np.random.rand(100, 10)
+        lens = mapper.fit_transform(data)
+
+        with pytest.deprecated_call():
+            graph = mapper.map(lens, data, nr_cubes=10)
+
+        with pytest.deprecated_call():
+            graph = mapper.map(lens, data, overlap_perc=10)
+
+        with pytest.deprecated_call():
+            graph = mapper.map(lens, data, nr_cubes=10, overlap_perc=0.1)
+
+    def test_new_api_old_defaults(self):
+        mapper = KeplerMapper()
+        data = np.random.rand(100, 10)
+        lens = mapper.fit_transform(data)
+
+        _ = mapper.map(lens, data, nr_cubes=10)
+        c2 = mapper.coverer
+
+        assert c2.overlap_perc == 0.1
+
+        _ = mapper.map(lens, data, overlap_perc=0.1)
+        c2 = mapper.coverer
+
+        assert c2.nr_cubes == 10
+
+    def test_no_warn_normally(self, recwarn):
+        """ Confirm that deprecation warnings behave as expected"""
+        mapper = KeplerMapper()
+        data = np.random.rand(100, 10)
+        lens = mapper.fit_transform(data)
+
+        warnings.simplefilter('always')
+        graph = mapper.map(lens, data)
+
+        assert len(recwarn) == 0
+        assert DeprecationWarning not in recwarn

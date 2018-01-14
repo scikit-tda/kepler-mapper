@@ -1,91 +1,21 @@
 from __future__ import division
-import sys
-import inspect
-import json
-import itertools
+
 from collections import defaultdict
 from datetime import datetime
+import inspect
+import itertools
+import os
+import sys
 import warnings
 
+from jinja2 import Environment, FileSystemLoader, Template
 import numpy as np
 from sklearn import cluster, preprocessing, manifold, decomposition
 from scipy.spatial import distance
 
+from .cover import Cover
 from .nerve import GraphNerve
-
-class Cover():
-    """Helper class that defines the default covering scheme
-
-    functions
-    ---------
-    cubes:          @property, returns an iterable of all bins in the cover.
-    find_entries:   Find all entries in the input data that are in the given cube.
-    """
-
-    def __init__(self, nr_cubes=10, overlap_perc=0.2):
-        self.nr_cubes = nr_cubes
-        self.overlap_perc = overlap_perc
-
-    def define_bins(self, data):
-        """
-        Helper function to get origin coordinates for our intervals/hypercubes
-        Useful for looping no matter the number of cubes or dimensions
-        Example:   	if there are 4 cubes per dimension and 3 dimensions
-                        return the bottom left (origin) coordinates of 64 hypercubes,
-                        as a sorted list of Numpy arrays
-
-        This function must assume that the first column of data are indices.
-        """
-
-        indexless_data = data[:, 1:]
-        bounds = (np.min(indexless_data, axis=0),
-                  np.max(indexless_data, axis=0))
-
-        # We chop up the min-max column ranges into 'nr_cubes' parts
-        self.chunk_dist = (bounds[1] - bounds[0]) / self.nr_cubes
-
-        # We calculate the overlapping windows distance
-        self.overlap_dist = self.overlap_perc * self.chunk_dist
-
-        # We find our starting point
-        self.d = bounds[0]
-
-        # Use a dimension index array on the projected X
-        # (For now this uses the entire dimensionality, but we keep for experimentation)
-        self.di = np.array(range(1, data.shape[1]))
-        self.nr_dimensions = len(self.di)
-
-        if type(self.nr_cubes) is not list:
-            cubes = [self.nr_cubes] * self.nr_dimensions
-        else:
-            assert len(self.nr_cubes) == self.nr_dimensions, "There are {} ({}) dimensions specified but {} dimensions needing specification. If you supply specific number of cubes for each dimension, please supply the correct number.".format(
-                len(self.nr_cubes), self.nr_cubes, self.nr_dimensions)
-            cubes = self.nr_cubes
-
-        coordinates = map(np.asarray, itertools.product(
-            *(range(i) for i in cubes)))
-
-        return coordinates
-
-    def find_entries(self, data, cube, verbose=0):
-        """Find all entries in data that are in the given cube
-
-        Input:      data, cube (an item from the list of cubes provided by `cover.cubes`)
-        Output:     all entries in data that are in cube.
-        """
-
-        chunk = self.chunk_dist
-        overlap = self.overlap_dist
-        lower_bound = self.d + (cube * chunk)
-        upper_bound = lower_bound + chunk + overlap
-
-        # Slice the hypercube
-        entries = (data[:, self.di] >= lower_bound) & \
-                  (data[:, self.di] < upper_bound)
-
-        hypercube = data[np.invert(np.any(entries == False, axis=1))]
-
-        return hypercube
+from .visuals import init_color_function, format_meta, dict_to_json, color_function_distribution
 
 
 class KeplerMapper(object):
@@ -274,7 +204,7 @@ class KeplerMapper(object):
             nr_cubes = nr_cubes if nr_cubes else 10
             overlap_perc = overlap_perc if overlap_perc else 0.1
             self.coverer = Cover(nr_cubes=nr_cubes,
-                            overlap_perc=overlap_perc)
+                                 overlap_perc=overlap_perc)
 
             warnings.warn(
                 "Explicitly passing in nr_cubes and overlap_perc will be deprecated in future releases. Please supply Cover object.", DeprecationWarning)
@@ -378,199 +308,54 @@ class KeplerMapper(object):
         print("\nCreated %s edges and %s nodes in %s." %
               (nr_links, len(nodes), time))
 
+    def visualize(self,
+                  graph,
+                  color_function=None,
+                  custom_tooltips=None,
+                  custom_meta=None,
+                  path_html="mapper_visualization_output.html",
+                  title="My Data",
+                  save_file=True,
+                  inverse_X=None,
+                  inverse_X_names=[],
+                  projected_X=None,
+                  projected_X_names=[]):
 
-    def visualize(self, complex, color_function="", path_html="mapper_visualization_output.html", title="My Data",
-                  graph_link_distance=30, graph_gravity=0.1, graph_charge=-120, custom_tooltips=None, width_html=0,
-                  height_html=0, show_tooltips=True, show_title=True, show_meta=True, save_file=True):
-        """Turns the dictionary 'complex' in a html file with d3.js
+        color_function = init_color_function(graph, color_function)
+        json_graph = dict_to_json(
+            graph, color_function, inverse_X, inverse_X_names, projected_X, projected_X_names, custom_tooltips)
+        color_distribution = color_function_distribution(
+            graph, color_function)
+        meta = format_meta(graph, custom_meta)
 
-        Input:      complex. Dictionary (output from calling .map())
-        Output:      a HTML page saved as a file in 'path_html'.
 
-        parameters
-        ----------
-        color_function    	string. Not fully implemented. Default: "" (distance to origin)
-        path_html        		file path as string. Where to save the HTML page.
-        title          		string. HTML page document title and first heading.
-        graph_link_distance  	int. Edge length.
-        graph_gravity     	float. "Gravity" to center of layout.
-        graph_charge      	int. charge between nodes.
-        custom_tooltips   	None or Numpy Array. You could use "y"-label array for this.
-        width_html        	int. Width of canvas. Default: 0 (full width)
-        height_html       	int. Height of canvas. Default: 0 (full height)
-        show_tooltips     	bool. default:True
-        show_title      		bool. default:True
-        show_meta        		bool. default:True
-        """
-        # Format JSON for D3 graph
-        json_s = {}
-        json_s["nodes"] = []
-        json_s["links"] = []
-        k2e = {}  # a key to incremental int dict, used for id's when linking
+        # Find the absolute module path and the static files
+        js_path = os.path.join(os.path.dirname(__file__), 'static', 'kmapper.js')
+        with open(js_path, 'r') as myfile:
+            js_text = myfile.read()
+        css_path = os.path.join(os.path.dirname(__file__), 'static', 'style.css')
+        with open(css_path, 'r') as myfile:
+            css_text = myfile.read()
 
-        meta_data = complex["meta_data"]
+        # Find the module absolute path and locate templates
+        module_root = os.path.join(os.path.dirname(__file__), 'templates')
+        env = Environment(loader=FileSystemLoader(module_root))
 
-        for e, k in enumerate(complex["nodes"]):
-            # Tooltip and node color formatting, TODO: de-mess-ify
-            if custom_tooltips is not None:
-                tooltip_s = "<h2>Cluster %s</h2> Contains %s members.<br>%s" % (k, len(
-                    complex["nodes"][k]), " ".join([str(f) for f in custom_tooltips[complex["nodes"][k]]]))
-                if color_function == "average_signal_cluster":
-                    tooltip_i = int(((sum([f for f in custom_tooltips[complex["nodes"][k]]]
-                                          ) / len(custom_tooltips[complex["nodes"][k]])) * 30))
-                    json_s["nodes"].append({"name": str(k), "tooltip": tooltip_s, "group": 2 * int(
-                        np.log(len(complex["nodes"][k]))), "color": str(tooltip_i)})
-                else:
-                    json_s["nodes"].append({"name": str(k), "tooltip": tooltip_s, "group": 2 * int(np.log(
-                        len(complex["nodes"][k]))), "color": str(complex["meta_nodes"][k]["coordinates"][0])})
-            else:
-                tooltip_s = "<h2>Cluster %s</h2>Contains %s members." % (
-                    k, len(complex["nodes"][k]))
-                json_s["nodes"].append({"name": str(k), "tooltip": tooltip_s, "group": 2 * int(np.log(
-                    len(complex["nodes"][k]))), "color": str(complex["meta_nodes"][k]["coordinates"][0])})
-            k2e[k] = e
-        for k in complex["links"]:
-            for link in complex["links"][k]:
-                json_s["links"].append(
-                    {"source": k2e[k], "target": k2e[link], "value": 1})
-
-        # Width and height of graph in HTML output
-        if width_html == 0:
-            width_css = "100%"
-            width_js = 'document.getElementById("holder").offsetWidth-20'
-        else:
-            width_css = "%spx" % width_html
-            width_js = "%s" % width_html
-        if height_html == 0:
-            height_css = "100%"
-            height_js = 'document.getElementById("holder").offsetHeight-20'
-        else:
-            height_css = "%spx" % height_html
-            height_js = "%s" % height_html
-
-        # Whether to show certain UI elements or not
-        if show_tooltips == False:
-            tooltips_display = "display: none;"
-        else:
-            tooltips_display = ""
-
-        if show_meta == False:
-            meta_display = "display: none;"
-        else:
-            meta_display = ""
-
-        if show_title == False:
-            title_display = "display: none;"
-        else:
-            title_display = ""
-
-        # Account for overlap_perc being singleton or list
-        if type(meta_data['overlap_perc']) != list:
-            overlap_perc = [meta_data['overlap_perc']]
-        else:
-            overlap_perc = meta_data['overlap_perc']
-        overlap_perc = ", ".join("{}%".format(int(overlap * 100)) for overlap in overlap_perc)
-
-        html = """<!DOCTYPE html>
-    <meta charset="utf-8">
-    <meta name="generator" content="KeplerMapper">
-    <title>%s | KeplerMapper</title>
-    <link href='https://fonts.googleapis.com/css?family=Roboto:700,300' rel='stylesheet' type='text/css'>
-    <style>
-    * {margin: 0; padding: 0;}
-    html { height: 100%%;}
-    body {background: #111; height: 100%%; font: 100 16px Roboto, Sans-serif;}
-    .link { stroke: #999; stroke-opacity: .333;  }
-    .divs div { border-radius: 50%%; background: red; position: absolute; }
-    .divs { position: absolute; top: 0; left: 0; }
-    #holder { position: relative; width: %s; height: %s; background: #111; display: block;}
-    h1 { %s padding: 20px; color: #fafafa; text-shadow: 0px 1px #000,0px -1px #000; position: absolute; font: 300 30px Roboto, Sans-serif;}
-    h2 { text-shadow: 0px 1px #000,0px -1px #000; font: 700 16px Roboto, Sans-serif;}
-    .meta {  position: absolute; opacity: 0.9; width: 220px; top: 80px; left: 20px; display: block; %s background: #000; line-height: 25px; color: #fafafa; border: 20px solid #000; font: 100 16px Roboto, Sans-serif;}
-    div.tooltip { position: absolute; width: 380px; display: block; %s padding: 20px; background: #000; border: 0px; border-radius: 3px; pointer-events: none; z-index: 999; color: #FAFAFA;}
-    }
-    </style>
-    <body>
-    <div id="holder">
-      <h1>%s</h1>
-      <p class="meta">
-      <b>Lens</b><br>%s<br><br>
-      <b>Cubes per dimension</b><br>%s<br><br>
-      <b>Overlap percentage</b><br>%s<br><br>
-      <b>Color Function</b><br>%s( %s )<br><br>
-      <b>Clusterer</b><br>%s<br><br>
-      <b>Scaler</b><br>%s
-      </p>
-    </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
-    <script>
-    var width = %s,
-      height = %s;
-    var color = d3.scale.ordinal()
-      .domain(["0","1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30"])
-      .range(["#FF0000","#FF1400","#FF2800","#FF3c00","#FF5000","#FF6400","#FF7800","#FF8c00","#FFa000","#FFb400","#FFc800","#FFdc00","#FFf000","#fdff00","#b0ff00","#65ff00","#17ff00","#00ff36","#00ff83","#00ffd0","#00e4ff","#00c4ff","#00a4ff","#00a4ff","#0084ff","#0064ff","#0044ff","#0022ff","#0002ff","#0100ff","#0300ff","#0500ff"]);
-    var force = d3.layout.force()
-      .charge(%s)
-      .linkDistance(%s)
-      .gravity(%s)
-      .size([width, height]);
-    var svg = d3.select("#holder").append("svg")
-      .attr("width", width)
-      .attr("height", height);
-    var div = d3.select("#holder").append("div")
-      .attr("class", "tooltip")
-      .style("opacity", 0.0);
-    var divs = d3.select('#holder').append('div')
-      .attr('class', 'divs')
-      .attr('style', function(d) { return 'overflow: hidden; width: ' + width + 'px; height: ' + height + 'px;'; });
-      graph = %s;
-      force
-        .nodes(graph.nodes)
-        .links(graph.links)
-        .start();
-      var link = svg.selectAll(".link")
-        .data(graph.links)
-        .enter().append("line")
-        .attr("class", "link")
-        .style("stroke-width", function(d) { return Math.sqrt(d.value); });
-      var node = divs.selectAll('div')
-      .data(graph.nodes)
-        .enter().append('div')
-        .on("mouseover", function(d) {
-          div.transition()
-            .duration(200)
-            .style("opacity", .9);
-          div .html(d.tooltip + "<br/>")
-            .style("left", (d3.event.pageX + 100) + "px")
-            .style("top", (d3.event.pageY - 28) + "px");
-          })
-        .on("mouseout", function(d) {
-          div.transition()
-            .duration(500)
-            .style("opacity", 0);
-        })
-        .call(force.drag);
-      node.append("title")
-        .text(function(d) { return d.name; });
-      force.on("tick", function() {
-      link.attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.y; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; });
-      node.attr("cx", function(d) { return d.x; })
-        .attr("cy", function(d) { return d.y; })
-        .attr('style', function(d) { return 'width: ' + (d.group * 2) + 'px; height: ' + (d.group * 2) + 'px; ' + 'left: '+(d.x-(d.group))+'px; ' + 'top: '+(d.y-(d.group))+'px; background: '+color(d.color)+'; box-shadow: 0px 0px 3px #111; box-shadow: 0px 0px 33px '+color(d.color)+', inset 0px 0px 5px rgba(0, 0, 0, 0.2);'})
-        ;
-      });
-    </script>""" % (title, width_css, height_css, title_display, meta_display, tooltips_display, title, meta_data["projection"], meta_data['nr_cubes'], overlap_perc, color_function, meta_data["projection"], meta_data["clusterer"], meta_data["scaler"], width_js, height_js, graph_charge, graph_link_distance, graph_gravity, json.dumps(json_s))
+        # Render the Jinja template, filling fields as appropriate
+        template = env.get_template('base.html').render(
+            title=title,
+            meta=meta,
+            color_distribution=color_distribution,
+            json_graph=json_graph,
+            js_text=js_text,
+            css_text=css_text)
 
         if save_file:
             with open(path_html, "wb") as outfile:
-                outfile.write(html.encode("utf-8"))
-            if self.verbose > 0:
-                print("\nWrote d3.js graph to '%s'" % path_html)
-
-        return html
+                if self.verbose > 0:
+                    print("Wrote visualization to: %s" % (path_html))
+                outfile.write(template.encode("utf-8"))
+        return template
 
     def data_from_cluster_id(self, cluster_id, graph, data):
         """Returns the original data of each cluster member for a given cluster ID

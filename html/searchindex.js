@@ -1,1 +1,0 @@
-Search.setIndex({docnames:["index"],envversion:52,filenames:["index.rst"],objects:{},objnames:{},objtypes:{},terms:{here:0,index:0,lot:0,modul:0,more:0,page:0,search:0,text:0},titles:["Welcome to KeplerMapper\u2019s documentation!"],titleterms:{document:0,indic:0,keplermapp:0,tabl:0,welcom:0}})

@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Welcome to KeplerMapper’s documentation! &#8212; KeplerMapper 1.0.1 documentation</title>
+    <title>KeplerMapper &#8212; KeplerMapper 1.0.1 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -22,8 +22,10 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="About" href="about.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -39,10 +41,51 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="welcome-to-keplermapper-s-documentation">
-<h1>Welcome to KeplerMapper’s documentation!<a class="headerlink" href="#welcome-to-keplermapper-s-documentation" title="Permalink to this headline">¶</a></h1>
-<p>Here is lots more text</p>
+  <p><a class="reference external" href="https://badge.fury.io/py/kmapper"><img alt="PyPI version" src="https://badge.fury.io/py/kmapper.svg" /></a> <a class="reference external" href="https://travis-ci.org/MLWave/kepler-mapper"><img alt="Build Status" src="https://travis-ci.org/MLWave/kepler-mapper.svg?branch=master" /></a> <a class="reference external" href="https://codecov.io/gh/mlwave/kepler-mapper"><img alt="Codecov" src="https://codecov.io/gh/mlwave/kepler-mapper/branch/master/graph/badge.svg" /></a> <a class="reference external" href="https://doi.org/10.5281/zenodo.1054444"><img alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.1054444.svg" /></a></p>
+<div class="section" id="keplermapper">
+<h1>KeplerMapper<a class="headerlink" href="#keplermapper" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div>Nature uses as little as possible of anything. - Johannes Kepler</div></blockquote>
+<p>This is a library implementing the Mapper algorithm in Python. KeplerMapper can be used for visualization of high-dimensional data and 3D point cloud data. KeplerMapper can make use of Scikit-Learn API compatible cluster and scaling algorithms.</p>
+<p>KeplerMapper employs approaches based on the MAPPER algorithm (Singh et al.) as first described in the paper “Topological Methods for the Analysis of High Dimensional Data Sets and 3D Object Recognition”.</p>
+<div class="section" id="user-guide-tutorial">
+<h2>User Guide / Tutorial<a class="headerlink" href="#user-guide-tutorial" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="about.html#disclaimer">Disclaimer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="about.html#cite">Cite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="about.html#uses-mentions">Uses &amp; Mentions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="about.html#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#dependencies">Dependencies</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="basic_usage.html">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="basic_usage.html#python-code">Python code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_usage.html#console-output">Console output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_usage.html#visualization-output">Visualization output</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#initialize">Initialize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#fitting-and-transforming">Fitting and transforming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#mapping">Mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference.html#visualizing">Visualizing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#d-point-cloud">3D-point cloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#very-noisy-datasets">Very noisy datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#dimensionality-reduction">Dimensionality reduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#unsupervised-anomaly-detection">Unsupervised Anomaly Detection</a></li>
+</ul>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="section" id="indices-and-tables">
@@ -59,10 +102,23 @@
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper"><div class="relations">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="#">
+              <img class="logo" src="_static/logo.jpg" alt="Logo"/>
+            </a></p>
+<h3><a href="#">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basic_usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+</ul>
+<div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="about.html" title="next chapter">About</a></li>
   </ul></li>
 </ul>
 </div>

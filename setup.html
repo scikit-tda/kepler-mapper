@@ -1,12 +1,11 @@
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Index &#8212; KeplerMapper 1.0.1 documentation</title>
+    <title>Setup &#8212; KeplerMapper 1.0.1 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -24,8 +23,10 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="author" title="About these documents" href="about.html" />
-    <link rel="index" title="Index" href="#" />
+    <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Usage" href="basic_usage.html" />
+    <link rel="prev" title="About" href="about.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -41,11 +42,41 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-
-<h1 id="index">Index</h1>
-
-<div class="genindex-jumpbox">
- 
+  <div class="section" id="setup">
+<h1>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>Install KeplerMapper with pip:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">kmapper</span>
+</pre></div>
+</div>
+<p>To install from source:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">MLWave</span><span class="o">/</span><span class="n">kepler</span><span class="o">-</span><span class="n">mapper</span>
+<span class="n">cd</span> <span class="n">kepler</span><span class="o">-</span><span class="n">mapper</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="o">.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<p>KeplerMapper requires:</p>
+<ul class="simple">
+<li>Python (&gt;= 2.7 or &gt;= 3.3)</li>
+<li>NumPy</li>
+<li>Scikit-learn</li>
+</ul>
+<p>Running some of the examples requires:</p>
+<ul class="simple">
+<li>matplotlib</li>
+<li>bokeh</li>
+<li>PIL</li>
+</ul>
+<p>Visualizations load external resources:</p>
+<ul class="simple">
+<li>Roboto Webfont (Google)</li>
+<li>D3.js (Mike Bostock)</li>
+</ul>
+</div>
 </div>
 
 
@@ -58,9 +89,13 @@
               <img class="logo" src="_static/logo.jpg" alt="Logo"/>
             </a></p>
 <h3><a href="index.html">Table Of Contents</a></h3>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dependencies">Dependencies</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="basic_usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Parameters</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
@@ -69,6 +104,8 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="about.html" title="previous chapter">About</a></li>
+      <li>Next: <a href="basic_usage.html" title="next chapter">Usage</a></li>
   </ul></li>
 </ul>
 </div>
@@ -93,6 +130,9 @@
       Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
+      |
+      <a href="_sources/setup.rst.txt"
+          rel="nofollow">Page source</a>
     </div>
 
     

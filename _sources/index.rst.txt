@@ -6,6 +6,8 @@
 Welcome to KeplerMapper's documentation!
 ========================================
 
+Here is lots more text
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:

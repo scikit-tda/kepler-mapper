@@ -1,7 +1,7 @@
 About
 ======
 
-This project started out as a learning endeavor, but has since grown to so much more. If you would like to contribute, please open a github issue first.
+This project started out as a learning endeavor, but has since grown to so much more. If you would like to contribute, please open a github issue first: https://github.com/MLWave/kepler-mapper.
 
 Disclaimer
 ----------

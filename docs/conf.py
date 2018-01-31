@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# keplermapper documentation build configuration file, created by
-# sphinx-quickstart on Fri Dec  1 23:03:50 2017.
+# KeplerMapper documentation build configuration file, created by
+# sphinx-quickstart on Sun Jan 14 12:23:40 2018.
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
@@ -31,9 +31,13 @@
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['sphinx.ext.autodoc',
+    'sphinx.ext.doctest',
+    'sphinx.ext.todo',
+    'sphinx.ext.coverage',
     'sphinx.ext.mathjax',
     'sphinx.ext.ifconfig',
-    'sphinx.ext.viewcode']
+    'sphinx.ext.viewcode',
+    'sphinx.ext.githubpages']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -48,16 +52,16 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'keplermapper'
-copyright = u'2017, Hendrik Jacob van Veen, Nathaniel Saul'
-author = u'Hendrik Jacob van Veen, Nathaniel Saul'
+project = u'KeplerMapper'
+copyright = u'2018, Hendrik Jacob van Veen and Nathaniel Saul'
+author = u'Hendrik Jacob van Veen and Nathaniel Saul'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-version = u'1.0.1'
+version = u'1.0'
 # The full version, including alpha/beta/rc tags.
 release = u'1.0.1'
 
@@ -71,13 +75,13 @@ language = None
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This patterns also effect to html_static_path and html_extra_path
-exclude_patterns = []
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
-todo_include_todos = False
+todo_include_todos = True
 
 
 # -- Options for HTML output ----------------------------------------------
@@ -85,8 +89,9 @@ todo_include_todos = False
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
+html_theme = 'alabaster'
 
+html_logo = 'logo.jpg'
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
@@ -105,8 +110,11 @@ html_static_path = ['_static']
 # refs: http://alabaster.readthedocs.io/en/latest/installation.html#sidebars
 html_sidebars = {
     '**': [
+        'globaltoc.html',
         'relations.html',  # needs 'show_related': True theme option to display
         'searchbox.html',
+        # 'setup.html',
+        # 'basic_usage.html',
     ]
 }
 
@@ -114,7 +122,7 @@ html_sidebars = {
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'keplermapperdoc'
+htmlhelp_basename = 'KeplerMapperdoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -141,8 +149,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'keplermapper.tex', u'keplermapper Documentation',
-     u'Hendrik Jacob van Veen, Nathaniel Saul', 'manual'),
+    (master_doc, 'KeplerMapper.tex', u'KeplerMapper Documentation',
+     u'Hendrik Jacob van Veen and Nathaniel Saul', 'manual'),
 ]
 
 
@@ -151,7 +159,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'keplermapper', u'keplermapper Documentation',
+    (master_doc, 'keplermapper', u'KeplerMapper Documentation',
      [author], 1)
 ]
 
@@ -162,7 +170,10 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'keplermapper', u'keplermapper Documentation',
-     author, 'keplermapper', 'One line description of project.',
+    (master_doc, 'KeplerMapper', u'KeplerMapper Documentation',
+     author, 'KeplerMapper', 'One line description of project.',
      'Miscellaneous'),
 ]
+
+
+

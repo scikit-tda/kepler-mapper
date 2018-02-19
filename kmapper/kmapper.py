@@ -360,7 +360,7 @@ class KeplerMapper(object):
     def data_from_cluster_id(self, cluster_id, graph, data):
         """Returns the original data of each cluster member for a given cluster ID
 
-        Input: cluster_id. Integer. ID of the cluster.
+        Input: cluster_id. String. ID of the cluster.
                graph. Dict. The resulting dictionary after applying map()
                data. Numpy array. Original dataset. Accepts both 1-D and 2-D array.
         Output: rows of cluster member data as Numpy array.

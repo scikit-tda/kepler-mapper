@@ -42,7 +42,7 @@ def dict_to_json(graph, color_function, inverse_X,
     for i, (node_id, member_ids) in enumerate(graph["nodes"].items()):
         node_id_to_num[node_id] = i
         n = {"id": "",
-             "name": "node_id",
+             "name": node_id,
              "color": _color_function(member_ids, color_function),
              "type": _type_node(),
              "size": _size_node(member_ids),

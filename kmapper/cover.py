@@ -7,11 +7,6 @@ import numpy as np
 
 class Cover():
     """Helper class that defines the default covering scheme
-
-    functions
-    ---------
-    cubes:          @property, returns an iterable of all bins in the cover.
-    find_entries:   Find all entries in the input data that are in the given cube.
     """
 
     def __init__(self, nr_cubes=10, overlap_perc=0.2):
@@ -19,14 +14,13 @@ class Cover():
         self.overlap_perc = overlap_perc
 
     def define_bins(self, data):
-        """
-        Helper function to get origin coordinates for our intervals/hypercubes
-        Useful for looping no matter the number of cubes or dimensions
-        Example:   	if there are 4 cubes per dimension and 3 dimensions
-                        return the bottom left (origin) coordinates of 64 hypercubes,
-                        as a sorted list of Numpy arrays
+        """Returns an iterable of all bins in the cover.
 
-        This function must assume that the first column of data are indices.
+        Example
+        -------
+            If there are 4 cubes per dimension and 3 dimensions return the bottom left (origin) coordinates of 64 hypercubes, as a sorted list of Numpy arrays
+
+        Warning: This function must assume that the first column of data are indices.
         """
 
         indexless_data = data[:, 1:]
@@ -60,10 +54,20 @@ class Cover():
         return coordinates
 
     def find_entries(self, data, cube, verbose=0):
-        """Find all entries in data that are in the given cube
+        """Find all entries in data that are in the given cube.
 
-        Input:      data, cube (an item from the list of cubes provided by `cover.cubes`)
-        Output:     all entries in data that are in cube.
+        Parameters
+        ----------
+        data: Numpy array
+            Either projected data or original data.
+        cube:
+            an item from the list of cubes provided by `cover.define_bins` iterable.
+
+        Returns
+        -------
+        hypercube: Numpy Array
+            All entries in data that are in cube.
+
         """
 
         chunk = self.chunk_dist

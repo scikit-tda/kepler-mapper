@@ -1,9 +1,24 @@
 
-Parameters
+Reference
 ----------
 
 Initialize
 ~~~~~~~~~~
+
+
+.. automodule:: kmapper
+
+
+useful #1 -- auto members
+=========================
+
+This is something I want to say that is not in the docstring.
+
+.. automodule:: kmapper.cover
+   :members:
+
+End Auto import modules
+~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code:: python
 

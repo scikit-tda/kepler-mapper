@@ -58,10 +58,15 @@ v00007
 v00008
 v00009
 
-0.2.1
+1.0.1
 		Convert versioning scheme to major.minor.micro
 		Restructure library to be compatible with PyPi installation
 		Minor bug fixes
 		Include preliminary unit test suite
 		Refactor, extract helper classes and helper functions
-		
+
+1.1
+    Massive visualization upgrades
+    Separation of HTML, JS, CSS, and Python code
+    New nerves and covers API
+    Documentation site

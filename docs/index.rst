@@ -29,15 +29,6 @@ Contents
   reference
 
 
-
-.. Indices and tables
-.. ==================
-..
-.. * :ref:`genindex`
-.. * :ref:`modindex`
-.. * :ref:`search`
-
-
 .. |PyPI version| image:: https://badge.fury.io/py/kmapper.svg
    :target: https://badge.fury.io/py/kmapper
 .. |Build Status| image:: https://travis-ci.org/MLWave/kepler-mapper.svg?branch=master

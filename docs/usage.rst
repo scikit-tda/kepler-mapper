@@ -3,6 +3,8 @@ Usage
 
 KeplerMapper adopts the scikit-learn API as much as possible, so it should feel very familiar to anyone who has used these libraries.
 
+The main workflow for Mapper is to project the data, group the image, apply clustering to the preimage of the groups, and then build a simplicial complex. For an intuitive explanation of this process, see `this writeup <https://sauln.github.io/2017/09/02/mapper-part1.html>`_.
+
 Python code
 ~~~~~~~~~~~
 
@@ -48,10 +50,11 @@ Console output
 Visualization output
 ~~~~~~~~~~~~~~~~~~~~
 
+This is a screenshot of the visualization output.
+
 .. figure:: http://i.imgur.com/i3cqQVr.png
    :alt: Click for large
 
-   Visualization
 
 Click here for an `interactive
 version <http://mlwave.github.io/tda/make_circles_keplermapper_output2.html>`__.

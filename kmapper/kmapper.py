@@ -30,11 +30,6 @@ class KeplerMapper(object):
                 connect these with an edge.
     3)  	Visualize the network using HTML and D3.js.
 
-    functions
-    ---------
-    fit_transform:   Create a projection (lens) from a dataset
-    map:         	Apply Mapper algorithm on this projection and build a simplicial complex
-    visualize:    	Turns the complex dictionary into a HTML/D3.js visualization
     """
 
     def __init__(self, verbose=0):
@@ -46,18 +41,31 @@ class KeplerMapper(object):
         self.scaler = None
 
     def fit_transform(self, X, projection="sum", scaler=preprocessing.MinMaxScaler(), distance_matrix=False):
-        """Creates the projection/lens from X.
+        """Creates the projection/lens from a dataset. Input the data set. Specify a projection/lens type. Output the projected data/lens.
 
-        Input:      X. Input features as a numpy array.
-        Output:     projected_X. original data transformed to a projection (lens).
 
-        parameters
+        Parameters
         ----------
-        projection:   Projection parameter is either a string,
-                      a scikit class with fit_transform, like manifold.TSNE(),
-                      or a list of dimension indices.
-        scaler:       if None, do no scaling, else apply scaling to the projection
-                      Default: Min-Max scaling
+        data : Numpy Array
+            The data to fit a projection/lens to.
+
+        projection :
+            Projection parameter is either a string, a Scikit-learn class with fit_transform, like manifold.TSNE(), or a list of dimension indices. A string from ["sum", "mean", "median", "max", "min", "std", "dist_mean", "l2norm", "knn_distance_n"]. If using knn_distance_n write the number of desired neighbors in place of n: knn_distance_5 for summed distances to 5 nearest neighbors. Default = "sum".
+
+        scaler :
+            Scikit-Learn API compatible scaler. Scaler of the data applied before mapping. Use None for no scaling. Default = preprocessing.MinMaxScaler() if None, do no scaling, else apply scaling to the projection. Default: Min-Max scaling distance_matrix: False or any of: ["braycurtis", "canberra", "chebyshev", "cityblock", "correlation", "cosine", "dice", "euclidean", "hamming", "jaccard", "kulsinski", "mahalanobis", "matching", "minkowski", "rogerstanimoto", "russellrao", "seuclidean", "sokalmichener", "sokalsneath", "sqeuclidean", "yule"]. If False do nothing, else create a squared distance matrix with the chosen metric, before applying the projection.
+
+        Returns
+        -------
+        lens : Numpy Array
+            projected data.
+
+
+        Example
+        -------
+
+        >>> projected_data = mapper.fit_transform(data, projection="sum", scaler=km.preprocessing.MinMaxScaler() )
+
         """
         self.inverse = X
         self.scaler = scaler
@@ -166,26 +174,45 @@ class KeplerMapper(object):
             overlap_perc=None,
             coverer=Cover(nr_cubes=10, overlap_perc=0.1),
             nerve=GraphNerve()):
-        """This maps the data to a simplicial complex. Returns a dictionary with nodes and links.
+        """Apply Mapper algorithm on this projection and build a simplicial complex. Returns a dictionary with nodes and links.
 
-        Input:    projected_X. A Numpy array with the projection/lens.
-        Output:    complex. A dictionary with "nodes", "links" and "meta information"
-
-        parameters
+        Parameters
         ----------
-        projected_X:    projected_X. A Numpy array with the projection/lens.
-                        Required.
-        inverse_X:      Numpy array or None. If None then the projection itself
-                        is used for clustering.
-        clusterer:      Scikit-learn API compatible clustering algorithm.
-                        Default: DBSCAN
-        nr_cubes:       Int. The number of intervals/hypercubes to create.
-                        (DeprecationWarning, define Cover explicitly in future versions)
-        overlap_perc:   Float. The percentage of overlap "between" the intervals/hypercubes.
-                        (DeprecationWarning, define Cover explicitly in future versions)
-        coverer:        Cover scheme for lens. Instance of kmapper. Cover providing
-                        methods `define_bins` and `find_entries`.
-        nerve           Nerve builder implementing __call__(nodes) API
+        projected_X : Numpy Array
+            Output from fit_transform
+
+        inverse_X : Numpy Array
+            Original data. If `None`, then use `projected_X` for clustering.
+
+        clusterer:
+            Scikit-learn API compatible clustering algorithm. Default: DBSCAN
+
+        nr_cubes : Int
+            The number of intervals/hypercubes to create. Default = 10. (DeprecationWarning: define Cover explicitly in future versions)
+
+        overlap_perc : Float
+            The percentage of overlap "between" the intervals/hypercubes. Default = 0.1. (DeprecationWarning: define Cover explicitly in future versions)
+
+        coverer : kmapper.Cover
+            Cover scheme for lens. Instance of kmapper.cover providing methods `define_bins` and `find_entries`.
+
+        nerve : kmapper.Nerve
+            Nerve builder implementing `__call__(nodes)` API
+
+        Returns
+        =======
+        simplicial_complex : dict
+            A dictionary with "nodes", "links" and "meta" information.
+
+        Example
+        =======
+
+        >>> simplicial_complex = mapper.map(projected_X, inverse_X=None, clusterer=cluster.DBSCAN(eps=0.5,min_samples=3),nr_cubes=10, overlap_perc=0.1)
+
+        >>>print(simplicial_complex["nodes"])
+        >>>print(simplicial_complex["links"])
+        >>>print(simplicial_complex["meta"])
+
         """
 
         start = datetime.now()
@@ -320,6 +347,21 @@ class KeplerMapper(object):
                   inverse_X_names=[],
                   projected_X=None,
                   projected_X_names=[]):
+        """Generate a visualization of the simplicial complex mapper output. Turns the complex dictionary into a HTML/D3.js visualization
+
+        Parameters
+        ----------
+        graph : dict
+            Simplicial complex output from the `map` method.
+        path_html : String
+        file name for outputing the resulting html.
+
+        Example
+        -------
+
+        >>> mapper.visualize(simplicial_complex, path_html="mapper_visualization_output.html")
+
+        """
 
         color_function = init_color_function(graph, color_function)
         json_graph = dict_to_json(
@@ -360,10 +402,20 @@ class KeplerMapper(object):
     def data_from_cluster_id(self, cluster_id, graph, data):
         """Returns the original data of each cluster member for a given cluster ID
 
-        Input: cluster_id. String. ID of the cluster.
-               graph. Dict. The resulting dictionary after applying map()
-               data. Numpy array. Original dataset. Accepts both 1-D and 2-D array.
-        Output: rows of cluster member data as Numpy array.
+        Parameters
+        ----------
+        cluster_id : String
+            ID of the cluster.
+        graph : dict
+            The resulting dictionary after applying map()
+        data : Numpy Array
+            Original dataset. Accepts both 1-D and 2-D array.
+
+        Returns
+        -------
+        entries:
+            rows of cluster member data as Numpy array.
+
         """
         if cluster_id in graph["nodes"]:
             cluster_members = graph["nodes"][cluster_id]

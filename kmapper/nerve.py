@@ -3,12 +3,9 @@ from collections import defaultdict
 
 
 class Nerve:
-    """
-    Base class for implementations of a nerve finder to build a Mapper complex.
+    """Base class for implementations of a nerve finder to build a Mapper complex.
 
-    functions
-    ---------
-    __call__:     Return all simplices found by the nerve finder
+    __call__: Return all simplices found by the nerve finder
     """
     def __init__(self):
         pass
@@ -18,8 +15,7 @@ class Nerve:
 
 
 class GraphNerve(Nerve):
-    """
-    Creates the 1-skeleton of the Mapper complex.
+    """ Creates the 1-skeleton of the Mapper complex.
     """
     def __init__(self, min_intersection=1):
         self.min_intersection = min_intersection
@@ -28,14 +24,19 @@ class GraphNerve(Nerve):
     def __call__(self, nodes):
         """Helper function to find edges of the overlapping clusters.
 
-        Input
-        nodes:  A dictionary with entires {node id}:{list of ids in node}
+        Parameters
+        ----------
+        nodes:
+            A dictionary with entires `{node id}:{list of ids in node}`
 
-        Output
-        edges: A 1-skeleton of the nerve (intersecting  nodes)
-        simplicies: Complete list of simplices
+        Returns
+        -------
+        edges:
+            A 1-skeleton of the nerve (intersecting  nodes)
 
-        TODO: generalize to take nerve.
+        simplicies: 
+            Complete list of simplices
+
         """
 
         result = defaultdict(list)
@@ -51,12 +52,9 @@ class GraphNerve(Nerve):
         return result, simplices
 
 class SimplicialNerve(Nerve):
-    """
-    Creates the entire Cech complex of the covering defined by the nodes.
+    """ Creates the entire Cech complex of the covering defined by the nodes.
+
+    Warning: Not implemented yet.
     """
     def __call__(self, nodes, links=None):
-        """
-        Helper function to find all
-
-        """
         pass

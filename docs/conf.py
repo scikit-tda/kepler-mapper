@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # KeplerMapper documentation build configuration file, created by
-# sphinx-quickstart on Sun Jan 14 12:23:40 2018.
+# sphinx-quickstart on Mon Feb 19 11:19:26 2018.
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
@@ -30,15 +30,23 @@
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.autodoc',
-    'sphinx.ext.doctest',
-    'sphinx.ext.todo',
-    'sphinx.ext.coverage',
-    'sphinx.ext.mathjax',
-    'sphinx.ext.ifconfig',
-    'sphinx.ext.viewcode',
-    'sphinx.ext.githubpages']
 
+import sys
+sys.path.append("../.")
+
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.intersphinx',
+    'sphinx.ext.todo',
+    'sphinx.ext.mathjax',
+    'sphinx.ext.viewcode',
+    'numpydoc.numpydoc',
+    'sphinx.ext.autosummary',
+    'sphinx.ext.githubpages'
+]
+
+
+numpydoc_show_class_members = False
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
@@ -96,7 +104,15 @@ html_logo = 'logo.jpg'
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-# html_theme_options = {}
+html_theme_options = {
+    'logo_name': True,
+    'description': 'Python library for visualization of high-dimensional data.',
+    'fixed_sidebar': True,
+    'github_button': True,
+    'github_user': 'MLWave',
+    'github_repo': 'kepler-mapper',
+    'github_type': 'star'
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -113,8 +129,7 @@ html_sidebars = {
         'globaltoc.html',
         'relations.html',  # needs 'show_related': True theme option to display
         'searchbox.html',
-        # 'setup.html',
-        # 'basic_usage.html',
+
     ]
 }
 
@@ -127,31 +142,31 @@ htmlhelp_basename = 'KeplerMapperdoc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
-latex_elements = {
-    # The paper size ('letterpaper' or 'a4paper').
-    #
-    # 'papersize': 'letterpaper',
-
-    # The font size ('10pt', '11pt' or '12pt').
-    #
-    # 'pointsize': '10pt',
-
-    # Additional stuff for the LaTeX preamble.
-    #
-    # 'preamble': '',
-
-    # Latex figure (float) alignment
-    #
-    # 'figure_align': 'htbp',
-}
+# latex_elements = {
+#     # The paper size ('letterpaper' or 'a4paper').
+#     #
+#     # 'papersize': 'letterpaper',
+#
+#     # The font size ('10pt', '11pt' or '12pt').
+#     #
+#     # 'pointsize': '10pt',
+#
+#     # Additional stuff for the LaTeX preamble.
+#     #
+#     # 'preamble': '',
+#
+#     # Latex figure (float) alignment
+#     #
+#     # 'figure_align': 'htbp',
+# }
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
-latex_documents = [
-    (master_doc, 'KeplerMapper.tex', u'KeplerMapper Documentation',
-     u'Hendrik Jacob van Veen and Nathaniel Saul', 'manual'),
-]
+# latex_documents = [
+#     (master_doc, 'KeplerMapper.tex', u'KeplerMapper Documentation',
+#      u'Hendrik Jacob van Veen and Nathaniel Saul', 'manual'),
+# ]
 
 
 # -- Options for manual page output ---------------------------------------
@@ -169,11 +184,14 @@ man_pages = [
 # Grouping the document tree into Texinfo files. List of tuples
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
-texinfo_documents = [
-    (master_doc, 'KeplerMapper', u'KeplerMapper Documentation',
-     author, 'KeplerMapper', 'One line description of project.',
-     'Miscellaneous'),
-]
+# texinfo_documents = [
+#     (master_doc, 'KeplerMapper', u'KeplerMapper Documentation',
+#      author, 'KeplerMapper', 'KeplerMapper is a Python class for visualization of high-dimensional data and 3-D point cloud data.',
+#      'Miscellaneous'),
+# ]
 
 
 
+
+# Example configuration for intersphinx: refer to the Python standard library.
+intersphinx_mapping = {'https://docs.python.org/': None}

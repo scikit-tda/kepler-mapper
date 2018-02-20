@@ -24,9 +24,10 @@ Contents
   Introduction <index>
   about
   setup
-  basic_usage
-  reference
+  usage
   examples
+  reference
+
 
 
 .. Indices and tables

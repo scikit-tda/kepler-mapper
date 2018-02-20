@@ -1,0 +1,6 @@
+_build/
+.cache/
+examples/
+kmapper/
+kmapper.egg-info
+venv/

@@ -7,7 +7,7 @@
 
 KeplerMapper
 ===================
-|logo|
+
 
     Nature uses as little as possible of anything. - Johannes Kepler
 
@@ -15,39 +15,20 @@ This is a library implementing the Mapper algorithm in Python. KeplerMapper can 
 
 KeplerMapper employs approaches based on the MAPPER algorithm (Singh et al.) as first described in the paper "Topological Methods for the Analysis of High Dimensional Data Sets and 3D Object Recognition".
 
-User Guide / Tutorial
----------------------
+Contents
+--------
 
 .. toctree::
   :maxdepth: 2
 
+  Introduction <index>
   about
   setup
-  basic_usage
+  usage
   examples
-
-API Reference
--------------
-
-  api
-  basic_api
-
-.. toctree::
-
-  api
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+  reference
 
 
-.. |logo| image:: http://i.imgur.com/axOG6GJ.jpg
-   :height: 40px
-   :width: 40px
-   :align: right
 .. |PyPI version| image:: https://badge.fury.io/py/kmapper.svg
    :target: https://badge.fury.io/py/kmapper
 .. |Build Status| image:: https://travis-ci.org/MLWave/kepler-mapper.svg?branch=master

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# keplermapper documentation build configuration file, created by
-# sphinx-quickstart on Fri Dec  1 23:03:50 2017.
+# KeplerMapper documentation build configuration file, created by
+# sphinx-quickstart on Mon Feb 19 11:19:26 2018.
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
@@ -30,11 +30,23 @@
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.autodoc',
-    'sphinx.ext.mathjax',
-    'sphinx.ext.ifconfig',
-    'sphinx.ext.viewcode']
 
+import sys
+sys.path.append("../.")
+
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.intersphinx',
+    'sphinx.ext.todo',
+    'sphinx.ext.mathjax',
+    'sphinx.ext.viewcode',
+    'numpydoc.numpydoc',
+    'sphinx.ext.autosummary',
+    'sphinx.ext.githubpages'
+]
+
+
+numpydoc_show_class_members = False
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
@@ -48,16 +60,16 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'keplermapper'
-copyright = u'2017, Hendrik Jacob van Veen, Nathaniel Saul'
-author = u'Hendrik Jacob van Veen, Nathaniel Saul'
+project = u'KeplerMapper'
+copyright = u'2018, Hendrik Jacob van Veen and Nathaniel Saul'
+author = u'Hendrik Jacob van Veen and Nathaniel Saul'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-version = u'1.0.1'
+version = u'1.0'
 # The full version, including alpha/beta/rc tags.
 release = u'1.0.1'
 
@@ -71,13 +83,13 @@ language = None
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This patterns also effect to html_static_path and html_extra_path
-exclude_patterns = []
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
-todo_include_todos = False
+todo_include_todos = True
 
 
 # -- Options for HTML output ----------------------------------------------
@@ -85,13 +97,22 @@ todo_include_todos = False
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
+html_theme = 'alabaster'
 
+html_logo = 'logo.jpg'
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-# html_theme_options = {}
+html_theme_options = {
+    'logo_name': True,
+    'description': 'Python library for visualization of high-dimensional data.',
+    'fixed_sidebar': True,
+    'github_button': True,
+    'github_user': 'MLWave',
+    'github_repo': 'kepler-mapper',
+    'github_type': 'star'
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -105,8 +126,10 @@ html_static_path = ['_static']
 # refs: http://alabaster.readthedocs.io/en/latest/installation.html#sidebars
 html_sidebars = {
     '**': [
+        'globaltoc.html',
         'relations.html',  # needs 'show_related': True theme option to display
         'searchbox.html',
+
     ]
 }
 
@@ -114,36 +137,36 @@ html_sidebars = {
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'keplermapperdoc'
+htmlhelp_basename = 'KeplerMapperdoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
 
-latex_elements = {
-    # The paper size ('letterpaper' or 'a4paper').
-    #
-    # 'papersize': 'letterpaper',
-
-    # The font size ('10pt', '11pt' or '12pt').
-    #
-    # 'pointsize': '10pt',
-
-    # Additional stuff for the LaTeX preamble.
-    #
-    # 'preamble': '',
-
-    # Latex figure (float) alignment
-    #
-    # 'figure_align': 'htbp',
-}
+# latex_elements = {
+#     # The paper size ('letterpaper' or 'a4paper').
+#     #
+#     # 'papersize': 'letterpaper',
+#
+#     # The font size ('10pt', '11pt' or '12pt').
+#     #
+#     # 'pointsize': '10pt',
+#
+#     # Additional stuff for the LaTeX preamble.
+#     #
+#     # 'preamble': '',
+#
+#     # Latex figure (float) alignment
+#     #
+#     # 'figure_align': 'htbp',
+# }
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
-latex_documents = [
-    (master_doc, 'keplermapper.tex', u'keplermapper Documentation',
-     u'Hendrik Jacob van Veen, Nathaniel Saul', 'manual'),
-]
+# latex_documents = [
+#     (master_doc, 'KeplerMapper.tex', u'KeplerMapper Documentation',
+#      u'Hendrik Jacob van Veen and Nathaniel Saul', 'manual'),
+# ]
 
 
 # -- Options for manual page output ---------------------------------------
@@ -151,7 +174,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'keplermapper', u'keplermapper Documentation',
+    (master_doc, 'keplermapper', u'KeplerMapper Documentation',
      [author], 1)
 ]
 
@@ -161,8 +184,14 @@ man_pages = [
 # Grouping the document tree into Texinfo files. List of tuples
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
-texinfo_documents = [
-    (master_doc, 'keplermapper', u'keplermapper Documentation',
-     author, 'keplermapper', 'One line description of project.',
-     'Miscellaneous'),
-]
+# texinfo_documents = [
+#     (master_doc, 'KeplerMapper', u'KeplerMapper Documentation',
+#      author, 'KeplerMapper', 'KeplerMapper is a Python class for visualization of high-dimensional data and 3-D point cloud data.',
+#      'Miscellaneous'),
+# ]
+
+
+
+
+# Example configuration for intersphinx: refer to the Python standard library.
+intersphinx_mapping = {'https://docs.python.org/': None}

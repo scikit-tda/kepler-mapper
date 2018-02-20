@@ -33,13 +33,86 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="reference">
-<h1>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="module-kmapper">
-<span id="initialize"></span><h2>Initialize<a class="headerlink" href="#module-kmapper" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="useful-1-auto-members">
-<h3>useful #1 – auto members<a class="headerlink" href="#useful-1-auto-members" title="Permalink to this headline">¶</a></h3>
-<p>This is something I want to say that is not in the docstring.</p>
+  <div class="section" id="module-kmapper">
+<span id="reference"></span><h1>Reference<a class="headerlink" href="#module-kmapper" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="keplermapper">
+<h2>KeplerMapper<a class="headerlink" href="#keplermapper" title="Permalink to this headline">¶</a></h2>
+<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mapper</span> <span class="o">=</span> <span class="n">km</span><span class="o">.</span><span class="n">KeplerMapper</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<span class="target" id="module-kmapper.kmapper"></span><dl class="class">
+<dt id="kmapper.kmapper.KeplerMapper">
+<em class="property">class </em><code class="descclassname">kmapper.kmapper.</code><code class="descname">KeplerMapper</code><span class="sig-paren">(</span><em>verbose=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/kmapper.html#KeplerMapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.kmapper.KeplerMapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>With this class you can build topological networks from (high-dimensional) data.</p>
+<ol class="arabic simple">
+<li>Fit a projection/lens/function to a dataset and transform it.
+For instance “mean_of_row(x) for x in X”</li>
+<li>Map this projection with overlapping intervals/hypercubes.
+Cluster the points inside the interval
+(Note: we cluster on the inverse image/original data to lessen projection loss).
+If two clusters/nodes have the same members (due to the overlap), then:
+connect these with an edge.</li>
+<li>Visualize the network using HTML and D3.js.</li>
+</ol>
+<p>fit_transform:   Create a projection (lens) from a dataset
+map:                Apply Mapper algorithm on this projection and build a simplicial complex
+visualize:          Turns the complex dictionary into a HTML/D3.js visualization</p>
+<dl class="method">
+<dt id="kmapper.kmapper.KeplerMapper.data_from_cluster_id">
+<code class="descname">data_from_cluster_id</code><span class="sig-paren">(</span><em>cluster_id</em>, <em>graph</em>, <em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/kmapper.html#KeplerMapper.data_from_cluster_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.kmapper.KeplerMapper.data_from_cluster_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the original data of each cluster member for a given cluster ID</p>
+<dl class="docutils">
+<dt>Input: cluster_id. Integer. ID of the cluster.</dt>
+<dd>graph. Dict. The resulting dictionary after applying map()
+data. Numpy array. Original dataset. Accepts both 1-D and 2-D array.</dd>
+</dl>
+<p>Output: rows of cluster member data as Numpy array.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kmapper.kmapper.KeplerMapper.fit_transform">
+<code class="descname">fit_transform</code><span class="sig-paren">(</span><em>X</em>, <em>projection='sum'</em>, <em>scaler=MinMaxScaler(copy=True</em>, <em>feature_range=(0</em>, <em>1))</em>, <em>distance_matrix=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/kmapper.html#KeplerMapper.fit_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.kmapper.KeplerMapper.fit_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the projection/lens from X.</p>
+<p>Input:      X. Input features as a numpy array.
+Output:     projected_X. original data transformed to a projection (lens).</p>
+<dl class="docutils">
+<dt>projection:   Projection parameter is either a string,</dt>
+<dd>a scikit class with fit_transform, like manifold.TSNE(),
+or a list of dimension indices.</dd>
+<dt>scaler:       if None, do no scaling, else apply scaling to the projection</dt>
+<dd>Default: Min-Max scaling</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kmapper.kmapper.KeplerMapper.map">
+<code class="descname">map</code><span class="sig-paren">(</span><em>projected_X</em>, <em>inverse_X=None</em>, <em>clusterer=DBSCAN(algorithm='auto'</em>, <em>eps=0.5</em>, <em>leaf_size=30</em>, <em>metric='euclidean'</em>, <em>metric_params=None</em>, <em>min_samples=3</em>, <em>n_jobs=1</em>, <em>p=None)</em>, <em>nr_cubes=None</em>, <em>overlap_perc=None</em>, <em>coverer=&lt;kmapper.cover.Cover object&gt;</em>, <em>nerve=&lt;kmapper.nerve.GraphNerve object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/kmapper.html#KeplerMapper.map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.kmapper.KeplerMapper.map" title="Permalink to this definition">¶</a></dt>
+<dd><p>This maps the data to a simplicial complex. Returns a dictionary with nodes and links.</p>
+<p>Input:    projected_X. A Numpy array with the projection/lens.
+Output:    complex. A dictionary with “nodes”, “links” and “meta information”</p>
+<dl class="docutils">
+<dt>projected_X:    projected_X. A Numpy array with the projection/lens.</dt>
+<dd>Required.</dd>
+<dt>inverse_X:      Numpy array or None. If None then the projection itself</dt>
+<dd>is used for clustering.</dd>
+<dt>clusterer:      Scikit-learn API compatible clustering algorithm.</dt>
+<dd>Default: DBSCAN</dd>
+<dt>nr_cubes:       Int. The number of intervals/hypercubes to create.</dt>
+<dd>(DeprecationWarning, define Cover explicitly in future versions)</dd>
+<dt>overlap_perc:   Float. The percentage of overlap “between” the intervals/hypercubes.</dt>
+<dd>(DeprecationWarning, define Cover explicitly in future versions)</dd>
+<dt>coverer:        Cover scheme for lens. Instance of kmapper. Cover providing</dt>
+<dd>methods <cite>define_bins</cite> and <cite>find_entries</cite>.</dd>
+</dl>
+<p>nerve           Nerve builder implementing __call__(nodes) API</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="cover-schemes">
+<h2>Cover Schemes<a class="headerlink" href="#cover-schemes" title="Permalink to this headline">¶</a></h2>
+<p>Cover schemes provide a customizable way of defining a cover for your lens.</p>
 <span class="target" id="module-kmapper.cover"></span><dl class="class">
 <dt id="kmapper.cover.Cover">
 <em class="property">class </em><code class="descclassname">kmapper.cover.</code><code class="descname">Cover</code><span class="sig-paren">(</span><em>nr_cubes=10</em>, <em>overlap_perc=0.2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/cover.html#Cover"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.cover.Cover" title="Permalink to this definition">¶</a></dt>
@@ -69,12 +142,27 @@ Output:     all entries in data that are in cube.</p>
 </dd></dl>
 
 </div>
-</div>
-<div class="section" id="end-auto-import-modules">
-<h2>End Auto import modules<a class="headerlink" href="#end-auto-import-modules" title="Permalink to this headline">¶</a></h2>
-<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mapper</span> <span class="o">=</span> <span class="n">km</span><span class="o">.</span><span class="n">KeplerMapper</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</pre></div>
-</div>
+<div class="section" id="module-kmapper.nerve">
+<span id="nerves"></span><h2>Nerves<a class="headerlink" href="#module-kmapper.nerve" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="kmapper.nerve.GraphNerve">
+<em class="property">class </em><code class="descclassname">kmapper.nerve.</code><code class="descname">GraphNerve</code><span class="sig-paren">(</span><em>min_intersection=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/nerve.html#GraphNerve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.nerve.GraphNerve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the 1-skeleton of the Mapper complex.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="kmapper.nerve.Nerve">
+<em class="property">class </em><code class="descclassname">kmapper.nerve.</code><code class="descname">Nerve</code><a class="reference internal" href="_modules/kmapper/nerve.html#Nerve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.nerve.Nerve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for implementations of a nerve finder to build a Mapper complex.</p>
+<p>__call__:     Return all simplices found by the nerve finder</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="kmapper.nerve.SimplicialNerve">
+<em class="property">class </em><code class="descclassname">kmapper.nerve.</code><code class="descname">SimplicialNerve</code><a class="reference internal" href="_modules/kmapper/nerve.html#SimplicialNerve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.nerve.SimplicialNerve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the entire Cech complex of the covering defined by the nodes.</p>
+</dd></dl>
+
 <table border="1" class="docutils">
 <colgroup>
 <col width="19%" />
@@ -91,9 +179,8 @@ Output:     all entries in data that are in cube.</p>
 </tr>
 </tbody>
 </table>
-</div>
 <div class="section" id="fitting-and-transforming">
-<h2>Fitting and transforming<a class="headerlink" href="#fitting-and-transforming" title="Permalink to this headline">¶</a></h2>
+<h3>Fitting and transforming<a class="headerlink" href="#fitting-and-transforming" title="Permalink to this headline">¶</a></h3>
 <p>Input the data set. Specify a projection/lens type. Output the projected
 data/lens.</p>
 <div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">projected_data</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span>
@@ -148,7 +235,7 @@ applying the projection.</td>
 </table>
 </div>
 <div class="section" id="mapping">
-<h2>Mapping<a class="headerlink" href="#mapping" title="Permalink to this headline">¶</a></h2>
+<h3>Mapping<a class="headerlink" href="#mapping" title="Permalink to this headline">¶</a></h3>
 <div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">simplicial_complex</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">projected_X</span><span class="p">,</span> <span class="n">inverse_X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                  <span class="n">clusterer</span><span class="o">=</span><span class="n">cluster</span><span class="o">.</span><span class="n">DBSCAN</span><span class="p">(</span><span class="n">eps</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">min_samples</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
                                  <span class="n">nr_cubes</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">overlap_perc</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
@@ -194,7 +281,7 @@ The clustering algorithm to use for mapping.
 </table>
 </div>
 <div class="section" id="visualizing">
-<h2>Visualizing<a class="headerlink" href="#visualizing" title="Permalink to this headline">¶</a></h2>
+<h3>Visualizing<a class="headerlink" href="#visualizing" title="Permalink to this headline">¶</a></h3>
 <div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mapper</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">topological_network</span><span class="p">,</span>
                  <span class="n">path_html</span><span class="o">=</span><span class="s2">&quot;mapper_visualization_output.html&quot;</span><span class="p">)</span>
 </pre></div>
@@ -222,6 +309,7 @@ meta-information. <strong>Required</strong></td>
 </table>
 </div>
 </div>
+</div>
 
 
           </div>
@@ -229,17 +317,18 @@ meta-information. <strong>Required</strong></td>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/logo.jpg" alt="Logo"/>
+            </a></p>
 <h3><a href="index.html">Table Of Contents</a></h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="basic_usage.html">Usage</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-kmapper">Initialize</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#end-auto-import-modules">End Auto import modules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#fitting-and-transforming">Fitting and transforming</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#mapping">Mapping</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#visualizing">Visualizing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#keplermapper">KeplerMapper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cover-schemes">Cover Schemes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-kmapper.nerve">Nerves</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>

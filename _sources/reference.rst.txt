@@ -2,27 +2,39 @@
 Reference
 ----------
 
-Initialize
-~~~~~~~~~~
-
-
 .. automodule:: kmapper
 
 
-useful #1 -- auto members
+KeplerMapper
+==============
+.. code:: python
+
+    mapper = km.KeplerMapper(verbose=1)
+
+
+.. automodule:: kmapper.kmapper
+   :members:
+
+Cover Schemes
 =========================
 
-This is something I want to say that is not in the docstring.
+Cover schemes provide a customizable way of defining a cover for your lens.
 
 .. automodule:: kmapper.cover
    :members:
 
-End Auto import modules
-~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: python
+Nerves
+=========================
 
-    mapper = km.KeplerMapper(verbose=1)
+.. automodule:: kmapper.nerve
+   :members:
+
+
+
+
+
+
 
 +-------------+------------------------------------------------------+
 | Parameter   | Description                                          |

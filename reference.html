@@ -17,6 +17,7 @@
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Examples" href="examples.html" />
     <link rel="prev" title="Usage" href="basic_usage.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -54,6 +55,7 @@
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="basic_usage.html" title="previous chapter">Usage</a></li>
+      <li>Next: <a href="examples.html" title="next chapter">Examples</a></li>
   </ul></li>
 </ul>
 </div>
@@ -96,27 +98,6 @@ If two clusters/nodes have the same members (due to the overlap), then:
 connect these with an edge.</li>
 <li>Visualize the network using HTML and D3.js.</li>
 </ol>
-<p class="rubric">Methods</p>
-<table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#kmapper.kmapper.KeplerMapper.data_from_cluster_id" title="kmapper.kmapper.KeplerMapper.data_from_cluster_id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">data_from_cluster_id</span></code></a>(cluster_id,&nbsp;graph,&nbsp;data)</td>
-<td>Returns the original data of each cluster member for a given cluster ID</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="#kmapper.kmapper.KeplerMapper.fit_transform" title="kmapper.kmapper.KeplerMapper.fit_transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_transform</span></code></a>(X[,&nbsp;projection,&nbsp;scaler,&nbsp;…])</td>
-<td>Creates the projection/lens from X.</td>
-</tr>
-<tr class="row-odd"><td><a class="reference internal" href="#kmapper.kmapper.KeplerMapper.map" title="kmapper.kmapper.KeplerMapper.map"><code class="xref py py-obj docutils literal notranslate"><span class="pre">map</span></code></a>(projected_X[,&nbsp;inverse_X,&nbsp;clusterer,&nbsp;…])</td>
-<td>This maps the data to a simplicial complex.</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="#kmapper.kmapper.KeplerMapper.visualize" title="kmapper.kmapper.KeplerMapper.visualize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">visualize</span></code></a>(graph[,&nbsp;color_function,&nbsp;…])</td>
-<td>Generate a visualization of the simplicial complex mapper output.</td>
-</tr>
-</tbody>
-</table>
 <dl class="method">
 <dt id="kmapper.kmapper.KeplerMapper.data_from_cluster_id">
 <code class="descname">data_from_cluster_id</code><span class="sig-paren">(</span><em>cluster_id</em>, <em>graph</em>, <em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/kmapper.html#KeplerMapper.data_from_cluster_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.kmapper.KeplerMapper.data_from_cluster_id" title="Permalink to this definition">¶</a></dt>
@@ -198,21 +179,6 @@ path_html (string): file name for outputing the resulting html.</dd>
 <em class="property">class </em><code class="descclassname">kmapper.cover.</code><code class="descname">Cover</code><span class="sig-paren">(</span><em>nr_cubes=10</em>, <em>overlap_perc=0.2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/cover.html#Cover"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.cover.Cover" title="Permalink to this definition">¶</a></dt>
 <dd><p>Helper class that defines the default covering scheme</p>
 <p>find_entries:   Find all entries in the input data that are in the given cube.</p>
-<p class="rubric">Methods</p>
-<table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#kmapper.cover.Cover.define_bins" title="kmapper.cover.Cover.define_bins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">define_bins</span></code></a>(data)</td>
-<td>Returns an iterable of all bins in the cover.</td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="#kmapper.cover.Cover.find_entries" title="kmapper.cover.Cover.find_entries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_entries</span></code></a>(data,&nbsp;cube[,&nbsp;verbose])</td>
-<td>Find all entries in data that are in the given cube</td>
-</tr>
-</tbody>
-</table>
 <dl class="method">
 <dt id="kmapper.cover.Cover.define_bins">
 <code class="descname">define_bins</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/cover.html#Cover.define_bins"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.cover.Cover.define_bins" title="Permalink to this definition">¶</a></dt>
@@ -261,18 +227,6 @@ path_html (string): file name for outputing the resulting html.</dd>
 <dt id="kmapper.nerve.GraphNerve">
 <em class="property">class </em><code class="descclassname">kmapper.nerve.</code><code class="descname">GraphNerve</code><span class="sig-paren">(</span><em>min_intersection=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/nerve.html#GraphNerve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.nerve.GraphNerve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates the 1-skeleton of the Mapper complex.</p>
-<p class="rubric">Methods</p>
-<table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(nodes)</td>
-<td>Helper function to find edges of the overlapping clusters.</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="class">
@@ -280,18 +234,6 @@ path_html (string): file name for outputing the resulting html.</dd>
 <em class="property">class </em><code class="descclassname">kmapper.nerve.</code><code class="descname">Nerve</code><a class="reference internal" href="_modules/kmapper/nerve.html#Nerve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.nerve.Nerve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for implementations of a nerve finder to build a Mapper complex.</p>
 <p>__call__: Return all simplices found by the nerve finder</p>
-<p class="rubric">Methods</p>
-<table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(nodes,&nbsp;links)</td>
-<td>Call self as a function.</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="class">
@@ -299,18 +241,6 @@ path_html (string): file name for outputing the resulting html.</dd>
 <em class="property">class </em><code class="descclassname">kmapper.nerve.</code><code class="descname">SimplicialNerve</code><a class="reference internal" href="_modules/kmapper/nerve.html#SimplicialNerve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.nerve.SimplicialNerve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates the entire Cech complex of the covering defined by the nodes.</p>
 <p>Warning: Not implemented yet.</p>
-<p class="rubric">Methods</p>
-<table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code>(nodes[,&nbsp;links])</td>
-<td>Call self as a function.</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 </div>

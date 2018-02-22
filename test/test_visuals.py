@@ -65,10 +65,11 @@ class TestVisualHelpers():
         json = dict_to_json(graph, color_function, inverse_X,
                  inverse_X_names, projected_X, projected_X_names, custom_tooltips)
 
-        assert("""name": "cube2_cluster0", "color": 7""" in json)
+        assert("""name": "cube2_cluster0""" in json)
         assert("""projected_0""" in json)
         assert("""inverse_0""" in json)
         assert("""customized_""" in json)
+
 
 class TestVisualizeIntegration():
     def test_visualize_standalone_same(self, tmpdir):

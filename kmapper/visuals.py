@@ -19,7 +19,7 @@ def init_color_function(graph, color_function=None):
     return color_function
 
 
-def format_meta(graph, custom_meta):
+def format_meta(graph, custom_meta=None):
     meta = ""
     if custom_meta is not None:
         for k, v in custom_meta:

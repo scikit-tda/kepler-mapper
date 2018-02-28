@@ -70,3 +70,7 @@ v00009
     Separation of HTML, JS, CSS, and Python code
     New nerves and covers API
     Documentation site
+
+1.1.2
+		Bug fix, setup.py did not include static directory so installation visualizations did not work when installed from pypi.
+		Add Jupyter notebook support

@@ -42,7 +42,6 @@ KeplerMapper can make use of Scikit-Learn API compatible cluster and scaling alg
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
       ],
-      keywords='mapper, topology data analysis, algebraic topology, unsupervised learning'
-
-
+      keywords='mapper, topology data analysis, algebraic topology, unsupervised learning',
+      include_package_data=True
      )

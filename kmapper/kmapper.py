@@ -12,10 +12,12 @@ from jinja2 import Environment, FileSystemLoader, Template
 import numpy as np
 from sklearn import cluster, preprocessing, manifold, decomposition
 from scipy.spatial import distance
+from scipy.sparse import issparse
 
 from .cover import Cover
 from .nerve import GraphNerve
 from .visuals import init_color_function, format_meta, dict_to_json, color_function_distribution
+
 
 
 class KeplerMapper(object):
@@ -40,7 +42,7 @@ class KeplerMapper(object):
         self.projection = None
         self.scaler = None
 
-    def fit_transform(self, X, projection="sum", scaler=preprocessing.MinMaxScaler(), distance_matrix=False):
+    def project(self, X, projection="sum", scaler=preprocessing.MinMaxScaler(), distance_matrix=False):
         """Creates the projection/lens from a dataset. Input the data set. Specify a projection/lens type. Output the projected data/lens.
 
 
@@ -71,6 +73,9 @@ class KeplerMapper(object):
         self.scaler = scaler
         self.projection = str(projection)
         self.distance_matrix = distance_matrix
+
+        if self.verbose > 0:
+            print("..Projecting on data shaped %s"%(str(X.shape)))
 
         # If distance_matrix is a scipy.spatial.pdist string, we create a square distance matrix
         # from the vectors, before applying a projection.
@@ -158,6 +163,12 @@ class KeplerMapper(object):
                 print("\n..Projecting data using: %s" % (str(projection)))
             X = X[:, np.array(projection)]
 
+        # If projection produced sparse output, turn into a dense array
+        if issparse(X):
+            X = X.toarray()
+            if self.verbose > 0:
+                print("\n..Created projection shaped %s"%(str(X.shape)))
+
         # Scaling
         if scaler is not None:
             if self.verbose > 0:
@@ -165,6 +176,63 @@ class KeplerMapper(object):
             X = scaler.fit_transform(X)
 
         return X
+
+    def fit_transform(self,
+                 X,
+                 projection="sum",
+                 scaler=preprocessing.MinMaxScaler(),
+                 distance_matrix=False):
+        """Same as .project() but accepts lists for arguments so you can chain.
+
+        """
+
+        projections = projection
+        scalers = scaler
+        distance_matrices = distance_matrix
+
+        # Turn single projection arguments into a pipeline
+        if isinstance(projection, list) and isinstance(projection[0], int):
+            projections = [projection]
+
+        if not isinstance(projection, list):
+            projections = [projection]
+
+        # Turn single scaler arguments into a pipeline
+        if not isinstance(scaler, list):
+            scalers = [scaler]
+
+        # Turn single distance matrix arguments into a pipeline
+        if not isinstance(distance_matrix, list):
+            distance_matrices = [distance_matrix]
+
+        # set defaults to first list item, if not (correctly) set by the user
+        if len(scalers) != len(projections):
+            scalers = [scalers[0]] * len(projections)
+
+        if len(distance_matrices) != len(projections):
+            distance_matrices = [distance_matrices[0]] * len(projections)
+
+        if self.verbose > 0:
+            print("..Composing projection pipeline length %s:"%(len(projections)))
+            print("Projections: %s\n\n"%("\n".join(map(str, projections))))
+            print("Distance matrices: %s\n\n"%("\n".join(map(str, distance_matrices))))
+            print("Scalers: %s\n\n"%("\n".join(map(str, scalers))))
+
+        # Pipeline Stack the projection functions
+        for i, (projection, scaler, distance_matrix) in enumerate(zip(projections,
+            scalers, distance_matrices)):
+            if i == 0:
+                projected_X = self.project(X,
+                    projection=projection,
+                    scaler=scaler,
+                    distance_matrix=distance_matrix)
+            else:
+                projected_X = self.project(projected_X,
+                    projection=projection,
+                    scaler=scaler,
+                    distance_matrix=distance_matrix)
+
+        return projected_X
 
     def map(self,
             projected_X,

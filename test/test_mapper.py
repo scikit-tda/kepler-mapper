@@ -75,6 +75,18 @@ class TestLens():
 
         mapper = KeplerMapper()
         data = np.random.rand(100, 5)
+        lens = mapper.fit_transform(data, projection=[0, 1])
+        np.testing.assert_allclose(lens, data[:, :2], atol=atol)
+
+        lens = mapper.fit_transform(data, projection=[0])
+        np.testing.assert_allclose(lens, data[:, :1], atol=atol)
+
+    def test_projection_without_pipeline(self):
+        # accomodate scaling, values are in (0,1), but will be scaled slightly
+        atol = 0.1
+
+        mapper = KeplerMapper()
+        data = np.random.rand(100, 5)
         lens = mapper.project(data, projection=[0, 1])
         np.testing.assert_allclose(lens, data[:, :2], atol=atol)
 

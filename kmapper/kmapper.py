@@ -342,7 +342,7 @@ class KeplerMapper(object):
                   custom_meta=None,
                   path_html="mapper_visualization_output.html",
                   title="My Data",
-                  save_file=True,
+                  save_file=False,
                   inverse_X=None,
                   inverse_X_names=[],
                   projected_X=None,
@@ -362,7 +362,6 @@ class KeplerMapper(object):
         >>> mapper.visualize(simplicial_complex, path_html="mapper_visualization_output.html")
 
         """
-
         color_function = init_color_function(graph, color_function)
         json_graph = dict_to_json(
             graph, color_function, inverse_X, inverse_X_names, projected_X, projected_X_names, custom_tooltips)
@@ -372,6 +371,7 @@ class KeplerMapper(object):
 
 
         # Find the absolute module path and the static files
+
         js_path = os.path.join(os.path.dirname(__file__), 'static', 'kmapper.js')
         with open(js_path, 'r') as myfile:
             js_text = myfile.read()

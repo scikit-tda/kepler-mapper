@@ -1,4 +1,6 @@
 import IPython
+import html as HTML
+
 
 # Here we set the custom CSS to override Jupyter's default
 CUSTOM_CSS = """<style>
@@ -7,13 +9,13 @@ CUSTOM_CSS = """<style>
     </style>"""
 IPython.core.display.display(IPython.core.display.HTML(CUSTOM_CSS))
 
-def display(path_html="mapper_visualization_output.html"):
+def display(path_html="mapper_visualization_output.html", html=None):
     """ Displays a html file inside a Jupyter Notebook output cell.
-    
+
     Parameters
     ----------
     path_html : str
-        Path to html. Use file name for file inside current working 
+        Path to html. Use file name for file inside current working
         directory. Use `file://` browser url-format for path to local file.
         Use `https://` urls for externally hosted resources.
 
@@ -24,6 +26,13 @@ def display(path_html="mapper_visualization_output.html"):
 
     """
 
-    iframe = '<iframe src=' + path_html \
-            + ' width=100%% height=800 frameBorder="0"></iframe>'
+
+    if html:
+        html = HTML.escape(html)
+        iframe = f'''<iframe srcdoc="{html}" width=100%% height=800 frameBorder="0"></iframe>'''
+    else:
+        iframe = '<iframe src=' + path_html \
+                + ' width=100%% height=800 frameBorder="0"></iframe>'
+
+    # print(iframe)
     IPython.core.display.display(IPython.core.display.HTML(iframe))

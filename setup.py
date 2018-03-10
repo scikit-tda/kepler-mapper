@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
-from distutils.core import setup
+#from distutils.core import setup
+from setuptools import setup
 
 setup(name='kmapper',
-      version='1.1.2',
+      version='1.1.3',
       description='Python implementation of Mapper algorithm for Topological Data Analysis.',
       long_description="""
 This is a Python implementation of the TDA Mapper algorithm for visualization of high-dimensional data. For complete documentation, see https://MLWave.github.io/kepler-mapper.
@@ -17,14 +18,12 @@ KeplerMapper can make use of Scikit-Learn API compatible cluster and scaling alg
       url='https://MLWave.github.io/kepler-mapper',
       license='MIT',
       packages=['kmapper'],
+      include_package_data=True,
       install_requires=[
         'scikit-learn',
         'numpy',
         'scipy',
         'Jinja2'
-      ],
-      test_requires=[
-        'pytest'
       ],
       python_requires='>=2.7,!=3.1,!=3.2,!=3.3',
       classifiers=[
@@ -42,6 +41,5 @@ KeplerMapper can make use of Scikit-Learn API compatible cluster and scaling alg
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
       ],
-      keywords='mapper, topology data analysis, algebraic topology, unsupervised learning',
-      include_package_data=True
+      keywords='mapper, topology data analysis, algebraic topology, unsupervised learning'
      )

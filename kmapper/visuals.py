@@ -19,7 +19,7 @@ def init_color_function(graph, color_function=None):
     return color_function
 
 
-def format_meta(graph, custom_meta):
+def format_meta(graph, custom_meta=None):
     meta = ""
     if custom_meta is not None:
         for k, v in custom_meta:
@@ -129,31 +129,31 @@ def _format_cluster_statistics(member_ids, inverse_X, inverse_X_names):
         below_stats = [a for a in stats if a[4] == False]
 
         if len(above_stats) > 0:
-            cluster_stats += "<h3>Above Average</h3><table><tr><th>Feature</th>" \
-                             + "<th style='width:50px;'><small>Mean</small></th>" \
-                             + "<th style='width:50px'><small>STD</small></th></tr>"
+            cluster_stats += '<h3>Above Average</h3><table><tr><th>Feature</th>' \
+                             + '<th style="width:50px;"><small>Mean</small></th>' \
+                             + '<th style="width:50px;"><small>STD</small></th></tr>'
             for s, f, i, c, a, v in above_stats[:5]:
-                cluster_stats += "<tr><td>%s</td><td><small>%s</small></td>" % (f, round(c, 3)) \
-                    + "<td class='std'><small>%sx</small></td></tr>" % (round(s, 1))
+                cluster_stats += '<tr><td>%s</td><td><small>%s</small></td>' % (f, round(c, 3)) \
+                    + '<td class="std"><small>%sx</small></td></tr>' % (round(s, 1))
             cluster_stats += "</table>"
         if len(below_stats) > 0:
-            cluster_stats += "<h3>Below Average</h3><table><tr><th>Feature</th>" \
-                             + "<th style='width:50px;'><small>Mean</small></th>" \
-                             + "<th style='width:50px'><small>STD</small></th></tr>"
+            cluster_stats += '<h3>Below Average</h3><table><tr><th>Feature</th>' \
+                             + '<th style="width:50px;"><small>Mean</small></th>' \
+                             + '<th style="width:50px;"><small>STD</small></th></tr>'
             for s, f, i, c, a, v in below_stats[:5]:
-                cluster_stats += "<tr><td>%s</td><td><small>%s</small></td>" % (f, round(c, 3)) \
-                    + "<td class='std'><small>%sx</small></td></tr>" % (round(s, 1))
+                cluster_stats += '<tr><td>%s</td><td><small>%s</small></td>' % (f, round(c, 3)) \
+                    + '<td class="std"><small>%sx</small></td></tr>' % (round(s, 1))
             cluster_stats += "</table>"
-    cluster_stats += "<h3>Size</h3><p>%s</p>" % (len(member_ids))
+    cluster_stats += '<h3>Size</h3><p>%s</p>' % (len(member_ids))
     return "%s" % (str(cluster_stats))
 
 
 def _format_projection_statistics(member_ids, projected_X, projected_X_names):
     projection_stats = ""
     if projected_X is not None:
-        projection_stats += "<h3>Projection</h3><table><tr><th>Lens</th><th style='width:50px;'>" \
-                            + "<small>Mean</small></th><th style='width:50px;'><small>Max</small></th>" \
-                            + "<th style='width:50px;'><small>Min</small></th></tr>"
+        projection_stats += '<h3>Projection</h3><table><tr><th>Lens</th><th style="width:50px;">' \
+                            + '<small>Mean</small></th><th style="width:50px;"><small>Max</small></th>' \
+                            + '<th style="width:50px;"><small>Min</small></th></tr>'
         if isinstance(projected_X_names, list):
             projected_X_names = np.array(projected_X_names)
         # Create defaults when providing no projected_X_names

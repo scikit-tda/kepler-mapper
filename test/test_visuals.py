@@ -1,8 +1,13 @@
 import numpy as np
-
+from sklearn.datasets import make_circles
 from kmapper import KeplerMapper
 
-from kmapper.visuals import init_color_function
+from kmapper.visuals import (init_color_function, format_meta, dict_to_json)
+
+
+
+np.random.seed(1)
+
 
 
 class TestVisualHelpers():
@@ -32,6 +37,38 @@ class TestVisualHelpers():
         color_function = init_color_function(graph)
 
         assert len(color_function) == len(nodes['a']) + len(nodes['b']) + 1
+
+    def test_format_meta(self):
+        mapper = KeplerMapper()
+        data = np.random.rand(1000, 10)
+        lens = mapper.fit_transform(data, projection=[0])
+        graph = mapper.map(lens, data)
+
+        assert("<p>%s</p>"%(len(graph["nodes"])) in format_meta(graph))
+        assert("<h3>Description</h3>\n<p>A short description</p>" in 
+            format_meta(graph,
+                custom_meta=[("Description", "A short description")]))
+
+    def test_dict_to_json(self):
+        mapper = KeplerMapper()
+        data, labels = make_circles(1000, random_state=0)
+        lens = mapper.fit_transform(data, projection=[0])
+        graph = mapper.map(lens, data)
+
+        color_function = lens[:,0]
+        inverse_X = data
+        projected_X = lens
+        projected_X_names = ["projected_%s"%(i) for i in range(projected_X.shape[1])]
+        inverse_X_names = ["inverse_%s"%(i) for i in range(inverse_X.shape[1])]
+        custom_tooltips = np.array(["customized_%s"%(l) for l in labels])
+
+        json = dict_to_json(graph, color_function, inverse_X,
+                 inverse_X_names, projected_X, projected_X_names, custom_tooltips)
+
+        assert("""name": "cube2_cluster0""" in json)
+        assert("""projected_0""" in json)
+        assert("""inverse_0""" in json)
+        assert("""customized_""" in json)
 
 
 class TestVisualizeIntegration():
@@ -77,3 +114,4 @@ class TestVisualizeIntegration():
 
         assert len(tmpdir.listdir()) == 0, "file was never written to"
         # assert file.read() != viz
+

@@ -8,6 +8,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.linear_model import Lasso
 
+
 class TestLogging():
     """ Simple tests that confirm map completes at each logging level
     """
@@ -89,8 +90,10 @@ class TestLens():
         lasso.fit(data, y)
         lens = mapper.project(data, projection=(lasso, data), scaler=None)
 
-        assert lens.shape == (100, 1) # hard to test this, at least it doesn't fail
-        np.testing.assert_array_equal(lens, lasso.predict(data).reshape((100,1)))
+        # hard to test this, at least it doesn't fail
+        assert lens.shape == (100, 1)
+        np.testing.assert_array_equal(
+            lens, lasso.predict(data).reshape((100, 1)))
 
     def test_tuple_projection_fit(self):
         mapper = KeplerMapper()
@@ -98,7 +101,8 @@ class TestLens():
         y = np.random.rand(100, 1)
         lens = mapper.project(data, projection=(Lasso(), data, y), scaler=None)
 
-        assert lens.shape == (100, 1) # hard to test this, at least it doesn't fail
+        # hard to test this, at least it doesn't fail
+        assert lens.shape == (100, 1)
 
     def test_projection_without_pipeline(self):
         # accomodate scaling, values are in (0,1), but will be scaled slightly

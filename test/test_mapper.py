@@ -5,7 +5,7 @@ import warnings
 from kmapper import KeplerMapper
 
 from sklearn.preprocessing import StandardScaler
-
+from sklearn.decomposition import PCA
 
 class TestLogging():
     """ Simple tests that confirm map completes at each logging level
@@ -68,6 +68,17 @@ class TestLens():
         graph = mapper.map(data)
         assert graph["meta_data"]["projection"] == "custom"
         assert graph["meta_data"]["scaler"] == "None"
+
+
+    def test_project_sklearn_class(self):
+        mapper = KeplerMapper()
+        data = np.random.rand(100, 5)
+        lens = mapper.project(data, projection=PCA(n_components=1), scaler=None)
+
+        pca = PCA(n_components=1)
+        lens_confirm = pca.fit_transform(data)
+        assert lens.shape == (100, 1)
+        np.testing.assert_array_equal(lens, lens_confirm)
 
 
     def test_projection_without_pipeline(self):

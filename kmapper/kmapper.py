@@ -68,6 +68,8 @@ class KeplerMapper(object):
         >>> projected_data = mapper.fit_transform(data, projection="sum", scaler=km.preprocessing.MinMaxScaler() )
 
         """
+
+        # Sae original values off so they can be referenced by later functions in the pipeline
         self.inverse = X
         self.scaler = scaler
         self.projection = str(projection)
@@ -106,7 +108,7 @@ class KeplerMapper(object):
 
         # Detect if projection is a class (for scikit-learn)
         try:
-            p = projection.get_params()
+            p = projection.get_params() # fail quickly
             reducer = projection
             if self.verbose > 0:
                 try:

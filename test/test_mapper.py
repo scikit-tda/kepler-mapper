@@ -4,6 +4,8 @@ import numpy as np
 import warnings
 from kmapper import KeplerMapper
 
+from sklearn.preprocessing import StandardScaler
+
 
 class TestLogging():
     """ Simple tests that confirm map completes at each logging level
@@ -79,6 +81,86 @@ class TestLens():
         lens = mapper.fit_transform(data, projection=[0])
         np.testing.assert_allclose(lens, data[:, :1], atol=atol)
 
+    def test_projection_without_pipeline(self):
+        # accomodate scaling, values are in (0,1), but will be scaled slightly
+        atol = 0.1
+
+        mapper = KeplerMapper()
+        data = np.random.rand(100, 5)
+        lens = mapper.project(data, projection=[0, 1])
+        np.testing.assert_allclose(lens, data[:, :2], atol=atol)
+
+        lens = mapper.project(data, projection=[0])
+        np.testing.assert_allclose(lens, data[:, :1], atol=atol)
+
+    def test_pipeline(self):
+        input_data = np.array([[1,2],[3,4],[5,6],[7,8]])
+        atol_big = 0.1
+        atol_small = 0.001
+        
+        mapper = KeplerMapper()
+
+        lens_1 = mapper.fit_transform(input_data,
+            projection=[[0, 1], "sum"],
+            scaler=None)
+        expected_output_1 = np.array([[3],[7],[11],[15]])
+
+        lens_2 = mapper.fit_transform(input_data,
+            projection=[[0, 1], "sum"])
+        expected_output_2 = np.array([[0],[0.33],[0.66],[1.]])
+
+        lens_3 = mapper.fit_transform(input_data,
+            projection=[[0, 1], "mean"],
+            scaler=None)
+        expected_output_3 = np.array([[1.5],[3.5],[5.5],[7.5]])
+
+        lens_4 = mapper.fit_transform(input_data,
+            projection=[[1], "mean"],
+            scaler=None)
+        expected_output_4 = np.array([[2],[4],[6],[8]])
+
+        lens_5 = mapper.fit_transform(input_data,
+            projection=[[0, 1], "l2norm"],
+            scaler=None,
+            distance_matrix=[False, "pearson"])
+        expected_output_5 = np.array([[2.236],[5.],[7.81],[10.630]])
+
+        lens_6 = mapper.fit_transform(input_data,
+            projection=[[0, 1], [0, 1]],
+            scaler=None,
+            distance_matrix=[False, "cosine"])
+        expected_output_6 = np.array([[0., 0.016],
+            [0.016, 0.],[0.026, 0.0013],[0.032,0.0028]])
+
+        lens_7 = mapper.fit_transform(input_data,
+            projection=[[0, 1], "l2norm"],
+            scaler=None,
+            distance_matrix=[False, "cosine"])
+        expected_output_7 = np.array(
+            [[0.044894],[0.01643],[0.026617],[0.032508]])
+
+        lens_8 = mapper.fit_transform(input_data, projection=[[0, 1], "sum"])
+        lens_9 = mapper.fit_transform(input_data, projection="sum")
+
+        lens_10 = mapper.fit_transform(input_data, projection="sum",
+            scaler=StandardScaler())
+        lens_11 = mapper.fit_transform(input_data, projection=[[0,1],"sum"],
+            scaler=[None, StandardScaler()])
+        expected_output_10 = np.array(
+            [[-1.341641],[-0.447214],[0.447214],[1.341641]])
+
+        np.testing.assert_array_equal(lens_1, expected_output_1)
+        np.testing.assert_allclose(lens_2, expected_output_2, atol=atol_big)
+        np.testing.assert_array_equal(lens_3, expected_output_3)
+        np.testing.assert_array_equal(lens_4, expected_output_4)
+        np.testing.assert_allclose(lens_5, expected_output_5, atol=atol_small)
+        np.testing.assert_allclose(lens_6, expected_output_6, atol=atol_small)
+        np.testing.assert_allclose(lens_7, expected_output_7, atol=atol_small)
+        np.testing.assert_allclose(lens_8, lens_9, atol=atol_small)
+        np.testing.assert_allclose(lens_10, expected_output_10, atol=atol_small)
+        np.testing.assert_array_equal(lens_10, lens_11)
+        assert not np.array_equal(lens_10, lens_2)
+        assert not np.array_equal(lens_10, lens_1)
 
 class TestAPIMaintenance():
     """ These tests just confirm that new api changes are backwards compatible"""

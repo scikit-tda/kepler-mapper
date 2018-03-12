@@ -11,7 +11,9 @@ import warnings
 from jinja2 import Environment, FileSystemLoader, Template
 import numpy as np
 from sklearn import cluster, preprocessing, manifold, decomposition
+from sklearn.model_selection import StratifiedKFold
 from scipy.spatial import distance
+from scipy.sparse import issparse
 
 from .cover import Cover
 from .nerve import GraphNerve
@@ -40,9 +42,8 @@ class KeplerMapper(object):
         self.projection = None
         self.scaler = None
 
-    def fit_transform(self, X, projection="sum", scaler=preprocessing.MinMaxScaler(), distance_matrix=False):
+    def project(self, X, projection="sum", scaler=preprocessing.MinMaxScaler(), distance_matrix=False):
         """Creates the projection/lens from a dataset. Input the data set. Specify a projection/lens type. Output the projected data/lens.
-
 
         Parameters
         ----------
@@ -71,6 +72,9 @@ class KeplerMapper(object):
         self.scaler = scaler
         self.projection = str(projection)
         self.distance_matrix = distance_matrix
+
+        if self.verbose > 0:
+            print("..Projecting on data shaped %s" % (str(X.shape)))
 
         # If distance_matrix is a scipy.spatial.pdist string, we create a square distance matrix
         # from the vectors, before applying a projection.
@@ -113,6 +117,9 @@ class KeplerMapper(object):
             X = reducer.fit_transform(X)
         except:
             pass
+
+        if isinstance(projection, tuple):
+            X = self._process_projection_tuple(projection)
 
         # Detect if projection is a string (for standard functions)
         # TODO: test each one of these projections
@@ -158,6 +165,12 @@ class KeplerMapper(object):
                 print("\n..Projecting data using: %s" % (str(projection)))
             X = X[:, np.array(projection)]
 
+        # If projection produced sparse output, turn into a dense array
+        if issparse(X):
+            X = X.toarray()
+            if self.verbose > 0:
+                print("\n..Created projection shaped %s" % (str(X.shape)))
+
         # Scaling
         if scaler is not None:
             if self.verbose > 0:
@@ -165,6 +178,65 @@ class KeplerMapper(object):
             X = scaler.fit_transform(X)
 
         return X
+
+    def fit_transform(self,
+                      X,
+                      projection="sum",
+                      scaler=preprocessing.MinMaxScaler(),
+                      distance_matrix=False):
+        """Same as .project() but accepts lists for arguments so you can chain.
+
+        """
+
+        projections = projection
+        scalers = scaler
+        distance_matrices = distance_matrix
+
+        # Turn single projection arguments into a pipeline
+        if isinstance(projection, list) and isinstance(projection[0], int):
+            projections = [projection]
+
+        if not isinstance(projection, list):
+            projections = [projection]
+
+        # Turn single scaler arguments into a pipeline
+        if not isinstance(scaler, list):
+            scalers = [scaler]
+
+        # Turn single distance matrix arguments into a pipeline
+        if not isinstance(distance_matrix, list):
+            distance_matrices = [distance_matrix]
+
+        # set defaults to first list item, if not (correctly) set by the user
+        if len(scalers) != len(projections):
+            scalers = [scalers[0]] * len(projections)
+
+        if len(distance_matrices) != len(projections):
+            distance_matrices = [distance_matrices[0]] * len(projections)
+
+        if self.verbose > 0:
+            print("..Composing projection pipeline length %s:" %
+                  (len(projections)))
+            print("Projections: %s\n\n" % ("\n".join(map(str, projections))))
+            print("Distance matrices: %s\n\n" %
+                  ("\n".join(map(str, distance_matrices))))
+            print("Scalers: %s\n\n" % ("\n".join(map(str, scalers))))
+
+        # Pipeline Stack the projection functions
+        for i, (projection, scaler, distance_matrix) in enumerate(zip(projections,
+                                                                      scalers, distance_matrices)):
+            if i == 0:
+                projected_X = self.project(X,
+                                           projection=projection,
+                                           scaler=scaler,
+                                           distance_matrix=distance_matrix)
+            else:
+                projected_X = self.project(projected_X,
+                                           projection=projection,
+                                           scaler=scaler,
+                                           distance_matrix=distance_matrix)
+
+        return projected_X
 
     def map(self,
             projected_X,
@@ -369,13 +441,13 @@ class KeplerMapper(object):
             graph, color_function)
         meta = format_meta(graph, custom_meta)
 
-
         # Find the absolute module path and the static files
-
-        js_path = os.path.join(os.path.dirname(__file__), 'static', 'kmapper.js')
+        js_path = os.path.join(os.path.dirname(
+            __file__), 'static', 'kmapper.js')
         with open(js_path, 'r') as myfile:
             js_text = myfile.read()
-        css_path = os.path.join(os.path.dirname(__file__), 'static', 'style.css')
+        css_path = os.path.join(os.path.dirname(
+            __file__), 'static', 'style.css')
         with open(css_path, 'r') as myfile:
             css_text = myfile.read()
 
@@ -423,3 +495,65 @@ class KeplerMapper(object):
             return cluster_members_data
         else:
             return np.array([])
+
+    def _process_projection_tuple(self, projection):
+        # Detect if projection is a tuple (for prediction functions)
+        # TODO: multi-label models
+        # TODO: infer binary classification and select positive class preds
+        # TODO: turn into smaller functions for better tests and complexity
+
+        def blend(X_blend, pred_fun, X_data, y):
+            skf = StratifiedKFold(n_splits=5,
+                                  shuffle=True, random_state=1729)
+            for train_index, test_index in skf.split(X_data, y):
+                fold_X_train = X_data[train_index]
+                fold_y_train = y[train_index]
+                fold_X_test = X_data[test_index]
+                fold_y_test = y[test_index]
+                model.fit(fold_X_train, fold_y_train)
+                fold_preds = pred_fun(fold_X_test)
+                X_blend[test_index] = fold_preds
+
+            return X_blend
+
+        # If projection was passed without ground truth
+        # assume we are predicting a fitted model on a test set
+        if len(projection) == 2:
+            model, X_data = projection
+            # Are we dealing with a classifier or a regressor?
+            estimator_type = getattr(model, "_estimator_type", None)
+            if estimator_type == "classifier":
+                X_blend = model.predict_proba(
+                    X_data)  # classifier probabilities
+            elif estimator_type == "regressor":
+                X_blend = model.predict(X_data)
+            else:
+                warnings.warn("Unknown estimator type for: %s" % (model))
+
+        # If projection is passed with ground truth do 5-fold stratified
+        # cross-validation, saving the out-of-fold predictions.
+        # this is called "Stacked Generalization" (see: Wolpert 1992)
+        elif len(projection) == 3:
+            model, X_data, y = projection
+            estimator_type = getattr(model, "_estimator_type", None)
+
+            if estimator_type == "classifier":
+                X_blend = np.zeros((X_data.shape[0], np.unique(y).shape[0]))
+                blend(X_blend, model.predict_proba, X_data, y)
+            elif estimator_type == "regressor":
+                X_blend = np.zeros(X_data.shape[0])
+                blend(X_blend, model.predict, X_data, y)
+            else:
+                warnings.warn("Unknown estimator type for: %s" % (model))
+        else:
+            # Warn for malformed input and provide help to avoid it.
+            warnings.warn("Passing a model function should be" +
+                          "(model, X) or (model, X, y)." +
+                          "Instead got %s" % (str(projection)))
+        # Reshape 1-D arrays (regressor outputs) to 2-D arrays
+        if X_blend.ndim == 1:
+            X_blend = X_blend.reshape((X_blend.shape[0], 1))
+
+        X = X_blend
+
+        return X

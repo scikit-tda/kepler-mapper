@@ -69,17 +69,6 @@ class TestLens():
         assert graph["meta_data"]["projection"] == "custom"
         assert graph["meta_data"]["scaler"] == "None"
 
-    def test_projection(self):
-        # accomodate scaling, values are in (0,1), but will be scaled slightly
-        atol = 0.1
-
-        mapper = KeplerMapper()
-        data = np.random.rand(100, 5)
-        lens = mapper.fit_transform(data, projection=[0, 1])
-        np.testing.assert_allclose(lens, data[:, :2], atol=atol)
-
-        lens = mapper.fit_transform(data, projection=[0])
-        np.testing.assert_allclose(lens, data[:, :1], atol=atol)
 
     def test_projection_without_pipeline(self):
         # accomodate scaling, values are in (0,1), but will be scaled slightly
@@ -97,7 +86,7 @@ class TestLens():
         input_data = np.array([[1,2],[3,4],[5,6],[7,8]])
         atol_big = 0.1
         atol_small = 0.001
-        
+
         mapper = KeplerMapper()
 
         lens_1 = mapper.fit_transform(input_data,

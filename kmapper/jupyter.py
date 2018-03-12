@@ -31,14 +31,8 @@ def display(path_html="mapper_visualization_output.html",
 
     if html:
         html = HTML.escape(html)
-        iframe = f'''<iframe srcdoc="{html}" width={width}%% height={height} frameBorder="0"></iframe>'''
-        #IPython.core.display.display(IPython.core.display.HTML(iframe))
-        IPython.display.display(IPython.display.IFrame(html, width=500, height=500))
-        #IPython.core.display.display(IPython.display.HTML(html))
-
-
-        #
-
+        iframe = f'''<iframe srcdoc="{html}" width={width}%% height={height}></iframe>'''
+        IPython.core.display.display(IPython.display.HTML(iframe))
 
     else:
         iframe = '<iframe src=' + path_html \

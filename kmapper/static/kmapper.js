@@ -23,9 +23,11 @@ var size = d3.scale.pow().exponent(1)
 // Show/Hide Functionality
 d3.select("#tooltip_control").on("click", function() {
   d3.select("#tooltip").style("display", "none");
+  d3.event.preventDefault();
 });
 d3.select("#meta_control").on("click", function() {
   d3.select("#meta").style("display", "none");
+  d3.event.preventDefault();
 });
 
 // Color settings: Ordinal Scale of ["0"-"30"] hot-to-cold

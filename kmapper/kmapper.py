@@ -11,7 +11,7 @@ import warnings
 from jinja2 import Environment, FileSystemLoader, Template
 import numpy as np
 from sklearn import cluster, preprocessing, manifold, decomposition
-from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import StratifiedKFold, KFold
 from scipy.spatial import distance
 from scipy.sparse import issparse
 
@@ -505,10 +505,8 @@ class KeplerMapper(object):
         # TODO: infer binary classification and select positive class preds
         # TODO: turn into smaller functions for better tests and complexity
 
-        def blend(X_blend, pred_fun, X_data, y):
-            skf = StratifiedKFold(n_splits=5,
-                                  shuffle=True, random_state=1729)
-            for train_index, test_index in skf.split(X_data, y):
+        def blend(X_blend, pred_fun, folder, X_data, y):
+            for train_index, test_index in folder.split(X_data, y):
                 fold_X_train = X_data[train_index]
                 fold_y_train = y[train_index]
                 fold_X_test = X_data[test_index]
@@ -537,15 +535,20 @@ class KeplerMapper(object):
         # cross-validation, saving the out-of-fold predictions.
         # this is called "Stacked Generalization" (see: Wolpert 1992)
         elif len(projection) == 3:
+            #import pdb; pdb.set_trace()
             model, X_data, y = projection
             estimator_type = getattr(model, "_estimator_type", None)
 
             if estimator_type == "classifier":
                 X_blend = np.zeros((X_data.shape[0], np.unique(y).shape[0]))
-                blend(X_blend, model.predict_proba, X_data, y)
+                skf = StratifiedKFold(n_splits=5,
+                                      shuffle=True, random_state=1729)
+
+                blend(X_blend, model.predict_proba, skf, X_data, y)
             elif estimator_type == "regressor":
                 X_blend = np.zeros(X_data.shape[0])
-                blend(X_blend, model.predict, X_data, y)
+                kf = KFold(n_splits=5, shuffle=True, random_state=1729)
+                blend(X_blend, model.predict, kf, X_data, y)
             else:
                 warnings.warn("Unknown estimator type for: %s" % (model))
         else:

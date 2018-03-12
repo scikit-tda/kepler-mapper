@@ -342,7 +342,7 @@ class KeplerMapper(object):
                   custom_meta=None,
                   path_html="mapper_visualization_output.html",
                   title="My Data",
-                  save_file=False,
+                  save_file=True,
                   inverse_X=None,
                   inverse_X_names=[],
                   projected_X=None,

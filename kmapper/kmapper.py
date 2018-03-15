@@ -11,7 +11,7 @@ import warnings
 from jinja2 import Environment, FileSystemLoader, Template
 import numpy as np
 from sklearn import cluster, preprocessing, manifold, decomposition
-from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import StratifiedKFold, KFold
 from scipy.spatial import distance
 from scipy.sparse import issparse
 
@@ -45,7 +45,6 @@ class KeplerMapper(object):
     def project(self, X, projection="sum", scaler=preprocessing.MinMaxScaler(), distance_matrix=False):
         """Creates the projection/lens from a dataset. Input the data set. Specify a projection/lens type. Output the projected data/lens.
 
-
         Parameters
         ----------
         data : Numpy Array
@@ -69,13 +68,15 @@ class KeplerMapper(object):
         >>> projected_data = mapper.fit_transform(data, projection="sum", scaler=km.preprocessing.MinMaxScaler() )
 
         """
+
+        # Sae original values off so they can be referenced by later functions in the pipeline
         self.inverse = X
         self.scaler = scaler
         self.projection = str(projection)
         self.distance_matrix = distance_matrix
 
         if self.verbose > 0:
-            print("..Projecting on data shaped %s"%(str(X.shape)))
+            print("..Projecting on data shaped %s" % (str(X.shape)))
 
         # If distance_matrix is a scipy.spatial.pdist string, we create a square distance matrix
         # from the vectors, before applying a projection.
@@ -107,7 +108,7 @@ class KeplerMapper(object):
 
         # Detect if projection is a class (for scikit-learn)
         try:
-            p = projection.get_params()
+            p = projection.get_params()  # fail quickly
             reducer = projection
             if self.verbose > 0:
                 try:
@@ -119,66 +120,8 @@ class KeplerMapper(object):
         except:
             pass
 
-        # Detect if projection is a tuple (for prediction functions)
-        # TODO: multi-label models
-        # TODO: infer binary classification and select positive class preds
-        # TODO: turn into smaller functions for better tests and complexity
- 
         if isinstance(projection, tuple):
-            # If projection was passed without ground truth
-            # assume we are predicting a fitted model on a test set
-            if len(projection) == 2:
-                model, X_data = projection 
-                # Are we dealing with a classifier or a regressor?
-                estimator_type = getattr(model, "_estimator_type", None)
-                if estimator_type == "classifier":
-                    X_blend = model.predict_proba(X_data) # classifier probabilities
-                elif estimator_type == "regressor":
-                    X_blend = model.predict(X_data)
-                else:
-                    warnings.warn("Unknown estimator type for: %s"%(model))
-            # If projection is passed with ground truth do 5-fold stratified
-            # cross-validation, saving the out-of-fold predictions.
-            # this is called "Stacked Generalization" (see: Wolpert 1992)
-            elif len(projection) == 3:
-                model, X_data, y = projection
-                estimator_type = getattr(model, "_estimator_type", None)
-                if estimator_type == "classifier":
-                    X_blend = np.zeros((X_data.shape[0], np.unique(y).shape[0]))
-                    skf = StratifiedKFold(n_splits=5,
-                        shuffle=True, random_state=1729)
-                    for train_index, test_index in skf.split(X_data, y):
-                        fold_X_train = X_data[train_index]
-                        fold_y_train = y[train_index]
-                        fold_X_test = X_data[test_index]
-                        fold_y_test = y[test_index]
-                        model.fit(fold_X_train, fold_y_train)
-                        fold_preds = model.predict_proba(fold_X_test)
-                        X_blend[test_index] = fold_preds
-                elif estimator_type == "regressor":
-                    X_blend = np.zeros(X_data.shape[0])
-                    # TODO: Quantile stratified
-                    skf = StratifiedKFold(n_splits=5,
-                        shuffle=True, random_state=1729)
-                    for train_index, test_index in skf.split(X_data, y):
-                        fold_X_train = X_data[train_index]
-                        fold_y_train = y[train_index]
-                        fold_X_test = X_data[test_index]
-                        fold_y_test = y[test_index]
-                        model.fit(fold_X_train, fold_y_train)
-                        fold_preds = model.predict(fold_X_test)
-                        X_blend[test_index] = fold_preds
-                else:
-                    warnings.warn("Unknown estimator type for: %s"%(model))    
-            else:
-                # Warn for malformed input and provide help to avoid it.
-                warnings.warn("Passing a model function should be"+
-                    "(model, X) or (model, X, y)."+
-                    "Instead got %s"%(str(projection)))
-            # Reshape 1-D arrays (regressor outputs) to 2-D arrays
-            if X_blend.ndim == 1:
-                X_blend = X_blend.reshape((X_blend.shape[0],1))
-            X = X_blend
+            X = self._process_projection_tuple(projection)
 
         # Detect if projection is a string (for standard functions)
         # TODO: test each one of these projections
@@ -228,7 +171,7 @@ class KeplerMapper(object):
         if issparse(X):
             X = X.toarray()
             if self.verbose > 0:
-                print("\n..Created projection shaped %s"%(str(X.shape)))
+                print("\n..Created projection shaped %s" % (str(X.shape)))
 
         # Scaling
         if scaler is not None:
@@ -239,10 +182,10 @@ class KeplerMapper(object):
         return X
 
     def fit_transform(self,
-                 X,
-                 projection="sum",
-                 scaler=preprocessing.MinMaxScaler(),
-                 distance_matrix=False):
+                      X,
+                      projection="sum",
+                      scaler=preprocessing.MinMaxScaler(),
+                      distance_matrix=False):
         """Same as .project() but accepts lists for arguments so you can chain.
 
         """
@@ -274,24 +217,26 @@ class KeplerMapper(object):
             distance_matrices = [distance_matrices[0]] * len(projections)
 
         if self.verbose > 0:
-            print("..Composing projection pipeline length %s:"%(len(projections)))
-            print("Projections: %s\n\n"%("\n".join(map(str, projections))))
-            print("Distance matrices: %s\n\n"%("\n".join(map(str, distance_matrices))))
-            print("Scalers: %s\n\n"%("\n".join(map(str, scalers))))
+            print("..Composing projection pipeline length %s:" %
+                  (len(projections)))
+            print("Projections: %s\n\n" % ("\n".join(map(str, projections))))
+            print("Distance matrices: %s\n\n" %
+                  ("\n".join(map(str, distance_matrices))))
+            print("Scalers: %s\n\n" % ("\n".join(map(str, scalers))))
 
         # Pipeline Stack the projection functions
         for i, (projection, scaler, distance_matrix) in enumerate(zip(projections,
-            scalers, distance_matrices)):
+                                                                      scalers, distance_matrices)):
             if i == 0:
                 projected_X = self.project(X,
-                    projection=projection,
-                    scaler=scaler,
-                    distance_matrix=distance_matrix)
+                                           projection=projection,
+                                           scaler=scaler,
+                                           distance_matrix=distance_matrix)
             else:
                 projected_X = self.project(projected_X,
-                    projection=projection,
-                    scaler=scaler,
-                    distance_matrix=distance_matrix)
+                                           projection=projection,
+                                           scaler=scaler,
+                                           distance_matrix=distance_matrix)
 
         return projected_X
 
@@ -499,12 +444,13 @@ class KeplerMapper(object):
             graph, color_function)
         meta = format_meta(graph, custom_meta)
 
-
         # Find the absolute module path and the static files
-        js_path = os.path.join(os.path.dirname(__file__), 'static', 'kmapper.js')
+        js_path = os.path.join(os.path.dirname(
+            __file__), 'static', 'kmapper.js')
         with open(js_path, 'r') as myfile:
             js_text = myfile.read()
-        css_path = os.path.join(os.path.dirname(__file__), 'static', 'style.css')
+        css_path = os.path.join(os.path.dirname(
+            __file__), 'static', 'style.css')
         with open(css_path, 'r') as myfile:
             css_text = myfile.read()
 
@@ -552,3 +498,68 @@ class KeplerMapper(object):
             return cluster_members_data
         else:
             return np.array([])
+
+    def _process_projection_tuple(self, projection):
+        # Detect if projection is a tuple (for prediction functions)
+        # TODO: multi-label models
+        # TODO: infer binary classification and select positive class preds
+        # TODO: turn into smaller functions for better tests and complexity
+
+        def blend(X_blend, pred_fun, folder, X_data, y):
+            for train_index, test_index in folder.split(X_data, y):
+                fold_X_train = X_data[train_index]
+                fold_y_train = y[train_index]
+                fold_X_test = X_data[test_index]
+                fold_y_test = y[test_index]
+                model.fit(fold_X_train, fold_y_train)
+                fold_preds = pred_fun(fold_X_test)
+                X_blend[test_index] = fold_preds
+
+            return X_blend
+
+        # If projection was passed without ground truth
+        # assume we are predicting a fitted model on a test set
+        if len(projection) == 2:
+            model, X_data = projection
+            # Are we dealing with a classifier or a regressor?
+            estimator_type = getattr(model, "_estimator_type", None)
+            if estimator_type == "classifier":
+                X_blend = model.predict_proba(
+                    X_data)  # classifier probabilities
+            elif estimator_type == "regressor":
+                X_blend = model.predict(X_data)
+            else:
+                warnings.warn("Unknown estimator type for: %s" % (model))
+
+        # If projection is passed with ground truth do 5-fold stratified
+        # cross-validation, saving the out-of-fold predictions.
+        # this is called "Stacked Generalization" (see: Wolpert 1992)
+        elif len(projection) == 3:
+            #import pdb; pdb.set_trace()
+            model, X_data, y = projection
+            estimator_type = getattr(model, "_estimator_type", None)
+
+            if estimator_type == "classifier":
+                X_blend = np.zeros((X_data.shape[0], np.unique(y).shape[0]))
+                skf = StratifiedKFold(n_splits=5,
+                                      shuffle=True, random_state=1729)
+
+                blend(X_blend, model.predict_proba, skf, X_data, y)
+            elif estimator_type == "regressor":
+                X_blend = np.zeros(X_data.shape[0])
+                kf = KFold(n_splits=5, shuffle=True, random_state=1729)
+                blend(X_blend, model.predict, kf, X_data, y)
+            else:
+                warnings.warn("Unknown estimator type for: %s" % (model))
+        else:
+            # Warn for malformed input and provide help to avoid it.
+            warnings.warn("Passing a model function should be" +
+                          "(model, X) or (model, X, y)." +
+                          "Instead got %s" % (str(projection)))
+        # Reshape 1-D arrays (regressor outputs) to 2-D arrays
+        if X_blend.ndim == 1:
+            X_blend = X_blend.reshape((X_blend.shape[0], 1))
+
+        X = X_blend
+
+        return X

@@ -436,7 +436,6 @@ class KeplerMapper(object):
         >>> mapper.visualize(simplicial_complex, path_html="mapper_visualization_output.html")
 
         """
-
         color_function = init_color_function(graph, color_function)
         json_graph = dict_to_json(
             graph, color_function, inverse_X, inverse_X_names, projected_X, projected_X_names, custom_tooltips)

@@ -81,7 +81,8 @@ mapper.visualize(graph, path_html="make_circles_keplermapper_output.html",
                  title="make_circles(n_samples=5000, noise=0.03, factor=0.3)")
 
 #or as a Plotly plot:
-kmgraph,  meta = mapper.visualize(graph,  color_function=projected_data[:,0]-projected_data[:,0].min(),  path_html=None) 
+kmgraph,  meta = mapper.visualize(graph,  color_function=projected_data[:,0]-projected_data[:,0].min(),
+                                  path_html=None) 
 from plotly.offline import download_plotlyjs, init_notebook_mode,  iplot
 init_notebook_mode(connected=True)
 

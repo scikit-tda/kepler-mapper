@@ -17,7 +17,7 @@ from scipy.sparse import issparse
 
 from .cover import Cover
 from .nerve import GraphNerve
-from .visuals import init_color_function, format_meta, dict_to_json, color_function_distribution
+from .visuals import init_color_function, format_meta, format_meta_plotly, dict_to_json, color_function_distribution
 
 
 class KeplerMapper(object):
@@ -438,12 +438,15 @@ class KeplerMapper(object):
         """
 
         color_function = init_color_function(graph, color_function)
-        json_graph = dict_to_json(
-            graph, color_function, inverse_X, inverse_X_names, projected_X, projected_X_names, custom_tooltips)
+        json_graph = dict_to_json(graph, color_function, inverse_X, inverse_X_names, projected_X,
+                                  projected_X_names, custom_tooltips, path_html=path_html)
         color_distribution = color_function_distribution(
             graph, color_function)
-        meta = format_meta(graph, custom_meta)
+        if path_html is None:
+            meta = format_meta_plotly(graph, custom_meta)
+            return json_graph,  meta
 
+        meta = format_meta(graph, custom_meta)
         # Find the absolute module path and the static files
         js_path = os.path.join(os.path.dirname(
             __file__), 'static', 'kmapper.js')

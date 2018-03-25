@@ -28,6 +28,7 @@ KeplerMapper requires:
   - Scikit-learn
   - Igraph
   - Plotly 
+  
 Running some of the examples requires:
 
   - matplotlib

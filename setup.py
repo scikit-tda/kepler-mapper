@@ -2,16 +2,14 @@
 
 from setuptools import setup
 
+with open('README.md') as f:
+    long_description = f.read()
+
 setup(name='kmapper',
-      version='1.1.3',
+      version='1.1.4',
       description='Python implementation of Mapper algorithm for Topological Data Analysis.',
-      long_description="""
-This is a Python implementation of the TDA Mapper algorithm for visualization of high-dimensional data. For complete documentation, see https://MLWave.github.io/kepler-mapper.
-
-KeplerMapper employs approaches based on the Mapper algorithm (Singh et al.) as first described in the paper "Topological Methods for the Analysis of High Dimensional Data Sets and 3D Object Recognition".
-
-KeplerMapper can make use of Scikit-Learn API compatible cluster and scaling algorithms.
-""",
+      long_description=long_description,
+      long_description_content_type="text/markdown",	
       author='HJ van Veen, Nathaniel Saul',
       author_email='info@mlwave.com, nat@saulgill.com',
       url='https://MLWave.github.io/kepler-mapper',

@@ -42,5 +42,4 @@ graph = mapper.map(lens,
 mapper.visualize(graph,
                  path_html="breast-cancer.html",
                  title="Wisconsin Breast Cancer Dataset",
-                 custom_tooltips=y,
-                 color_function="average_signal_cluster")
+                 custom_tooltips=y)

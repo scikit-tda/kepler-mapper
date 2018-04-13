@@ -17,7 +17,6 @@ graph = mapper.map(lens,
 
 
 mapper.visualize(graph,
-                 graph_gravity=0.25,
                  path_html="horse_keplermapper_output.html")
 
 # You may want to visualize the original point cloud data in 3D scatter too

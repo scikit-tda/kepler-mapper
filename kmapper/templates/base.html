@@ -2,14 +2,16 @@
 <html>
 
 <head>
-  <div id="json_graph" data-graph='{{ json_graph }}' style="display:none"></div>
+  <!-- Storage of data so D3 can access it later -->
+  <div id="json_graph" data-graph='{{ mapper_data|tojson|safe }}' style="display:none"></div>
+
   <meta charset="utf-8">
   <meta name="generator" content="KeplerMapper">
   <title>{{ title }} | KeplerMapper</title>
 
   <link rel="icon" type="image/png" href="https://i.imgur.com/2eZcTZn.png" />
   <link href='https://fonts.googleapis.com/css?family=Roboto+Mono:700,300' rel='stylesheet' type='text/css'>
-  <style> {{ css_text }} </style>
+  <style>{{ css_text }}</style>
 
 </head>
 
@@ -23,18 +25,22 @@
   </div>
   <div id="tooltip">
     <div id="tooltip_control">
+      <!-- enable completely turning off tooltip -->
+
       <a href="#"><small>[-]</small></a>
     </div>
-    <h2>Cluster Meta</h2>
+    <h2>Cluster Details</h2>
     <div id="tooltip_content">
 
     </div>
   </div>
+
+
   <div id="meta">
     <div id="meta_control">
       <a href="#"><small>[-]</small></a>
     </div>
-    <h2>Graph Meta</h2> {{ meta }} {{ color_distribution }}
+    <h2>Mapper Summary</h2> {{ mapper_summary }} {{ histogram }}
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>

@@ -219,7 +219,7 @@ class TestAPIMaintenance():
         _ = mapper.map(lens, data, overlap_perc=0.1)
         c2 = mapper.coverer
 
-        assert c2.nr_cubes == 10
+        assert c2.n_cubes == 10
 
     def test_no_warn_normally(self, recwarn):
         """ Confirm that deprecation warnings behave as expected"""

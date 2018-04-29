@@ -21,13 +21,30 @@ var size = d3.scale.pow().exponent(1)
            .range([8,24]);
 
 // Show/Hide Functionality
-// TODO: make it so tooltip doesn't popup
+// TODO: add option to permanently turn off tooltip
 d3.select("#tooltip_control").on("click", function() {
   d3.select("#tooltip").style("display", "none");
 });
 d3.select("#meta_control").on("click", function() {
   d3.select("#meta").style("display", "none");
 });
+
+
+/// Display the hotkey shortcuts 
+d3.select("#helptip_control").on("click", function() {
+  var active = helptip_content.active ? false : true
+
+  if (active){
+    d3.select("#helptip_content").style("display", "unset");
+  } else{
+    d3.select("#helptip_content").style("display", "none");
+  }
+  
+
+  helptip_content.active = active
+});
+
+
 
 // Color settings: Ordinal Scale of ["0"-"30"] hot-to-cold
 var color = d3.scale.ordinal()
@@ -209,22 +226,22 @@ function set_highlight(d){
 
 // Zoom logic
 zoom.on("zoom", function() {
-var stroke = nominal_stroke;
-var base_radius = nominal_base_node_size;
-if (nominal_base_node_size*zoom.scale()>max_base_node_size) {
-  base_radius = max_base_node_size/zoom.scale();}
-circle.attr("d", d3.svg.symbol()
-  .size(function(d) { return d.size * 50; })
-  .type(function(d) { return d.type; }))
-if (!text_center) text.attr("dx", function(d) {
-  return (size(d.size)*base_radius/nominal_base_node_size||base_radius); });
+  var stroke = nominal_stroke;
+  var base_radius = nominal_base_node_size;
+  if (nominal_base_node_size*zoom.scale()>max_base_node_size) {
+    base_radius = max_base_node_size/zoom.scale();}
+  circle.attr("d", d3.svg.symbol()
+    .size(function(d) { return d.size * 50; })
+    .type(function(d) { return d.type; }))
+  if (!text_center) text.attr("dx", function(d) {
+    return (size(d.size)*base_radius/nominal_base_node_size||base_radius); });
 
-var text_size = nominal_text_size;
-if (nominal_text_size*zoom.scale()>max_text_size) {
-  text_size = max_text_size/zoom.scale(); }
-text.style("font-size",text_size + "px");
+  var text_size = nominal_text_size;
+  if (nominal_text_size*zoom.scale()>max_text_size) {
+    text_size = max_text_size/zoom.scale(); }
+  text.style("font-size",text_size + "px");
 
-g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+  g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 });
 
 svg.call(zoom);
@@ -233,14 +250,14 @@ d3.select(window).on("resize", resize);
 
 // Animation per tick
 force.on("tick", function() {
-node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-text.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-link.attr("x1", function(d) { return d.source.x; })
-  .attr("y1", function(d) { return d.source.y; })
-  .attr("x2", function(d) { return d.target.x; })
-  .attr("y2", function(d) { return d.target.y; });
-node.attr("cx", function(d) { return d.x; })
-  .attr("cy", function(d) { return d.y; });
+  node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+  text.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+  link.attr("x1", function(d) { return d.source.x; })
+    .attr("y1", function(d) { return d.source.y; })
+    .attr("x2", function(d) { return d.target.x; })
+    .attr("y2", function(d) { return d.target.y; });
+  node.attr("cx", function(d) { return d.x; })
+    .attr("cy", function(d) { return d.y; });
 });
 
 // Resizing window and redraws

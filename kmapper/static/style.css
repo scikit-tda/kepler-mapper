@@ -102,6 +102,18 @@ a:hover {
   display: none;
 }
 
+#helptip_content {
+  background: #191919;
+  position: absolute;
+  top: 75px;
+  left: 0;
+  bottom: 280;
+  width: 120px;
+  padding: 20px;
+  
+  display: none;
+}
+
 #display #tooltip {
   background: #191919;
 }

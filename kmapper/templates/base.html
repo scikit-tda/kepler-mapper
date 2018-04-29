@@ -18,13 +18,37 @@
 <body id="display">
   <div id="header">
     <noscript><b>Requires JavaScript (d3.js) for visualizations</b></noscript>
-    <h1>{{ title }} <img align="right" width="40" height="40" src="https://i.imgur.com/bxux6WA.png"> </h1>
+    <h1>{{ title }} 
+        <img align="right" width="40" height="40" src="https://i.imgur.com/bxux6WA.png">
+    </h1>
+
+
+
+    <div id="helptip">
+        <div id="helptip_control">
+            <!-- enable completely turning off tooltip -->
+    
+            <a href="#"><small>[help]</small></a>
+        </div>
+
+    
+        <div id="helptip_content">
+            {% include 'help.html' %} 
+        </div>
+    </div>
+
+
+
   </div>
 
 
   <div id="canvas">
     <!-- Graph will go in here -->
   </div>
+
+
+ 
+
 
 
   {% if show_tooltips %}

@@ -21,7 +21,6 @@ var size = d3.scale.pow().exponent(1)
            .range([8,24]);
 
 // Show/Hide Functionality
-// TODO: add option to permanently turn off tooltip
 d3.select("#tooltip_control").on("click", function() {
   d3.select("#tooltip").style("display", "none");
 });
@@ -40,34 +39,21 @@ d3.select("#helptip_control").on("click", function() {
     d3.select("#helptip_content").style("display", "none");
   }
   
-
   helptip_content.active = active
 });
-
-
 
 // Color settings: Ordinal Scale of ["0"-"30"] hot-to-cold
 var color = d3.scale.ordinal()
             .domain(["0","1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
                      "11", "12", "13","14","15","16","17","18","19","20",
                      "21","22","23","24","25","26","27","28","29","30"])
-            .range(['#0500ff','#0300ff','#0100ff','#0002ff','#0022ff',
-            '#0044ff','#0064ff','#0084ff','#00a4ff','#00a4ff','#00c4ff',
-            '#00e4ff','#00ffd0','#00ff83','#00ff36','#17ff00','#65ff00',
-            '#b0ff00','#fdff00','#FFf000','#FFdc00','#FFc800','#FFb400',
-            '#FFa000','#FF8c00','#FF7800','#FF6400','#FF5000','#FF3c00',
-            '#FF2800','#FF1400','#FF0000']);
+            .range(["#FF0000","#FF1400","#FF2800","#FF3c00","#FF5000","#FF6400",
+                    "#FF7800","#FF8c00","#FFa000","#FFb400","#FFc800","#FFdc00",
+                    "#FFf000","#fdff00","#b0ff00","#65ff00","#17ff00","#00ff36",
+                    "#00ff83","#00ffd0","#00e4ff","#00c4ff","#00a4ff","#00a4ff",
+                    "#0084ff","#0064ff","#0044ff","#0022ff","#0002ff","#0100ff",
+                    "#0300ff","#0500ff"]);
               
-            // Reverse the ordering of the color, cold-to-hot
-              
-              
-              
-              // // ["#FF0000","#FF1400","#FF2800","#FF3c00","#FF5000","#FF6400",
-              //       "#FF7800","#FF8c00","#FFa000","#FFb400","#FFc800","#FFdc00",
-              //       "#FFf000","#fdff00","#b0ff00","#65ff00","#17ff00","#00ff36",
-              //       "#00ff83","#00ffd0","#00e4ff","#00c4ff","#00a4ff","#00a4ff",
-              //       "#0084ff","#0064ff","#0044ff","#0022ff","#0002ff","#0100ff",
-              //       "#0300ff","#0500ff"]);
 // Force settings
 var force = d3.layout.force()
             .linkDistance(5)
@@ -191,7 +177,6 @@ if (text_center) {
 // Mouse events
 node.on("mouseover", function(d) {
   set_highlight(d);
-  // console.log("node hover");
 
   d3.select("#tooltip").style("display", "block");
   d3.select("#tooltip_content").html(d.tooltip + "<br/>");
@@ -200,7 +185,6 @@ node.on("mouseover", function(d) {
     focus_node = d;
     if (highlight_node === null) set_highlight(d)
   }).on("mouseout", function(d) {
-    // console.log("mouseout");
     exit_highlight();
   });
 

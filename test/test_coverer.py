@@ -114,7 +114,7 @@ class TestCover():
 def test_BasicCover():
     # TODO: add a mock that asserts the cover was called appropriately.. or test number of cubes etc.
     data, _ = datasets.make_circles()
-    
+
     data = data.astype(np.float64)
     mapper = KeplerMapper()
     graph = mapper.map(data)

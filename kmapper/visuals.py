@@ -6,7 +6,6 @@ from collections import defaultdict
 
 
 def init_color_function(graph, color_function=None):
-
     # If no color_function provided we color by row order in data set
     # Reshaping to 2-D array is required for sklearn 0.19
     n_samples = np.max([i for s in graph["nodes"].values() for i in s]) + 1
@@ -14,7 +13,7 @@ def init_color_function(graph, color_function=None):
         color_function = np.arange(n_samples).reshape(-1, 1)
     else:
         color_function = color_function.reshape(-1, 1)
-    
+
     color_function = color_function.astype(np.float64)
     # MinMax Scaling to be friendly to non-scaled input.
     scaler = preprocessing.MinMaxScaler()
@@ -33,13 +32,13 @@ def format_meta(graph, custom_meta=None):
         "n_edges": sum([len(l) for l in graph["links"].values()]),
         "n_total": sum([len(l) for l in graph["nodes"].values()]),
         "n_unique": n_unique
-    }    
+    }
 
     return mapper_summary
 
 
 def format_mapper_data(graph, color_function, X,
-                 X_names, lens, lens_names, custom_tooltips, env):
+                       X_names, lens, lens_names, custom_tooltips, env):
     # import pdb; pdb.set_trace()
     json_dict = {"nodes": [], "links": []}
     node_id_to_num = {}
@@ -83,8 +82,7 @@ def graph_data_distribution(graph, color_function):
 
     buckets = defaultdict(float)
 
-
-    # TODO: this histogram groups all points in a node in the same bin. 
+    # TODO: this histogram groups all points in a node in the same bin.
     #       This might yield unintuitive results
     for i, (node_id, member_ids) in enumerate(graph["nodes"].items()):
         # round to color range value to nearest 3 multiple
@@ -110,12 +108,11 @@ def graph_data_distribution(graph, color_function):
             'color': color
         })
 
-
     return histogram
 
 
 def _format_cluster_statistics(member_ids, X, X_names):
-    cluster_data = {'above':[], 'below':[], 'size': len(member_ids)}
+    cluster_data = {'above': [], 'below': [], 'size': len(member_ids)}
 
     cluster_stats = ""
     if X is not None:
@@ -133,14 +130,12 @@ def _format_cluster_statistics(member_ids, X, X_names):
         above_mean = cluster_X_mean > X_mean
         std_m = np.sqrt((cluster_X_mean - X_mean)**2) / X_std
 
-
-        stat_zip = list(zip(std_m, X_names,np.mean(X, axis=0),cluster_X_mean,above_mean,np.std(X, axis=0)))
+        stat_zip = list(zip(std_m, X_names, np.mean(X, axis=0), cluster_X_mean, above_mean, np.std(X, axis=0)))
         stats = sorted(stat_zip, reverse=True)
-            # [(s, f, i, c, a, v) for s, f, i, c, a, v in 
-                # ], reverse=True)
+        # [(s, f, i, c, a, v) for s, f, i, c, a, v in
+        # ], reverse=True)
         above_stats = [a for a in stats if a[4] == True]
         below_stats = [a for a in stats if a[4] == False]
-
 
         if len(above_stats) > 0:
             for s, f, i, c, a, v in above_stats[:5]:
@@ -149,7 +144,7 @@ def _format_cluster_statistics(member_ids, X, X_names):
                     'mean': round(c, 3),
                     'std': round(s, 1)
                 })
-                
+
         if len(below_stats) > 0:
 
             for s, f, i, c, a, v in below_stats[:5]:
@@ -158,7 +153,6 @@ def _format_cluster_statistics(member_ids, X, X_names):
                     'mean': round(c, 3),
                     'std': round(s, 1)
                 })
-
 
     return cluster_data
 
@@ -179,7 +173,7 @@ def _format_projection_statistics(member_ids, lens, lens_names):
         maxs_v = np.max(lens[member_ids], axis=0)
         mins_v = np.min(lens[member_ids], axis=0)
 
-        for name, mean_v, max_v, min_v in zip(lens_names, means_v, maxs_v, mins_v): 
+        for name, mean_v, max_v, min_v in zip(lens_names, means_v, maxs_v, mins_v):
             projection_data.append({
                 'name': name,
                 'mean': round(mean_v, 3),
@@ -192,18 +186,17 @@ def _format_projection_statistics(member_ids, lens, lens_names):
 
 def _format_tooltip(env, member_ids, custom_tooltips, X,
                     X_names, lens, lens_names):
-
     # TODO: Allow customization in the form of aggregate per node and per entry in node.
     # TODO: Allow users to turn off tooltip completely.
 
     custom_tooltips = custom_tooltips[member_ids] if custom_tooltips is not None else member_ids
-    
+
     # list will render better than numpy arrays
     custom_tooltips = list(custom_tooltips)
 
     projection_stats = _format_projection_statistics(
         member_ids, lens, lens_names)
-    cluster_stats  = _format_cluster_statistics(member_ids, X, X_names)
+    cluster_stats = _format_cluster_statistics(member_ids, X, X_names)
 
     tooltip = env.get_template('cluster_tooltip.html').render(
         projection_stats=projection_stats,

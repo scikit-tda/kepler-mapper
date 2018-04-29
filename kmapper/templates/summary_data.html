@@ -1,6 +1,6 @@
 <h2>Mapper Summary</h2> 
 
-<hr> <br/>
+<hr><br>
 
 {% if mapper_summary.custom_meta %}
     {% for k, v in custom_meta %}
@@ -15,6 +15,5 @@
 <h3>Total Samples</h3><p> {{ mapper_summary.n_total }}</p>
 
 <h3>Unique Samples</h3><p> {{ mapper_summary.n_unique }}</p>
-
 
 {% include 'histogram.html' %}

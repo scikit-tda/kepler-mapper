@@ -36,15 +36,13 @@ class KeplerMapper(object):
 
     def __init__(self, verbose=0):
         # TODO: move as many of the arguments from fit_transform and map into here.
-
-
-
         self.verbose = verbose
         self.chunk_dist = []
         self.overlap_dist = []
         self.d = []
         self.projection = None
         self.scaler = None
+        self.cover = None
 
     def project(self, X, projection="sum", scaler=preprocessing.MinMaxScaler(), distance_matrix=False):
         """Creates the projection/lens from a dataset. Input the data set. Specify a projection/lens type. Output the projected data/lens.
@@ -84,11 +82,11 @@ class KeplerMapper(object):
 
         # If distance_matrix is a scipy.spatial.pdist string, we create a square distance matrix
         # from the vectors, before applying a projection.
-        if self.distance_matrix in ["braycurtis", "canberra",  "chebyshev", "cityblock", 
-                                    "correlation", "cosine",  "dice", "euclidean", "hamming",
-                                    "jaccard", "kulsinski","mahalanobis","matching","minkowski",
-                                    "rogerstanimoto","russellrao","seuclidean","sokalmichener",
-                                    "sokalsneath","sqeuclidean", "yule"]:
+        if self.distance_matrix in ["braycurtis", "canberra", "chebyshev", "cityblock",
+                                    "correlation", "cosine", "dice", "euclidean", "hamming",
+                                    "jaccard", "kulsinski", "mahalanobis", "matching", "minkowski",
+                                    "rogerstanimoto", "russellrao", "seuclidean", "sokalmichener",
+                                    "sokalsneath", "sqeuclidean", "yule"]:
             X = distance.squareform(distance.pdist(X, metric=distance_matrix))
             if self.verbose > 0:
                 print("Created distance matrix, shape: %s, with distance metric `%s`" %
@@ -121,7 +119,7 @@ class KeplerMapper(object):
 
             def dist_mean(X, axis=1):
                 X_mean = np.mean(X, axis=0)
-                X = np.sum(np.sqrt((X - X_mean)**2),axis=1)
+                X = np.sum(np.sqrt((X - X_mean)**2), axis=1)
                 return X
 
             projection_funcs = {
@@ -169,7 +167,6 @@ class KeplerMapper(object):
                     nn.fit(X)
                     X = np.sum(nn.kneighbors(X, n_neighbors=n_neighbors, return_distance=True)[
                                0], axis=1).reshape((X.shape[0], 1))
-
 
         # Detect if projection is a list (with dimension indices)
         if isinstance(projection, list):
@@ -243,39 +240,42 @@ class KeplerMapper(object):
 
         return lens
 
-    def map(self, 
+    def map(self,
             lens,
             X=None,
             clusterer=cluster.DBSCAN(eps=0.5, min_samples=3),
-            n_cubes=None,
-            overlap_perc=None,
-            coverer=Cover(n_cubes=10, overlap_perc=0.1),
+            cover=Cover(n_cubes=10, perc_overlap=0.1),
             nerve=GraphNerve(),
-            nr_cubes=None):
+
+            # These arguments are all deprecated
+            overlap_perc=None,
+            nr_cubes=None,
+            coverer=None):
         """Apply Mapper algorithm on this projection and build a simplicial complex. Returns a dictionary with nodes and links.
 
         Parameters
         ----------
-        lens : Numpy Array
-            Output from fit_transform
+        lens: Numpy Array
+            Lower dimensional representation of data. In general will be output of `fit_transform`.
 
-        X : Numpy Array
-            Original data. If `None`, then use `lens` for clustering.
+        X: Numpy Array
+            Original data or data to run clustering on. If `None`, then use `lens` as default.
 
-        clusterer:
-            Scikit-learn API compatible clustering algorithm. Default: DBSCAN
+        clusterer: Default: DBSCAN
+            Scikit-learn API compatible clustering algorithm. Must provide `fit`, `get_labels`, and produce attribute `labels_`.
 
-        n_cubes : Int
-            The number of intervals/hypercubes to create. Default = 10. (DeprecationWarning: define Cover explicitly in future versions)
-
-        overlap_perc : Float
-            The percentage of overlap "between" the intervals/hypercubes. Default = 0.1. (DeprecationWarning: define Cover explicitly in future versions)
-
-        coverer : kmapper.Cover
+        cover: type kmapper.Cover
             Cover scheme for lens. Instance of kmapper.cover providing methods `define_bins` and `find_entries`.
 
-        nerve : kmapper.Nerve
+        nerve: kmapper.Nerve
             Nerve builder implementing `__call__(nodes)` API
+
+        nr_cubes: Int (Deprecated)
+            The number of intervals/hypercubes to create. Default = 10. (DeprecationWarning: define Cover explicitly in future versions)
+
+        overlap_perc: Float (Deprecated)
+            The percentage of overlap "between" the intervals/hypercubes. Default = 0.1. (DeprecationWarning: define Cover explicitly in future versions)
+
 
         Returns
         =======
@@ -285,14 +285,13 @@ class KeplerMapper(object):
         Example
         =======
 
-        >>> simplicial_complex = mapper.map(lens, X=None, clusterer=cluster.DBSCAN(eps=0.5,min_samples=3),n_cubes=10, overlap_perc=0.1)
+        >>> simplicial_complex = mapper.map(lens, X=None, clusterer=cluster.DBSCAN(eps=0.5,min_samples=3), cover=km.Cover(n_cubes=[10,20], perc_overlap=0.4))
 
         >>>print(simplicial_complex["nodes"])
         >>>print(simplicial_complex["links"])
         >>>print(simplicial_complex["meta"])
 
         """
-
 
         start = datetime.now()
 
@@ -304,34 +303,37 @@ class KeplerMapper(object):
         if X is None:
             X = lens
 
-        if nr_cubes is not None:
+        # Deprecation warnings
+        if nr_cubes is not None or overlap_perc is not None:
             warnings.warn(
-                "nr_cubes is deprecated and will be removed. Use Cover object", DeprecationWarning)
+                "Please supply km.Cover object. Explicitly passing in n_cubes/nr_cubes and overlap_perc will be deprecated in future releases. ", DeprecationWarning)
+        if coverer is not None:
+            warnings.warn(
+                "coverer has been renamed to `cover`. Please you `cover` from now on.", DeprecationWarning)
 
-        if n_cubes is not None or overlap_perc is not None:
-            # If user supplied n_cubes or overlap_perc,
-            # use old defaults instead of new Cover
-            n_cubes = n_cubes if n_cubes else 10
+        ## If user supplied nr_cubes, overlap_perc, or coverer, opt for those
+        ## TODO: remove this conditional after release in 1.2
+        if coverer is not None:
+            self.cover = coverer
+        elif nr_cubes is not None or overlap_perc is not None:
+            n_cubes = nr_cubes if nr_cubes else 10
             overlap_perc = overlap_perc if overlap_perc else 0.1
-            self.coverer = Cover(n_cubes=n_cubes,
-                                 overlap_perc=overlap_perc)
-
-            warnings.warn(
-                "Explicitly passing in n_cubes and overlap_perc will be deprecated in future releases. Please supply Cover object.", DeprecationWarning)
+            self.cover = Cover(n_cubes=n_cubes,
+                               perc_overlap=overlap_perc)
         else:
-            self.coverer = coverer
+            self.cover = cover
 
         if self.verbose > 0:
             print("Mapping on data shaped %s using lens shaped %s\n" %
                   (str(X.shape), str(lens.shape)))
 
-        # Prefix'ing the data with ID's
+        # Prefix'ing the data with an ID column
         ids = np.array([x for x in range(lens.shape[0])])
         lens = np.c_[ids, lens]
         X = np.c_[ids, X]
 
         # Cover scheme defines a list of elements
-        bins = self.coverer.define_bins(lens)
+        bins = self.cover.define_bins(lens)
 
         # Algo's like K-Means, have a set number of clusters. We need this number
         # to adjust for the minimal number of samples inside an interval before
@@ -352,7 +354,7 @@ class KeplerMapper(object):
         for i, cube in enumerate(bins):
             # Slice the hypercube:
             #  gather all entries in this element of the cover
-            hypercube = self.coverer.find_entries(lens, cube)
+            hypercube = self.cover.find_entries(lens, cube)
 
             if self.verbose > 1:
                 print("There are %s points in cube_%s / %s" %
@@ -396,8 +398,8 @@ class KeplerMapper(object):
         graph["simplices"] = simplices
         graph["meta_data"] = {
             "projection": self.projection if self.projection else "custom",
-            "n_cubes": self.coverer.n_cubes,
-            "overlap_perc": self.coverer.overlap_perc,
+            "n_cubes": self.cover.n_cubes,
+            "perc_overlap": self.cover.perc_overlap,
             "clusterer": str(clusterer),
             "scaler": str(self.scaler)
         }
@@ -437,36 +439,67 @@ class KeplerMapper(object):
         ----------
         graph : dict
             Simplicial complex output from the `map` method.
+
         path_html : String
-        file name for outputing the resulting html.
+            file name for outputing the resulting html.
+
+        custom_meta: dict
+            Render (key, value) in the Mapper Summary pane. 
+
+        custom_tooltip: list or array like
+            Value to display for each entry in the node. The cluster data pane will display entry for all values in the node. Default is index of data.
+
+        save_file: bool, default is True
+            Save file to `path_html`.
+
+        X: numpy arraylike
+            If supplied, compute statistics information about the original data source with respect to each node.
+
+        X_names: list of strings
+            Names of each variable in `X` to be displayed. If None, then display names by index.
+
+        lens: numpy arraylike
+            If supplied, compute statistics of each node based on the projection/lens
+
+        lens_name: list of strings
+            Names of each variable in `lens` to be displayed. In None, then display names by index.
+
+        show_tooltips: bool, default is True.
+            If false, completely disable tooltips. This is useful when using output in space-tight pages or will display node data in custom ways.
+
+        Return
+        ------
+        html: string
+            Returns the same html that is normally output to `path_html`. Complete graph and data ready for viewing.
+
 
         Example
         -------
 
-        >>> mapper.visualize(simplicial_complex, path_html="mapper_visualization_output.html")
+        >>> mapper.visualize(simplicial_complex, path_html="mapper_visualization_output.html",
+                            custom_meta={'Data': 'MNIST handwritten digits', 
+                                         'Created by': 'Franklin Roosevelt'
+                            }, )
 
         """
 
-        # TODO: 
+        # TODO:
         #   - Make color functions more intuitive. How do they even work?
         #   - Allow multiple color functions that can be toggled on and off.
-
 
         # Find the module absolute path and locate templates
         module_root = os.path.join(os.path.dirname(__file__), 'templates')
         env = Environment(loader=FileSystemLoader(module_root))
 
-
         # Color function is a vector of colors?
         color_function = init_color_function(graph, color_function)
-        
+
         mapper_data = format_mapper_data(graph, color_function, X,
-                                         X_names, lens, 
+                                         X_names, lens,
                                          lens_names, custom_tooltips, env)
-        
+
         histogram = graph_data_distribution(graph, color_function)
-        
-        
+
         mapper_summary = format_meta(graph, custom_meta)
 
         # Find the absolute module path and the static files
@@ -477,7 +510,6 @@ class KeplerMapper(object):
         css_path = os.path.join(os.path.dirname(__file__), 'static', 'style.css')
         with open(css_path, 'r') as f:
             css_text = f.read()
-
 
         # Render the Jinja template, filling fields as appropriate
         template = env.get_template('base.html').render(
@@ -550,7 +582,7 @@ class KeplerMapper(object):
             estimator_type = getattr(model, "_estimator_type", None)
             if estimator_type == "classifier":
                 # classifier probabilities
-                X_blend = model.predict_proba(X_data) 
+                X_blend = model.predict_proba(X_data)
             elif estimator_type == "regressor":
                 X_blend = model.predict(X_data)
             else:

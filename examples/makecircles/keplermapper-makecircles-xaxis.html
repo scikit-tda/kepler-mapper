@@ -1,97 +1,721 @@
 <!DOCTYPE html>
-    <meta charset="utf-8">
-    <meta name="generator" content="KeplerMapper">
-    <title>datasets.make_circles(n_samples=5000, noise=0.05, factor=0.3) | KeplerMapper</title>
-    <link href='https://fonts.googleapis.com/css?family=Roboto:700,300' rel='stylesheet' type='text/css'>
-    <style>
-    * {margin: 0; padding: 0;}
-    html { height: 100%;}
-    body {background: #111; height: 100%; font: 100 16px Roboto, Sans-serif;}
-    .link { stroke: #999; stroke-opacity: .333;  }
-    .divs div { border-radius: 50%; background: red; position: absolute; }
-    .divs { position: absolute; top: 0; left: 0; }
-    #holder { position: relative; width: 100%; height: 100%; background: #111; display: block;}
-    h1 {  padding: 20px; color: #fafafa; text-shadow: 0px 1px #000,0px -1px #000; position: absolute; font: 300 30px Roboto, Sans-serif;}
-    h2 { text-shadow: 0px 1px #000,0px -1px #000; font: 700 16px Roboto, Sans-serif;}
-    .meta {  position: absolute; opacity: 0.9; width: 220px; top: 80px; left: 20px; display: block;  background: #000; line-height: 25px; color: #fafafa; border: 20px solid #000; font: 100 16px Roboto, Sans-serif;}
-    div.tooltip { position: absolute; width: 380px; display: block;  padding: 20px; background: #000; border: 0px; border-radius: 3px; pointer-events: none; z-index: 999; color: #FAFAFA;}
-    }
-    </style>
-    <body>
-    <div id="holder">
-      <h1>datasets.make_circles(n_samples=5000, noise=0.05, factor=0.3)</h1>
-      <p class="meta">
-      <b>Lens</b><br>[0]<br><br>
-      <b>Cubes per dimension</b><br>20<br><br>
-      <b>Overlap percentage</b><br>10.0%<br><br>
-      <b>Color Function</b><br>average_signal_cluster( [0] )<br><br>
-      <b>Clusterer</b><br>DBSCAN(algorithm='auto', eps=0.1, leaf_size=30, metric='euclidean',
-    metric_params=None, min_samples=10, n_jobs=1, p=None)<br><br>
-      <b>Scaler</b><br>MinMaxScaler(copy=True, feature_range=(0, 1))
-      </p>
+<html>
+
+<head>
+  <!-- Storage of data so D3 can access it later -->
+  <div id="json_graph" data-graph='{"links": [{"source": 0, "target": 1, "width": 1}, {"source": 1, "target": 2, "width": 1}, {"source": 1, "target": 3, "width": 1}, {"source": 2, "target": 5, "width": 1}, {"source": 3, "target": 4, "width": 1}, {"source": 4, "target": 6, "width": 1}, {"source": 5, "target": 7, "width": 1}, {"source": 6, "target": 9, "width": 1}, {"source": 7, "target": 8, "width": 1}, {"source": 8, "target": 10, "width": 1}, {"source": 9, "target": 12, "width": 1}, {"source": 10, "target": 15, "width": 1}, {"source": 11, "target": 13, "width": 1}, {"source": 12, "target": 14, "width": 1}, {"source": 13, "target": 16, "width": 1}, {"source": 14, "target": 17, "width": 1}, {"source": 15, "target": 18, "width": 1}, {"source": 16, "target": 19, "width": 1}, {"source": 16, "target": 20, "width": 1}, {"source": 17, "target": 22, "width": 1}, {"source": 18, "target": 21, "width": 1}, {"source": 19, "target": 23, "width": 1}, {"source": 20, "target": 24, "width": 1}, {"source": 21, "target": 26, "width": 1}, {"source": 22, "target": 25, "width": 1}, {"source": 23, "target": 27, "width": 1}, {"source": 24, "target": 27, "width": 1}, {"source": 25, "target": 28, "width": 1}, {"source": 26, "target": 29, "width": 1}, {"source": 27, "target": 30, "width": 1}, {"source": 28, "target": 32, "width": 1}, {"source": 29, "target": 31, "width": 1}, {"source": 30, "target": 33, "width": 1}, {"source": 31, "target": 34, "width": 1}, {"source": 32, "target": 35, "width": 1}, {"source": 34, "target": 36, "width": 1}, {"source": 35, "target": 37, "width": 1}, {"source": 36, "target": 39, "width": 1}, {"source": 37, "target": 38, "width": 1}, {"source": 38, "target": 41, "width": 1}, {"source": 39, "target": 40, "width": 1}, {"source": 40, "target": 42, "width": 1}, {"source": 41, "target": 43, "width": 1}, {"source": 42, "target": 44, "width": 1}, {"source": 43, "target": 44, "width": 1}, {"source": 44, "target": 45, "width": 1}], "nodes": [{"color": 14, "id": "", "name": "cube0_cluster0", "size": 5, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e89\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 14, "id": "", "name": "cube1_cluster0", "size": 6, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e281\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 14, "id": "", "name": "cube2_cluster0", "size": 5, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e116\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 15, "id": "", "name": "cube2_cluster1", "size": 5, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e91\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 15, "id": "", "name": "cube3_cluster0", "size": 5, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e80\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 14, "id": "", "name": "cube3_cluster1", "size": 5, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e67\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 14, "id": "", "name": "cube4_cluster0", "size": 5, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e66\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 13, "id": "", "name": "cube4_cluster1", "size": 5, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e67\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 14, "id": "", "name": "cube5_cluster0", "size": 5, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e65\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 15, "id": "", "name": "cube5_cluster1", "size": 5, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e60\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 14, "id": "", "name": "cube6_cluster0", "size": 4, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e48\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 14, "id": "", "name": "cube6_cluster1", "size": 5, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e111\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 13, "id": "", "name": "cube6_cluster2", "size": 4, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e52\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 14, "id": "", "name": "cube7_cluster0", "size": 7, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e509\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 12, "id": "", "name": "cube7_cluster1", "size": 4, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e47\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 15, "id": "", "name": "cube7_cluster2", "size": 5, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e62\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 14, "id": "", "name": "cube8_cluster0", "size": 7, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e454\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 13, "id": "", "name": "cube8_cluster1", "size": 5, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e57\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 14, "id": "", "name": "cube8_cluster2", "size": 4, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e46\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 15, "id": "", "name": "cube9_cluster0", "size": 6, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e166\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 14, "id": "", "name": "cube9_cluster1", "size": 6, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e168\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 15, "id": "", "name": "cube9_cluster2", "size": 4, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e52\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 15, "id": "", "name": "cube9_cluster3", "size": 4, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e53\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 16, "id": "", "name": "cube10_cluster0", "size": 6, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e179\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 15, "id": "", "name": "cube10_cluster1", "size": 6, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e187\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 14, "id": "", "name": "cube10_cluster2", "size": 4, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e49\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 17, "id": "", "name": "cube10_cluster3", "size": 5, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e55\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 15, "id": "", "name": "cube11_cluster0", "size": 7, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e513\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 15, "id": "", "name": "cube11_cluster1", "size": 4, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e53\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 16, "id": "", "name": "cube11_cluster2", "size": 4, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e47\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 15, "id": "", "name": "cube12_cluster0", "size": 7, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e442\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 17, "id": "", "name": "cube12_cluster1", "size": 4, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e47\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 15, "id": "", "name": "cube12_cluster2", "size": 5, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e55\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 14, "id": "", "name": "cube13_cluster2", "size": 4, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e39\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 14, "id": "", "name": "cube13_cluster0", "size": 5, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e64\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 18, "id": "", "name": "cube13_cluster1", "size": 5, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e63\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 15, "id": "", "name": "cube14_cluster0", "size": 4, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e50\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 13, "id": "", "name": "cube14_cluster1", "size": 5, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e57\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 15, "id": "", "name": "cube15_cluster0", "size": 5, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e66\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 15, "id": "", "name": "cube15_cluster1", "size": 5, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e70\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 14, "id": "", "name": "cube16_cluster0", "size": 5, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e74\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 15, "id": "", "name": "cube16_cluster1", "size": 5, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e77\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 14, "id": "", "name": "cube17_cluster0", "size": 5, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e123\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 16, "id": "", "name": "cube17_cluster1", "size": 5, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e105\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 15, "id": "", "name": "cube18_cluster0", "size": 6, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e267\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}, {"color": 13, "id": "", "name": "cube19_cluster0", "size": 4, "tooltip": "\u003c!-- Projection Statistics --\u003e\n\n\n\n\u003c!-- Cluster Statistics --\u003e\n\n\n\u003chr\u003e \u003cbr/\u003e\n\n    \u003c!-- \u003ch3\u003eCluster Statistics\u003c/h3\u003e --\u003e\n\n    \n\n    \n\n\n    \u003ch3\u003eSize\u003c/h3\u003e\n        \u003cp\u003e40\u003c/p\u003e\n\n\n\n\n\u003c!-- Membership information --\u003e\n\u003chr\u003e \u003cbr/\u003e\n\n\u003ch3\u003eMembers\u003c/h3\u003e\n[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\n\n\u003cbr\u003e\u003cbr\u003e\n\u003chr\u003e\u003cbr\u003e", "type": "circle"}]}' style="display:none"></div>
+
+  <meta charset="utf-8">
+  <meta name="generator" content="KeplerMapper">
+  <title>Kepler Mapper | KeplerMapper</title>
+
+  <link rel="icon" type="image/png" href="http://i.imgur.com/axOG6GJ.jpg" />
+  <link href='https://fonts.googleapis.com/css?family=Roboto+Mono:700,300' rel='stylesheet' type='text/css'>
+  <style>* {
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%%;
+}
+
+body {
+  font-family: "Roboto Mono", "Helvetica", sans-serif;
+  font-size: 14px;
+}
+
+#display {
+  color: #95A5A6;
+  background: #212121;
+}
+
+#print {
+  color: #000;
+  background: #FFF;
+}
+
+h1 {
+  font-size: 21px;
+  font-weight: 300;
+  font-weight: 300;
+}
+
+h2 {
+  font-size: 18px;
+  padding-bottom: 20px;
+  font-weight: 300;
+}
+
+h3 {
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+#meta h3 {
+  float: left;
+  padding-right: 8px;
+}
+
+p, #tooltip h3, ol, ul, table {
+  padding-bottom: 20px;
+}
+
+ol, ul {
+  padding-left: 20px;
+}
+
+ol b {
+  display: block;
+}
+
+a {
+  color: #16a085;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #2ecc71;
+}
+
+#header {
+  height: 35px;
+  padding: 20px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+}
+
+#display #header {
+  background: #111111;
+  box-shadow: 0px 0px 4px #000
+}
+
+#print #header {
+  background: #FFF;
+}
+
+#canvas {
+  height: 100%%;
+  width: 100%%;
+  display: block;
+}
+
+#tooltip {
+  position: absolute;
+  top: 75px;
+  left: 0;
+  bottom: 0;
+  width: 320px;
+  padding: 20px;
+  overflow: auto;
+  display: none;
+}
+
+#helptip_content {
+  background: #191919;
+  position: absolute;
+  top: 75px;
+  left: 0;
+  bottom: 280;
+  width: 120px;
+  padding: 20px;
+  
+  display: none;
+}
+
+#display #tooltip {
+  background: #191919;
+}
+
+#print #tooltip {
+  background: #FFF;
+}
+
+#meta {
+  position: absolute;
+  top: 75px;
+  right: 0;
+  bottom: 0;
+  width: 320px;
+  padding: 20px;
+  overflow: auto;
+}
+
+#display #meta {
+  background: #191919;
+}
+
+#print #meta {
+  background: #FFF;
+}
+
+#meta_control, #tooltip_control {
+  position: absolute;
+  right: 20px;
+}
+
+#meta::-webkit-scrollbar, #tooltip::-webkit-scrollbar {
+  width: 1em;
+}
+
+#meta::-webkit-scrollbar-track, #tooltip::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+#meta::-webkit-scrollbar-thumb, #tooltip::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
+
+#histogram {
+  display: block;
+  height: 100px;
+  padding-top: 50px;
+  clear: both;
+}
+
+#display #histogram {
+  opacity: 0.68;
+}
+
+.bin {
+  width: 30px;
+  float: left;
+}
+
+.bin div {
+  font-size: 10px;
+  display: block;
+  width: 35px;
+  margin-top: -30px;
+  text-align: right;
+  margin-left: -3px;
+  -webkit-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg);
+  -o-transform: rotate(-90deg);
+}
+
+#histogram:hover {
+  opacity: 1.;
+}
+
+#display .circle {
+  stroke-opacity: 0.18;
+  stroke-width: 7px;
+  stroke: #000;
+}
+
+#print .circle {
+  stroke-opacity: 1;
+  stroke-width: 2px;
+  stroke: #000;
+  stroke-linecap: round;
+}
+
+#print .link {
+  stroke: #000;
+}
+
+#display .link {
+  stroke: rgba(160, 160, 160, 0.5);
+}
+
+table {
+  border-collapse: collapse;
+  display: table;
+  width: 100%%;
+  margin-bottom: 20px;
+}
+
+td, th {
+  padding: 5px;
+  text-align: left;
+}
+
+#display th {
+  background: #212121
+}
+
+td {
+  border-bottom: 1px solid #111;
+}
+</style>
+
+</head>
+
+<body id="display">
+  <div id="header">
+    <noscript><b>Requires JavaScript (d3.js) for visualizations</b></noscript>
+    <h1>Kepler Mapper 
+        <img align="right" width="40" height="40" src="https://i.imgur.com/bxux6WA.png">
+    </h1>
+
+    <div id="helptip">
+        <div id="helptip_control">
+            <!-- enable completely turning off tooltip -->
+    
+            <a href="#"><small>[help]</small></a>
+        </div>
+
+    
+        <div id="helptip_content">
+            <!-- Help pane. 
+    TODO: Add more information here.  -->
+<table>
+    <tr>
+        <th>Key</th>
+        <th style="width:50px;"><small>Action</small></th>
+    </tr>
+
+    <tr>
+        <td>s</td>
+        <td><small>Nodes glow :D</small></td>
+    </tr>
+
+    <tr>
+        <td>c</td>
+        <td><small>remove glow</small></td>
+    </tr>
+
+    <tr>
+        <td>p</td>
+        <td><small>print?</small></td>
+    </tr>
+
+    <tr>
+        <td>d</td>
+        <td><small>Hide mouse</small></td>
+    </tr>
+
+    <tr>
+        <td>z</td>
+        <td><small>Turn off gravity</small></td>
+    </tr>
+
+    <tr>
+        <td>m</td>
+        <td><small>Spacious layout</small></td>
+    </tr>
+
+    <tr>
+        <td>e</td>
+        <td><small>Tight layout</small></td>
+    </tr>
+
+</table> 
+        </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
-    <script>
-    var width = document.getElementById("holder").offsetWidth-20,
-      height = document.getElementById("holder").offsetHeight-20;
-    var color = d3.scale.ordinal()
-      .domain(["0","1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30"])
-      .range(["#FF0000","#FF1400","#FF2800","#FF3c00","#FF5000","#FF6400","#FF7800","#FF8c00","#FFa000","#FFb400","#FFc800","#FFdc00","#FFf000","#fdff00","#b0ff00","#65ff00","#17ff00","#00ff36","#00ff83","#00ffd0","#00e4ff","#00c4ff","#00a4ff","#00a4ff","#0084ff","#0064ff","#0044ff","#0022ff","#0002ff","#0100ff","#0300ff","#0500ff"]);
-    var force = d3.layout.force()
-      .charge(-120)
-      .linkDistance(30)
-      .gravity(0.1)
-      .size([width, height]);
-    var svg = d3.select("#holder").append("svg")
-      .attr("width", width)
-      .attr("height", height);
+  </div>
 
-    var div = d3.select("#holder").append("div")
-      .attr("class", "tooltip")
-      .style("opacity", 0.0);
+  <div id="canvas">
+    <!-- Graph will go in here -->
+  </div>
 
-    var divs = d3.select('#holder').append('div')
-      .attr('class', 'divs')
-      .attr('style', function(d) { return 'overflow: hidden; width: ' + width + 'px; height: ' + height + 'px;'; });
+  
 
-      graph = {"nodes": [{"name": "0_0_0.0_[0]_[ 0.]", "tooltip": "<h2>Cluster 0_0_0.0_[0]_[ 0.]</h2> Contains 104 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 8, "color": "0"}, {"name": "1_1_0.0_[1]_[ 0.05]", "tooltip": "<h2>Cluster 1_1_0.0_[1]_[ 0.05]</h2> Contains 274 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 10, "color": "0"}, {"name": "2_2_0.0_[2]_[ 0.1]", "tooltip": "<h2>Cluster 2_2_0.0_[2]_[ 0.1]</h2> Contains 102 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 8, "color": "0"}, {"name": "2_2_1.0_[2]_[ 0.1]", "tooltip": "<h2>Cluster 2_2_1.0_[2]_[ 0.1]</h2> Contains 97 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 8, "color": "0"}, {"name": "3_3_0.0_[3]_[ 0.15]", "tooltip": "<h2>Cluster 3_3_0.0_[3]_[ 0.15]</h2> Contains 71 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 8, "color": "0"}, {"name": "3_3_1.0_[3]_[ 0.15]", "tooltip": "<h2>Cluster 3_3_1.0_[3]_[ 0.15]</h2> Contains 71 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 8, "color": "0"}, {"name": "4_4_0.0_[4]_[ 0.2]", "tooltip": "<h2>Cluster 4_4_0.0_[4]_[ 0.2]</h2> Contains 54 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 6, "color": "0"}, {"name": "4_4_1.0_[4]_[ 0.2]", "tooltip": "<h2>Cluster 4_4_1.0_[4]_[ 0.2]</h2> Contains 64 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 8, "color": "0"}, {"name": "5_5_0.0_[5]_[ 0.25]", "tooltip": "<h2>Cluster 5_5_0.0_[5]_[ 0.25]</h2> Contains 63 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 8, "color": "0"}, {"name": "5_5_1.0_[5]_[ 0.25]", "tooltip": "<h2>Cluster 5_5_1.0_[5]_[ 0.25]</h2> Contains 63 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 8, "color": "0"}, {"name": "6_6_0.0_[6]_[ 0.3]", "tooltip": "<h2>Cluster 6_6_0.0_[6]_[ 0.3]</h2> Contains 93 members.<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1", "group": 8, "color": "30"}, {"name": "6_6_1.0_[6]_[ 0.3]", "tooltip": "<h2>Cluster 6_6_1.0_[6]_[ 0.3]</h2> Contains 48 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 6, "color": "0"}, {"name": "6_6_2.0_[6]_[ 0.3]", "tooltip": "<h2>Cluster 6_6_2.0_[6]_[ 0.3]</h2> Contains 48 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 6, "color": "0"}, {"name": "7_7_0.0_[7]_[ 0.35]", "tooltip": "<h2>Cluster 7_7_0.0_[7]_[ 0.35]</h2> Contains 56 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 8, "color": "0"}, {"name": "7_7_1.0_[7]_[ 0.35]", "tooltip": "<h2>Cluster 7_7_1.0_[7]_[ 0.35]</h2> Contains 543 members.<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1", "group": 12, "color": "30"}, {"name": "7_7_2.0_[7]_[ 0.35]", "tooltip": "<h2>Cluster 7_7_2.0_[7]_[ 0.35]</h2> Contains 55 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 8, "color": "0"}, {"name": "8_8_0.0_[8]_[ 0.4]", "tooltip": "<h2>Cluster 8_8_0.0_[8]_[ 0.4]</h2> Contains 437 members.<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1", "group": 12, "color": "30"}, {"name": "8_8_1.0_[8]_[ 0.4]", "tooltip": "<h2>Cluster 8_8_1.0_[8]_[ 0.4]</h2> Contains 50 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 6, "color": "0"}, {"name": "8_8_2.0_[8]_[ 0.4]", "tooltip": "<h2>Cluster 8_8_2.0_[8]_[ 0.4]</h2> Contains 52 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 6, "color": "0"}, {"name": "9_9_0.0_[9]_[ 0.45]", "tooltip": "<h2>Cluster 9_9_0.0_[9]_[ 0.45]</h2> Contains 44 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 6, "color": "0"}, {"name": "9_9_1.0_[9]_[ 0.45]", "tooltip": "<h2>Cluster 9_9_1.0_[9]_[ 0.45]</h2> Contains 171 members.<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1", "group": 10, "color": "30"}, {"name": "9_9_2.0_[9]_[ 0.45]", "tooltip": "<h2>Cluster 9_9_2.0_[9]_[ 0.45]</h2> Contains 43 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 6, "color": "0"}, {"name": "9_9_3.0_[9]_[ 0.45]", "tooltip": "<h2>Cluster 9_9_3.0_[9]_[ 0.45]</h2> Contains 184 members.<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1", "group": 10, "color": "30"}, {"name": "10_10_0.0_[10]_[ 0.5]", "tooltip": "<h2>Cluster 10_10_0.0_[10]_[ 0.5]</h2> Contains 159 members.<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1", "group": 10, "color": "30"}, {"name": "10_10_1.0_[10]_[ 0.5]", "tooltip": "<h2>Cluster 10_10_1.0_[10]_[ 0.5]</h2> Contains 56 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 8, "color": "0"}, {"name": "10_10_2.0_[10]_[ 0.5]", "tooltip": "<h2>Cluster 10_10_2.0_[10]_[ 0.5]</h2> Contains 171 members.<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1", "group": 10, "color": "30"}, {"name": "10_10_3.0_[10]_[ 0.5]", "tooltip": "<h2>Cluster 10_10_3.0_[10]_[ 0.5]</h2> Contains 49 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 6, "color": "0"}, {"name": "11_11_0.0_[11]_[ 0.55]", "tooltip": "<h2>Cluster 11_11_0.0_[11]_[ 0.55]</h2> Contains 52 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 6, "color": "0"}, {"name": "11_11_1.0_[11]_[ 0.55]", "tooltip": "<h2>Cluster 11_11_1.0_[11]_[ 0.55]</h2> Contains 449 members.<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1", "group": 12, "color": "30"}, {"name": "11_11_2.0_[11]_[ 0.55]", "tooltip": "<h2>Cluster 11_11_2.0_[11]_[ 0.55]</h2> Contains 54 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 6, "color": "0"}, {"name": "12_12_0.0_[12]_[ 0.6]", "tooltip": "<h2>Cluster 12_12_0.0_[12]_[ 0.6]</h2> Contains 488 members.<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1", "group": 12, "color": "30"}, {"name": "12_12_1.0_[12]_[ 0.6]", "tooltip": "<h2>Cluster 12_12_1.0_[12]_[ 0.6]</h2> Contains 54 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 6, "color": "0"}, {"name": "12_12_2.0_[12]_[ 0.6]", "tooltip": "<h2>Cluster 12_12_2.0_[12]_[ 0.6]</h2> Contains 55 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 8, "color": "0"}, {"name": "13_13_0.0_[13]_[ 0.65]", "tooltip": "<h2>Cluster 13_13_0.0_[13]_[ 0.65]</h2> Contains 51 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 6, "color": "0"}, {"name": "13_13_1.0_[13]_[ 0.65]", "tooltip": "<h2>Cluster 13_13_1.0_[13]_[ 0.65]</h2> Contains 38 members.<br>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1", "group": 6, "color": "30"}, {"name": "13_13_2.0_[13]_[ 0.65]", "tooltip": "<h2>Cluster 13_13_2.0_[13]_[ 0.65]</h2> Contains 53 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 6, "color": "0"}, {"name": "14_14_0.0_[14]_[ 0.7]", "tooltip": "<h2>Cluster 14_14_0.0_[14]_[ 0.7]</h2> Contains 56 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 8, "color": "0"}, {"name": "14_14_1.0_[14]_[ 0.7]", "tooltip": "<h2>Cluster 14_14_1.0_[14]_[ 0.7]</h2> Contains 55 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 8, "color": "0"}, {"name": "15_15_0.0_[15]_[ 0.75]", "tooltip": "<h2>Cluster 15_15_0.0_[15]_[ 0.75]</h2> Contains 68 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 8, "color": "0"}, {"name": "15_15_1.0_[15]_[ 0.75]", "tooltip": "<h2>Cluster 15_15_1.0_[15]_[ 0.75]</h2> Contains 71 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 8, "color": "0"}, {"name": "16_16_0.0_[16]_[ 0.8]", "tooltip": "<h2>Cluster 16_16_0.0_[16]_[ 0.8]</h2> Contains 80 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 8, "color": "0"}, {"name": "16_16_1.0_[16]_[ 0.8]", "tooltip": "<h2>Cluster 16_16_1.0_[16]_[ 0.8]</h2> Contains 71 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 8, "color": "0"}, {"name": "17_17_0.0_[17]_[ 0.85]", "tooltip": "<h2>Cluster 17_17_0.0_[17]_[ 0.85]</h2> Contains 113 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 8, "color": "0"}, {"name": "17_17_1.0_[17]_[ 0.85]", "tooltip": "<h2>Cluster 17_17_1.0_[17]_[ 0.85]</h2> Contains 120 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 8, "color": "0"}, {"name": "18_18_0.0_[18]_[ 0.9]", "tooltip": "<h2>Cluster 18_18_0.0_[18]_[ 0.9]</h2> Contains 270 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 10, "color": "0"}, {"name": "19_19_0.0_[19]_[ 0.95]", "tooltip": "<h2>Cluster 19_19_0.0_[19]_[ 0.95]</h2> Contains 45 members.<br>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0", "group": 6, "color": "0"}], "links": [{"source": 0, "target": 1, "value": 1}, {"source": 1, "target": 2, "value": 1}, {"source": 1, "target": 3, "value": 1}, {"source": 2, "target": 5, "value": 1}, {"source": 3, "target": 4, "value": 1}, {"source": 4, "target": 6, "value": 1}, {"source": 5, "target": 7, "value": 1}, {"source": 6, "target": 8, "value": 1}, {"source": 7, "target": 9, "value": 1}, {"source": 8, "target": 12, "value": 1}, {"source": 9, "target": 11, "value": 1}, {"source": 10, "target": 14, "value": 1}, {"source": 11, "target": 15, "value": 1}, {"source": 12, "target": 13, "value": 1}, {"source": 13, "target": 17, "value": 1}, {"source": 14, "target": 16, "value": 1}, {"source": 15, "target": 18, "value": 1}, {"source": 16, "target": 20, "value": 1}, {"source": 16, "target": 22, "value": 1}, {"source": 17, "target": 21, "value": 1}, {"source": 18, "target": 19, "value": 1}, {"source": 19, "target": 26, "value": 1}, {"source": 20, "target": 25, "value": 1}, {"source": 21, "target": 24, "value": 1}, {"source": 22, "target": 23, "value": 1}, {"source": 23, "target": 28, "value": 1}, {"source": 24, "target": 27, "value": 1}, {"source": 25, "target": 28, "value": 1}, {"source": 26, "target": 29, "value": 1}, {"source": 27, "target": 32, "value": 1}, {"source": 28, "target": 30, "value": 1}, {"source": 29, "target": 31, "value": 1}, {"source": 30, "target": 34, "value": 1}, {"source": 31, "target": 33, "value": 1}, {"source": 32, "target": 35, "value": 1}, {"source": 33, "target": 36, "value": 1}, {"source": 35, "target": 37, "value": 1}, {"source": 36, "target": 39, "value": 1}, {"source": 37, "target": 38, "value": 1}, {"source": 38, "target": 40, "value": 1}, {"source": 39, "target": 41, "value": 1}, {"source": 40, "target": 43, "value": 1}, {"source": 41, "target": 42, "value": 1}, {"source": 42, "target": 44, "value": 1}, {"source": 43, "target": 44, "value": 1}, {"source": 44, "target": 45, "value": 1}]};
-      force
-        .nodes(graph.nodes)
-        .links(graph.links)
-        .start();
-      var link = svg.selectAll(".link")
-        .data(graph.links)
-        .enter().append("line")
-        .attr("class", "link")
-        .style("stroke-width", function(d) { return Math.sqrt(d.value); });
-      var node = divs.selectAll('div')
-      .data(graph.nodes)
-        .enter().append('div')
-        .on("mouseover", function(d) {
-          div.transition()
-            .duration(200)
-            .style("opacity", .9);
-          div .html(d.tooltip + "<br/>")
-            .style("left", (d3.event.pageX + 100) + "px")
-            .style("top", (d3.event.pageY - 28) + "px");
-          })
-        .on("mouseout", function(d) {
-          div.transition()
-            .duration(500)
-            .style("opacity", 0);
-        })
-        .call(force.drag);
+    <div id="tooltip">
+      <div id="tooltip_control">
+        <!-- enable completely turning off tooltip -->
 
-      node.append("title")
-        .text(function(d) { return d.name; });
-      force.on("tick", function() {
-      link.attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.y; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; });
-      node.attr("cx", function(d) { return d.x; })
-        .attr("cy", function(d) { return d.y; })
-        .attr('style', function(d) { return 'width: ' + (d.group * 2) + 'px; height: ' + (d.group * 2) + 'px; ' + 'left: '+(d.x-(d.group))+'px; ' + 'top: '+(d.y-(d.group))+'px; background: '+color(d.color)+'; box-shadow: 0px 0px 3px #111; box-shadow: 0px 0px 33px '+color(d.color)+', inset 0px 0px 5px rgba(0, 0, 0, 0.2);'})
-        ;
-      });
-    </script>
+        <a href="#"><small>[-]</small></a>
+      </div>
+      <h2>Cluster Details</h2>
+      <div id="tooltip_content">
+
+      </div>
+    </div>
+
+  
+
+  <div id="meta">
+    <div id="meta_control">
+      <a href="#"><small>[-]</small></a>
+    </div>
+    
+    <h2>Mapper Summary</h2> 
+
+<hr><br>
+
+
+    
+
+
+<h3>Nodes</h3><p> 46 </p>
+
+<h3>Edges</h3><p> 46 </p>
+
+<h3>Total Samples</h3><p> 5529</p>
+
+<h3>Unique Samples</h3><p> 4987</p>
+
+<hr><br/>
+
+<h3>Distribution</h3>  
+
+<div id="histogram">
+<!-- Render histogram -->
+
+    <div class="bin" style="height:5px; background:#0300ff">
+        <div>0.0%</div>
+    </div>         
+
+    <div class="bin" style="height:5px; background:#0022ff">
+        <div>0.0%</div>
+    </div>         
+
+    <div class="bin" style="height:5px; background:#0084ff">
+        <div>0.0%</div>
+    </div>         
+
+    <div class="bin" style="height:5px; background:#00e4ff">
+        <div>0.0%</div>
+    </div>         
+
+    <div class="bin" style="height:11px; background:#00ff36">
+        <div>5.8%</div>
+    </div>         
+
+    <div class="bin" style="height:105px; background:#b0ff00">
+        <div>91.2%</div>
+    </div>         
+
+    <div class="bin" style="height:8px; background:#FFdc00">
+        <div>3.0%</div>
+    </div>         
+
+    <div class="bin" style="height:5px; background:#FFa000">
+        <div>0.0%</div>
+    </div>         
+
+    <div class="bin" style="height:5px; background:#FF6400">
+        <div>0.0%</div>
+    </div>         
+
+    <div class="bin" style="height:5px; background:#FF2800">
+        <div>0.0%</div>
+    </div>         
+
+</div>
+
+<br><br>
+<hr><br> 
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+
+  <script>// Height and width settings
+var canvas_height = window.innerHeight - 5;
+document.getElementById("canvas").style.height = canvas_height + "px";
+var width = document.getElementById("canvas").offsetWidth;
+var height = document.getElementById("canvas").offsetHeight;
+var w = width;
+var h = height;
+
+// We draw the graph in SVG
+var svg = d3.select("#canvas").append("svg")
+          .attr("width", width)
+          .attr("height", height);
+
+var focus_node = null, highlight_node = null;
+var text_center = false;
+var outline = false;
+
+// Size for zooming
+var size = d3.scale.pow().exponent(1)
+           .domain([1,100])
+           .range([8,24]);
+
+// Show/Hide Functionality
+d3.select("#tooltip_control").on("click", function() {
+  d3.select("#tooltip").style("display", "none");
+});
+d3.select("#meta_control").on("click", function() {
+  d3.select("#meta").style("display", "none");
+});
+
+
+/// Display the hotkey shortcuts 
+d3.select("#helptip_control").on("click", function() {
+  var active = helptip_content.active ? false : true
+
+  if (active){
+    d3.select("#helptip_content").style("display", "unset");
+  } else{
+    d3.select("#helptip_content").style("display", "none");
+  }
+  
+  helptip_content.active = active
+});
+
+// Color settings: Ordinal Scale of ["0"-"30"] hot-to-cold
+var color = d3.scale.ordinal()
+            .domain(["0","1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
+                     "11", "12", "13","14","15","16","17","18","19","20",
+                     "21","22","23","24","25","26","27","28","29","30"])
+            .range(["#FF0000","#FF1400","#FF2800","#FF3c00","#FF5000","#FF6400",
+                    "#FF7800","#FF8c00","#FFa000","#FFb400","#FFc800","#FFdc00",
+                    "#FFf000","#fdff00","#b0ff00","#65ff00","#17ff00","#00ff36",
+                    "#00ff83","#00ffd0","#00e4ff","#00c4ff","#00a4ff","#00a4ff",
+                    "#0084ff","#0064ff","#0044ff","#0022ff","#0002ff","#0100ff",
+                    "#0300ff","#0500ff"]);
+              
+// Force settings
+var force = d3.layout.force()
+            .linkDistance(5)
+            .gravity(0.2)
+            .charge(-1200)
+            .size([w,h]);
+
+// Variety of variable inits
+var highlight_color = "blue";
+var highlight_trans = 0.1;
+var default_node_color = "#ccc";
+var default_node_color = "rgba(160,160,160, 0.5)";
+var default_link_color = "rgba(160,160,160, 0.5)";
+var nominal_base_node_size = 8;
+var nominal_text_size = 15;
+var max_text_size = 24;
+var nominal_stroke = 1.0;
+var max_stroke = 4.5;
+var max_base_node_size = 36;
+var min_zoom = 0.1;
+var max_zoom = 7;
+var zoom = d3.behavior.zoom().scaleExtent([min_zoom,max_zoom]);
+var g = svg.append("g");
+
+svg.style("cursor","move");
+
+var graph = JSON.parse(document.getElementById("json_graph").dataset.graph);
+
+force
+  .nodes(graph.nodes)
+  .links(graph.links)
+  .start();
+
+var link = g.selectAll(".link")
+            .data(graph.links)
+            .enter().append("line")
+              .attr("class", "link")
+              .style("stroke-width", function(d) { return d.w * nominal_stroke; })
+              .style("stroke-width", function(d) { return d.w * nominal_stroke; })
+              //.style("stroke", function(d) {
+              //  if (isNumber(d.score) && d.score>=0) return color(d.score);
+              //  else return default_link_color; })
+
+var node = g.selectAll(".node")
+            .data(graph.nodes)
+            .enter().append("g")
+              .attr("class", "node")
+              .call(force.drag);
+
+node.on("dblclick.zoom", function(d) { d3.event.stopPropagation();
+  var dcx = (window.innerWidth/2-d.x*zoom.scale());
+  var dcy = (window.innerHeight/2-d.y*zoom.scale());
+  zoom.translate([dcx,dcy]);
+  g.attr("transform", "translate("+ dcx + "," + dcy  + ")scale(" + zoom.scale() + ")");
+});
+
+var tocolor = "fill";
+var towhite = "stroke";
+if (outline) {
+  tocolor = "stroke";
+  towhite = "fill";
+}
+
+// Drop-shadow Filter
+var svg = d3.select("svg");
+var defs = svg.append("defs");
+var dropShadowFilter = defs.append('svg:filter')
+  .attr('id', 'drop-shadow')
+  .attr('filterUnits', "userSpaceOnUse")
+  .attr('width', '250%')
+  .attr('height', '250%');
+dropShadowFilter.append('svg:feGaussianBlur')
+  .attr('in', 'SourceGraphic')
+  .attr('stdDeviation', 12)
+  .attr('result', 'blur-out');
+dropShadowFilter.append('svg:feColorMatrix')
+  .attr('in', 'blur-out')
+  .attr('type', 'hueRotate')
+  .attr('values', 0)
+  .attr('result', 'color-out');
+dropShadowFilter.append('svg:feOffset')
+  .attr('in', 'color-out')
+  .attr('dx', 0)
+  .attr('dy', 0)
+  .attr('result', 'the-shadow');
+dropShadowFilter.append('svg:feComponentTransfer')
+  .attr('type', 'linear')
+  .attr('slope', 0.2)
+  .attr('result', 'shadow-opacity');
+dropShadowFilter.append('svg:feBlend')
+  .attr('in', 'SourceGraphic')
+  .attr('in2', 'the-shadow')
+  .attr('mode', 'normal');
+
+var circle = node.append("path")
+  .attr("d", d3.svg.symbol()
+    .size(function(d) { return d.size * 50; })
+    .type(function(d) { return d.type; }))
+  .attr("class", "circle")
+  .style(tocolor, function(d) {
+    return color(d.color);});
+//.style("filter", "url(#drop-shadow)");
+
+var text = g.selectAll(".text")
+  .data(graph.nodes)
+  .enter().append("text")
+    .attr("dy", ".35em")
+    .style("font-family", "Roboto")
+    .style("font-weight", "400")
+    .style("color", "#2C3E50")
+    .style("font-size", nominal_text_size + "px");
+
+if (text_center) {
+  text.text(function(d) { return d.id; })
+    .style("text-anchor", "middle");
+} else {
+  text.attr("dx", function(d) {return (size(d.size)||nominal_base_node_size);})
+    .text(function(d) { return '\u2002'+d.id; });
+}
+
+// Mouse events
+node.on("mouseover", function(d) {
+  set_highlight(d);
+
+  d3.select("#tooltip").style("display", "block");
+  d3.select("#tooltip_content").html(d.tooltip + "<br/>");
+  }).on("mousedown", function(d) {
+    d3.event.stopPropagation();
+    focus_node = d;
+    if (highlight_node === null) set_highlight(d)
+  }).on("mouseout", function(d) {
+    exit_highlight();
+  });
+
+  d3.select(window).on("mouseup", function() {
+    if (focus_node!==null){
+      focus_node = null;
+    }
+    if (highlight_node === null) exit_highlight();
+});
+
+// Node highlighting logic
+function exit_highlight(){
+  highlight_node = null;
+  if (focus_node===null){
+    svg.style("cursor","move");
+  }
+}
+
+function set_highlight(d){
+  svg.style("cursor","pointer");
+  if (focus_node!==null) d = focus_node;
+}
+
+// Zoom logic
+zoom.on("zoom", function() {
+  var stroke = nominal_stroke;
+  var base_radius = nominal_base_node_size;
+  if (nominal_base_node_size*zoom.scale()>max_base_node_size) {
+    base_radius = max_base_node_size/zoom.scale();}
+  circle.attr("d", d3.svg.symbol()
+    .size(function(d) { return d.size * 50; })
+    .type(function(d) { return d.type; }))
+  if (!text_center) text.attr("dx", function(d) {
+    return (size(d.size)*base_radius/nominal_base_node_size||base_radius); });
+
+  var text_size = nominal_text_size;
+  if (nominal_text_size*zoom.scale()>max_text_size) {
+    text_size = max_text_size/zoom.scale(); }
+  text.style("font-size",text_size + "px");
+
+  g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+});
+
+svg.call(zoom);
+resize();
+d3.select(window).on("resize", resize);
+
+// Animation per tick
+force.on("tick", function() {
+  node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+  text.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+  link.attr("x1", function(d) { return d.source.x; })
+    .attr("y1", function(d) { return d.source.y; })
+    .attr("x2", function(d) { return d.target.x; })
+    .attr("y2", function(d) { return d.target.y; });
+  node.attr("cx", function(d) { return d.x; })
+    .attr("cy", function(d) { return d.y; });
+});
+
+// Resizing window and redraws
+function resize() {
+  var width = window.innerWidth, height = window.innerHeight;
+  var width = document.getElementById("canvas").offsetWidth;
+  var height = document.getElementById("canvas").offsetHeight;
+  svg.attr("width", width).attr("height", height);
+
+  force.size([force.size()[0]+(width-w)/zoom.scale(),
+              force.size()[1]+(height-h)/zoom.scale()]).resume();
+    w = width;
+    h = height;
+}
+
+function isNumber(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+// Key press events
+window.addEventListener("keydown", function (event) {
+if (event.defaultPrevented) {
+  return; // Do nothing if the event was already processed
+}
+switch (event.key) {
+  case "s":
+    // Do something for "s" key press.
+    node.style("filter", "url(#drop-shadow)");
+    break;
+  case "c":
+    // Do something for "s" key press.
+    node.style("filter", null);
+    break;
+  case "p":
+    // Do something for "p" key press.
+    d3.select("body").attr('id', null).attr('id', "print")
+    break;
+  case "d":
+    // Do something for "d" key press.
+    d3.select("body").attr('id', null).attr('id', "display")
+    break;
+  case "z":
+    force.gravity(0.0)
+         .charge(0.0);
+    resize();
+    break
+  case "m":
+    force.gravity(0.07)
+         .charge(-1);
+    resize();
+    break
+  case "e":
+    force.gravity(0.4)
+         .charge(-600);
+
+    resize();
+    break
+  default:
+    return; // Quit when this doesn't handle the key event.
+}
+// Cancel the default action to avoid it being handled twice
+event.preventDefault();
+}, true);
+</script>
+</body>
+
+</html>

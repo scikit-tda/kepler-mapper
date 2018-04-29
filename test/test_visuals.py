@@ -57,6 +57,7 @@ def jinja_env():
     env = Environment(loader=FileSystemLoader(module_root))
     return env
 
+
 class TestVisualHelpers():
     def test_color_function_type(self):
         nodes = {"a": [1, 2, 3], "b": [4, 5, 6]}
@@ -108,15 +109,15 @@ class TestVisualHelpers():
         lens = mapper.fit_transform(data, projection=[0])
         graph = mapper.map(lens, data)
 
-        color_function = lens[:,0]
+        color_function = lens[:, 0]
         inverse_X = data
         projected_X = lens
-        projected_X_names = ["projected_%s"%(i) for i in range(projected_X.shape[1])]
-        inverse_X_names = ["inverse_%s"%(i) for i in range(inverse_X.shape[1])]
-        custom_tooltips = np.array(["customized_%s"%(l) for l in labels])
+        projected_X_names = ["projected_%s" % (i) for i in range(projected_X.shape[1])]
+        inverse_X_names = ["inverse_%s" % (i) for i in range(inverse_X.shape[1])]
+        custom_tooltips = np.array(["customized_%s" % (l) for l in labels])
 
         graph_data = format_mapper_data(graph, color_function, inverse_X,
-                 inverse_X_names, projected_X, projected_X_names, custom_tooltips, jinja_env)
+                                        inverse_X_names, projected_X, projected_X_names, custom_tooltips, jinja_env)
 
         # TODO test more properties!
         assert 'name' in graph_data['nodes'][0].keys()

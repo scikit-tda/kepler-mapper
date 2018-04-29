@@ -37,11 +37,11 @@ np.random.seed(1)
         - Edits should be able to be saved. Can re-export the html file so you can open it in the same state.
         - Color funcs should be easier to use.
         - Should be able to choose any D3 palette
-        - Cold is low, hot is high.
+        - [x] Cold is low, hot is high.
     
     Style:
-        - 'inverse_X' should just be called X
-        - More of the html stuff should be in the jinja2 stuff.
+        - [x] 'inverse_X' should just be called X
+        - [x] More of the html stuff should be in the jinja2 stuff.
         - If running from source, should be able to run offline
 
     Map 

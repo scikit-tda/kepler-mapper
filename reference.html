@@ -4,7 +4,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Reference &#8212; KeplerMapper 1.0.1 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
@@ -104,24 +104,24 @@ connect these with an edge.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>cluster_id</strong> : String</p>
-<blockquote>
-<div><p>ID of the cluster.</p>
-</div></blockquote>
-<p><strong>graph</strong> : dict</p>
-<blockquote>
-<div><p>The resulting dictionary after applying map()</p>
-</div></blockquote>
-<p><strong>data</strong> : Numpy Array</p>
-<blockquote>
-<div><p>Original dataset. Accepts both 1-D and 2-D array.</p>
-</div></blockquote>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>cluster_id</strong> <span class="classifier-delimiter">:</span> <span class="classifier">String</span></dt>
+<dd><p class="first last">ID of the cluster.</p>
+</dd>
+<dt><strong>graph</strong> <span class="classifier-delimiter">:</span> <span class="classifier">dict</span></dt>
+<dd><p class="first last">The resulting dictionary after applying map()</p>
+</dd>
+<dt><strong>data</strong> <span class="classifier-delimiter">:</span> <span class="classifier">Numpy Array</span></dt>
+<dd><p class="first last">Original dataset. Accepts both 1-D and 2-D array.</p>
+</dd>
+</dl>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">entries:</p>
-<blockquote class="last">
-<div><p>rows of cluster member data as Numpy array.</p>
-</div></blockquote>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>entries:</strong></dt>
+<dd><p class="first last">rows of cluster member data as Numpy array.</p>
+</dd>
+</dl>
 </td>
 </tr>
 </tbody>
@@ -131,29 +131,47 @@ connect these with an edge.</li>
 <dl class="method">
 <dt id="kmapper.kmapper.KeplerMapper.fit_transform">
 <code class="descname">fit_transform</code><span class="sig-paren">(</span><em>X</em>, <em>projection='sum'</em>, <em>scaler=MinMaxScaler(copy=True</em>, <em>feature_range=(0</em>, <em>1))</em>, <em>distance_matrix=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/kmapper.html#KeplerMapper.fit_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.kmapper.KeplerMapper.fit_transform" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates the projection/lens from a dataset. Input the data set. Specify a projection/lens type. Output the projected data/lens.</p>
+<dd><p>Same as .project() but accepts lists for arguments so you can chain.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="kmapper.kmapper.KeplerMapper.map">
+<code class="descname">map</code><span class="sig-paren">(</span><em>lens</em>, <em>X=None</em>, <em>clusterer=DBSCAN(algorithm='auto'</em>, <em>eps=0.5</em>, <em>leaf_size=30</em>, <em>metric='euclidean'</em>, <em>metric_params=None</em>, <em>min_samples=3</em>, <em>n_jobs=1</em>, <em>p=None)</em>, <em>cover=&lt;kmapper.cover.Cover object&gt;</em>, <em>nerve=&lt;kmapper.nerve.GraphNerve object&gt;</em>, <em>n_cubes=None</em>, <em>overlap_perc=None</em>, <em>nr_cubes=None</em>, <em>coverer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/kmapper.html#KeplerMapper.map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.kmapper.KeplerMapper.map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply Mapper algorithm on this projection and build a simplicial complex. Returns a dictionary with nodes and links.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>data</strong> : Numpy Array</p>
-<blockquote>
-<div><p>The data to fit a projection/lens to.</p>
-</div></blockquote>
-<p><strong>projection :</strong></p>
-<blockquote>
-<div><p>Projection parameter is either a string, a Scikit-learn class with fit_transform, like manifold.TSNE(), or a list of dimension indices. A string from [“sum”, “mean”, “median”, “max”, “min”, “std”, “dist_mean”, “l2norm”, “knn_distance_n”]. If using knn_distance_n write the number of desired neighbors in place of n: knn_distance_5 for summed distances to 5 nearest neighbors. Default = “sum”.</p>
-</div></blockquote>
-<p><strong>scaler :</strong></p>
-<blockquote>
-<div><p>Scikit-Learn API compatible scaler. Scaler of the data applied before mapping. Use None for no scaling. Default = preprocessing.MinMaxScaler() if None, do no scaling, else apply scaling to the projection. Default: Min-Max scaling distance_matrix: False or any of: [“braycurtis”, “canberra”, “chebyshev”, “cityblock”, “correlation”, “cosine”, “dice”, “euclidean”, “hamming”, “jaccard”, “kulsinski”, “mahalanobis”, “matching”, “minkowski”, “rogerstanimoto”, “russellrao”, “seuclidean”, “sokalmichener”, “sokalsneath”, “sqeuclidean”, “yule”]. If False do nothing, else create a squared distance matrix with the chosen metric, before applying the projection.</p>
-</div></blockquote>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>lens: Numpy Array</strong></dt>
+<dd><p class="first last">Lower dimensional representation of data. In general will be output of <cite>fit_transform</cite>.</p>
+</dd>
+<dt><strong>X: Numpy Array</strong></dt>
+<dd><p class="first last">Original data or data to run clustering on. If <cite>None</cite>, then use <cite>lens</cite> as default.</p>
+</dd>
+<dt><strong>clusterer: Default: DBSCAN</strong></dt>
+<dd><p class="first last">Scikit-learn API compatible clustering algorithm. Must provide <cite>fit</cite>, <cite>get_labels</cite>, and produce attribute <cite>labels_</cite>.</p>
+</dd>
+<dt><strong>cover: type kmapper.Cover</strong></dt>
+<dd><p class="first last">Cover scheme for lens. Instance of kmapper.cover providing methods <cite>define_bins</cite> and <cite>find_entries</cite>.</p>
+</dd>
+<dt><strong>nerve: kmapper.Nerve</strong></dt>
+<dd><p class="first last">Nerve builder implementing <cite>__call__(nodes)</cite> API</p>
+</dd>
+<dt><strong>n_cubes/nr_cubes: Int (Deprecated)</strong></dt>
+<dd><p class="first last">The number of intervals/hypercubes to create. Default = 10. (DeprecationWarning: define Cover explicitly in future versions)</p>
+</dd>
+<dt><strong>overlap_perc: Float (Deprecated)</strong></dt>
+<dd><p class="first last">The percentage of overlap “between” the intervals/hypercubes. Default = 0.1. (DeprecationWarning: define Cover explicitly in future versions)</p>
+</dd>
+</dl>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>lens</strong> : Numpy Array</p>
-<blockquote class="last">
-<div><p>projected data.</p>
-</div></blockquote>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>simplicial_complex</strong> <span class="classifier-delimiter">:</span> <span class="classifier">dict</span></dt>
+<dd><p class="first last">A dictionary with “nodes”, “links” and “meta” information.</p>
+</dd>
+</dl>
 </td>
 </tr>
 </tbody>
@@ -161,47 +179,31 @@ connect these with an edge.</li>
 </dd></dl>
 
 <dl class="method">
-<dt id="kmapper.kmapper.KeplerMapper.map">
-<code class="descname">map</code><span class="sig-paren">(</span><em>projected_X</em>, <em>inverse_X=None</em>, <em>clusterer=DBSCAN(algorithm='auto'</em>, <em>eps=0.5</em>, <em>leaf_size=30</em>, <em>metric='euclidean'</em>, <em>metric_params=None</em>, <em>min_samples=3</em>, <em>n_jobs=1</em>, <em>p=None)</em>, <em>nr_cubes=None</em>, <em>overlap_perc=None</em>, <em>coverer=&lt;kmapper.cover.Cover object&gt;</em>, <em>nerve=&lt;kmapper.nerve.GraphNerve object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/kmapper.html#KeplerMapper.map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.kmapper.KeplerMapper.map" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply Mapper algorithm on this projection and build a simplicial complex. Returns a dictionary with nodes and links.</p>
+<dt id="kmapper.kmapper.KeplerMapper.project">
+<code class="descname">project</code><span class="sig-paren">(</span><em>X</em>, <em>projection='sum'</em>, <em>scaler=MinMaxScaler(copy=True</em>, <em>feature_range=(0</em>, <em>1))</em>, <em>distance_matrix=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/kmapper.html#KeplerMapper.project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.kmapper.KeplerMapper.project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the projection/lens from a dataset. Input the data set. Specify a projection/lens type. Output the projected data/lens.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>projected_X</strong> : Numpy Array</p>
-<blockquote>
-<div><p>Output from fit_transform</p>
-</div></blockquote>
-<p><strong>inverse_X</strong> : Numpy Array</p>
-<blockquote>
-<div><p>Original data. If <cite>None</cite>, then use <cite>projected_X</cite> for clustering.</p>
-</div></blockquote>
-<p><strong>clusterer:</strong></p>
-<blockquote>
-<div><p>Scikit-learn API compatible clustering algorithm. Default: DBSCAN</p>
-</div></blockquote>
-<p><strong>nr_cubes</strong> : Int</p>
-<blockquote>
-<div><p>The number of intervals/hypercubes to create. Default = 10. (DeprecationWarning: define Cover explicitly in future versions)</p>
-</div></blockquote>
-<p><strong>overlap_perc</strong> : Float</p>
-<blockquote>
-<div><p>The percentage of overlap “between” the intervals/hypercubes. Default = 0.1. (DeprecationWarning: define Cover explicitly in future versions)</p>
-</div></blockquote>
-<p><strong>coverer</strong> : kmapper.Cover</p>
-<blockquote>
-<div><p>Cover scheme for lens. Instance of kmapper.cover providing methods <cite>define_bins</cite> and <cite>find_entries</cite>.</p>
-</div></blockquote>
-<p><strong>nerve</strong> : kmapper.Nerve</p>
-<blockquote>
-<div><p>Nerve builder implementing <cite>__call__(nodes)</cite> API</p>
-</div></blockquote>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>X</strong> <span class="classifier-delimiter">:</span> <span class="classifier">Numpy Array</span></dt>
+<dd><p class="first last">The data to fit a projection/lens to.</p>
+</dd>
+<dt><strong>projection :</strong></dt>
+<dd><p class="first last">Projection parameter is either a string, a Scikit-learn class with fit_transform, like manifold.TSNE(), or a list of dimension indices. A string from [“sum”, “mean”, “median”, “max”, “min”, “std”, “dist_mean”, “l2norm”, “knn_distance_n”]. If using knn_distance_n write the number of desired neighbors in place of n: knn_distance_5 for summed distances to 5 nearest neighbors. Default = “sum”.</p>
+</dd>
+<dt><strong>scaler :</strong></dt>
+<dd><p class="first last">Scikit-Learn API compatible scaler. Scaler of the data applied before mapping. Use None for no scaling. Default = preprocessing.MinMaxScaler() if None, do no scaling, else apply scaling to the projection. Default: Min-Max scaling distance_matrix: False or any of: [“braycurtis”, “canberra”, “chebyshev”, “cityblock”, “correlation”, “cosine”, “dice”, “euclidean”, “hamming”, “jaccard”, “kulsinski”, “mahalanobis”, “matching”, “minkowski”, “rogerstanimoto”, “russellrao”, “seuclidean”, “sokalmichener”, “sokalsneath”, “sqeuclidean”, “yule”]. If False do nothing, else create a squared distance matrix with the chosen metric, before applying the projection.</p>
+</dd>
+</dl>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>simplicial_complex</strong> : dict</p>
-<blockquote class="last">
-<div><p>A dictionary with “nodes”, “links” and “meta” information.</p>
-</div></blockquote>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>lens</strong> <span class="classifier-delimiter">:</span> <span class="classifier">Numpy Array</span></dt>
+<dd><p class="first last">projected data.</p>
+</dd>
+</dl>
 </td>
 </tr>
 </tbody>
@@ -210,18 +212,44 @@ connect these with an edge.</li>
 
 <dl class="method">
 <dt id="kmapper.kmapper.KeplerMapper.visualize">
-<code class="descname">visualize</code><span class="sig-paren">(</span><em>graph</em>, <em>color_function=None</em>, <em>custom_tooltips=None</em>, <em>custom_meta=None</em>, <em>path_html='mapper_visualization_output.html'</em>, <em>title='My Data'</em>, <em>save_file=True</em>, <em>inverse_X=None</em>, <em>inverse_X_names=[]</em>, <em>projected_X=None</em>, <em>projected_X_names=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/kmapper.html#KeplerMapper.visualize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.kmapper.KeplerMapper.visualize" title="Permalink to this definition">¶</a></dt>
+<code class="descname">visualize</code><span class="sig-paren">(</span><em>graph</em>, <em>color_function=None</em>, <em>custom_tooltips=None</em>, <em>custom_meta=None</em>, <em>path_html='mapper_visualization_output.html'</em>, <em>title='Kepler Mapper'</em>, <em>save_file=True</em>, <em>X=None</em>, <em>X_names=[]</em>, <em>lens=None</em>, <em>lens_names=[]</em>, <em>show_tooltips=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/kmapper.html#KeplerMapper.visualize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.kmapper.KeplerMapper.visualize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate a visualization of the simplicial complex mapper output. Turns the complex dictionary into a HTML/D3.js visualization</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>graph</strong> : dict</p>
-<blockquote>
-<div><p>Simplicial complex output from the <cite>map</cite> method.</p>
-</div></blockquote>
-<p><strong>path_html</strong> : String</p>
-<p class="last"><strong>file name for outputing the resulting html.</strong></p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>graph</strong> <span class="classifier-delimiter">:</span> <span class="classifier">dict</span></dt>
+<dd><p class="first last">Simplicial complex output from the <cite>map</cite> method.</p>
+</dd>
+<dt><strong>path_html</strong> <span class="classifier-delimiter">:</span> <span class="classifier">String</span></dt>
+<dd><p class="first last">file name for outputing the resulting html.</p>
+</dd>
+<dt><strong>custom_meta: dict</strong></dt>
+<dd><p class="first last">Render (key, value) in the Mapper Summary pane.</p>
+</dd>
+<dt><strong>custom_tooltip: list or array like</strong></dt>
+<dd><p class="first last">Value to display for each entry in the node. The cluster data pane will display entry for all values in the node. Default is index of data.</p>
+</dd>
+<dt><strong>save_file: bool, default is True</strong></dt>
+<dd><p class="first last">Save file to <cite>path_html</cite>.</p>
+</dd>
+<dt><strong>X: numpy arraylike</strong></dt>
+<dd><p class="first last">If supplied, compute statistics information about the original data source with respect to each node.</p>
+</dd>
+<dt><strong>X_names: list of strings</strong></dt>
+<dd><p class="first last">Names of each variable in <cite>X</cite> to be displayed. If None, then display names by index.</p>
+</dd>
+<dt><strong>lens: numpy arraylike</strong></dt>
+<dd><p class="first last">If supplied, compute statistics of each node based on the projection/lens</p>
+</dd>
+<dt><strong>lens_name: list of strings</strong></dt>
+<dd><p class="first last">Names of each variable in <cite>lens</cite> to be displayed. In None, then display names by index.</p>
+</dd>
+<dt><strong>show_tooltips: bool, default is True.</strong></dt>
+<dd><p class="first last">If false, completely disable tooltips. This is useful when using output in space-tight pages or will display node data in custom ways.</p>
+</dd>
+</dl>
 </td>
 </tr>
 </tbody>
@@ -236,7 +264,7 @@ connect these with an edge.</li>
 <p>Cover schemes provide a customizable way of defining a cover for your lens.</p>
 <span class="target" id="module-kmapper.cover"></span><dl class="class">
 <dt id="kmapper.cover.Cover">
-<em class="property">class </em><code class="descclassname">kmapper.cover.</code><code class="descname">Cover</code><span class="sig-paren">(</span><em>nr_cubes=10</em>, <em>overlap_perc=0.2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/cover.html#Cover"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.cover.Cover" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">kmapper.cover.</code><code class="descname">Cover</code><span class="sig-paren">(</span><em>n_cubes=10</em>, <em>perc_overlap=0.2</em>, <em>overlap_perc=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/cover.html#Cover"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.cover.Cover" title="Permalink to this definition">¶</a></dt>
 <dd><p>Helper class that defines the default covering scheme</p>
 <dl class="method">
 <dt id="kmapper.cover.Cover.define_bins">
@@ -252,20 +280,21 @@ connect these with an edge.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>data: Numpy array</strong></p>
-<blockquote>
-<div><p>Either projected data or original data.</p>
-</div></blockquote>
-<p><strong>cube:</strong></p>
-<blockquote>
-<div><p>an item from the list of cubes provided by <cite>cover.define_bins</cite> iterable.</p>
-</div></blockquote>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>data: Numpy array</strong></dt>
+<dd><p class="first last">Either projected data or original data.</p>
+</dd>
+<dt><strong>cube:</strong></dt>
+<dd><p class="first last">an item from the list of cubes provided by <cite>cover.define_bins</cite> iterable.</p>
+</dd>
+</dl>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">hypercube: Numpy Array</p>
-<blockquote class="last">
-<div><p>All entries in data that are in cube.</p>
-</div></blockquote>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>hypercube: Numpy Array</strong></dt>
+<dd><p class="first last">All entries in data that are in cube.</p>
+</dd>
+</dl>
 </td>
 </tr>
 </tbody>
@@ -310,7 +339,7 @@ connect these with an edge.</li>
       &copy;2018, Hendrik Jacob van Veen and Nathaniel Saul.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.4</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
       |

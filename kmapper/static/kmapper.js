@@ -174,7 +174,7 @@ if (text_center) {
 // Mouse events
 node.on("mouseover", function(d) {
   set_highlight(d);
-  console.log("node hover");
+  // console.log("node hover");
 
   d3.select("#tooltip").style("display", "block");
   d3.select("#tooltip_content").html(d.tooltip + "<br/>");
@@ -183,7 +183,7 @@ node.on("mouseover", function(d) {
     focus_node = d;
     if (highlight_node === null) set_highlight(d)
   }).on("mouseout", function(d) {
-    console.log("mouseout");
+    // console.log("mouseout");
     exit_highlight();
   });
 

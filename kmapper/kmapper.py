@@ -424,12 +424,13 @@ class KeplerMapper(object):
                   custom_tooltips=None,
                   custom_meta=None,
                   path_html="mapper_visualization_output.html",
-                  title="My Data",
+                  title="Kepler Mapper",
                   save_file=True,
                   X=None,
                   X_names=[],
                   lens=None,
-                  lens_names=[]):
+                  lens_names=[],
+                  show_tooltips=True):
         """Generate a visualization of the simplicial complex mapper output. Turns the complex dictionary into a HTML/D3.js visualization
 
         Parameters
@@ -447,8 +448,6 @@ class KeplerMapper(object):
         """
 
         # TODO: 
-        # 
-        #   - Don't send json_graph to base template, we can use jinja2
         #   - Make color functions more intuitive. How do they even work?
         #   - Allow multiple color functions that can be toggled on and off.
 
@@ -487,7 +486,8 @@ class KeplerMapper(object):
             histogram=histogram,
             mapper_data=mapper_data,
             js_text=js_text,
-            css_text=css_text)
+            css_text=css_text,
+            show_tooltips=True)
 
         if save_file:
             with open(path_html, "wb") as outfile:

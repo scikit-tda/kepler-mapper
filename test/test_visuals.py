@@ -21,14 +21,14 @@ np.random.seed(1)
     Should Kepler Mapper be split into two objects?
     I don't get how distance_matrix works
 
-    
+
     The visualize method should have sane defaults.
         
     Tooltips   
-        - Tooltips should default to showing the ID of data point in each node.
+        - [x] Tooltips should default to showing the ID of data point in each node.
         - Tooltips should be able to be disabled.
-        - Tooltips should be able to show aggregate data for each node.
-        - Tooltips should easily be able to export the data.
+        - [was done already?] Tooltips should be able to show aggregate data for each node.
+        - [copy and pastable] Tooltips should easily be able to export the data.
 
     Graph
         - Graph should be able to be frozen.

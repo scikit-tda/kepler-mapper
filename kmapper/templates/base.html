@@ -20,20 +20,29 @@
     <noscript><b>Requires JavaScript (d3.js) for visualizations</b></noscript>
     <h1>{{ title }}</h1>
   </div>
+
+
   <div id="canvas">
-
+    <!-- Graph will go in here -->
   </div>
-  <div id="tooltip">
-    <div id="tooltip_control">
-      <!-- enable completely turning off tooltip -->
 
-      <a href="#"><small>[-]</small></a>
-    </div>
-    <h2>Cluster Details</h2>
-    <div id="tooltip_content">
 
+  {% if show_tooltips %}
+
+    <div id="tooltip">
+      <div id="tooltip_control">
+        <!-- enable completely turning off tooltip -->
+
+        <a href="#"><small>[-]</small></a>
+      </div>
+      <h2>Cluster Details</h2>
+      <div id="tooltip_content">
+
+      </div>
     </div>
-  </div>
+
+  {% endif %}
+
 
 
   <div id="meta">

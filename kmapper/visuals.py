@@ -197,6 +197,9 @@ def _format_tooltip(env, member_ids, custom_tooltips, X,
     # TODO: Allow users to turn off tooltip completely.
 
     custom_tooltips = custom_tooltips[member_ids] if custom_tooltips is not None else member_ids
+    
+    # list will render better than numpy arrays
+    custom_tooltips = list(custom_tooltips)
 
     projection_stats = _format_projection_statistics(
         member_ids, lens, lens_names)

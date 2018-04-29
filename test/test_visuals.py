@@ -19,9 +19,9 @@ np.random.seed(1)
 
 
     Should Kepler Mapper be split into two objects?
-
     I don't get how distance_matrix works
 
+    
     The visualize method should have sane defaults.
         
     Tooltips   

@@ -453,12 +453,17 @@ class KeplerMapper(object):
         #   - Allow multiple color functions that can be toggled on and off.
 
 
+        # Find the module absolute path and locate templates
+        module_root = os.path.join(os.path.dirname(__file__), 'templates')
+        env = Environment(loader=FileSystemLoader(module_root))
+
+
         # Color function is a vector of colors?
         color_function = init_color_function(graph, color_function)
         
         mapper_data = format_mapper_data(graph, color_function, X,
                                          X_names, lens, 
-                                         lens_names, custom_tooltips)
+                                         lens_names, custom_tooltips, env)
         
         histogram = graph_data_distribution(graph, color_function)
         
@@ -474,11 +479,7 @@ class KeplerMapper(object):
         with open(css_path, 'r') as f:
             css_text = f.read()
 
-        # Find the module absolute path and locate templates
-        module_root = os.path.join(os.path.dirname(__file__), 'templates')
-        env = Environment(loader=FileSystemLoader(module_root))
 
-   
         # Render the Jinja template, filling fields as appropriate
         template = env.get_template('base.html').render(
             title=title,

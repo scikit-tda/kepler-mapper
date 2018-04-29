@@ -21,6 +21,7 @@ var size = d3.scale.pow().exponent(1)
            .range([8,24]);
 
 // Show/Hide Functionality
+// TODO: make it so tooltip doesn't popup
 d3.select("#tooltip_control").on("click", function() {
   d3.select("#tooltip").style("display", "none");
 });
@@ -173,7 +174,7 @@ if (text_center) {
 // Mouse events
 node.on("mouseover", function(d) {
   set_highlight(d);
-  console.log("node hober");
+  console.log("node hover");
 
   d3.select("#tooltip").style("display", "block");
   d3.select("#tooltip_content").html(d.tooltip + "<br/>");

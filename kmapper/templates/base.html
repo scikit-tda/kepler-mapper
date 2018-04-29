@@ -40,7 +40,9 @@
     <div id="meta_control">
       <a href="#"><small>[-]</small></a>
     </div>
-    <h2>Mapper Summary</h2> {{ mapper_summary }} {{ histogram }}
+    
+    {% include 'summary_data.html' %}
+    
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>

@@ -54,3 +54,7 @@ MANIFEST
 setup.cfg
 dist
 *.pyc
+
+
+# IPython Notebook
+.ipynb_checkpoints

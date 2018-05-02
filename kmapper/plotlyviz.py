@@ -18,7 +18,7 @@ def get_plotly_data(E, coords):
     return Xnodes, Ynodes, Xedges, Yedges
 
 
-def plotly_graph(kmgraph,  graph_layout='kk', colorscale='Viridis',
+def plotly_graph(kmgraph, graph_layout='kk', colorscale='Viridis',
                  reversescale=False, showscale=True, factor_size=2,
                  keep_kmtooltips=True,
                  edge_linecolor='rgb(200,200,200)', edge_linewidth=1.5):
@@ -38,13 +38,13 @@ def plotly_graph(kmgraph,  graph_layout='kk', colorscale='Viridis',
     layt = G.layout(graph_layout)
 
     if keep_kmtooltips:
-        tooltips = [node['name']+'<br>'+node['tooltip']
+        tooltips = [node['name'] + '<br>' + node['tooltip']
                     for node in kmgraph['nodes']]
     else:
         tooltips = [node['name'] for node in kmgraph['nodes']]
 
     color_vals = [node['color'] for node in kmgraph['nodes']]
-    size = np.array([factor_size*node['size'] for node in kmgraph['nodes']],
+    size = np.array([factor_size * node['size'] for node in kmgraph['nodes']],
                     dtype=np.int)
     Xn, Yn, Xe, Ye = get_plotly_data(links, layt)
     edges_trace = dict(type='scatter',

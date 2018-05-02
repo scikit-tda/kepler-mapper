@@ -75,10 +75,7 @@ def dict_to_json(graph, color_function, inverse_X, inverse_X_names,
                  "target": node_id_to_num[linked_node_id],
                  "width": _size_link_width(graph, node_id, linked_node_id)}
             json_dict["links"].append(l)
-    if path_html is None:
-        return json_dict
-    return json.dumps(json_dict)
-
+    return json_dict if path_html is None else json.dumps(json_dict)
 
 def color_function_distribution(graph, color_function):
     bin_colors = {0: "#FF2800",
@@ -137,7 +134,8 @@ def _format_cluster_statistics(member_ids, inverse_X, inverse_X_names, path_html
 
         stats = sorted([(s, f, i, c, a, v) for s, f, i, c, a, v in zip(std_m,
                                                                        inverse_X_names,
-                                                                       np.mean(inverse_X, axis=0),
+                                                                       np.mean(
+                                                                           inverse_X, axis=0),
                                                                        cluster_X_mean,
                                                                        above_mean,
                                                                        np.std(inverse_X, axis=0))],

@@ -5,6 +5,17 @@ import json
 from collections import defaultdict
 
 
+palette = [
+    '#0500ff', '#0300ff', '#0100ff', '#0002ff', '#0022ff', '#0044ff',
+    '#0064ff', '#0084ff', '#00a4ff', '#00a4ff', '#00c4ff', '#00e4ff',
+    '#00ffd0', '#00ff83', '#00ff36', '#17ff00', '#65ff00', '#b0ff00',
+    '#fdff00', '#FFf000', '#FFdc00', '#FFc800', '#FFb400', '#FFa000',
+    '#FF8c00', '#FF7800', '#FF6400', '#FF5000', '#FF3c00', '#FF2800',
+    '#FF1400', '#FF0000'
+]
+
+
+
 def init_color_function(graph, color_function=None):
     # If no color_function provided we color by row order in data set
     # Reshaping to 2-D array is required for sklearn 0.19
@@ -25,6 +36,9 @@ def format_meta(graph, custom_meta=None):
 
     n = [l for l in graph["nodes"].values()]
     n_unique = len(set([i for s in n for i in s]))
+    
+    if custom_meta is None:
+        custom_meta = graph['meta_data']
 
     mapper_summary = {
         "custom_meta": custom_meta,
@@ -44,18 +58,18 @@ def format_mapper_data(graph, color_function, X,
     node_id_to_num = {}
     for i, (node_id, member_ids) in enumerate(graph["nodes"].items()):
         node_id_to_num[node_id] = i
+        c = _color_function(member_ids, color_function)
+        t = _type_node()
+        s = _size_node(member_ids)
+        tt = _format_tooltip(env, member_ids, custom_tooltips, X, X_names, lens, lens_names, color_function)
 
         n = {"id": "",
              "name": node_id,
-             "color": _color_function(member_ids, color_function),
+             "color": c,
              "type": _type_node(),
-             "size": _size_node(member_ids),
-             "tooltip": _format_tooltip(env, member_ids,
-                                        custom_tooltips,
-                                        X,
-                                        X_names,
-                                        lens,
-                                        lens_names)}
+             "size": s,
+             "tooltip": tt}
+
         json_dict["nodes"].append(n)
     for i, (node_id, linked_node_ids) in enumerate(graph["links"].items()):
         for linked_node_id in linked_node_ids:
@@ -66,47 +80,37 @@ def format_mapper_data(graph, color_function, X,
     return json_dict
 
 
-def graph_data_distribution(graph, color_function):
-
-    # TODO: accept a color palette instead of this
-    bin_colors = {9: "#FF2800",
-                  8: "#FF6400",
-                  7: "#FFa000",
-                  6: "#FFdc00",
-                  5: "#b0ff00",
-                  4: "#00ff36",
-                  3: "#00e4ff",
-                  2: "#0084ff",
-                  1: "#0022ff",
-                  0: "#0300ff"}
-
-    buckets = defaultdict(float)
-
-    # TODO: this histogram groups all points in a node in the same bin.
-    #       This might yield unintuitive results
-    for i, (node_id, member_ids) in enumerate(graph["nodes"].items()):
-        # round to color range value to nearest 3 multiple
-        k = int(round(_color_function(member_ids, color_function) / 3.0))
-        buckets[k] += len(member_ids)
-
-    # TODO: Fix color-range length of 31 (prob not the best idea to pick
-    #       prime numbers for equidistant binning...)
-    buckets[9] += buckets[10]
+def build_histogram(data):
+    # Build histogram of data based on values of color_function
+  
+    h_min, h_max = 0, 1
+    hist, bin_edges = np.histogram(data, range=(h_min, h_max), bins=10)
+    
+    bin_mids = np.mean(np.array(list(zip(bin_edges, bin_edges[1:]))), axis=1)
 
     histogram = []
-    max_bucket_value = max(buckets.values())
-    sum_bucket_value = sum(list(set(buckets.values())))
-    for bucket_id in range(10):
-        bucket_value = buckets[bucket_id]
-        height = int(((bucket_value / max_bucket_value) * 100) + 5)
-        perc = round((bucket_value / sum_bucket_value) * 100., 1)
-        color = bin_colors[bucket_id]
+    max_bucket_value = max(hist)
+    sum_bucket_value = sum(hist)
+    for bar, mid in zip(hist, bin_mids):
+        height = int(((bar / max_bucket_value) * 100) + 1)
+        perc = round((bar / sum_bucket_value) * 100., 1)
+        color = palette[_color_idx(mid)]
 
         histogram.append({
             'height': height,
             'perc': perc,
             'color': color
         })
+    return histogram
+
+def graph_data_distribution(graph, color_function):
+
+    node_averages = []
+    for node_id, member_ids in graph["nodes"].items():
+        member_colors = color_function[member_ids]
+        node_averages.append(np.mean(member_colors))
+    
+    histogram = build_histogram(node_averages)
 
     return histogram
 
@@ -185,7 +189,7 @@ def _format_projection_statistics(member_ids, lens, lens_names):
 
 
 def _format_tooltip(env, member_ids, custom_tooltips, X,
-                    X_names, lens, lens_names):
+                    X_names, lens, lens_names, color_function):
     # TODO: Allow customization in the form of aggregate per node and per entry in node.
     # TODO: Allow users to turn off tooltip completely.
 
@@ -197,18 +201,25 @@ def _format_tooltip(env, member_ids, custom_tooltips, X,
     projection_stats = _format_projection_statistics(
         member_ids, lens, lens_names)
     cluster_stats = _format_cluster_statistics(member_ids, X, X_names)
+    histogram = build_histogram(color_function[member_ids])
 
     tooltip = env.get_template('cluster_tooltip.html').render(
         projection_stats=projection_stats,
         cluster_stats=cluster_stats,
-        custom_tooltips=custom_tooltips)
+        custom_tooltips=custom_tooltips,
+        histogram=histogram,
+        dist_label="Member")
 
     return tooltip
 
 
 def _color_function(member_ids, color_function):
-    return int(np.mean(color_function[member_ids]) * 30)
+    return _color_idx(np.mean(color_function[member_ids]))
+    # return int(np.mean(color_function[member_ids]) * 30)
 
+def _color_idx(val):
+    """ Take a value between 0 and 1 and return the idx of color """
+    return int(val * 30)
 
 def _size_node(member_ids):
     return int(np.log(len(member_ids) + 1) + 1)

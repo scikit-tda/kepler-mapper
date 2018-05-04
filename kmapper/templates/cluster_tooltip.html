@@ -1,3 +1,10 @@
+
+
+
+{% include 'histogram.html' %}
+
+
+
 <!-- Projection Statistics -->
 {% if projection_stats %}
 
@@ -26,8 +33,7 @@
 
 <!-- Cluster Statistics -->
 {% if cluster_stats %}
-
-<hr> <br/>
+    <hr><br/>
 
     <!-- <h3>Cluster Statistics</h3> -->
 
@@ -64,10 +70,14 @@
     <h3>Size</h3>
         <p>{{ cluster_stats['size'] }}</p>
 
+
 {% endif %}
 
 
 <!-- Membership information -->
+
+
+
 <hr> <br/>
 
 <h3>Members</h3>

@@ -17,7 +17,7 @@ from scipy.sparse import issparse
 
 from .cover import Cover
 from .nerve import GraphNerve
-from .visuals import init_color_function, format_meta, format_mapper_data, graph_data_distribution
+from .visuals import init_color_function, format_meta, format_mapper_data, build_histogram, graph_data_distribution
 
 
 class KeplerMapper(object):
@@ -490,7 +490,6 @@ class KeplerMapper(object):
         # Find the module absolute path and locate templates
         module_root = os.path.join(os.path.dirname(__file__), 'templates')
         env = Environment(loader=FileSystemLoader(module_root))
-
         # Color function is a vector of colors?
         color_function = init_color_function(graph, color_function)
 
@@ -516,6 +515,7 @@ class KeplerMapper(object):
             title=title,
             mapper_summary=mapper_summary,
             histogram=histogram,
+            dist_label="Node",
             mapper_data=mapper_data,
             js_text=js_text,
             css_text=css_text,

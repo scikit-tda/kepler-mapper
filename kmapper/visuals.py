@@ -201,6 +201,7 @@ def _format_tooltip(env, member_ids, custom_tooltips, X,
     projection_stats = _format_projection_statistics(
         member_ids, lens, lens_names)
     cluster_stats = _format_cluster_statistics(member_ids, X, X_names)
+    
     histogram = build_histogram(color_function[member_ids])
 
     tooltip = env.get_template('cluster_tooltip.html').render(

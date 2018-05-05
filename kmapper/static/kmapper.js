@@ -5,43 +5,22 @@ var width = document.getElementById("canvas").offsetWidth;
 var height = document.getElementById("canvas").offsetHeight;
 var w = width;
 var h = height;
-
-// We draw the graph in SVG
-var svg = d3.select("#canvas").append("svg")
-          .attr("width", width)
-          .attr("height", height);
+var padding = 40;
 
 var focus_node = null, highlight_node = null;
 var text_center = false;
 var outline = false;
 
+
+// tooltip_content.active = false;
+// meta_content.active = false;
+
+
+
 // Size for zooming
 var size = d3.scale.pow().exponent(1)
            .domain([1,100])
            .range([8,24]);
-
-// Show/Hide Functionality
-d3.select("#tooltip_control").on("click", function() {
-  d3.select("#tooltip").style("display", "none");
-});
-d3.select("#meta_control").on("click", function() {
-  d3.select("#meta").style("display", "none");
-});
-
-
-/// Display the hotkey shortcuts 
-d3.select("#helptip_control").on("click", function() {
-  var active = helptip_content.active ? false : true
-
-  if (active){
-    d3.select("#helptip_content").style("display", "unset");
-  } else{
-    d3.select("#helptip_content").style("display", "none");
-  }
-  
-  helptip_content.active = active
-});
-
 
 var palette = [
   '#0500ff', '#0300ff', '#0100ff', '#0002ff', '#0022ff', '#0044ff',
@@ -51,20 +30,6 @@ var palette = [
   '#FF8c00', '#FF7800', '#FF6400', '#FF5000', '#FF3c00', '#FF2800',
   '#FF1400', '#FF0000'
 ];
-
-// Color settings: Ordinal Scale of ["0"-"30"] hot-to-cold
-var color = d3.scale.ordinal()
-            .domain(["0","1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-                     "11", "12", "13","14","15","16","17","18","19","20",
-                     "21","22","23","24","25","26","27","28","29","30"])
-            .range(palette);
-              
-// Force settings
-var force = d3.layout.force()
-            .linkDistance(5)
-            .gravity(0.2)
-            .charge(-1200)
-            .size([w,h]);
 
 // Variety of variable inits
 var highlight_color = "blue";
@@ -81,11 +46,109 @@ var max_base_node_size = 36;
 var min_zoom = 0.1;
 var max_zoom = 7;
 var zoom = d3.behavior.zoom().scaleExtent([min_zoom,max_zoom]);
-var g = svg.append("g");
+
+
+var tocolor = "fill";
+var towhite = "stroke";
+if (outline) {
+  tocolor = "stroke";
+  towhite = "fill";
+}
+
+
+// We draw the graph in SVG
+var svg = d3.select("#canvas").append("svg")
+          .attr("width", width)
+          .attr("height", height);
 
 svg.style("cursor","move");
+var g = svg.append("g");
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////
+////      Side panes
+////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+// Show/Hide Functionality
+var toggle_pane = function(content, content_id, tag){
+  var active = content.active ? false : true;
+
+  if (active){
+    content_id.style("display", "unset");
+    tag.textContent = "[-]";
+  } else{
+    content_id.style("display", "none");
+    tag.textContent = "[+]";
+  }
+
+  // TODO: This is probably not the best way to find the correct height.
+  var h = canvas_height - content.offsetTop - padding;
+  content_id.style("height", h + "px")
+
+  content.active = active;
+}
+
+d3.select("#tooltip_control").on("click", function() {
+  toggle_pane(tooltip_content, 
+              d3.select("#tooltip_content"), 
+              d3.select("#tooltip_tag")[0][0]);
+
+});
+
+d3.select("#meta_control").on("click", function() {
+  toggle_pane(meta_content, 
+              d3.select("#meta_content"),
+              d3.select("#meta_tag")[0][0])
+
+});
+
+d3.select("#help_control").on("click", function() {
+  toggle_pane(helptip_content, 
+              d3.select("#helptip_content"),
+              d3.select("#helptip_tag")[0][0])
+});
+
+d3.select("#selection_control").on("click", function() {
+  console.log("TURN LASSO ON OR OFF")
+});
+
+
+// Color settings: Ordinal Scale of ["0"-"30"] hot-to-cold
+var color = d3.scale.ordinal()
+  .domain(["0","1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
+            "11", "12", "13","14","15","16","17","18","19","20",
+            "21","22","23","24","25","26","27","28","29","30"])
+  .range(palette);
+
+// var color = d3.scale.category10();
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////
+////      Graph Setup
+////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+
 
 var graph = JSON.parse(document.getElementById("json_graph").dataset.graph);
+
+              
+// Force settings
+var force = d3.layout.force()
+            .linkDistance(5)
+            .gravity(0.2)
+            .charge(-1200)
+            .size([w,h]);
 
 force
   .nodes(graph.nodes)
@@ -108,6 +171,7 @@ var node = g.selectAll(".node")
               .attr("class", "node")
               .call(force.drag);
 
+// Double clicking on a node will center on it.
 node.on("dblclick.zoom", function(d) { d3.event.stopPropagation();
   var dcx = (window.innerWidth/2-d.x*zoom.scale());
   var dcy = (window.innerHeight/2-d.y*zoom.scale());
@@ -115,12 +179,8 @@ node.on("dblclick.zoom", function(d) { d3.event.stopPropagation();
   g.attr("transform", "translate("+ dcx + "," + dcy  + ")scale(" + zoom.scale() + ")");
 });
 
-var tocolor = "fill";
-var towhite = "stroke";
-if (outline) {
-  tocolor = "stroke";
-  towhite = "fill";
-}
+
+
 
 // Drop-shadow Filter
 var svg = d3.select("svg");
@@ -153,6 +213,7 @@ dropShadowFilter.append('svg:feBlend')
   .attr('in2', 'the-shadow')
   .attr('mode', 'normal');
 
+// Draw circles
 var circle = node.append("path")
   .attr("d", d3.svg.symbol()
     .size(function(d) { return d.size * 50; })
@@ -162,6 +223,8 @@ var circle = node.append("path")
     return color(d.color);});
 //.style("filter", "url(#drop-shadow)");
 
+
+// Format all text 
 var text = g.selectAll(".text")
   .data(graph.nodes)
   .enter().append("text")
@@ -171,6 +234,8 @@ var text = g.selectAll(".text")
     .style("color", "#2C3E50")
     .style("font-size", nominal_text_size + "px");
 
+
+
 if (text_center) {
   text.text(function(d) { return d.id; })
     .style("text-anchor", "middle");
@@ -179,25 +244,47 @@ if (text_center) {
     .text(function(d) { return '\u2002'+d.id; });
 }
 
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////
+////      Mouse Interactivity
+////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
 // Mouse events
 node.on("mouseover", function(d) {
+  // Change node details
   set_highlight(d);
-
-  d3.select("#tooltip").style("display", "block");
   d3.select("#tooltip_content").html(d.tooltip + "<br/>");
-  }).on("mousedown", function(d) {
-    d3.event.stopPropagation();
-    focus_node = d;
-    if (highlight_node === null) set_highlight(d)
-  }).on("mouseout", function(d) {
-    exit_highlight();
-  });
+}).on("mousedown", function(d) {
+  // TODO: This seems to only stop the one particular node from moving?
 
-  d3.select(window).on("mouseup", function() {
-    if (focus_node!==null){
-      focus_node = null;
-    }
-    if (highlight_node === null) exit_highlight();
+  d3.event.stopPropagation();
+  focus_node = d;
+  if (highlight_node === null) {
+    set_highlight(d)
+  }
+}).on("mouseout", function(d) {
+  exit_highlight();
+});
+
+d3.select(window).on("mouseup", function() {
+  if (focus_node!==null){
+    focus_node = null;
+  }
+  if (highlight_node === null) {
+    exit_highlight();
+  }
 });
 
 // Node highlighting logic
@@ -212,6 +299,7 @@ function set_highlight(d){
   svg.style("cursor","pointer");
   if (focus_node!==null) d = focus_node;
 }
+
 
 // Zoom logic
 zoom.on("zoom", function() {
@@ -249,6 +337,8 @@ force.on("tick", function() {
     .attr("cy", function(d) { return d.y; });
 });
 
+
+
 // Resizing window and redraws
 function resize() {
   var width = window.innerWidth, height = window.innerHeight;
@@ -258,9 +348,93 @@ function resize() {
 
   force.size([force.size()[0]+(width-w)/zoom.scale(),
               force.size()[1]+(height-h)/zoom.scale()]).resume();
-    w = width;
-    h = height;
+  w = width;
+  h = height;
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+///
+///      Lasso
+///
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+// Lasso functions to execute while lassoing
+var lasso_start = function() {
+  lasso.items()
+    .attr("r",3.5) // reset size
+    .style("fill",null) // clear all of the fills
+    .classed({"not_possible":true,"selected":false}); // style as not possible
+};
+
+var lasso_draw = function() {
+  // Style the possible dots
+  lasso.items().filter(function(d) {return d.possible===true})
+    .classed({"not_possible":false,"possible":true});
+
+  // Style the not possible dot
+  lasso.items().filter(function(d) {return d.possible===false})
+    .classed({"not_possible":true,"possible":false});
+};
+
+var lasso_end = function() {
+  // Reset the color of all dots
+  lasso.items()
+     .style("fill", function(d) { return color(d.species); });
+
+  // Style the selected dots
+  lasso.items().filter(function(d) {return d.selected===true})
+    .classed({"not_possible":false,"possible":false})
+    .attr("r",7);
+
+  // Reset the style of the not selected dots
+  lasso.items().filter(function(d) {return d.selected===false})
+    .classed({"not_possible":false,"possible":false})
+    .attr("r",3.5);
+
+};
+
+// Create the area where the lasso event can be triggered
+// var lasso_area = svg.append("rect")
+//                       .attr("width",width)
+//                       .attr("height",height)
+//                       .style("opacity",0);
+
+// Define the lasso
+// var lasso = d3.lasso()
+//       .closePathDistance(75) // max distance for the lasso loop to be closed
+//       .closePathSelect(true) // can items be selected by closing the path?
+//       .hoverSelect(true) // can items by selected by hovering over them?
+//       .area(lasso_area) // area where the lasso can be started
+//       .on("start",lasso_start) // lasso start function
+//       .on("draw",lasso_draw) // lasso draw function
+//       .on("end",lasso_end); // lasso end function
+
+
+
+
+// // Init the lasso on the svg:g that contains the dots
+
+
+// lasso.items(d3.selectAll(".node"));
+// svg.call(lasso);
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function isNumber(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
@@ -286,7 +460,7 @@ switch (event.key) {
     node.style("filter", null);
     break;
   case "p":
-    // Do something for "p" key press.
+    // Turn to print mode, white backgrounds
     d3.select("body").attr('id', null).attr('id', "print")
     break;
   case "d":

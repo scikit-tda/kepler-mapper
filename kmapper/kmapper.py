@@ -44,6 +44,9 @@ class KeplerMapper(object):
         self.scaler = None
         self.cover = None
 
+        if verbose > 0:
+            print("KeplerMapper()")
+
     def project(self, X, projection="sum", scaler=preprocessing.MinMaxScaler(), distance_matrix=False):
         """Creates the projection/lens from a dataset. Input the data set. Specify a projection/lens type. Output the projected data/lens.
 
@@ -67,7 +70,7 @@ class KeplerMapper(object):
         Example
         -------
 
-        >>> projected_data = mapper.fit_transform(data, projection="sum", scaler=km.preprocessing.MinMaxScaler() )
+        >>> projected_data = mapper.project(data, projection="sum", scaler=km.preprocessing.MinMaxScaler() )
 
         """
 
@@ -269,6 +272,8 @@ class KeplerMapper(object):
 
         nerve: kmapper.Nerve
             Nerve builder implementing `__call__(nodes)` API
+
+
 
         nr_cubes: Int (Deprecated)
             The number of intervals/hypercubes to create. Default = 10. (DeprecationWarning: define Cover explicitly in future versions)

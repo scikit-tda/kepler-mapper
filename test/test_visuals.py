@@ -1,12 +1,13 @@
 import os
 import numbers
-
+import json
 import pytest
 
 import numpy as np
 from sklearn.datasets import make_circles
 from kmapper import KeplerMapper
 
+from kmapper import visuals
 from kmapper.visuals import init_color_function, format_meta, format_mapper_data
 from jinja2 import Environment, FileSystemLoader
 
@@ -73,10 +74,11 @@ class TestVisualHelpers():
         nodes = {"a": [1, 2, 3], "b": [4, 5, 6]}
         graph = {"nodes": nodes}
 
-        color_function = init_color_function(graph)
+        cf = np.array([6,5,4,3,2,1])
+        color_function = init_color_function(graph, cf)
 
-        assert min(color_function) == 0
-        assert max(color_function) == 1
+        np.testing.assert_almost_equal(min(color_function), 0)
+        np.testing.assert_almost_equal(max(color_function), 1), "Scaler might have floating point issues, 1.0000...0002"
 
     def test_color_function_size(self):
         nodes = {"a": [1, 2, 3], "b": [4, 5, 6, 7, 8, 9]}
@@ -103,6 +105,16 @@ class TestVisualHelpers():
         for v in vals:
             assert isinstance(v, numbers.Number)
 
+    def test_format_meta_with_meta(self):
+        mapper = KeplerMapper()
+        data = np.random.rand(1000, 10)
+        lens = mapper.fit_transform(data, projection=[0])
+        graph = mapper.map(lens, data)
+
+        cm = "My custom_meta"
+        fmt = format_meta(graph, cm)
+        assert fmt['custom_meta'] == cm
+
     def test_format_mapper_data(self, jinja_env):
         mapper = KeplerMapper()
         data, labels = make_circles(1000, random_state=0)
@@ -118,16 +130,77 @@ class TestVisualHelpers():
 
         graph_data = format_mapper_data(graph, color_function, inverse_X,
                                         inverse_X_names, projected_X, projected_X_names, custom_tooltips, jinja_env)
+        # print(graph_data)
+        # Dump to json so we can easily tell what's in it.
+        graph_data = json.dumps(graph_data)
 
         # TODO test more properties!
-        assert 'name' in graph_data['nodes'][0].keys()
-        # assert "cube2_cluster0" == graph_data['name']
-        # assert """projected_0""" in graph_data.keys()
-        # assert """inverse_0""" in graph_data
-        # assert """customized_""" in graph_data
+        assert 'name' in graph_data
+        assert """cube2_cluster0""" in graph_data
+        assert """projected_0""" in graph_data
+        assert """inverse_0""" in graph_data
 
+        assert """customized_""" in graph_data
 
-class TestVisualizeIntegration():
+    def test_histogram(self):
+        data = np.random.random((100,1))
+        hist = visuals.build_histogram(data)
+        assert isinstance(hist, list)
+        assert isinstance(hist[0], dict)
+        assert len(hist) == 10
+
+    def test_cluster_stats(self):
+        X = np.random.random((1000,3))
+        ids = np.random.choice(20, 1000)
+
+        cluster_data = visuals._format_cluster_statistics(ids, X, ["a", "b", "c"])
+
+        assert isinstance(cluster_data, dict)
+        assert cluster_data['size'] == len(ids)
+
+    def test_cluster_stats_above(self):
+        X = np.ones((1000,3))
+        ids = np.random.choice(20, 1000)
+        X[ids,0] = 10
+
+        cluster_data = visuals._format_cluster_statistics(ids, X, ["a", "b", "c"])
+
+        assert len(cluster_data['above']) >= 1
+        assert cluster_data['above'][0]['feature'] == 'a'
+        assert cluster_data['above'][0]['mean'] == 10
+
+    def test_cluster_stats_below(self):
+        X = np.ones((1000,3))
+        ids = np.random.choice(20, 1000)
+        X[ids,0] = 0
+
+        cluster_data = visuals._format_cluster_statistics(ids, X, ["a", "b", "c"])
+
+        assert len(cluster_data['below']) >= 1
+        assert cluster_data['below'][0]['feature'] == 'a'
+        assert cluster_data['below'][0]['mean'] == 0
+
+    def test_cluster_stats_with_no_names(self):
+        # This would be the default. 
+
+        X = np.ones((1000,3))
+        ids = np.random.choice(20, 1000)
+        X[ids,0] = 0
+
+        cluster_data = visuals._format_cluster_statistics(ids, X, [])
+
+        assert len(cluster_data['below']) >= 1
+        assert cluster_data['below'][0]['feature'] == 'f_0'
+        assert cluster_data['below'][0]['mean'] == 0
+
+class TestVisualizeIntegration:
+    def test_empty_graph_warning(self):
+        mapper = KeplerMapper()
+
+        graph = {"nodes": {}}
+        with pytest.raises(Exception):
+            mapper.visualize(graph)
+
     def test_visualize_standalone_same(self, tmpdir):
         """ ensure that the visualization is not dependent on the actual mapper object.
         """
@@ -150,7 +223,7 @@ class TestVisualizeIntegration():
 
         file = tmpdir.join('output.html')
 
-        data = np.random.rand(1000, 10)
+        data = np.random.rand(1000, 2)
         lens = mapper.fit_transform(data, projection=[0])
         graph = mapper.map(lens, data)
         viz = mapper.visualize(graph, path_html=file.strpath)

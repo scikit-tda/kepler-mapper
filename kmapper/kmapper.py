@@ -226,7 +226,7 @@ class KeplerMapper(object):
             distance_matrices = [distance_matrices[0]] * len(projections)
 
         if self.verbose > 0:
-            print("..Composing projection pipeline length %s:" %
+            print("..Composing projection pipeline of length %s:" %
                   (len(projections)))
             print("Projections: %s\n\n" % ("\n".join(map(str, projections))))
             print("Distance matrices: %s\n\n" %
@@ -491,6 +491,9 @@ class KeplerMapper(object):
         # TODO:
         #   - Make color functions more intuitive. How do they even work?
         #   - Allow multiple color functions that can be toggled on and off.
+
+        if not len(graph['nodes']) > 0:
+            raise Exception("Visualize requires a mapper with more than 0 nodes. \nIt is possible that the constructed mapper could have been constructed with bad parameters. This can occasionally happens when using the default clustering algorithm. Try changing `eps` or `min_samples` in the DBSCAN clustering algorithm.")
 
         # Find the module absolute path and locate templates
         module_root = os.path.join(os.path.dirname(__file__), 'templates')

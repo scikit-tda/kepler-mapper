@@ -114,10 +114,6 @@ d3.select("#help_control").on("click", function() {
               d3.select("#helptip_tag")[0][0])
 });
 
-d3.select("#selection_control").on("click", function() {
-  console.log("TURN LASSO ON OR OFF")
-});
-
 
 // Color settings: Ordinal Scale of ["0"-"30"] hot-to-cold
 var color = d3.scale.ordinal()
@@ -257,10 +253,6 @@ if (text_center) {
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-
-
-
-
 // Mouse events
 node.on("mouseover", function(d) {
   // Change node details
@@ -351,89 +343,6 @@ function resize() {
   w = width;
   h = height;
 }
-
-
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-///
-///      Lasso
-///
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
-
-// Lasso functions to execute while lassoing
-var lasso_start = function() {
-  lasso.items()
-    .attr("r",3.5) // reset size
-    .style("fill",null) // clear all of the fills
-    .classed({"not_possible":true,"selected":false}); // style as not possible
-};
-
-var lasso_draw = function() {
-  // Style the possible dots
-  lasso.items().filter(function(d) {return d.possible===true})
-    .classed({"not_possible":false,"possible":true});
-
-  // Style the not possible dot
-  lasso.items().filter(function(d) {return d.possible===false})
-    .classed({"not_possible":true,"possible":false});
-};
-
-var lasso_end = function() {
-  // Reset the color of all dots
-  lasso.items()
-     .style("fill", function(d) { return color(d.species); });
-
-  // Style the selected dots
-  lasso.items().filter(function(d) {return d.selected===true})
-    .classed({"not_possible":false,"possible":false})
-    .attr("r",7);
-
-  // Reset the style of the not selected dots
-  lasso.items().filter(function(d) {return d.selected===false})
-    .classed({"not_possible":false,"possible":false})
-    .attr("r",3.5);
-
-};
-
-// Create the area where the lasso event can be triggered
-// var lasso_area = svg.append("rect")
-//                       .attr("width",width)
-//                       .attr("height",height)
-//                       .style("opacity",0);
-
-// Define the lasso
-// var lasso = d3.lasso()
-//       .closePathDistance(75) // max distance for the lasso loop to be closed
-//       .closePathSelect(true) // can items be selected by closing the path?
-//       .hoverSelect(true) // can items by selected by hovering over them?
-//       .area(lasso_area) // area where the lasso can be started
-//       .on("start",lasso_start) // lasso start function
-//       .on("draw",lasso_draw) // lasso draw function
-//       .on("end",lasso_end); // lasso end function
-
-
-
-
-// // Init the lasso on the svg:g that contains the dots
-
-
-// lasso.items(d3.selectAll(".node"));
-// svg.call(lasso);
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 function isNumber(n) {

@@ -15,7 +15,6 @@ palette = [
 ]
 
 
-
 def init_color_function(graph, color_function=None):
     # If no color_function provided we color by row order in data set
     # Reshaping to 2-D array is required for sklearn 0.19
@@ -103,6 +102,7 @@ def build_histogram(data):
         })
     return histogram
 
+
 def graph_data_distribution(graph, color_function):
 
     node_averages = []
@@ -116,6 +116,12 @@ def graph_data_distribution(graph, color_function):
 
 
 def _format_cluster_statistics(member_ids, X, X_names):
+    # TODO: Cache X_mean and X_std for all clusters.
+    # TODO: replace long tuples with named tuples.
+    # TODO: Name all the single letter variables.
+    # TODO: remove duplication between above_stats and below_stats
+    # TODO: Should we only show variables that are much above or below the mean?
+
     cluster_data = {'above': [], 'below': [], 'size': len(member_ids)}
 
     cluster_stats = ""
@@ -136,8 +142,6 @@ def _format_cluster_statistics(member_ids, X, X_names):
 
         stat_zip = list(zip(std_m, X_names, np.mean(X, axis=0), cluster_X_mean, above_mean, np.std(X, axis=0)))
         stats = sorted(stat_zip, reverse=True)
-        # [(s, f, i, c, a, v) for s, f, i, c, a, v in
-        # ], reverse=True)
         above_stats = [a for a in stats if a[4] == True]
         below_stats = [a for a in stats if a[4] == False]
 
@@ -150,7 +154,6 @@ def _format_cluster_statistics(member_ids, X, X_names):
                 })
 
         if len(below_stats) > 0:
-
             for s, f, i, c, a, v in below_stats[:5]:
                 cluster_data['below'].append({
                     'feature': f,

@@ -316,8 +316,8 @@ class KeplerMapper(object):
             warnings.warn(
                 "coverer has been renamed to `cover`. Please you `cover` from now on.", DeprecationWarning)
 
-        ## If user supplied nr_cubes, overlap_perc, or coverer, opt for those
-        ## TODO: remove this conditional after release in 1.2
+        # If user supplied nr_cubes, overlap_perc, or coverer, opt for those
+        # TODO: remove this conditional after release in 1.2
         if coverer is not None:
             self.cover = coverer
         elif nr_cubes is not None or overlap_perc is not None:

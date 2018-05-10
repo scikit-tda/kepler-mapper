@@ -35,7 +35,7 @@ def format_meta(graph, custom_meta=None):
 
     n = [l for l in graph["nodes"].values()]
     n_unique = len(set([i for s in n for i in s]))
-    
+
     if custom_meta is None:
         custom_meta = graph['meta_data']
 
@@ -81,10 +81,10 @@ def format_mapper_data(graph, color_function, X,
 
 def build_histogram(data):
     # Build histogram of data based on values of color_function
-  
+
     h_min, h_max = 0, 1
     hist, bin_edges = np.histogram(data, range=(h_min, h_max), bins=10)
-    
+
     bin_mids = np.mean(np.array(list(zip(bin_edges, bin_edges[1:]))), axis=1)
 
     histogram = []
@@ -109,7 +109,7 @@ def graph_data_distribution(graph, color_function):
     for node_id, member_ids in graph["nodes"].items():
         member_colors = color_function[member_ids]
         node_averages.append(np.mean(member_colors))
-    
+
     histogram = build_histogram(node_averages)
 
     return histogram
@@ -204,7 +204,7 @@ def _format_tooltip(env, member_ids, custom_tooltips, X,
     projection_stats = _format_projection_statistics(
         member_ids, lens, lens_names)
     cluster_stats = _format_cluster_statistics(member_ids, X, X_names)
-    
+
     histogram = build_histogram(color_function[member_ids])
 
     tooltip = env.get_template('cluster_tooltip.html').render(
@@ -221,9 +221,11 @@ def _color_function(member_ids, color_function):
     return _color_idx(np.mean(color_function[member_ids]))
     # return int(np.mean(color_function[member_ids]) * 30)
 
+
 def _color_idx(val):
     """ Take a value between 0 and 1 and return the idx of color """
     return int(val * 30)
+
 
 def _size_node(member_ids):
     return int(np.log(len(member_ids) + 1) + 1)

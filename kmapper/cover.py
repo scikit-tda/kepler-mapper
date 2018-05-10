@@ -11,15 +11,13 @@ class Cover():
     """Helper class that defines the default covering scheme
     """
 
-    def __init__(self, 
-                 n_cubes=10, 
-                 perc_overlap=0.2, 
+    def __init__(self,
+                 n_cubes=10,
+                 perc_overlap=0.2,
                  # Deprecated parameters:
-                 nr_cubes=None, 
+                 nr_cubes=None,
                  overlap_perc=None):
 
-
-        
         self.n_cubes = nr_cubes if nr_cubes else n_cubes
         self.perc_overlap = overlap_perc if overlap_perc else perc_overlap
 

@@ -74,7 +74,7 @@ class TestVisualHelpers():
         nodes = {"a": [1, 2, 3], "b": [4, 5, 6]}
         graph = {"nodes": nodes}
 
-        cf = np.array([6,5,4,3,2,1])
+        cf = np.array([6, 5, 4, 3, 2, 1])
         color_function = init_color_function(graph, cf)
 
         np.testing.assert_almost_equal(min(color_function), 0)
@@ -143,14 +143,14 @@ class TestVisualHelpers():
         assert """customized_""" in graph_data
 
     def test_histogram(self):
-        data = np.random.random((100,1))
+        data = np.random.random((100, 1))
         hist = visuals.build_histogram(data)
         assert isinstance(hist, list)
         assert isinstance(hist[0], dict)
         assert len(hist) == 10
 
     def test_cluster_stats(self):
-        X = np.random.random((1000,3))
+        X = np.random.random((1000, 3))
         ids = np.random.choice(20, 1000)
 
         cluster_data = visuals._format_cluster_statistics(ids, X, ["a", "b", "c"])
@@ -159,9 +159,9 @@ class TestVisualHelpers():
         assert cluster_data['size'] == len(ids)
 
     def test_cluster_stats_above(self):
-        X = np.ones((1000,3))
+        X = np.ones((1000, 3))
         ids = np.random.choice(20, 1000)
-        X[ids,0] = 10
+        X[ids, 0] = 10
 
         cluster_data = visuals._format_cluster_statistics(ids, X, ["a", "b", "c"])
 
@@ -170,9 +170,9 @@ class TestVisualHelpers():
         assert cluster_data['above'][0]['mean'] == 10
 
     def test_cluster_stats_below(self):
-        X = np.ones((1000,3))
+        X = np.ones((1000, 3))
         ids = np.random.choice(20, 1000)
-        X[ids,0] = 0
+        X[ids, 0] = 0
 
         cluster_data = visuals._format_cluster_statistics(ids, X, ["a", "b", "c"])
 
@@ -181,17 +181,18 @@ class TestVisualHelpers():
         assert cluster_data['below'][0]['mean'] == 0
 
     def test_cluster_stats_with_no_names(self):
-        # This would be the default. 
+        # This would be the default.
 
-        X = np.ones((1000,3))
+        X = np.ones((1000, 3))
         ids = np.random.choice(20, 1000)
-        X[ids,0] = 0
+        X[ids, 0] = 0
 
         cluster_data = visuals._format_cluster_statistics(ids, X, [])
 
         assert len(cluster_data['below']) >= 1
         assert cluster_data['below'][0]['feature'] == 'f_0'
         assert cluster_data['below'][0]['mean'] == 0
+
 
 class TestVisualizeIntegration:
     def test_empty_graph_warning(self):

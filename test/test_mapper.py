@@ -56,7 +56,7 @@ class TestDataAccess:
 
         ids = np.random.choice(10, 100)
         data[ids] = 2
-        
+
         graph = mapper.map(data)
         graph['nodes']['new node'] = ids
         mems = mapper.data_from_cluster_id('new node', graph, data)
@@ -65,10 +65,11 @@ class TestDataAccess:
     def test_wrong_id(self):
         mapper = KeplerMapper(verbose=1)
         data = np.random.rand(100, 2)
-        
+
         graph = mapper.map(data)
         mems = mapper.data_from_cluster_id('new node', graph, data)
         np.testing.assert_array_equal(mems, np.array([]))
+
 
 class TestLens():
     # TODO: most of these tests only accomodate the default option. They need to be extended to incorporate all possible transforms.
@@ -96,20 +97,18 @@ class TestLens():
             np.testing.assert_almost_equal(lens[0][0], func(first_point))
             np.testing.assert_almost_equal(lens[-1][0], func(last_point))
 
-        # For dist_mean, just make sure the code runs without breaking, not sure how to test this best 
+        # For dist_mean, just make sure the code runs without breaking, not sure how to test this best
         lens = mapper.fit_transform(data, projection="dist_mean", scaler=None)
 
-    @pytest.mark.skip("Need to implement a test for this code")    
+    @pytest.mark.skip("Need to implement a test for this code")
     def test_knn_distance(self):
         pass
-
 
     def test_sparse_array(self):
         mapper = KeplerMapper()
 
         data = sparse.random(100, 10)
         lens = mapper.fit_transform(data)
-
 
     def test_lens_size(self):
         mapper = KeplerMapper()

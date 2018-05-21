@@ -55,7 +55,7 @@ class KeplerMapper(object):
 
         scaler :
             Scikit-Learn API compatible scaler. Scaler of the data applied before mapping. Use None for no scaling. Default = preprocessing.MinMaxScaler() if None, do no scaling, else apply scaling to the projection. Default: Min-Max scaling 
-        
+
         distance_matrix: 
             False or any of: ["braycurtis", "canberra", "chebyshev", "cityblock", "correlation", "cosine", "dice", "euclidean", "hamming", "jaccard", "kulsinski", "mahalanobis", "matching", "minkowski", "rogerstanimoto", "russellrao", "seuclidean", "sokalmichener", "sokalsneath", "sqeuclidean", "yule"]. If False do nothing, else create a squared distance matrix with the chosen metric, before applying the projection.
 
@@ -276,7 +276,7 @@ class KeplerMapper(object):
 
         nerve : kmapper.Nerve
             Nerve builder implementing `__call__(nodes)` API
-            
+
         precomputed : Boolean
             Tell Mapper whether the data that you are clustering on is a precomputed distance matrix. If set to
             `True`, the assumption is that you are also telling your `clusterer` that `metric='precomputed'` (which

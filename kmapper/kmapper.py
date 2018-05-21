@@ -276,6 +276,13 @@ class KeplerMapper(object):
 
         nerve : kmapper.Nerve
             Nerve builder implementing `__call__(nodes)` API
+            
+        precomputed : Boolean
+            Tell Mapper whether the data that you are clustering on is a precomputed distance matrix. If set to
+            `True`, the assumption is that you are also telling your `clusterer` that `metric='precomputed'` (which
+            is an argument for DBSCAN among others), which 
+            will then cause the clusterer to expect a square distance matrix for each hypercube. `precomputed=True` will give a square matrix
+            to the clusterer to fit on for each hypercube.
 
         Returns
         =======

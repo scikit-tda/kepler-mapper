@@ -54,7 +54,10 @@ class KeplerMapper(object):
             Projection parameter is either a string, a Scikit-learn class with fit_transform, like manifold.TSNE(), or a list of dimension indices. A string from ["sum", "mean", "median", "max", "min", "std", "dist_mean", "l2norm", "knn_distance_n"]. If using knn_distance_n write the number of desired neighbors in place of n: knn_distance_5 for summed distances to 5 nearest neighbors. Default = "sum".
 
         scaler :
-            Scikit-Learn API compatible scaler. Scaler of the data applied before mapping. Use None for no scaling. Default = preprocessing.MinMaxScaler() if None, do no scaling, else apply scaling to the projection. Default: Min-Max scaling distance_matrix: False or any of: ["braycurtis", "canberra", "chebyshev", "cityblock", "correlation", "cosine", "dice", "euclidean", "hamming", "jaccard", "kulsinski", "mahalanobis", "matching", "minkowski", "rogerstanimoto", "russellrao", "seuclidean", "sokalmichener", "sokalsneath", "sqeuclidean", "yule"]. If False do nothing, else create a squared distance matrix with the chosen metric, before applying the projection.
+            Scikit-Learn API compatible scaler. Scaler of the data applied before mapping. Use None for no scaling. Default = preprocessing.MinMaxScaler() if None, do no scaling, else apply scaling to the projection. Default: Min-Max scaling 
+        
+        distance_matrix: 
+            False or any of: ["braycurtis", "canberra", "chebyshev", "cityblock", "correlation", "cosine", "dice", "euclidean", "hamming", "jaccard", "kulsinski", "mahalanobis", "matching", "minkowski", "rogerstanimoto", "russellrao", "seuclidean", "sokalmichener", "sokalsneath", "sqeuclidean", "yule"]. If False do nothing, else create a squared distance matrix with the chosen metric, before applying the projection.
 
         Returns
         -------
@@ -247,7 +250,8 @@ class KeplerMapper(object):
             nr_cubes=None,
             overlap_perc=None,
             coverer=Cover(nr_cubes=10, overlap_perc=0.1),
-            nerve=GraphNerve()):
+            nerve=GraphNerve(),
+            precomputed=False):
         """Apply Mapper algorithm on this projection and build a simplicial complex. Returns a dictionary with nodes and links.
 
         Parameters
@@ -354,9 +358,14 @@ class KeplerMapper(object):
 
                 # Cluster the data point(s) in the cube, skipping the id-column
                 # Note that we apply clustering on the inverse image (original data samples) that fall inside the cube.
-                inverse_x = inverse_X[[int(nn) for nn in hypercube[:, 0]]]
+                ids = [int(nn) for nn in hypercube[:, 0]]
+                inverse_x = inverse_X[ids]
 
-                clusterer.fit(inverse_x[:, 1:])
+                fit_me = inverse_x[:, 1:]
+                if precomputed:
+                    fit_me = fit_me[:, ids]
+
+                clusterer.fit(fit_me)
 
                 if self.verbose > 1:
                     print("Found %s clusters in cube_%s\n" % (

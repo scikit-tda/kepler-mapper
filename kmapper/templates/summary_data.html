@@ -1,0 +1,22 @@
+<h2>Mapper Summary</h2>
+
+<hr><br>
+
+{% if mapper_summary.custom_meta %}
+    {% for k, v in mapper_summary.custom_meta.items() %}
+        <h3>{{ k }} </h3> <p> {{ v }}</p>
+    {% endfor %}
+{% endif %}
+
+<h3>Nodes</h3><p> {{ mapper_summary.n_nodes }} </p>
+
+<h3>Edges</h3><p> {{ mapper_summary.n_edges }} </p>
+
+<h3>Total Samples</h3><p> {{ mapper_summary.n_total }}</p>
+
+<h3>Unique Samples</h3><p> {{ mapper_summary.n_unique }}</p>
+
+{% include 'histogram.html' %}
+
+
+<hr><br>

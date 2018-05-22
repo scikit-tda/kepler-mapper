@@ -4,12 +4,21 @@
 }
 
 html, body {
-  height: 100%%;
+  height: 100%;
 }
 
 body {
   font-family: "Roboto Mono", "Helvetica", sans-serif;
   font-size: 14px;
+}
+
+#logo {
+  position: absolute;
+  right: 00px;
+  top: 0px;
+  width: 90px;
+  height: 90px;
+  z-index: 999999;
 }
 
 #display {
@@ -40,13 +49,21 @@ h3 {
   text-transform: uppercase;
 }
 
-#meta h3 {
+h4 {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding-bottom:0px;
+}
+
+
+#meta_content h3 {
   float: left;
   padding-right: 8px;
 }
 
-p, #tooltip h3, ol, ul, table {
-  padding-bottom: 20px;
+p, #tooltip_content h3, ol, ul, table {
+  padding-bottom: 10px;
 }
 
 ol, ul {
@@ -62,86 +79,103 @@ a {
   text-decoration: none;
 }
 
+#panes {
+    /* background: #e24d4d; */
+  /* position: absolute; */
+  /* height: 100%; */
+  /* width: 100%; */
+  /* display: block; */
+  /* z-index: 9999; */
+}
+
 a:hover {
   color: #2ecc71;
 }
 
 #header {
   height: 35px;
-  padding: 20px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 9999;
+  /* padding-top: 20px; */
+  padding:10px;
+  padding-left:20px;
+  position: relative;
 }
 
-#display #header {
+#display #header, #display #toolbar {
   background: #111111;
-  box-shadow: 0px 0px 4px #000
+  box-shadow: 0px 0px 4px #000;
 }
 
-#print #header {
+#print #header, #print #toolbar {
   background: #FFF;
 }
 
+
 #canvas {
-  height: 100%%;
-  width: 100%%;
+  position: absolute;
+  height: 100%;
+  width: 100%;
   display: block;
 }
 
-#tooltip {
-  position: absolute;
-  top: 75px;
-  left: 0;
-  bottom: 0;
-  width: 320px;
+
+#toolbar {
+  position: relative;
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  width: 100%;
+  overflow: auto;
+}
+
+/* #display #toolbar {
+  background: #111111;
+}
+
+#print #toolbar {
+  background: #FFF;
+} */
+
+.tool_item {
+  padding-left: 20px;
+  position: relative;
+  float: left;
+}
+
+.pane_content {
+  position: relative;
+  float: left;
+  width: 300px;
+  height:100%;
   padding: 20px;
   overflow: auto;
   display: none;
 }
 
-#display #tooltip {
+#helptip_content {
+  float:right;
+}
+
+#display .pane_content {
   background: #191919;
 }
 
-#print #tooltip {
+#print .pane_content{
   background: #FFF;
 }
 
-#meta {
-  position: absolute;
-  top: 75px;
-  right: 0;
-  bottom: 0;
-  width: 320px;
-  padding: 20px;
-  overflow: auto;
+#meta_content {
+  float:right;
 }
 
-#display #meta {
-  background: #191919;
-}
-
-#print #meta {
-  background: #FFF;
-}
-
-#meta_control, #tooltip_control {
-  position: absolute;
-  right: 20px;
-}
-
-#meta::-webkit-scrollbar, #tooltip::-webkit-scrollbar {
+#meta_content::-webkit-scrollbar, #tooltip_content::-webkit-scrollbar {
   width: 1em;
 }
 
-#meta::-webkit-scrollbar-track, #tooltip::-webkit-scrollbar-track {
+#meta_content::-webkit-scrollbar-track, #tooltip_content::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
 
-#meta::-webkit-scrollbar-thumb, #tooltip::-webkit-scrollbar-thumb {
+#meta_content::-webkit-scrollbar-thumb, #tooltip_content::-webkit-scrollbar-thumb {
   background-color: darkgrey;
   outline: 1px solid slategrey;
 }

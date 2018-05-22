@@ -1,17 +1,29 @@
 from __future__ import division
 
+import warnings
 from itertools import product
 import numpy as np
 
 # TODO: Incorporate @pablodecm's cover API.
 
+
 class Cover():
     """Helper class that defines the default covering scheme
     """
 
-    def __init__(self, nr_cubes=10, overlap_perc=0.2):
-        self.nr_cubes = nr_cubes
-        self.overlap_perc = overlap_perc
+    def __init__(self,
+                 n_cubes=10,
+                 perc_overlap=0.2,
+                 # Deprecated parameters:
+                 nr_cubes=None,
+                 overlap_perc=None):
+
+        self.n_cubes = nr_cubes if nr_cubes else n_cubes
+        self.perc_overlap = overlap_perc if overlap_perc else perc_overlap
+
+        if overlap_perc is not None or nr_cubes is not None:
+            warnings.warn(
+                "Arguements `overlap_perc` and `nr_cubes` have been replaced with `perc_overlap` and `n_cubes`. Use `perc_overlap` and `n_cubes` instead. They will be removed in future releases.", DeprecationWarning)
 
     def define_bins(self, data):
         """Returns an iterable of all bins in the cover.
@@ -27,11 +39,11 @@ class Cover():
         bounds = (np.min(indexless_data, axis=0),
                   np.max(indexless_data, axis=0))
 
-        # We chop up the min-max column ranges into 'nr_cubes' parts
-        self.chunk_dist = (bounds[1] - bounds[0]) / self.nr_cubes
+        # We chop up the min-max column ranges into 'n_cubes' parts
+        self.chunk_dist = (bounds[1] - bounds[0]) / self.n_cubes
 
         # We calculate the overlapping windows distance
-        self.overlap_dist = self.overlap_perc * self.chunk_dist
+        self.overlap_dist = self.perc_overlap * self.chunk_dist
 
         # We find our starting point
         self.d = bounds[0]
@@ -41,12 +53,12 @@ class Cover():
         self.di = np.array(range(1, data.shape[1]))
         self.nr_dimensions = len(self.di)
 
-        if type(self.nr_cubes) is not list:
-            cubes = [self.nr_cubes] * self.nr_dimensions
+        if type(self.n_cubes) is not list:
+            cubes = [self.n_cubes] * self.nr_dimensions
         else:
-            assert len(self.nr_cubes) == self.nr_dimensions, "There are {} ({}) dimensions specified but {} dimensions needing specification. If you supply specific number of cubes for each dimension, please supply the correct number.".format(
-                len(self.nr_cubes), self.nr_cubes, self.nr_dimensions)
-            cubes = self.nr_cubes
+            assert len(self.n_cubes) == self.nr_dimensions, "There are {} ({}) dimensions specified but {} dimensions needing specification. If you supply specific number of cubes for each dimension, please supply the correct number.".format(
+                len(self.n_cubes), self.n_cubes, self.nr_dimensions)
+            cubes = self.n_cubes
 
         coordinates = map(np.asarray, product(
             *(range(i) for i in cubes)))

@@ -6,35 +6,51 @@
   <meta name="generator" content="KeplerMapper">
   <title>{{ title }} | KeplerMapper</title>
 
-  <link rel="icon" type="image/png" href="https://i.imgur.com/2eZcTZn.png" />
+  <link rel="icon" type="image/png" href="http://i.imgur.com/axOG6GJ.jpg" />
+
   <link href='https://fonts.googleapis.com/css?family=Roboto+Mono:700,300' rel='stylesheet' type='text/css'>
-  <style> {{ css_text }} </style>
+  <style>{{ css_text }}</style>
 
 </head>
 
 <body id="display">
-  <div id="json_graph" data-graph='{{ json_graph }}' style="display:none"></div>
-  <div id="header">
-    <noscript><b>Requires JavaScript (d3.js) for visualizations</b></noscript>
-    <h1>{{ title }}</h1>
-  </div>
+
+  <!-- Storage of data so D3 can access it later. This is in <body> so Chrome doesn't wholesale move all head content to body. -->
+  <div id="json_graph" data-graph='{{ mapper_data|tojson|safe }}' style="display:none"></div>
+  
   <div id="canvas">
-
+      <!-- Graph will go in here -->
   </div>
-  <div id="tooltip">
-    <div id="tooltip_control">
-      <a href="#"><small>[-]</small></a>
-    </div>
-    <h2>Cluster Meta</h2>
-    <div id="tooltip_content">
 
+  <!-- Seperate canvas and panes so we can overlay elements -->
+  <div id="panes">
+    <img id="logo" src="https://i.imgur.com/bxux6WA.png">
+    {% include "toolbar.html" %}
+
+    <div id="header">
+      <noscript><b>Requires JavaScript (d3.js) for visualizations</b></noscript>
+      <h1> {{ title }} </h1>
     </div>
-  </div>
-  <div id="meta">
-    <div id="meta_control">
-      <a href="#"><small>[-]</small></a>
+
+    <!-- Panes for each of the tips -->
+    <div id="tooltip">
+      <div id="tooltip_content" class="pane_content">
+        Hover over a node to see attributes about it.
+      </div>
     </div>
-    <h2>Graph Meta</h2> {{ meta }} {{ color_distribution }}
+
+    <div id="helptip">
+        <div id="helptip_content" class="pane_content">
+            {% include 'help.html' %} 
+        </div>
+      </div>
+
+    <div id="meta">
+      <div id="meta_content" class="pane_content">
+        {% include 'summary_data.html' %} 
+      </div>
+    </div>
+    
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>

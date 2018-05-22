@@ -2,7 +2,7 @@ import numpy as np
 import sklearn
 import kmapper as km
 
-data = np.genfromtxt('lion-reference.csv',delimiter=',')
+data = np.genfromtxt('lion-reference.csv', delimiter=',')
 
 mapper = km.KeplerMapper(verbose=1)
 
@@ -11,7 +11,7 @@ lens = mapper.fit_transform(data)
 graph = mapper.map(lens,
                    data,
                    clusterer=sklearn.cluster.DBSCAN(eps=0.1, min_samples=5),
-                   coverer=km.Cover(nr_cubes=10, overlap_perc=0.2))
+                   cover=km.Cover(n_cubes=10, perc_overlap=0.2))
 
 mapper.visualize(graph,
                  path_html="lion_keplermapper_output.html")

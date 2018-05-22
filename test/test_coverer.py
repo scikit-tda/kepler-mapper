@@ -14,19 +14,19 @@ class TestCover():
 
     def test_define_diff_bins_per_dim(self):
         data = np.arange(30).reshape(10, 3)
-        c = Cover(nr_cubes=[5, 10])
+        c = Cover(n_cubes=[5, 10])
         cubes = c.define_bins(data)
         assert len(list(cubes)) == 5 * 10
 
     def test_find_entries_runs_with_diff_bins(self):
         data = np.arange(30).reshape(10, 3)
-        c = Cover(nr_cubes=[5, 10])
+        c = Cover(n_cubes=[5, 10])
         cubes = list(c.define_bins(data))
         _ = c.find_entries(data, cubes[0])
 
     def test_cube_count(self):
         data = np.arange(30).reshape(10, 3)
-        c = Cover(nr_cubes=10)
+        c = Cover(n_cubes=10)
         cubes = c.define_bins(data)
 
         assert len(list(cubes)) == 10**2, "idx column is ignored"
@@ -34,14 +34,14 @@ class TestCover():
     def test_cube_dim(self):
 
         data = np.arange(30).reshape(10, 3)
-        c = Cover(nr_cubes=10)
+        c = Cover(n_cubes=10)
         cubes = c.define_bins(data)
 
         assert all(len(cube) == 2 for cube in cubes)
 
     def test_single_dim(self):
         data = np.arange(20).reshape(10, 2)
-        c = Cover(nr_cubes=10)
+        c = Cover(n_cubes=10)
         cubes = c.define_bins(data)
 
         assert all(len(cube) == 1 for cube in cubes)
@@ -49,7 +49,7 @@ class TestCover():
     def test_chunk_dist(self):
         data = np.arange(20).reshape(10, 2)
 
-        cover = Cover(nr_cubes=10)
+        cover = Cover(n_cubes=10)
         _ = cover.define_bins(data)
         chunks = list(cover.chunk_dist)
         # TODO: this test is really fagile and has magic number, fix.
@@ -58,13 +58,13 @@ class TestCover():
     def test_nr_dimensions(self):
         data = np.arange(30).reshape(10, 3)
 
-        c = Cover(nr_cubes=10)
+        c = Cover(n_cubes=10)
         _ = c.define_bins(data)
         assert c.nr_dimensions == 2
 
     def test_bound_is_min(self):
         data = np.arange(30).reshape(10, 3)
-        cov = Cover(nr_cubes=10)
+        cov = Cover(n_cubes=10)
         _ = cov.define_bins(data)
         bounds = list(zip(cov.d, range(1, 10)))
         assert all(b[0] == b[1] for b in bounds)
@@ -72,7 +72,7 @@ class TestCover():
     def test_entries_even(self):
         data = np.arange(40).reshape(20, 2)
 
-        cover = Cover(nr_cubes=10)
+        cover = Cover(n_cubes=10)
         cubes = cover.define_bins(data)
 
         for cube in cubes:
@@ -85,7 +85,7 @@ class TestCover():
 
         data = np.arange(40).reshape(20, 2)
 
-        cover = Cover(nr_cubes=10)
+        cover = Cover(n_cubes=10)
         cubes = cover.define_bins(data)
         cubes = list(cubes)
         entries = [cover.find_entries(data, cube) for cube in cubes]
@@ -98,7 +98,7 @@ class TestCover():
     def test_cubes_overlap(self):
         data = np.arange(40).reshape(20, 2)
 
-        cover = Cover(nr_cubes=10)
+        cover = Cover(n_cubes=10)
         cubes = cover.define_bins(data)
 
         entries = []
@@ -114,15 +114,10 @@ class TestCover():
 def test_BasicCover():
     # TODO: add a mock that asserts the cover was called appropriately.. or test number of cubes etc.
     data, _ = datasets.make_circles()
+
+    data = data.astype(np.float64)
     mapper = KeplerMapper()
     graph = mapper.map(data)
     mapper.visualize(graph)
 
-# def test_diffCover():
-#     data, _ = datasets.make_circles()
-#
-#
-#     mapper = km.KeplerMapper()
-#     cover = km.DiffDimCover(data, nr_cubes=[3,4], overlap_perc=[0.2, 0.4])
-#     graph = mapper.map(data, coverer=cover)
-#     mapper.visualize(graph)
+

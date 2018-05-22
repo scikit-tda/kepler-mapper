@@ -2,21 +2,25 @@ import pytest
 import numpy as np
 
 import warnings
-from kmapper import KeplerMapper
+from kmapper import KeplerMapper, Cover
 
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.linear_model import Lasso
+from scipy import sparse
 
 
 class TestLogging():
     """ Simple tests that confirm map completes at each logging level
     """
 
-    def test_runs_with_logging_0(self):
+    def test_runs_with_logging_0(self, capsys):
         mapper = KeplerMapper(verbose=0)
         data = np.random.rand(100, 2)
         graph = mapper.map(data)
+
+        captured = capsys.readouterr()
+        assert captured[0] == ""
 
     def test_runs_with_logging_1(self):
         mapper = KeplerMapper(verbose=1)
@@ -27,6 +31,44 @@ class TestLogging():
         mapper = KeplerMapper(verbose=2)
         data = np.random.rand(100, 2)
         graph = mapper.map(data)
+
+    def test_logging_in_project(self, capsys):
+        mapper = KeplerMapper(verbose=2)
+        data = np.random.rand(100, 2)
+        lens = mapper.project(data)
+
+        captured = capsys.readouterr()
+        assert "Projecting on" in captured[0]
+
+    def test_logging_in_fit_transform(self, capsys):
+        mapper = KeplerMapper(verbose=2)
+        data = np.random.rand(100, 2)
+        lens = mapper.fit_transform(data)
+
+        captured = capsys.readouterr()
+        assert "Composing projection pipeline of length 1" in captured[0]
+
+
+class TestDataAccess:
+    def test_members_from_id(self):
+        mapper = KeplerMapper(verbose=1)
+        data = np.random.rand(100, 2)
+
+        ids = np.random.choice(10, 100)
+        data[ids] = 2
+
+        graph = mapper.map(data)
+        graph['nodes']['new node'] = ids
+        mems = mapper.data_from_cluster_id('new node', graph, data)
+        np.testing.assert_array_equal(data[ids], mems)
+
+    def test_wrong_id(self):
+        mapper = KeplerMapper(verbose=1)
+        data = np.random.rand(100, 2)
+
+        graph = mapper.map(data)
+        mems = mapper.data_from_cluster_id('new node', graph, data)
+        np.testing.assert_array_equal(mems, np.array([]))
 
 
 class TestLens():
@@ -45,7 +87,7 @@ class TestLens():
             ['max', np.max],
             ['min', np.min],
             ['std', np.std],
-            ['l2norm', np.linalg.norm]
+            ['l2norm', np.linalg.norm],
         ]
 
         first_point = data[0]
@@ -54,6 +96,19 @@ class TestLens():
             lens = mapper.fit_transform(data, projection=tag, scaler=None)
             np.testing.assert_almost_equal(lens[0][0], func(first_point))
             np.testing.assert_almost_equal(lens[-1][0], func(last_point))
+
+        # For dist_mean, just make sure the code runs without breaking, not sure how to test this best
+        lens = mapper.fit_transform(data, projection="dist_mean", scaler=None)
+
+    @pytest.mark.skip("Need to implement a test for this code")
+    def test_knn_distance(self):
+        pass
+
+    def test_sparse_array(self):
+        mapper = KeplerMapper()
+
+        data = sparse.random(100, 10)
+        lens = mapper.fit_transform(data)
 
     def test_lens_size(self):
         mapper = KeplerMapper()
@@ -117,6 +172,7 @@ class TestLens():
         np.testing.assert_allclose(lens, data[:, :1], atol=atol)
 
     def test_pipeline(self):
+        # TODO: break this test into many smaller ones.
         input_data = np.array([[1, 2], [3, 4], [5, 6], [7, 8]])
         atol_big = 0.1
         atol_small = 0.001
@@ -186,49 +242,3 @@ class TestLens():
         assert not np.array_equal(lens_10, lens_2)
         assert not np.array_equal(lens_10, lens_1)
 
-
-class TestAPIMaintenance():
-    """ These tests just confirm that new api changes are backwards compatible"""
-
-    def test_warn_old_api(self):
-        """ Confirm old api works but throws warning """
-
-        mapper = KeplerMapper()
-        data = np.random.rand(100, 10)
-        lens = mapper.fit_transform(data)
-
-        with pytest.deprecated_call():
-            graph = mapper.map(lens, data, nr_cubes=10)
-
-        with pytest.deprecated_call():
-            graph = mapper.map(lens, data, overlap_perc=10)
-
-        with pytest.deprecated_call():
-            graph = mapper.map(lens, data, nr_cubes=10, overlap_perc=0.1)
-
-    def test_new_api_old_defaults(self):
-        mapper = KeplerMapper()
-        data = np.random.rand(100, 10)
-        lens = mapper.fit_transform(data)
-
-        _ = mapper.map(lens, data, nr_cubes=10)
-        c2 = mapper.coverer
-
-        assert c2.overlap_perc == 0.1
-
-        _ = mapper.map(lens, data, overlap_perc=0.1)
-        c2 = mapper.coverer
-
-        assert c2.nr_cubes == 10
-
-    def test_no_warn_normally(self, recwarn):
-        """ Confirm that deprecation warnings behave as expected"""
-        mapper = KeplerMapper()
-        data = np.random.rand(100, 10)
-        lens = mapper.fit_transform(data)
-
-        warnings.simplefilter('always')
-        graph = mapper.map(lens, data)
-
-        assert len(recwarn) == 0
-        assert DeprecationWarning not in recwarn

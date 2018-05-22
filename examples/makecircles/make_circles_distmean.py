@@ -11,13 +11,12 @@ mapper = km.KeplerMapper(verbose=2)
 # Fit to and transform the data
 projected_data = mapper.fit_transform(data, projection="dist_mean")
 
-# Create dictionary called 'complex' with nodes, edges and meta-information
-complex = mapper.map(projected_X=projected_data, inverse_X=data,
-					 clusterer=sklearn.cluster.DBSCAN(eps=0.1, min_samples=5),
-					 nr_cubes=30, overlap_perc=0.2)
+# Create dictionary called 'simplicial_complex' with nodes, edges and meta-information
+simplicial_complex = mapper.map(projected_data, X=data,
+                                clusterer=sklearn.cluster.DBSCAN(eps=0.1, min_samples=5),
+                                cover=km.Cover())
 
 # Visualize it
-mapper.visualize(complex, path_html="keplermapper-makecircles-distmean.html",
-				 title="datasets.make_circles(n_samples=5000, noise=0.05, factor=0.3)",
-				 custom_tooltips=labels, color_function="average_signal_cluster",
-				 graph_gravity=0.03, graph_link_distance=30, graph_charge=-80)
+mapper.visualize(simplicial_complex, path_html="keplermapper-makecircles-distmean.html",
+                 custom_meta={"Data:": "datasets.make_circles(n_samples=5000, noise=0.05, factor=0.3)"},
+                 custom_tooltips=labels)

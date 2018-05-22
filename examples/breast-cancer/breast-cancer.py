@@ -15,7 +15,7 @@ from sklearn import ensemble
 df = pd.read_csv("data.csv")
 feature_names = [c for c in df.columns if c not in ["id", "diagnosis"]]
 df["diagnosis"] = df["diagnosis"].apply(lambda x: 1 if x == "M" else 0)
-X = np.array(df[feature_names].fillna(0)) # quick and dirty imputation
+X = np.array(df[feature_names].fillna(0))  # quick and dirty imputation
 y = np.array(df["diagnosis"])
 
 # We create a custom 1-D lens with Isolation Forest
@@ -33,10 +33,9 @@ lens = np.c_[lens1, lens2]
 # Create the simplicial complex
 graph = mapper.map(lens,
                    X,
-                   nr_cubes=15,
-                   overlap_perc=0.7,
+                   cover=km.Cover(n_cubes=15, perc_overlap=0.7),
                    clusterer=sklearn.cluster.KMeans(n_clusters=2,
-                                               random_state=1618033))
+                                                    random_state=1618033))
 
 # Visualization
 mapper.visualize(graph,

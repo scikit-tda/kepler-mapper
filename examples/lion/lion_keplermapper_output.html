@@ -143,6 +143,20 @@ a:hover {
   width: 320px;
   padding: 20px;
   overflow: auto;
+  display: none;
+}
+
+/* Chrome only: */
+@media all and (-webkit-min-device-pixel-ratio:0) and (min-resolution: .001dpcm) { 
+  .pane_content {
+    width: 314px;
+    padding-right: 10px;
+  }
+}
+
+
+#helptip_content {
+  float:right;
 }
 
 #display #meta {
@@ -269,7 +283,7 @@ td {
 <table>
     <tr>
         <th>Key</th>
-        <th style="width:50px;"><small>Action</small></th>
+        <th><small>Action</small></th>
     </tr>
 
     <tr>

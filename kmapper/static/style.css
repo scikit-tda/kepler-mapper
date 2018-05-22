@@ -151,6 +151,15 @@ a:hover {
   display: none;
 }
 
+/* Chrome only: */
+@media all and (-webkit-min-device-pixel-ratio:0) and (min-resolution: .001dpcm) { 
+  .pane_content {
+    width: 314px;
+    padding-right: 10px;
+  }
+}
+
+
 #helptip_content {
   float:right;
 }

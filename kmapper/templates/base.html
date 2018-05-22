@@ -2,9 +2,6 @@
 <html>
 
 <head>
-  <!-- Storage of data so D3 can access it later -->
-  <div id="json_graph" data-graph='{{ mapper_data|tojson|safe }}' style="display:none"></div>
-
   <meta charset="utf-8">
   <meta name="generator" content="KeplerMapper">
   <title>{{ title }} | KeplerMapper</title>
@@ -18,6 +15,9 @@
 
 <body id="display">
 
+  <!-- Storage of data so D3 can access it later. This is in <body> so Chrome doesn't wholesale move all head content to body. -->
+  <div id="json_graph" data-graph='{{ mapper_data|tojson|safe }}' style="display:none"></div>
+  
   <div id="canvas">
       <!-- Graph will go in here -->
   </div>

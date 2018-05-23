@@ -344,7 +344,10 @@ class KeplerMapper(object):
         # to adjust for the minimal number of samples inside an interval before
         # we consider clustering or skipping it.
         cluster_params = clusterer.get_params()
-        min_cluster_samples = cluster_params.get("n_clusters", 1)
+        
+        min_cluster_samples = cluster_params.get("n_clusters", None)
+        if min_cluster_samples is None:
+            min_cluster_samples = cluster_params.get("min_cluster_size", 1)
 
         if self.verbose > 1:
             print("Minimal points in hypercube before clustering: %d" %

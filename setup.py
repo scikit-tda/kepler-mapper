@@ -6,7 +6,7 @@ with open('README.md') as f:
     long_description = f.read()
 
 setup(name='kmapper',
-      version='1.1.5',
+      version='1.1.6.dev0',
       description='Python implementation of Mapper algorithm for Topological Data Analysis.',
       long_description=long_description,
       long_description_content_type="text/markdown",	

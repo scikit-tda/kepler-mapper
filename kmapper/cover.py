@@ -6,6 +6,7 @@ import numpy as np
 
 # TODO: Incorporate @pablodecm's cover API.
 
+
 class Cover():
     """Helper class that defines the default covering scheme
     """
@@ -94,6 +95,7 @@ class Cover():
 
         return hypercube
 
+
 class CoverBounds(Cover):
     """
     Class that allows cover to be defined using upper and lower bounds for given dimensions.
@@ -106,14 +108,14 @@ class CoverBounds(Cover):
                  nr_cubes=None,
                  overlap_perc=None,
                  # Bounds parameters
-                 limits = None):
+                 limits=None):
         """
         limits: Numpy Array (n_dim,2)
             (lower bound, upper bound) for every dimension
             If a value is set to np.float('inf'), the bound will be assumed to be the min/max value of the dimension
             Instead, if limits == None, this class works identically to the original Cover class.
         """
-        Cover.__init__(self,n_cubes, perc_overlap, nr_cubes, overlap_perc)
+        Cover.__init__(self.n_cubes, perc_overlap, nr_cubes, overlap_perc)
         self.limits = limits
 
     def define_bins(self, data):
@@ -127,12 +129,12 @@ class CoverBounds(Cover):
         """
 
         indexless_data = data[:, 1:]
-        try: # Catch to see if self.limits has been set to None - then we just ape the behavior from Cover.
+        try:  # Catch to see if self.limits has been set to None - then we just ape the behavior from Cover.
             if self.limits == None:
                 bounds = (np.min(indexless_data, axis=0),
                           np.max(indexless_data, axis=0))
-        except ValueError: # self.limits is an array
-            dump_arr = np.zeros(self.limits.shape) # dump_arr is used so we can change the values of self.limits from None to the min/max
+        except ValueError:  # self.limits is an array
+            dump_arr = np.zeros(self.limits.shape)  # dump_arr is used so we can change the values of self.limits from None to the min/max
             dump_arr[:,0] = np.min(indexless_data, axis=0)
             dump_arr[:,1] = np.max(indexless_data, axis=0)
             dump_arr[self.limits != np.float('inf')] = 0
@@ -169,3 +171,4 @@ class CoverBounds(Cover):
             *(range(i) for i in cubes)))
 
         return coordinates
+    

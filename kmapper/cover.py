@@ -153,8 +153,9 @@ class CoverBounds(Cover):
             bounds = (bounds_arr[:,0], bounds_arr[:,1])
 
             # Check new bounds are actually sensible - do they cover the range of values in the dataset?
-            assert (np.min(indexless_data, axis=0) >= bounds_arr[:,0]).all(), 'The lower limit has been set to be higher than the actual minimum'
-            assert (np.max(indexless_data, axis=0) <= bounds_arr[:,1]).all(), 'The upper limit has been set to be lower than the actual maximum'
+            if (np.min(indexless_data, axis=0) >= bounds_arr[:,0]).all() or \
+                    (np.max(indexless_data, axis=0) <= bounds_arr[:,1]).all():
+                warnings.warn('The limits given do not cover the entire range of the lens functions')
             
         else:  # It must be None, as we checked to see if it is array-like or None in __init__
             bounds = (np.min(indexless_data, axis=0),

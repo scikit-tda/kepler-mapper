@@ -47,6 +47,7 @@ class Cover():
 
         # We find our starting point
         self.d = bounds[0]
+        self.end = bounds[1]
 
         # Use a dimension index array on the projected X
         # (For now this uses the entire dimensionality, but we keep for experimentation)
@@ -63,6 +64,8 @@ class Cover():
         coordinates = map(np.asarray, product(
             *(range(i) for i in cubes)))
 
+        print coordinates
+        raise ValueError
         return coordinates
 
     def find_entries(self, data, cube, verbose=0):

@@ -151,9 +151,16 @@ class CoverBounds(Cover):
             """ bounds_arr[i,j] = self.limits[i,j] if self.limits[i,j] == inf
                 bounds_arr[i,j] = max/min(indexless_data[i]) if self.limits == inf """
             bounds = (bounds_arr[:,0], bounds_arr[:,1])
+
+            # Check new bounds are actually sensible - do they cover the range of values in the dataset?
+            assert (np.min(indexless_data, axis=0) >= bounds_arr[:,0]).all(), 'The lower limit has been set to be higher than the actual minimum'
+            assert (np.max(indexless_data, axis=0) <= bounds_arr[:,1]).all(), 'The upper limit has been set to be lower than the actual maximum'
+            
         else:  # It must be None, as we checked to see if it is array-like or None in __init__
             bounds = (np.min(indexless_data, axis=0),
                           np.max(indexless_data, axis=0))
+
+
 
         # Now bounds have been set, we just copy the behavior of Cover.define_bins
 

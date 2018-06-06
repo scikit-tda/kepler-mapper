@@ -169,33 +169,3 @@ class CoverBounds(Cover):
             *(range(i) for i in cubes)))
 
         return coordinates
-
-    def find_entries(self, data, cube, verbose=0):
-        """Find all entries in data that are in the given cube.
-
-        Parameters
-        ----------
-        data: Numpy array
-            Either projected data or original data.
-        cube:
-            an item from the list of cubes provided by `cover.define_bins` iterable.
-
-        Returns
-        -------
-        hypercube: Numpy Array
-            All entries in data that are in cube.
-
-        """
-
-        chunk = self.chunk_dist
-        overlap = self.overlap_dist
-        lower_bound = self.d + (cube * chunk)
-        upper_bound = lower_bound + chunk + overlap
-
-        # Slice the hypercube
-        entries = (data[:, self.di] >= lower_bound) & \
-                  (data[:, self.di] < upper_bound)
-
-        hypercube = data[np.invert(np.any(entries == False, axis=1))]
-
-        return hypercube

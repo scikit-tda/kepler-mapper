@@ -138,8 +138,8 @@ class CoverBounds(Cover):
             dump_arr[self.limits != np.float('inf')] = 0
             self.limits[self.limits == np.float('inf')] = 0
             bounds_arr = self.limits + dump_arr
-            """ bounds_arr[i,j] = self.limits[i,j] if self.limits[i,j] == None
-                bounds_arr[i,j] = max/min(indexless_data[i]) if self.limits == None """
+            """ bounds_arr[i,j] = self.limits[i,j] if self.limits[i,j] == inf
+                bounds_arr[i,j] = max/min(indexless_data[i]) if self.limits == inf """
             bounds = (bounds_arr[:,0], bounds_arr[:,1])
 
         # Now bounds have been set, we just copy the behavior of Cover.define_bins

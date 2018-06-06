@@ -113,9 +113,20 @@ class CoverBounds(Cover):
             (lower bound, upper bound) for every dimension
             If a value is set to np.float('inf'), the bound will be assumed to be the min/max value of the dimension
             Instead, if limits == None, this class works identically to the original Cover class.
+            i.e.
+                [[min_1, max_1],
+                 [min_2, max_2],
+                 [min_3, max_3]]
         """
         Cover.__init__(self, n_cubes, perc_overlap, nr_cubes, overlap_perc)
         self.limits = limits
+
+        # Check limits can actually be handled and are set appropriately
+        NoneType = type(None)
+        assert isinstance(self.limits, (list, np.ndarray, NoneType)), 'limits should either be an array or None'
+        if isinstance(self.limits, (list, np.ndarray)):
+            self.limits = np.array(self.limits)
+            assert self.limits.shape[1] == 2, 'limits should be (n_dim,2) in shape'
 
     def define_bins(self, data):
         """Returns an iterable of all bins in the cover.
@@ -128,11 +139,9 @@ class CoverBounds(Cover):
         """
 
         indexless_data = data[:, 1:]
-        try:  # Catch to see if self.limits has been set to None - then we just ape the behavior from Cover.
-            if self.limits == None:
-                bounds = (np.min(indexless_data, axis=0),
-                          np.max(indexless_data, axis=0))
-        except ValueError:  # self.limits is an array
+
+        # If self.limits is array-like
+        if isinstance(self.limits, np.ndarray):
             dump_arr = np.zeros(self.limits.shape)  # dump_arr is used so we can change the values of self.limits from None to the min/max
             dump_arr[:,0] = np.min(indexless_data, axis=0)
             dump_arr[:,1] = np.max(indexless_data, axis=0)
@@ -142,6 +151,9 @@ class CoverBounds(Cover):
             """ bounds_arr[i,j] = self.limits[i,j] if self.limits[i,j] == inf
                 bounds_arr[i,j] = max/min(indexless_data[i]) if self.limits == inf """
             bounds = (bounds_arr[:,0], bounds_arr[:,1])
+        else:  # It must be None, as we checked to see if it is array-like or None in __init__
+            bounds = (np.min(indexless_data, axis=0),
+                          np.max(indexless_data, axis=0))
 
         # Now bounds have been set, we just copy the behavior of Cover.define_bins
 

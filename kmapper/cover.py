@@ -153,13 +153,15 @@ class CoverBounds(Cover):
             bounds = (bounds_arr[:,0], bounds_arr[:,1])
 
             # Check new bounds are actually sensible - do they cover the range of values in the dataset?
-            if (np.min(indexless_data, axis=0) >= bounds_arr[:,0]).all() or \
-                    (np.max(indexless_data, axis=0) <= bounds_arr[:,1]).all():
-                warnings.warn('The limits given do not cover the entire range of the lens functions')
-            
+            if not ((np.min(indexless_data, axis=0) >= bounds_arr[:,0]).all() or \
+                    (np.max(indexless_data, axis=0) <= bounds_arr[:,1]).all()):
+                warnings.warn('The limits given do not cover the entire range of the lens functions\n' +\
+                              'Actual Minima: %s\tInput Minima: %s\n' % (np.min(indexless_data, axis=0), bounds_arr[:,0])+ \
+                              'Actual Maxima: %s\tInput Maxima: %s\n' % (np.max(indexless_data, axis=0), bounds_arr[:,1]))
+
         else:  # It must be None, as we checked to see if it is array-like or None in __init__
             bounds = (np.min(indexless_data, axis=0),
-                          np.max(indexless_data, axis=0))
+                      np.max(indexless_data, axis=0))
 
 
 

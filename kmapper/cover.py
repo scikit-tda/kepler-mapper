@@ -115,7 +115,7 @@ class CoverBounds(Cover):
             If a value is set to np.float('inf'), the bound will be assumed to be the min/max value of the dimension
             Instead, if limits == None, this class works identically to the original Cover class.
         """
-        Cover.__init__(self.n_cubes, perc_overlap, nr_cubes, overlap_perc)
+        Cover.__init__(self, n_cubes, perc_overlap, nr_cubes, overlap_perc)
         self.limits = limits
 
     def define_bins(self, data):
@@ -171,4 +171,3 @@ class CoverBounds(Cover):
             *(range(i) for i in cubes)))
 
         return coordinates
-    

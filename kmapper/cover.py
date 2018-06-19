@@ -103,9 +103,6 @@ class CoverBounds(Cover):
     def __init__(self,
                  n_cubes=10,
                  perc_overlap=0.2,
-                 # Deprecated parameters:
-                 nr_cubes=None,
-                 overlap_perc=None,
                  # Bounds parameters
                  limits=None):
         """
@@ -118,12 +115,12 @@ class CoverBounds(Cover):
                  [min_2, max_2],
                  [min_3, max_3]]
         """
-        Cover.__init__(self, n_cubes, perc_overlap, nr_cubes, overlap_perc)
+        Cover.__init__(self, n_cubes, perc_overlap)
         self.limits = limits
 
         # Check limits can actually be handled and are set appropriately
         NoneType = type(None)
-        assert isinstance(self.limits, (list, np.ndarray, NoneType)), 'limits should either be an array or None'
+        assert isinstance(self.limits, (list, np.ndarray, type(None)), 'limits should either be an array or None'
         if isinstance(self.limits, (list, np.ndarray)):
             self.limits = np.array(self.limits)
             assert self.limits.shape[1] == 2, 'limits should be (n_dim,2) in shape'
@@ -142,12 +139,13 @@ class CoverBounds(Cover):
 
         # If self.limits is array-like
         if isinstance(self.limits, np.ndarray):
-            dump_arr = np.zeros(self.limits.shape)  # dump_arr is used so we can change the values of self.limits from None to the min/max
-            dump_arr[:,0] = np.min(indexless_data, axis=0)
-            dump_arr[:,1] = np.max(indexless_data, axis=0)
-            dump_arr[self.limits != np.float('inf')] = 0
+            # limits_array is used so we can change the values of self.limits from None to the min/max
+            limits_array = np.zeros(self.limits.shape)
+            limits_array[:,0] = np.min(indexless_data, axis=0)
+            limits_array[:,1] = np.max(indexless_data, axis=0)
+            limits_array[self.limits != np.float('inf')] = 0
             self.limits[self.limits == np.float('inf')] = 0
-            bounds_arr = self.limits + dump_arr
+            bounds_arr = self.limits + limits_array
             """ bounds_arr[i,j] = self.limits[i,j] if self.limits[i,j] == inf
                 bounds_arr[i,j] = max/min(indexless_data[i]) if self.limits == inf """
             bounds = (bounds_arr[:,0], bounds_arr[:,1])
@@ -160,10 +158,9 @@ class CoverBounds(Cover):
                               'Actual Maxima: %s\tInput Maxima: %s\n' % (np.max(indexless_data, axis=0), bounds_arr[:,1]))
 
         else:  # It must be None, as we checked to see if it is array-like or None in __init__
+            warnings.warn("Using None as the limits is identical to using the normal Cover class")
             bounds = (np.min(indexless_data, axis=0),
                       np.max(indexless_data, axis=0))
-
-
 
         # Now bounds have been set, we just copy the behavior of Cover.define_bins
 

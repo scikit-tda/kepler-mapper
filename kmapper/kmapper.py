@@ -35,11 +35,20 @@ class KeplerMapper(object):
     """
 
     def __init__(self, verbose=0):
+        """
+        Inputs
+        ======
+
+        verbose: int, default is 0
+            Logging level. Currently 3 levels (0,1,2) are supported.
+                - for no logging, set `verbose=0`, 
+                - for some logging, set `verbose=1`,
+                - for complete logging, set `verbose=2`
+        """
+
+
         # TODO: move as many of the arguments from fit_transform and map into here.
         self.verbose = verbose
-        self.chunk_dist = []
-        self.overlap_dist = []
-        self.d = []
         self.projection = None
         self.scaler = None
         self.cover = None
@@ -59,7 +68,10 @@ class KeplerMapper(object):
             Projection parameter is either a string, a Scikit-learn class with fit_transform, like manifold.TSNE(), or a list of dimension indices. A string from ["sum", "mean", "median", "max", "min", "std", "dist_mean", "l2norm", "knn_distance_n"]. If using knn_distance_n write the number of desired neighbors in place of n: knn_distance_5 for summed distances to 5 nearest neighbors. Default = "sum".
 
         scaler :
-            Scikit-Learn API compatible scaler. Scaler of the data applied before mapping. Use None for no scaling. Default = preprocessing.MinMaxScaler() if None, do no scaling, else apply scaling to the projection. Default: Min-Max scaling distance_matrix: False or any of: ["braycurtis", "canberra", "chebyshev", "cityblock", "correlation", "cosine", "dice", "euclidean", "hamming", "jaccard", "kulsinski", "mahalanobis", "matching", "minkowski", "rogerstanimoto", "russellrao", "seuclidean", "sokalmichener", "sokalsneath", "sqeuclidean", "yule"]. If False do nothing, else create a squared distance matrix with the chosen metric, before applying the projection.
+            Scikit-Learn API compatible scaler. Scaler of the data applied before mapping. Use None for no scaling. Default = preprocessing.MinMaxScaler() if None, do no scaling, else apply scaling to the projection. Default: Min-Max scaling
+
+        distance_matrix:
+            False or any of: ["braycurtis", "canberra", "chebyshev", "cityblock", "correlation", "cosine", "dice", "euclidean", "hamming", "jaccard", "kulsinski", "mahalanobis", "matching", "minkowski", "rogerstanimoto", "russellrao", "seuclidean", "sokalmichener", "sokalsneath", "sqeuclidean", "yule"]. If False do nothing, else create a squared distance matrix with the chosen metric, before applying the projection.
 
         Returns
         -------
@@ -138,26 +150,6 @@ class KeplerMapper(object):
 
             if projection in projection_funcs.keys():
                 X = projection_funcs[projection](X, axis=1).reshape((X.shape[0], 1))
-
-            # if projection == "sum":  # sum of row
-            #     X = np.sum(X, axis=1).reshape((X.shape[0], 1))
-            # if projection == "mean":  # mean of row
-            #     X = np.mean(X, axis=1).reshape((X.shape[0], 1))
-            # if projection == "median":  # median of row
-            #     X = np.median(X, axis=1).reshape((X.shape[0], 1))
-            # if projection == "max":  # max of row
-            #     X = np.max(X, axis=1).reshape((X.shape[0], 1))
-            # if projection == "min":  # min of row
-            #     X = np.min(X, axis=1).reshape((X.shape[0], 1))
-            # if projection == "std":  # std of row
-            #     X = np.std(X, axis=1).reshape((X.shape[0], 1))
-            # if projection == "l2norm":
-            #     X = np.linalg.norm(X, axis=1).reshape((X.shape[0], 1))
-
-            # if projection == "dist_mean":  # Distance of x to mean of X
-            #     X_mean = np.mean(X, axis=0)
-            #     X = np.sum(np.sqrt((X - X_mean)**2),
-            #                axis=1).reshape((X.shape[0], 1))
 
             if "knn_distance_" in projection:
                 n_neighbors = int(projection.split("_")[2])
@@ -249,6 +241,7 @@ class KeplerMapper(object):
             clusterer=cluster.DBSCAN(eps=0.5, min_samples=3),
             cover=Cover(n_cubes=10, perc_overlap=0.1),
             nerve=GraphNerve(),
+            precomputed=False,
 
             # These arguments are all deprecated
             overlap_perc=None,
@@ -273,14 +266,18 @@ class KeplerMapper(object):
         nerve: kmapper.Nerve
             Nerve builder implementing `__call__(nodes)` API
 
-
+        precomputed : Boolean
+            Tell Mapper whether the data that you are clustering on is a precomputed distance matrix. If set to
+            `True`, the assumption is that you are also telling your `clusterer` that `metric='precomputed'` (which
+            is an argument for DBSCAN among others), which 
+            will then cause the clusterer to expect a square distance matrix for each hypercube. `precomputed=True` will give a square matrix
+            to the clusterer to fit on for each hypercube.
 
         nr_cubes: Int (Deprecated)
             The number of intervals/hypercubes to create. Default = 10. (DeprecationWarning: define Cover explicitly in future versions)
 
         overlap_perc: Float (Deprecated)
             The percentage of overlap "between" the intervals/hypercubes. Default = 0.1. (DeprecationWarning: define Cover explicitly in future versions)
-
 
         Returns
         =======
@@ -370,12 +367,16 @@ class KeplerMapper(object):
 
             # If at least min_cluster_samples samples inside the hypercube
             if hypercube.shape[0] >= min_cluster_samples:
-
                 # Cluster the data point(s) in the cube, skipping the id-column
                 # Note that we apply clustering on the inverse image (original data samples) that fall inside the cube.
+                ids = [int(nn) for nn in hypercube[:, 0]]
+                X_cube = X[ids]
+                
                 X_cube = X[[int(nn) for nn in hypercube[:, 0]]]
-
-                clusterer.fit(X_cube[:, 1:])
+                fit_data = X_cube[:, 1:]
+                if precomputed:
+                    fit_data = fit_data[:, ids]
+                clusterer.fit(fit_data)
 
                 if self.verbose > 1:
                     print("Found %s clusters in cube_%s\n" % (

@@ -120,7 +120,7 @@ class CoverBounds(Cover):
 
         # Check limits can actually be handled and are set appropriately
         NoneType = type(None)
-        assert isinstance(self.limits, (list, np.ndarray, type(None)), 'limits should either be an array or None'
+        assert isinstance(self.limits, (list, np.ndarray, type(None))), 'limits should either be an array or None'
         if isinstance(self.limits, (list, np.ndarray)):
             self.limits = np.array(self.limits)
             assert self.limits.shape[1] == 2, 'limits should be (n_dim,2) in shape'

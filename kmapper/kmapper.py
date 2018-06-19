@@ -35,11 +35,20 @@ class KeplerMapper(object):
     """
 
     def __init__(self, verbose=0):
+        """
+        Inputs
+        ======
+
+        verbose: int, default is 0
+            Logging level. Currently 3 levels (0,1,2) are supported.
+                - for no logging, set `verbose=0`, 
+                - for some logging, set `verbose=1`,
+                - for complete logging, set `verbose=2`
+        """
+
+
         # TODO: move as many of the arguments from fit_transform and map into here.
         self.verbose = verbose
-        self.chunk_dist = []
-        self.overlap_dist = []
-        self.d = []
         self.projection = None
         self.scaler = None
         self.cover = None
@@ -141,26 +150,6 @@ class KeplerMapper(object):
 
             if projection in projection_funcs.keys():
                 X = projection_funcs[projection](X, axis=1).reshape((X.shape[0], 1))
-
-            # if projection == "sum":  # sum of row
-            #     X = np.sum(X, axis=1).reshape((X.shape[0], 1))
-            # if projection == "mean":  # mean of row
-            #     X = np.mean(X, axis=1).reshape((X.shape[0], 1))
-            # if projection == "median":  # median of row
-            #     X = np.median(X, axis=1).reshape((X.shape[0], 1))
-            # if projection == "max":  # max of row
-            #     X = np.max(X, axis=1).reshape((X.shape[0], 1))
-            # if projection == "min":  # min of row
-            #     X = np.min(X, axis=1).reshape((X.shape[0], 1))
-            # if projection == "std":  # std of row
-            #     X = np.std(X, axis=1).reshape((X.shape[0], 1))
-            # if projection == "l2norm":
-            #     X = np.linalg.norm(X, axis=1).reshape((X.shape[0], 1))
-
-            # if projection == "dist_mean":  # Distance of x to mean of X
-            #     X_mean = np.mean(X, axis=0)
-            #     X = np.sum(np.sqrt((X - X_mean)**2),
-            #                axis=1).reshape((X.shape[0], 1))
 
             if "knn_distance_" in projection:
                 n_neighbors = int(projection.split("_")[2])

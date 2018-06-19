@@ -59,7 +59,10 @@ class KeplerMapper(object):
             Projection parameter is either a string, a Scikit-learn class with fit_transform, like manifold.TSNE(), or a list of dimension indices. A string from ["sum", "mean", "median", "max", "min", "std", "dist_mean", "l2norm", "knn_distance_n"]. If using knn_distance_n write the number of desired neighbors in place of n: knn_distance_5 for summed distances to 5 nearest neighbors. Default = "sum".
 
         scaler :
-            Scikit-Learn API compatible scaler. Scaler of the data applied before mapping. Use None for no scaling. Default = preprocessing.MinMaxScaler() if None, do no scaling, else apply scaling to the projection. Default: Min-Max scaling distance_matrix: False or any of: ["braycurtis", "canberra", "chebyshev", "cityblock", "correlation", "cosine", "dice", "euclidean", "hamming", "jaccard", "kulsinski", "mahalanobis", "matching", "minkowski", "rogerstanimoto", "russellrao", "seuclidean", "sokalmichener", "sokalsneath", "sqeuclidean", "yule"]. If False do nothing, else create a squared distance matrix with the chosen metric, before applying the projection.
+            Scikit-Learn API compatible scaler. Scaler of the data applied before mapping. Use None for no scaling. Default = preprocessing.MinMaxScaler() if None, do no scaling, else apply scaling to the projection. Default: Min-Max scaling
+
+        distance_matrix:
+            False or any of: ["braycurtis", "canberra", "chebyshev", "cityblock", "correlation", "cosine", "dice", "euclidean", "hamming", "jaccard", "kulsinski", "mahalanobis", "matching", "minkowski", "rogerstanimoto", "russellrao", "seuclidean", "sokalmichener", "sokalsneath", "sqeuclidean", "yule"]. If False do nothing, else create a squared distance matrix with the chosen metric, before applying the projection.
 
         Returns
         -------
@@ -249,6 +252,7 @@ class KeplerMapper(object):
             clusterer=cluster.DBSCAN(eps=0.5, min_samples=3),
             cover=Cover(n_cubes=10, perc_overlap=0.1),
             nerve=GraphNerve(),
+            precomputed=False,
 
             # These arguments are all deprecated
             overlap_perc=None,
@@ -273,14 +277,18 @@ class KeplerMapper(object):
         nerve: kmapper.Nerve
             Nerve builder implementing `__call__(nodes)` API
 
-
+        precomputed : Boolean
+            Tell Mapper whether the data that you are clustering on is a precomputed distance matrix. If set to
+            `True`, the assumption is that you are also telling your `clusterer` that `metric='precomputed'` (which
+            is an argument for DBSCAN among others), which 
+            will then cause the clusterer to expect a square distance matrix for each hypercube. `precomputed=True` will give a square matrix
+            to the clusterer to fit on for each hypercube.
 
         nr_cubes: Int (Deprecated)
             The number of intervals/hypercubes to create. Default = 10. (DeprecationWarning: define Cover explicitly in future versions)
 
         overlap_perc: Float (Deprecated)
             The percentage of overlap "between" the intervals/hypercubes. Default = 0.1. (DeprecationWarning: define Cover explicitly in future versions)
-
 
         Returns
         =======
@@ -370,12 +378,16 @@ class KeplerMapper(object):
 
             # If at least min_cluster_samples samples inside the hypercube
             if hypercube.shape[0] >= min_cluster_samples:
-
                 # Cluster the data point(s) in the cube, skipping the id-column
                 # Note that we apply clustering on the inverse image (original data samples) that fall inside the cube.
+                ids = [int(nn) for nn in hypercube[:, 0]]
+                X_cube = X[ids]
+                
                 X_cube = X[[int(nn) for nn in hypercube[:, 0]]]
-
-                clusterer.fit(X_cube[:, 1:])
+                fit_data = X_cube[:, 1:]
+                if precomputed:
+                    fit_data = fit_data[:, ids]
+                clusterer.fit(fit_data)
 
                 if self.verbose > 1:
                     print("Found %s clusters in cube_%s\n" % (

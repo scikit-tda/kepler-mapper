@@ -4,7 +4,7 @@ from sklearn import datasets
 
 from kmapper import KeplerMapper
 
-from kmapper.cover import Cover
+from kmapper.cover import Cover, CoverBounds
 
 
 class TestCover():
@@ -109,6 +109,20 @@ class TestCover():
 
         for i, j in zip(range(9), range(1, 10)):
             assert set(entries[i]).union(set(entries[j]))
+
+    def test_CoverBounds_bounds(self):
+        data_vals = np.arange(40).reshape(20,2)
+        data = np.zeros((20,3))
+        data[:,0] = np.arange(20,dtype=int)  # Index row
+        data[:,1:3] = data_vals
+
+        limits = np.array([[np.float('inf'), np.float('inf')],[-10,100]])
+        cover = CoverBounds(n_cubes=10, limits=limits)
+        cubes=cover.define_bins(data)
+
+        start = cover.d
+        end = cover.end
+        assert np.array_equal(np.array([start, end]), np.array([[0,-10], [38,100]]))
 
 
 def test_BasicCover():

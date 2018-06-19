@@ -60,7 +60,7 @@ def format_mapper_data(graph, color_function, X,
         c = _color_function(member_ids, color_function)
         t = _type_node()
         s = _size_node(member_ids)
-        tt = _format_tooltip(env, member_ids, custom_tooltips, X, X_names, lens, lens_names, color_function)
+        tt = _format_tooltip(env, member_ids, custom_tooltips, X, X_names, lens, lens_names, color_function, node_id)
 
         n = {"id": "",
              "name": node_id,
@@ -192,7 +192,7 @@ def _format_projection_statistics(member_ids, lens, lens_names):
 
 
 def _format_tooltip(env, member_ids, custom_tooltips, X,
-                    X_names, lens, lens_names, color_function):
+                    X_names, lens, lens_names, color_function, node_ID):
     # TODO: Allow customization in the form of aggregate per node and per entry in node.
     # TODO: Allow users to turn off tooltip completely.
 
@@ -213,7 +213,7 @@ def _format_tooltip(env, member_ids, custom_tooltips, X,
         custom_tooltips=custom_tooltips,
         histogram=histogram,
         dist_label="Member")
-
+    tooltip += "<h3>Node ID</h3> <p>%s</p>" % node_ID
     return tooltip
 
 

@@ -85,7 +85,6 @@ class Cover():
                               np.max(indexless_data, axis=0), bounds_arr[:, 1]))
 
         else:  # It must be None, as we checked to see if it is array-like or None in __init__
-            warnings.warn("Using None as the limits is identical to using the normal Cover class")
             bounds = (np.min(indexless_data, axis=0),
                       np.max(indexless_data, axis=0))
 

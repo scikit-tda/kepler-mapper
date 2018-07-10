@@ -97,6 +97,8 @@ class Cover():
 
         # We find our starting point
         self.d = bounds[0]
+        # And our ending point (for testing)
+        self.end = bounds[1]
 
         # Use a dimension index array on the projected X
         # (For now this uses the entire dimensionality, but we keep for experimentation)

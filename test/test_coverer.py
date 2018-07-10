@@ -9,7 +9,7 @@ from kmapper.cover import Cover
 
 
 
-@pytest.mark.parametrize('CoverClass', [Cover, CoverBounds])
+@pytest.mark.parametrize('CoverClass', [Cover])
 class TestCoverBasic():
     def test_cube_dim(self, CoverClass):
 

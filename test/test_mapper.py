@@ -105,29 +105,29 @@ class TestLens():
     @pytest.mark.skip("Need to implement a test for this code")
     def test_knn_distance(self):
         pass
-        
+
     def test_distance_matrix(self):
         # todo, test other distance_matrix functions
         mapper = KeplerMapper()
-        X = np.random.rand(100,10)
+        X = np.random.rand(100, 10)
         lens = mapper.fit_transform(X, distance_matrix='euclidean')
-        
+
         X_pdist = distance.squareform(distance.pdist(X, metric='euclidean'))
         lens2 = mapper.fit_transform(X_pdist)
-        
+
         np.testing.assert_array_equal(lens, lens2)
-        
+
     def test_precomputed(self):
         mapper = KeplerMapper()
-        
-        X = np.random.rand(100,2)
+
+        X = np.random.rand(100, 2)
         X_pdist = distance.squareform(distance.pdist(X, metric='euclidean'))
-        
+
         lens = mapper.fit_transform(X_pdist)
-        
-        graph = mapper.map(lens, X=X_pdist, cover=Cover(n_cubes=10, perc_overlap=0.8), clusterer=cluster.DBSCAN(metric='precomputed', min_samples=3), precomputed=True) 
+
+        graph = mapper.map(lens, X=X_pdist, cover=Cover(n_cubes=10, perc_overlap=0.8), clusterer=cluster.DBSCAN(metric='precomputed', min_samples=3), precomputed=True)
         graph2 = mapper.map(lens, X=X, cover=Cover(n_cubes=10, perc_overlap=0.8), clusterer=cluster.DBSCAN(metric='euclidean', min_samples=3))
-        
+
         assert graph['links'] == graph2['links']
         assert graph['nodes'] == graph2['nodes']
         assert graph['simplices'] == graph2['simplices']

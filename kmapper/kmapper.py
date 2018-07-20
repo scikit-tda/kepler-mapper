@@ -372,7 +372,6 @@ class KeplerMapper(object):
                 ids = [int(nn) for nn in hypercube[:, 0]]
                 X_cube = X[ids]
                 
-                X_cube = X[[int(nn) for nn in hypercube[:, 0]]]
                 fit_data = X_cube[:, 1:]
                 if precomputed:
                     fit_data = fit_data[:, ids]

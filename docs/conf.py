@@ -43,6 +43,7 @@ extensions = [
     'numpydoc.numpydoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.githubpages',
+    'nbsphinx',
 ]
 
 numpydoc_show_class_members = False

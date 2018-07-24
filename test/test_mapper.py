@@ -2,12 +2,14 @@ import pytest
 import numpy as np
 
 import warnings
-from kmapper import KeplerMapper, Cover
+from kmapper import KeplerMapper, Cover, cluster
 
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.linear_model import Lasso
+from sklearn.manifold import MDS
 from scipy import sparse
+from scipy.spatial import distance
 
 
 class TestLogging():
@@ -72,7 +74,7 @@ class TestDataAccess:
 
 
 class TestLens():
-    # TODO: most of these tests only accomodate the default option. They need to be extended to incorporate all possible transforms.
+    # TODO: most of these tests only accommodate the default option. They need to be extended to incorporate all possible transforms.
 
     # one test for each option supported
     def test_str_options(self):
@@ -103,6 +105,32 @@ class TestLens():
     @pytest.mark.skip("Need to implement a test for this code")
     def test_knn_distance(self):
         pass
+
+    def test_distance_matrix(self):
+        # todo, test other distance_matrix functions
+        mapper = KeplerMapper()
+        X = np.random.rand(100, 10)
+        lens = mapper.fit_transform(X, distance_matrix='euclidean')
+
+        X_pdist = distance.squareform(distance.pdist(X, metric='euclidean'))
+        lens2 = mapper.fit_transform(X_pdist)
+
+        np.testing.assert_array_equal(lens, lens2)
+
+    def test_precomputed(self):
+        mapper = KeplerMapper()
+
+        X = np.random.rand(100, 2)
+        X_pdist = distance.squareform(distance.pdist(X, metric='euclidean'))
+
+        lens = mapper.fit_transform(X_pdist)
+
+        graph = mapper.map(lens, X=X_pdist, cover=Cover(n_cubes=10, perc_overlap=0.8), clusterer=cluster.DBSCAN(metric='precomputed', min_samples=3), precomputed=True)
+        graph2 = mapper.map(lens, X=X, cover=Cover(n_cubes=10, perc_overlap=0.8), clusterer=cluster.DBSCAN(metric='euclidean', min_samples=3))
+
+        assert graph['links'] == graph2['links']
+        assert graph['nodes'] == graph2['nodes']
+        assert graph['simplices'] == graph2['simplices']
 
     def test_sparse_array(self):
         mapper = KeplerMapper()

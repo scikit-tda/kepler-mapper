@@ -52,6 +52,7 @@ class KeplerMapper(object):
 
         Parameters
         ----------
+
         X : Numpy Array
             The data to fit a projection/lens to.
 
@@ -66,12 +67,9 @@ class KeplerMapper(object):
         lens : Numpy Array
             projected data.
 
-
-        Example
-        -------
-
+        Examples
+        --------
         >>> projected_data = mapper.project(data, projection="sum", scaler=km.preprocessing.MinMaxScaler() )
-
         """
 
         # Sae original values off so they can be referenced by later functions in the pipeline
@@ -287,8 +285,8 @@ class KeplerMapper(object):
         simplicial_complex : dict
             A dictionary with "nodes", "links" and "meta" information.
 
-        Example
-        =======
+        Examples
+        ========
 
         >>> simplicial_complex = mapper.map(lens, X=None, clusterer=cluster.DBSCAN(eps=0.5,min_samples=3), cover=km.Cover(n_cubes=[10,20], perc_overlap=0.4))
 
@@ -475,20 +473,17 @@ class KeplerMapper(object):
         show_tooltips: bool, default is True.
             If false, completely disable tooltips. This is useful when using output in space-tight pages or will display node data in custom ways.
 
-        Return
+        Returns
         ------
         html: string
             Returns the same html that is normally output to `path_html`. Complete graph and data ready for viewing.
 
-
-        Example
+        Examples
         -------
-
         >>> mapper.visualize(simplicial_complex, path_html="mapper_visualization_output.html",
                             custom_meta={'Data': 'MNIST handwritten digits', 
                                          'Created by': 'Franklin Roosevelt'
                             }, )
-
         """
 
         # TODO:

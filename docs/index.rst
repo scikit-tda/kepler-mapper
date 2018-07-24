@@ -22,7 +22,6 @@ Contents
 .. toctree::
   :maxdepth: 2
 
-  Introduction <index>
   about
   setup
   usage

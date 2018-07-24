@@ -1,0 +1,130 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Using Kepler Mapper in Jupyter Notebook"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<style>\n",
+       "    .container { width:100% !important; }\n",
+       "    .output_scroll {height: 800px !important;}\n",
+       "    </style>"
+      ],
+      "text/plain": [
+       "<IPython.core.display.HTML object>"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "import kmapper as km\n",
+    "from kmapper import jupyter # Creates custom CSS full-size Jupyter screen"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {
+    "scrolled": false
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "\n",
+      "..Projecting data using: [0, 1]\n",
+      "\n",
+      "..Scaling with: MinMaxScaler(copy=True, feature_range=(0, 1))\n",
+      "\n",
+      "Mapping on data shaped (5000, 2) using lens shaped (5000, 2)\n",
+      "\n",
+      "Creating 100 hypercubes.\n",
+      "\n",
+      "Created 89 edges and 58 nodes in 0:00:00.142366.\n",
+      "Wrote visualization to: make_circles_keplermapper_output.html\n"
+     ]
+    },
+    {
+     "data": {
+      "text/html": [
+       "<iframe src=http://mlwave.github.io/tda/word2vec-gender-bias.html width=100%% height=800 frameBorder=\"0\"></iframe>"
+      ],
+      "text/plain": [
+       "<IPython.core.display.HTML object>"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "# Import the class\n",
+    "import kmapper as km\n",
+    "\n",
+    "# Some sample data\n",
+    "from sklearn import datasets\n",
+    "data, labels = datasets.make_circles(n_samples=5000, noise=0.03, factor=0.3)\n",
+    "\n",
+    "# Initialize\n",
+    "mapper = km.KeplerMapper(verbose=1)\n",
+    "\n",
+    "# Fit to and transform the data\n",
+    "projected_data = mapper.fit_transform(data, projection=[0,1]) # X-Y axis\n",
+    "\n",
+    "# Create dictionary called 'graph' with nodes, edges and meta-information\n",
+    "graph = mapper.map(projected_data, data, nr_cubes=10)\n",
+    "\n",
+    "# Visualize it\n",
+    "html = mapper.visualize(graph, path_html=\"make_circles_keplermapper_output.html\",\n",
+    "                 title=\"make_circles(n_samples=5000, noise=0.03, factor=0.3)\")\n",
+    "\n",
+    "# Inline display\n",
+    "# jupyter.display(path_html=\"http://mlwave.github.io/tda/word2vec-gender-bias.html\")\n",
+    "jupyter.display(path_html=\"make_circles_keplermapper_output.html\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.6.4"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 1
+}

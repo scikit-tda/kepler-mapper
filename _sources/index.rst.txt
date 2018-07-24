@@ -32,7 +32,7 @@ Contents
     :maxdepth: 2
     :caption: Tutorials
 
-    KeplerMapper Newsgroup20 pipline
+    KeplerMapper Newsgroup20 Pipeline
     KeplerMapper usage in Jupyter Notebook
     Confidence Graphs
     self-guessing

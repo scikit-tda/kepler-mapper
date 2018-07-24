@@ -98,6 +98,11 @@
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Reference</a></li>
 </ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="KeplerMapper Newsgroup20 Pipeline.html">KeplerMapper &amp; NLP examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Confidence Graphs.html">Confidence Graphs: Representing Model Uncertainty in Deep Learning</a></li>
+</ul>
 
             
           
@@ -161,17 +166,36 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="usage">
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="usage">
 <h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h1>
 <p>KeplerMapper adopts the scikit-learn API as much as possible, so it should feel very familiar to anyone who has used these libraries.</p>
 <p>The main workflow for Mapper is to project the data, group the image, apply clustering to the preimage of the groups, and then build a simplicial complex. For an intuitive explanation of this process, see <a class="reference external" href="https://sauln.github.io/2017/09/02/mapper-part1.html">this writeup</a>.</p>
 <div class="section" id="python-code">
 <h2>Python code<a class="headerlink" href="#python-code" title="Permalink to this headline">¶</a></h2>
-<div class="code python highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import the class</span>
-<span class="kn">import</span> <span class="nn">kmapper</span> <span class="k">as</span> <span class="nn">km</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import the class</span>
+<span class="kn">import</span> <span class="nn">kmapper</span> <span class="kn">as</span> <span class="nn">km</span>
 
 <span class="c1"># Some sample data</span>
-<span class="kn">from</span> <span class="nn">sklearn</span> <span class="k">import</span> <span class="n">datasets</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
 <span class="n">data</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">make_circles</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 
 <span class="c1"># Initialize</span>

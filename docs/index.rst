@@ -28,6 +28,15 @@ Contents
   examples
   reference
 
+.. toctree::
+    :maxdepth: 2
+    :caption: Tutorials
+
+    KeplerMapper Newsgroup20 pipline
+    KeplerMapper usage in Jupyter Notebook
+    Confidence Graphs
+    self-guessing
+
 
 .. |PyPI version| image:: https://badge.fury.io/py/kmapper.svg
    :target: https://badge.fury.io/py/kmapper

@@ -22,12 +22,20 @@ Contents
 .. toctree::
   :maxdepth: 2
 
-  Introduction <index>
   about
   setup
   usage
   examples
   reference
+
+.. toctree::
+    :maxdepth: 2
+    :caption: Tutorials
+
+    KeplerMapper Newsgroup20 Pipeline
+    KeplerMapper usage in Jupyter Notebook
+    Confidence Graphs
+    self-guessing
 
 
 .. |PyPI version| image:: https://badge.fury.io/py/kmapper.svg

@@ -2,9 +2,12 @@
 
 gh-pages:
 	echo "Make gh-pages"
+
+	cp notebooks/* docs/.
+
 	cd docs; make html
 	git checkout gh-pages
-	rm -rf _sources _static _modules
+	rm -rf _sources _static _modules _images
 	mv -fv docs/_build/html/* .
 	rm -rf docs
 	git add -A

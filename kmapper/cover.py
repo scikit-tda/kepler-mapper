@@ -49,11 +49,12 @@ class Cover():
     def define_bins(self, data):
         """Returns an iterable of all bins in the cover.
 
-        Example
-        -------
-            If there are 4 cubes per dimension and 3 dimensions return the bottom left (origin) coordinates of 64 hypercubes, as a sorted list of Numpy arrays
-
         Warning: This function must assume that the first column of data are indices.
+        
+        Examples
+        =========
+
+            If there are 4 cubes per dimension and 3 dimensions return the bottom left (origin) coordinates of 64 hypercubes, as a sorted list of Numpy arrays
         """
 
         indexless_data = data[:, 1:]

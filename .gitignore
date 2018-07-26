@@ -54,3 +54,6 @@ MANIFEST
 setup.cfg
 dist
 *.pyc
+.pytest_cache
+.vscode
+.ipynb_checkpoints

@@ -42,9 +42,9 @@ extensions = [
     'sphinx.ext.viewcode',
     'numpydoc.numpydoc',
     'sphinx.ext.autosummary',
-    'sphinx.ext.githubpages'
+    'sphinx.ext.githubpages',
+    'nbsphinx',
 ]
-
 
 numpydoc_show_class_members = False
 # Add any paths that contain templates here, relative to this directory.
@@ -97,22 +97,16 @@ todo_include_todos = True
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+# html_theme_path = /guzzle_sphinx_theme.html_theme_path()
+html_theme = 'sphinx_rtd_theme'
 
-html_logo = 'logo.jpg'
+# html_theme = 'sphinx_rtd_theme'
+
+html_logo = 'logo.png'
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-html_theme_options = {
-    'logo_name': True,
-    'description': 'Python library for visualization of high-dimensional data.',
-    'fixed_sidebar': True,
-    'github_button': True,
-    'github_user': 'MLWave',
-    'github_repo': 'kepler-mapper',
-    'github_type': 'star'
-}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -129,7 +123,6 @@ html_sidebars = {
         'globaltoc.html',
         'relations.html',  # needs 'show_related': True theme option to display
         'searchbox.html',
-
     ]
 }
 

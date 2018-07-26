@@ -1,4 +1,4 @@
-<h2>Cluster Details</h2>
+<h2>Cluster Details <span style="font-size:0.7em">(node id: {{ node_id }})</span></h2>
 
 {% include 'histogram.html' %}
 
@@ -78,7 +78,10 @@
 <hr> <br/>
 
 <h3>Members</h3>
-{{ custom_tooltips }}
+{% for tooltip in custom_tooltips %}
+{{ tooltip }}
+{% endfor %}
+
 
 <br><br>
 <hr><br>

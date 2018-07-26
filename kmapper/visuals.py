@@ -212,8 +212,9 @@ def _format_tooltip(env, member_ids, custom_tooltips, X,
         cluster_stats=cluster_stats,
         custom_tooltips=custom_tooltips,
         histogram=histogram,
-        dist_label="Member")
-    tooltip += "<h3>Node ID</h3> <p>%s</p>" % node_ID
+        dist_label="Member",
+        node_id=node_ID)
+   
     return tooltip
 
 

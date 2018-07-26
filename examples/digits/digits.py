@@ -25,7 +25,7 @@ for image_data in data:
     img.save(output, format="PNG")
     contents = output.getvalue()
     img_encoded = base64.b64encode(contents)
-    img_tag = """<img src="data:image/png;base64,{}"> """.format(img_encoded.decode('utf-8'))
+    img_tag = """<img src="data:image/png;base64,{}">""".format(img_encoded.decode('utf-8'))
     tooltip_s.append(img_tag)
     output.close()
 

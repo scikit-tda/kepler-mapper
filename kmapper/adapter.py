@@ -13,14 +13,15 @@ def to_networkx(graph):
     # import here so networkx is not always required.
     import networkx as nx
 
-    import pdb; pdb.set_trace()
-
     nodes = graph['nodes'].keys()
     edges = [[start, end] for start, ends in graph['links'].items() for end in ends]
 
     g = nx.Graph()
     g.add_nodes_from(nodes)
+    nx.set_node_attributes(g, dict(graph['nodes']), 'membership')
+
     g.add_edges_from(edges)
+
     return g
 
 

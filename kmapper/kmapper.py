@@ -256,7 +256,7 @@ class KeplerMapper(object):
             Original data or data to run clustering on. If `None`, then use `lens` as default.
 
         clusterer: Default: DBSCAN
-            Scikit-learn API compatible clustering algorithm. Must provide `fit`, `get_labels`, and produce attribute `labels_`.
+            Scikit-learn API compatible clustering algorithm. Must provide `fit` and `predict`.
 
         cover: type kmapper.Cover
             Cover scheme for lens. Instance of kmapper.cover providing methods `define_bins` and `find_entries`.
@@ -340,10 +340,10 @@ class KeplerMapper(object):
         # we consider clustering or skipping it.
         cluster_params = clusterer.get_params()
         
-        min_cluster_samples = cluster_params.get("n_clusters", None)
-        if min_cluster_samples is None:
-            min_cluster_samples = cluster_params.get("min_cluster_size", 1)
-
+        min_cluster_samples = cluster_params.get("n_clusters", 
+            cluster_params.get("min_samples", 
+            cluster_params.get("min_cluster_size", 1)))
+        
         if self.verbose > 1:
             print("Minimal points in hypercube before clustering: %d" %
                   (min_cluster_samples))
@@ -373,24 +373,25 @@ class KeplerMapper(object):
                 fit_data = X_cube[:, 1:]
                 if precomputed:
                     fit_data = fit_data[:, ids]
-                clusterer.fit(fit_data)
+                    
+                cluster_predictions = clusterer.fit_predict(fit_data)
 
                 if self.verbose > 1:
                     print("Found %s clusters in cube_%s\n" % (
-                        np.unique(clusterer.labels_[clusterer.labels_ > -1]).shape[0], i))
+                        np.unique(cluster_predictions[cluster_predictions > -1]).shape[0], i))
 
                 # TODO: I think this loop could be improved by turning inside out:
                 #           - partition points according to each cluster
                 # Now for every (sample id in cube, predicted cluster label)
-                for a in np.c_[hypercube[:, 0], clusterer.labels_]:
-                    if a[1] != -1:  # if not predicted as noise
+                for idx, pred in np.c_[hypercube[:, 0], cluster_predictions]:
+                    if pred != -1 and not np.isnan(pred):  # if not predicted as noise
 
                         # TODO: allow user supplied label
                         #   - where all those extra values necessary?
-                        cluster_id = "cube{}_cluster{}".format(i, int(a[1]))
+                        cluster_id = "cube{}_cluster{}".format(i, int(pred))
 
                         # Append the member id's as integers
-                        nodes[cluster_id].append(int(a[0]))
+                        nodes[cluster_id].append(int(idx))
                         meta[cluster_id] = {
                             "size": hypercube.shape[0], "coordinates": cube}
             else:

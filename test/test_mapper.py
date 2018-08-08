@@ -10,7 +10,7 @@ from sklearn.linear_model import Lasso
 from sklearn.manifold import MDS
 from scipy import sparse
 from scipy.spatial import distance
-
+from sklearn import neighbors
 
 class TestLogging():
     """ Simple tests that confirm map completes at each logging level
@@ -73,6 +73,33 @@ class TestDataAccess:
         np.testing.assert_array_equal(mems, np.array([]))
 
 
+class TestMap:
+    def test_precomputed(self):
+        mapper = KeplerMapper()
+
+        X = np.random.rand(100, 2)
+        X_pdist = distance.squareform(distance.pdist(X, metric='euclidean'))
+
+        lens = mapper.fit_transform(X_pdist)
+
+        graph = mapper.map(lens, X=X_pdist, cover=Cover(n_cubes=10, perc_overlap=0.8), clusterer=cluster.DBSCAN(metric='precomputed', min_samples=3), precomputed=True)
+        graph2 = mapper.map(lens, X=X, cover=Cover(n_cubes=10, perc_overlap=0.8), clusterer=cluster.DBSCAN(metric='euclidean', min_samples=3))
+
+        assert graph['links'] == graph2['links']
+        assert graph['nodes'] == graph2['nodes']
+        assert graph['simplices'] == graph2['simplices']
+
+    def test_affinity_prop_clustering(self):
+        mapper = KeplerMapper()
+
+        X = np.random.rand(100, 2)
+        lens = mapper.fit_transform(X)
+
+        graph = mapper.map(lens, X, 
+            clusterer=cluster.AffinityPropagation())
+
+
+
 class TestLens():
     # TODO: most of these tests only accommodate the default option. They need to be extended to incorporate all possible transforms.
 
@@ -102,13 +129,21 @@ class TestLens():
         # For dist_mean, just make sure the code runs without breaking, not sure how to test this best
         lens = mapper.fit_transform(data, projection="dist_mean", scaler=None)
 
-    @pytest.mark.skip("Need to implement a test for this code")
     def test_knn_distance(self):
-        pass
+        mapper = KeplerMapper()
+        data = np.random.rand(100, 5)
+        lens = mapper.project(data, projection="knn_distance_4", scaler=None)
+
+        nn = neighbors.NearestNeighbors(n_neighbors=4)
+        nn.fit(data)
+        lens_confirm = np.sum(nn.kneighbors(data, n_neighbors=4, return_distance=True)[0], axis=1).reshape((-1,1))
+
+        assert lens.shape == (100, 1)
+        np.testing.assert_array_equal(lens, lens_confirm)
 
     def test_distance_matrix(self):
         # todo, test other distance_matrix functions
-        mapper = KeplerMapper()
+        mapper = KeplerMapper(verbose=4)
         X = np.random.rand(100, 10)
         lens = mapper.fit_transform(X, distance_matrix='euclidean')
 
@@ -116,21 +151,6 @@ class TestLens():
         lens2 = mapper.fit_transform(X_pdist)
 
         np.testing.assert_array_equal(lens, lens2)
-
-    def test_precomputed(self):
-        mapper = KeplerMapper()
-
-        X = np.random.rand(100, 2)
-        X_pdist = distance.squareform(distance.pdist(X, metric='euclidean'))
-
-        lens = mapper.fit_transform(X_pdist)
-
-        graph = mapper.map(lens, X=X_pdist, cover=Cover(n_cubes=10, perc_overlap=0.8), clusterer=cluster.DBSCAN(metric='precomputed', min_samples=3), precomputed=True)
-        graph2 = mapper.map(lens, X=X, cover=Cover(n_cubes=10, perc_overlap=0.8), clusterer=cluster.DBSCAN(metric='euclidean', min_samples=3))
-
-        assert graph['links'] == graph2['links']
-        assert graph['nodes'] == graph2['nodes']
-        assert graph['simplices'] == graph2['simplices']
 
     def test_sparse_array(self):
         mapper = KeplerMapper()
@@ -191,7 +211,7 @@ class TestLens():
         # accomodate scaling, values are in (0,1), but will be scaled slightly
         atol = 0.1
 
-        mapper = KeplerMapper()
+        mapper = KeplerMapper(verbose=1)
         data = np.random.rand(100, 5)
         lens = mapper.project(data, projection=[0, 1])
         np.testing.assert_allclose(lens, data[:, :2], atol=atol)
@@ -201,7 +221,7 @@ class TestLens():
 
     def test_pipeline(self):
         # TODO: break this test into many smaller ones.
-        input_data = np.array([[1, 2], [3, 4], [5, 6], [7, 8]])
+        input_data = np.array([[1, 2], [3, 4], [5, 6], [7, 8]], np.float64)
         atol_big = 0.1
         atol_small = 0.001
 

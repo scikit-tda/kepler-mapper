@@ -233,7 +233,7 @@ class TestVisualizeIntegration:
         assert len(tmpdir.listdir()) == 1, "file was written to"
 
     def test_file_not_written(self, tmpdir):
-        mapper = KeplerMapper()
+        mapper = KeplerMapper(verbose=1)
 
         file = tmpdir.join('output.html')
 

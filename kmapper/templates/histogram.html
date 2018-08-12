@@ -5,9 +5,11 @@
 <div id="histogram">
 <!-- Render histogram -->
 {% for bar in histogram %}
+
     <div class="bin" style="height:{{ bar['height'] }}px; background:{{ bar['color'] }}">
         <div>{{ bar['perc'] }}%</div>
-    </div>         
+    </div>     
+  
 {% endfor %}
 </div>
 

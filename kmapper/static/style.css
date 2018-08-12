@@ -201,7 +201,7 @@ a:hover {
 }
 
 .bin {
-  width: 30px;
+  width: 10%;
   float: left;
 }
 
@@ -246,7 +246,7 @@ a:hover {
 table {
   border-collapse: collapse;
   display: table;
-  width: 100%%;
+  width: 100%;
   margin-bottom: 20px;
 }
 

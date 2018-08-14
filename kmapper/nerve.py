@@ -48,8 +48,10 @@ class GraphNerve(Nerve):
             if len(set(nodes[candidate[0]]).intersection(nodes[candidate[1]])) >= self.min_intersection:
                 result[candidate[0]].append(candidate[1])
 
-        simplices = [[n] for n in nodes] + [[x] + result[x] for x in result]
+        edges = [[x, end] for x in result for end in result[x]]
+        simplices = [[n] for n in nodes] + edges
         return result, simplices
+
 
 class SimplicialNerve(Nerve):
     """ Creates the entire Cech complex of the covering defined by the nodes.

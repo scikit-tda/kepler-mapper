@@ -32,6 +32,12 @@ class KeplerMapper(object):
                 connect these with an edge.
     3)  	Visualize the network using HTML and D3.js.
 
+    KM has a number of nice features, some which get forgotten.
+        - project : Some projections it makes sense to use a distance matrix, such as knn_distance_#. Using `distance_matrix = <metric>` for a custom metric.
+        - fit_transform : Applies a sequence of projections. Currently, this API is a little confusing and will be changed in the future. 
+        - 
+
+
     """
 
     def __init__(self, verbose=0):
@@ -56,7 +62,7 @@ class KeplerMapper(object):
         if verbose > 0:
             print("KeplerMapper()")
 
-    def project(self, X, projection="sum", scaler=preprocessing.MinMaxScaler(), distance_matrix=False):
+    def project(self, X, projection="sum", scaler=preprocessing.MinMaxScaler(), distance_matrix=None):
         """Creates the projection/lens from a dataset. Input the data set. Specify a projection/lens type. Output the projected data/lens.
 
         Parameters
@@ -68,11 +74,12 @@ class KeplerMapper(object):
         projection :
             Projection parameter is either a string, a Scikit-learn class with fit_transform, like manifold.TSNE(), or a list of dimension indices. A string from ["sum", "mean", "median", "max", "min", "std", "dist_mean", "l2norm", "knn_distance_n"]. If using knn_distance_n write the number of desired neighbors in place of n: knn_distance_5 for summed distances to 5 nearest neighbors. Default = "sum".
 
-        scaler :
-            Scikit-Learn API compatible scaler. Scaler of the data applied before mapping. Use None for no scaling. Default = preprocessing.MinMaxScaler() if None, do no scaling, else apply scaling to the projection. Default: Min-Max scaling
+        scaler : Scikit-Learn API compatible scaler.
+            Scaler of the data applied before mapping. Use None for no scaling. Default = preprocessing.MinMaxScaler() if None, do no scaling, else apply scaling to the projection. Default: Min-Max scaling
 
-        distance_matrix:
-            False or any of: ["braycurtis", "canberra", "chebyshev", "cityblock", "correlation", "cosine", "dice", "euclidean", "hamming", "jaccard", "kulsinski", "mahalanobis", "matching", "minkowski", "rogerstanimoto", "russellrao", "seuclidean", "sokalmichener", "sokalsneath", "sqeuclidean", "yule"]. If False do nothing, else create a squared distance matrix with the chosen metric, before applying the projection.
+        distance_matrix : Either str or None
+            If not None, then any of ["braycurtis", "canberra", "chebyshev", "cityblock", "correlation", "cosine", "dice", "euclidean", "hamming", "jaccard", "kulsinski", "mahalanobis", "matching", "minkowski", "rogerstanimoto", "russellrao", "seuclidean", "sokalmichener", "sokalsneath", "sqeuclidean", "yule"]. 
+            If False do nothing, else create a squared distance matrix with the chosen metric, before applying the projection.
 
         Returns
         -------
@@ -128,8 +135,7 @@ class KeplerMapper(object):
         if isinstance(projection, str):
             if self.verbose > 0:
                 print("\n..Projecting data using: %s" % (projection))
-            # Stats lenses
-
+            
             def dist_mean(X, axis=1):
                 X_mean = np.mean(X, axis=0)
                 X = np.sum(np.sqrt((X - X_mean)**2), axis=1)
@@ -185,7 +191,9 @@ class KeplerMapper(object):
                       projection="sum",
                       scaler=preprocessing.MinMaxScaler(),
                       distance_matrix=False):
-        """Same as .project() but accepts lists for arguments so you can chain.
+        """ Same as .project() but accepts lists for arguments so you can chain.
+
+            Deprecated.
 
         """
 
@@ -218,10 +226,10 @@ class KeplerMapper(object):
         if self.verbose > 0:
             print("..Composing projection pipeline of length %s:" %
                   (len(projections)))
-            print("Projections: %s\n\n" % ("\n".join(map(str, projections))))
-            print("Distance matrices: %s\n\n" %
+            print("\tProjections: %s" % ("\n\t\t".join(map(str, projections))))
+            print("\tDistance matrices: %s" %
                   ("\n".join(map(str, distance_matrices))))
-            print("Scalers: %s\n\n" % ("\n".join(map(str, scalers))))
+            print("\tScalers: %s" % ("\n".join(map(str, scalers))))
 
         # Pipeline Stack the projection functions
         lens = X
@@ -360,7 +368,7 @@ class KeplerMapper(object):
             hypercube = self.cover.find_entries(lens, cube)
 
             if self.verbose > 1:
-                print("There are %s points in cube_%s / %s" %
+                print("There are %s points in cube %s/%s" %
                       (hypercube.shape[0], i, total_bins))
 
             # If at least min_cluster_samples samples inside the hypercube
@@ -377,8 +385,8 @@ class KeplerMapper(object):
                 cluster_predictions = clusterer.fit_predict(fit_data)
 
                 if self.verbose > 1:
-                    print("Found %s clusters in cube_%s\n" % (
-                        np.unique(cluster_predictions[cluster_predictions > -1]).shape[0], i))
+                    print("   > Found %s clusters.\n" % (
+                        np.unique(cluster_predictions[cluster_predictions > -1]).shape[0]))
 
                 # TODO: I think this loop could be improved by turning inside out:
                 #           - partition points according to each cluster

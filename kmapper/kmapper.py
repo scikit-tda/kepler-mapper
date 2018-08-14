@@ -218,10 +218,10 @@ class KeplerMapper(object):
         if self.verbose > 0:
             print("..Composing projection pipeline of length %s:" %
                   (len(projections)))
-            print("Projections: %s\n\n" % ("\n".join(map(str, projections))))
-            print("Distance matrices: %s\n\n" %
+            print("\tProjections: %s" % ("\n\t\t".join(map(str, projections))))
+            print("\tDistance matrices: %s" %
                   ("\n".join(map(str, distance_matrices))))
-            print("Scalers: %s\n\n" % ("\n".join(map(str, scalers))))
+            print("\tScalers: %s" % ("\n".join(map(str, scalers))))
 
         # Pipeline Stack the projection functions
         lens = X
@@ -360,7 +360,7 @@ class KeplerMapper(object):
             hypercube = self.cover.find_entries(lens, cube)
 
             if self.verbose > 1:
-                print("There are %s points in cube_%s / %s" %
+                print("There are %s points in cube %s/%s" %
                       (hypercube.shape[0], i, total_bins))
 
             # If at least min_cluster_samples samples inside the hypercube
@@ -377,8 +377,8 @@ class KeplerMapper(object):
                 cluster_predictions = clusterer.fit_predict(fit_data)
 
                 if self.verbose > 1:
-                    print("Found %s clusters in cube_%s\n" % (
-                        np.unique(cluster_predictions[cluster_predictions > -1]).shape[0], i))
+                    print("   > Found %s clusters.\n" % (
+                        np.unique(cluster_predictions[cluster_predictions > -1]).shape[0]))
 
                 # TODO: I think this loop could be improved by turning inside out:
                 #           - partition points according to each cluster

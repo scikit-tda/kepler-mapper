@@ -74,6 +74,19 @@ class TestDataAccess:
 
 
 class TestMap:
+    def test_simplices(self):
+        mapper = KeplerMapper()
+        
+        X = np.random.rand(100, 2)
+        lens = mapper.fit_transform(X)
+        graph = mapper.map(lens, X=X, cover=Cover(n_cubes=3, perc_overlap=1.5), clusterer=cluster.DBSCAN(metric='euclidean', min_samples=3))
+        assert max([len(s) for s in graph["simplices"]]) <= 2
+
+        nodes = [n for n in graph['simplices'] if len(n) == 1]
+        edges = [n for n in graph['simplices'] if len(n) == 2]
+        assert len(nodes) == 3
+        assert len(edges) == 3
+
     def test_precomputed(self):
         mapper = KeplerMapper()
 
@@ -89,6 +102,14 @@ class TestMap:
         assert graph['nodes'] == graph2['nodes']
         assert graph['simplices'] == graph2['simplices']
 
+    def test_precomputed_with_knn_lens(self):
+        mapper = KeplerMapper()
+
+        X = np.random.rand(100, 5)
+
+        lens = mapper.fit_transform(X, projection="knn_distance_3", distance_matrix="chebyshev")
+        assert lens.shape == (100, 1)
+
     def test_affinity_prop_clustering(self):
         mapper = KeplerMapper()
 
@@ -97,7 +118,6 @@ class TestMap:
 
         graph = mapper.map(lens, X, 
             clusterer=cluster.AffinityPropagation())
-
 
 
 class TestLens():

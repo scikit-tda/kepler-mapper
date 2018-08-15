@@ -349,8 +349,9 @@ class KeplerMapper(object):
         cluster_params = clusterer.get_params()
         
         min_cluster_samples = cluster_params.get("n_clusters", 
+            cluster_params.get("min_cluster_size", 
             cluster_params.get("min_samples", 
-            cluster_params.get("min_cluster_size", 1)))
+            1)))
         
         if self.verbose > 1:
             print("Minimal points in hypercube before clustering: %d" %

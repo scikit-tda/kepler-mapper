@@ -8,7 +8,7 @@
 
 > Nature uses as little as possible of anything. - Johannes Kepler
 
-This is a Python implementation of the TDA Mapper algorithm  for visualization of high-dimensional data. For complete documentation, see [https://MLWave.github.io/kepler-mapper](https://MLWave.github.io/kepler-mapper).
+This is a Python implementation of the TDA Mapper algorithm  for visualization of high-dimensional data. For complete documentation, see [https://kepler-mapper.scikit-tda.org](https://kepler-mapper.scikit-tda.org).
 
 
 

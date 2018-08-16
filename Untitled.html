@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Using Kepler Mapper in Jupyter Notebook &mdash; KeplerMapper 1.0.1 documentation</title>
+  <title>&lt;no title&gt; &mdash; KeplerMapper 1.0.1 documentation</title>
   
 
   
@@ -28,9 +28,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Confidence Graphs: Representing Model Uncertainty in Deep Learning" href="Confidence Graphs.html" />
-    <link rel="prev" title="KeplerMapper &amp; NLP examples" href="KeplerMapper Newsgroup20 Pipeline.html" /> 
+    <link rel="search" title="Search" href="search.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -101,9 +99,9 @@
 <li class="toctree-l1"><a class="reference internal" href="reference.html">Reference</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Tutorials</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="KeplerMapper Newsgroup20 Pipeline.html">KeplerMapper &amp; NLP examples</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Using Kepler Mapper in Jupyter Notebook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="KeplerMapper usage in Jupyter Notebook.html">Using Kepler Mapper in Jupyter Notebook</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Confidence Graphs.html">Confidence Graphs: Representing Model Uncertainty in Deep Learning</a></li>
 </ul>
 
@@ -150,13 +148,13 @@
     
       <li><a href="https://scikit-tda.org">Scikit-TDA</a>&raquo;<a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Using Kepler Mapper in Jupyter Notebook</li>
+      <li>&lt;no title&gt;</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/KeplerMapper usage in Jupyter Notebook.ipynb.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/Untitled.ipynb.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -352,83 +350,57 @@ div.nboutput div.output_area.stderr {
     margin-right: 4px;  /* make room for the exclamation icon */
 }
 </style>
-<div class="section" id="Using-Kepler-Mapper-in-Jupyter-Notebook">
-<h1>Using Kepler Mapper in Jupyter Notebook<a class="headerlink" href="#Using-Kepler-Mapper-in-Jupyter-Notebook" title="Permalink to this headline">¶</a></h1>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">kmapper</span> <span class="k">as</span> <span class="nn">km</span>
-<span class="kn">from</span> <span class="nn">kmapper</span> <span class="k">import</span> <span class="n">jupyter</span> <span class="c1"># Creates custom CSS full-size Jupyter screen</span>
+<span></span><span class="kn">import</span> <span class="nn">pytest</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">kmapper</span> <span class="k">as</span> <span class="nn">km</span>
+<span class="kn">from</span> <span class="nn">kmapper</span> <span class="k">import</span> <span class="n">draw_matplotlib</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<style>
-    .container { width:100% !important; }
-    .output_scroll {height: 800px !important;}
-    </style></div>
-</div>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [4]:
+<span></span>In [3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># Import the class</span>
-<span class="kn">import</span> <span class="nn">kmapper</span> <span class="k">as</span> <span class="nn">km</span>
-
-<span class="c1"># Some sample data</span>
-<span class="kn">from</span> <span class="nn">sklearn</span> <span class="k">import</span> <span class="n">datasets</span>
-<span class="n">data</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">make_circles</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
-
-<span class="c1"># Initialize</span>
-<span class="n">mapper</span> <span class="o">=</span> <span class="n">km</span><span class="o">.</span><span class="n">KeplerMapper</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
-<span class="c1"># Fit to and transform the data</span>
-<span class="n">projected_data</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span> <span class="c1"># X-Y axis</span>
-
-<span class="c1"># Create dictionary called &#39;graph&#39; with nodes, edges and meta-information</span>
-<span class="n">graph</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">projected_data</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">nr_cubes</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-
-<span class="c1"># Visualize it</span>
-<span class="n">html</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">path_html</span><span class="o">=</span><span class="s2">&quot;make_circles_keplermapper_output.html&quot;</span><span class="p">,</span>
-                 <span class="n">title</span><span class="o">=</span><span class="s2">&quot;make_circles(n_samples=5000, noise=0.03, factor=0.3)&quot;</span><span class="p">)</span>
-
-<span class="c1"># Inline display</span>
-<span class="c1"># jupyter.display(path_html=&quot;http://mlwave.github.io/tda/word2vec-gender-bias.html&quot;)</span>
-<span class="n">jupyter</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="n">path_html</span><span class="o">=</span><span class="s2">&quot;make_circles_keplermapper_output.html&quot;</span><span class="p">)</span>
+<span></span><span class="n">mapper</span> <span class="o">=</span> <span class="n">km</span><span class="o">.</span><span class="n">KeplerMapper</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [45]:
+</pre></div>
 </div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-
-..Projecting data using: [0, 1]
-
-..Scaling with: MinMaxScaler(copy=True, feature_range=(0, 1))
-
-Mapping on data shaped (5000, 2) using lens shaped (5000, 2)
-
-Creating 100 hypercubes.
-
-Created 89 edges and 58 nodes in 0:00:00.142366.
-Wrote visualization to: make_circles_keplermapper_output.html
-</pre></div></div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">nodes</span> <span class="o">=</span> <span class="n">km</span><span class="o">.</span><span class="n">draw_matplotlib</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<iframe src=http://mlwave.github.io/tda/word2vec-gender-bias.html width=100%% height=800 frameBorder="0"></iframe></div>
+<img alt="_images/Untitled_3_0.png" src="_images/Untitled_3_0.png" />
 </div>
 </div>
 
@@ -437,15 +409,6 @@ Wrote visualization to: make_circles_keplermapper_output.html
            
           </div>
           <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="Confidence Graphs.html" class="btn btn-neutral float-right" title="Confidence Graphs: Representing Model Uncertainty in Deep Learning" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="KeplerMapper Newsgroup20 Pipeline.html" class="btn btn-neutral" title="KeplerMapper &amp; NLP examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
-    </div>
   
 
   <hr/>

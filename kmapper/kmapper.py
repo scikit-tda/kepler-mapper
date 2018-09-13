@@ -359,12 +359,12 @@ class KeplerMapper(object):
         # Deprecation warnings
         if nr_cubes is not None or overlap_perc is not None:
             warnings.warn(
-                "Please supply km.Cover object. Explicitly passing in n_cubes/nr_cubes and overlap_perc will be deprecated in future releases. ",
+                "Deprecation Warning: Please supply km.Cover object. Explicitly passing in n_cubes/nr_cubes and overlap_perc will be deprecated in future releases. ",
                 DeprecationWarning,
             )
         if coverer is not None:
             warnings.warn(
-                "coverer has been renamed to `cover`. Please you `cover` from now on.",
+                "Deprecation Warning: coverer has been renamed to `cover`. Please use `cover` from now on.",
                 DeprecationWarning,
             )
 

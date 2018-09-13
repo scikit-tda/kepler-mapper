@@ -7,6 +7,7 @@ CUSTOM_CSS = """<style>
     </style>"""
 IPython.core.display.display(IPython.core.display.HTML(CUSTOM_CSS))
 
+
 def display(path_html="mapper_visualization_output.html"):
     """ Displays a html file inside a Jupyter Notebook output cell.
     
@@ -24,6 +25,7 @@ def display(path_html="mapper_visualization_output.html"):
 
     """
 
-    iframe = '<iframe src=' + path_html \
-            + ' width=100%% height=800 frameBorder="0"></iframe>'
+    iframe = (
+        "<iframe src=" + path_html + ' width=100%% height=800 frameBorder="0"></iframe>'
+    )
     IPython.core.display.display(IPython.core.display.HTML(iframe))

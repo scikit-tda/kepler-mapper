@@ -1,14 +1,24 @@
 from __future__ import division
+from ast import literal_eval
+
 from .visuals import (init_color_function,
                       _size_node,
                       _format_projection_statistics,
                       _format_cluster_statistics)
 
-import igraph as ig
 import numpy as np
-import plotly.graph_objs as go
-from ast import literal_eval
-import ipywidgets as ipw
+
+try: 
+    import igraph as ig
+    import plotly.graph_objs as go
+    import ipywidgets as ipw
+except ImportError:
+    print(
+"""To use the plotly visualization tools, you must have the packages python-igraph, plotly, and ipywidgets installed in your environment."""
+""" It looks like at least one of these is missing.  Please install again with"""
+"""\n\n\t`pip install python-igraph plotly ipywidgets`\n\nand try again"""
+)
+    raise
 
 
 colorscale = [[0.0, 'rgb(68, 1, 84)'],  # Viridis

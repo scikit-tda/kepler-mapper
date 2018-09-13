@@ -37,9 +37,14 @@ colorscale = [
     [1.0, "rgb(253, 231, 36)"],
 ]
 
+def _to_html_format(st):
+    return st.replace("\n", "<br>")
 
-def pl_build_histogram(data, colorscale):
-    # Build histogram of data based on values of color_function
+
+def _colors_to_rgb(colorscale):
+    """ Ensure that the color scale is formatted in rgb strings. 
+        If the colorscale is a hex string, then convert to rgb.
+    """
     if colorscale[0][1][0] == "#":
         plotly_colors = np.array(colorscale)[:, 1].tolist()
         for k, hexcode in enumerate(plotly_colors):
@@ -49,6 +54,13 @@ def pl_build_histogram(data, colorscale):
             colorscale[k][1] = "rgb" + str(
                 tuple(int(hexcode[j : j + step], 16) for j in range(0, hex_len, step))
             )
+    
+    return colorscale
+
+def pl_build_histogram(data, colorscale):
+    """ Build histogram of data based on values of color_function
+    """
+    colorscale = _colors_to_rgb(colorscale)
 
     h_min, h_max = 0, 1
     hist, bin_edges = np.histogram(data, range=(h_min, h_max), bins=10)
@@ -137,10 +149,10 @@ def pl_format_meta(graph, color_function_name, custom_meta=None):
     if custom_meta is None:
         custom_meta = graph["meta_data"]
         clusterer = custom_meta["clusterer"]
-        custom_meta["clusterer"] = clusterer.replace("\n", "<br>")
+        custom_meta["clusterer"] = _to_html_format(clusterer)
         if "projection" in custom_meta.keys():
             projection = custom_meta["projection"]
-            custom_meta["projection"] = projection.replace("\n", "<br>")
+            custom_meta["projection"] = _to_html_format(projection)
         if color_function_name is not None:
             custom_meta["color_function"] = color_function_name
     mapper_summary = {
@@ -172,20 +184,20 @@ def get_mapper_graph(
     ----------
     simplicial_complex : dict
         Simplicial complex is the output from the KeplerMapper `map` method.
+    
     Returns
     -------
-    the graph dictionary in  a json representation, the mapper summary
+    the graph dictionary in a json representation, the mapper summary
     and the node_distribution
 
     Example
     -------
 
-    >>> kmgraph,  mapper_summary, n_distribution = \
-                                         get_mapper_graph(simplicial_complex)
+    >>> kmgraph,  mapper_summary, n_distribution = get_mapper_graph(simplicial_complex)
 
     """
     if not len(simplicial_complex["nodes"]) > 0:
-        raise Exception("A mapper graph should have more than 0 nodes")
+        raise Exception("A mapper graph should have more than 0 nodes. This might be because your clustering algorithm might be too sensitive and be classifying all points as noise.")
 
     color_function = init_color_function(simplicial_complex, color_function)
 
@@ -282,7 +294,8 @@ def plotly_graph(
 
 
 def get_kmgraph_meta(mapper_summary):
-    # Extract info from mapper summary to be displayed below the graph plot
+    """ Extract info from mapper summary to be displayed below the graph plot
+    """
     d = mapper_summary["custom_meta"]
     meta = (
         "<b>N_cubes:</b> "
@@ -318,14 +331,17 @@ def plot_layout(
     bottom=60,
 ):
     """Set the plotly layout
+
     Parameters
     ----------
-    width, height: integers setting  width and height of plot window
-    bgcolor: rgb, rgba or hex color code for the background color
-    annotation_text: string; meta data to be displayed
-    annotation_x, annotation_y are the coordinates of the
-    point where we insert the annotation; the negative sign for y coord
-    points output that  annotation is inserted below the plot
+    width, height: integers 
+        setting  width and height of plot window
+    bgcolor: string, 
+        rgba or hex color code for the background color
+    annotation_text: string
+        meta data to be displayed
+    annotation_x & annotation_y:
+        The coordinates of the point where we insert the annotation; the negative sign for y coord points output that annotation is inserted below the plot
     """
     pl_layout = dict(
         title=title,
@@ -375,6 +391,7 @@ def node_hist_fig(
     y_gridcolor="white",
 ):
     """Define the plotly plot representing the node histogram
+    
     Parameters
     ----------
     node_color_distribution: list of dicts describing the build_histogram
@@ -473,6 +490,7 @@ def hovering_widgets(
 ):
     """Defines the widgets that display the distribution of each node on hover
         and the members of each nodes
+    
     Parameters
     ----------
     kmgraph: the kepler-mapper graph dict returned by `get_mapper_graph()``
@@ -548,10 +566,10 @@ def hovering_widgets(
 
 
 def _map_val2color(val, vmin, vmax, colorscale):
-    # maps a value val in [vmin, vmax] to the corresponding color in
-    # the colorscale
-    # returns the rgb color code of that color
-
+    """ Maps a value val in [vmin, vmax] to the corresponding color in
+        the colorscale
+        returns the rgb color code of that color
+    """
     if vmin >= vmax:
         raise ValueError("vmin should be < vmax")
 

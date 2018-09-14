@@ -15,12 +15,13 @@ from kmapper.plotlyviz import (
     get_mapper_graph,
     _map_val2color,
     format_meta,
-    _to_html_format
+    _to_html_format,
 )
+
 
 @pytest.fixture
 def sc():
-    X = np.random.random((200,5))
+    X = np.random.random((200, 5))
     km = KeplerMapper()
     lens = km.fit_transform(X)
     sc = km.map(lens, X)
@@ -28,10 +29,11 @@ def sc():
 
 
 def test_histogram_default_colorscale():
-    hist = pl_build_histogram(np.random.random((100,1)), colorscale)
+    hist = pl_build_histogram(np.random.random((100, 1)), colorscale)
     assert isinstance(hist, list)
     assert isinstance(hist[0], dict)
-    assert len(hist) == len(colorscale)-1
+    assert len(hist) == len(colorscale) - 1
+
 
 def test_kepler_to_graph(sc):
 
@@ -41,10 +43,14 @@ def test_kepler_to_graph(sc):
     assert isinstance(mapper_summary, dict)
     assert isinstance(colorf_distribution, list)
 
+
 def test_format_meta(sc):
     mapper_summary = format_meta(sc, "Nada custom meta", "foo")
     assert mapper_summary["custom_meta"] == "Nada custom meta"
-    assert mapper_summary["n_total"] <= 200, "Some points can disappear because of noise in clustering."
+    assert (
+        mapper_summary["n_total"] <= 200
+    ), "Some points can disappear because of noise in clustering."
+
 
 def test_to_html_format():
     res = _to_html_format("a\nb\n\n\\n\n")

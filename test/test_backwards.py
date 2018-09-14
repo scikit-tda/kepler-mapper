@@ -10,7 +10,7 @@ import numpy as np
 from kmapper import KeplerMapper, Cover
 
 
-class TestAPIMaintenance():
+class TestAPIMaintenance:
     """ These tests just confirm that new api changes are backwards compatible"""
 
     def test_nr_cubes_cover(self):
@@ -66,7 +66,7 @@ class TestAPIMaintenance():
         data = np.random.rand(100, 10)
         lens = mapper.fit_transform(data)
 
-        warnings.simplefilter('always')
+        warnings.simplefilter("always")
         graph = mapper.map(lens, data)
 
         assert len(recwarn) == 0

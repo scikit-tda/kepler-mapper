@@ -78,8 +78,6 @@ def _map_val2color(val, vmin, vmax, colorscale):
     return "rgb" + str(tuple(val_color_0255))
 
 
-
-
 def init_color_function(graph, color_function=None):
     # If no color_function provided we color by row order in data set
     # Reshaping to 2-D array is required for sklearn 0.19

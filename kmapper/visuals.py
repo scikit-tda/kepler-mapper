@@ -3,7 +3,7 @@ import numpy as np
 from sklearn import preprocessing
 import json
 from collections import defaultdict
-
+from ast import literal_eval
 
 palette = [
     "#0500ff",
@@ -43,6 +43,40 @@ palette = [
 
 def _to_html_format(st):
     return st.replace("\n", "<br>")
+
+def _map_val2color(val, vmin, vmax, colorscale):
+    """ Maps a value val in [vmin, vmax] to the corresponding color in
+        the colorscale
+        returns the rgb color code of that color
+    """
+    if vmin >= vmax:
+        raise ValueError("vmin should be < vmax")
+
+    scale = list(map(float, np.array(colorscale)[:, 0]))
+    colors = np.array(colorscale)[:, 1]
+
+    colors_01 = (
+        np.array(list(map(literal_eval, [color[3:] for color in colors]))) / 255.
+    )
+
+    v = (val - vmin) / float((vmax - vmin))  # val is mapped to v in[0,1]
+
+    idx = 0
+    # sequential search for the two   consecutive indices idx, idx+1 such that
+    # v belongs to the interval  [scale[idx], scale[idx+1]
+    while v > scale[idx + 1]:
+        idx += 1
+    left_scale_val = scale[idx]
+    right_scale_val = scale[idx + 1]
+    vv = (v - left_scale_val) / (right_scale_val - left_scale_val)
+
+    # get the triplet of three values in [0,1] that represent the rgb color
+    # corresponding to val
+    val_color01 = colors_01[idx] + vv * (colors_01[idx + 1] - colors_01[idx])
+    val_color_0255 = list(map(np.uint8, 255 * val_color01))
+
+    return "rgb" + str(tuple(val_color_0255))
+
 
 
 
@@ -149,6 +183,7 @@ def build_histogram(data):
     for bar, mid in zip(hist, bin_mids):
         height = int(((bar / max_bucket_value) * 100) + 1)
         perc = round((bar / sum_bucket_value) * 100., 1)
+
         color = palette[_color_idx(mid)]
 
         histogram.append({"height": height, "perc": perc, "color": color})

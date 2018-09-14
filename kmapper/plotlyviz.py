@@ -1,5 +1,4 @@
 from __future__ import division
-from ast import literal_eval
 
 from .visuals import (
     init_color_function,
@@ -7,7 +6,8 @@ from .visuals import (
     _format_projection_statistics,
     _format_cluster_statistics,
     format_meta,
-    _to_html_format
+    _to_html_format,
+    _map_val2color
 )
 
 import numpy as np
@@ -59,6 +59,9 @@ def _colors_to_rgb(colorscale):
 def pl_build_histogram(data, colorscale):
     """ Build histogram of data based on values of color_function
     """
+
+
+    # TODO: we should weave this method of handling colors into the normal build_histogram and combine both functions
     colorscale = _colors_to_rgb(colorscale)
 
     h_min, h_max = 0, 1
@@ -71,6 +74,7 @@ def pl_build_histogram(data, colorscale):
     for bar, mid in zip(hist, bin_mids):
         height = np.floor(((bar / max_bucket_value) * 100) + 0.5)
         perc = round((bar / sum_bucket_value) * 100., 1)
+
         color = _map_val2color(mid, 0., 1., colorscale)
 
         histogram.append({"height": height, "perc": perc, "color": color})
@@ -538,41 +542,6 @@ def hovering_widgets(
     trace.on_hover(do_on_hover)
     return ipw.VBox([ipw.HBox([graph_fw, fwc]), clust_textbox, member_textbox])
 
-
-def _map_val2color(val, vmin, vmax, colorscale):
-    """ Maps a value val in [vmin, vmax] to the corresponding color in
-        the colorscale
-        returns the rgb color code of that color
-    """
-    if vmin >= vmax:
-        raise ValueError("vmin should be < vmax")
-
-    plotly_scale = list(map(float, np.array(colorscale)[:, 0]))
-    plotly_colors = np.array(colorscale)[:, 1]
-
-    colors_01 = (
-        np.array(list(map(literal_eval, [color[3:] for color in plotly_colors]))) / 255.
-    )
-
-    v = (val - vmin) / float((vmax - vmin))  # val is mapped to v in[0,1]
-
-    idx = 0
-    # sequential search for the two   consecutive indices idx, idx+1 such that
-    # v belongs to the interval  [plotly_scale[idx], plotly_scale[idx+1]
-    while v > plotly_scale[idx + 1]:
-        idx += 1
-    left_scale_val = plotly_scale[idx]
-    right_scale_val = plotly_scale[idx + 1]
-    vv = (v - left_scale_val) / (right_scale_val - left_scale_val)
-
-    # get the triplet of three values in [0,1] that represent the rgb color
-    # corresponding to val
-    val_color01 = colors_01[idx] + vv * (colors_01[idx + 1] - colors_01[idx])
-    val_color_0255 = list(map(np.uint8, 255 * val_color01))
-
-    return "rgb" + str(tuple(val_color_0255))
-
-
 def _get_plotly_data(E, coords):
     # E : the list of tuples representing the graph edges
     # coords: list of node coordinates assigned by igraph.Layout
@@ -614,6 +583,7 @@ def _pl_format_tooltip(
     colorscale,
 ):
 
+    # TODO: It looks like custom_tooltips is not supported -- it is never used.
     custom_tooltips = (
         custom_tooltips[member_ids] if custom_tooltips is not None else member_ids
     )
@@ -622,6 +592,8 @@ def _pl_format_tooltip(
 
     projection_stats = _format_projection_statistics(member_ids, lens, lens_names)
     cluster_stats = _format_cluster_statistics(member_ids, X, X_names)
+
+
     member_histogram = pl_build_histogram(color_function[member_ids], colorscale)
 
     return projection_stats, cluster_stats, member_histogram

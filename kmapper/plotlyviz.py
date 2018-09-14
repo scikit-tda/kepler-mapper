@@ -6,6 +6,8 @@ from .visuals import (
     _size_node,
     _format_projection_statistics,
     _format_cluster_statistics,
+    format_meta,
+    _to_html_format
 )
 
 import numpy as np
@@ -36,9 +38,6 @@ colorscale = [
     [0.9, "rgb(189, 222, 38)"],
     [1.0, "rgb(253, 231, 36)"],
 ]
-
-def _to_html_format(st):
-    return st.replace("\n", "<br>")
 
 
 def _colors_to_rgb(colorscale):
@@ -141,31 +140,6 @@ def scomplex_to_graph(
 
     return json_dict
 
-
-def pl_format_meta(graph, color_function_name, custom_meta=None):
-    n = [l for l in graph["nodes"].values()]
-    n_unique = len(set([i for s in n for i in s]))
-
-    if custom_meta is None:
-        custom_meta = graph["meta_data"]
-        clusterer = custom_meta["clusterer"]
-        custom_meta["clusterer"] = _to_html_format(clusterer)
-        if "projection" in custom_meta.keys():
-            projection = custom_meta["projection"]
-            custom_meta["projection"] = _to_html_format(projection)
-        if color_function_name is not None:
-            custom_meta["color_function"] = color_function_name
-    mapper_summary = {
-        "custom_meta": custom_meta,
-        "n_nodes": len(graph["nodes"]),
-        "n_edges": sum([len(l) for l in graph["links"].values()]),
-        "n_total": sum([len(l) for l in graph["nodes"].values()]),
-        "n_unique": n_unique,
-    }
-
-    return mapper_summary
-
-
 def get_mapper_graph(
     simplicial_complex,
     color_function=None,
@@ -214,8 +188,8 @@ def get_mapper_graph(
     colorf_distribution = pl_graph_data_distribution(
         simplicial_complex, color_function, colorscale
     )
-    mapper_summary = pl_format_meta(
-        simplicial_complex, color_function_name, custom_meta
+    mapper_summary = format_meta(
+        simplicial_complex, color_function_name=color_function_name, custom_meta=custom_meta
     )
 
     return json_graph, mapper_summary, colorf_distribution

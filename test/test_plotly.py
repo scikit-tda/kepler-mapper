@@ -14,7 +14,7 @@ from kmapper.plotlyviz import (
     colorscale,
     get_mapper_graph,
     _map_val2color,
-    pl_format_meta,
+    format_meta,
     _to_html_format
 )
 
@@ -42,7 +42,7 @@ def test_kepler_to_graph(sc):
     assert isinstance(colorf_distribution, list)
 
 def test_format_meta(sc):
-    mapper_summary = pl_format_meta(sc, "foo", "Nada custom meta")
+    mapper_summary = format_meta(sc, "Nada custom meta", "foo")
     assert mapper_summary["custom_meta"] == "Nada custom meta"
     assert mapper_summary["n_total"] <= 200, "Some points can disappear because of noise in clustering."
 

@@ -41,6 +41,11 @@ palette = [
 ]
 
 
+def _to_html_format(st):
+    return st.replace("\n", "<br>")
+
+
+
 def init_color_function(graph, color_function=None):
     # If no color_function provided we color by row order in data set
     # Reshaping to 2-D array is required for sklearn 0.19
@@ -57,12 +62,23 @@ def init_color_function(graph, color_function=None):
     return color_function
 
 
-def format_meta(graph, custom_meta=None):
+def format_meta(graph, custom_meta=None, color_function_name=None):
     n = [l for l in graph["nodes"].values()]
     n_unique = len(set([i for s in n for i in s]))
 
     if custom_meta is None:
         custom_meta = graph["meta_data"]
+        
+        if "clusterer" in custom_meta.keys():
+            clusterer = custom_meta["clusterer"]
+            custom_meta["clusterer"] = _to_html_format(clusterer)
+
+        if "projection" in custom_meta.keys():
+            projection = custom_meta["projection"]
+            custom_meta["projection"] = _to_html_format(projection)
+
+        if color_function_name is not None:
+            custom_meta["color_function"] = color_function_name
 
     mapper_summary = {
         "custom_meta": custom_meta,

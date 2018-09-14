@@ -7,7 +7,9 @@ from .visuals import (
     _format_cluster_statistics,
     format_meta,
     _to_html_format,
-    _map_val2color
+    _map_val2color,
+    graph_data_distribution,
+    build_histogram,
 )
 
 import numpy as np
@@ -40,58 +42,8 @@ colorscale = [
 ]
 
 
-def _colors_to_rgb(colorscale):
-    """ Ensure that the color scale is formatted in rgb strings. 
-        If the colorscale is a hex string, then convert to rgb.
-    """
-    if colorscale[0][1][0] == "#":
-        plotly_colors = np.array(colorscale)[:, 1].tolist()
-        for k, hexcode in enumerate(plotly_colors):
-            hexcode = hexcode.lstrip("#")
-            hex_len = len(hexcode)
-            step = hex_len // 3
-            colorscale[k][1] = "rgb" + str(
-                tuple(int(hexcode[j : j + step], 16) for j in range(0, hex_len, step))
-            )
-    
-    return colorscale
-
-def pl_build_histogram(data, colorscale):
-    """ Build histogram of data based on values of color_function
-    """
-
-
-    # TODO: we should weave this method of handling colors into the normal build_histogram and combine both functions
-    colorscale = _colors_to_rgb(colorscale)
-
-    h_min, h_max = 0, 1
-    hist, bin_edges = np.histogram(data, range=(h_min, h_max), bins=10)
-    bin_mids = np.mean(np.array(list(zip(bin_edges, bin_edges[1:]))), axis=1)
-
-    histogram = []
-    max_bucket_value = max(hist)
-    sum_bucket_value = sum(hist)
-    for bar, mid in zip(hist, bin_mids):
-        height = np.floor(((bar / max_bucket_value) * 100) + 0.5)
-        perc = round((bar / sum_bucket_value) * 100., 1)
-
-        color = _map_val2color(mid, 0., 1., colorscale)
-
-        histogram.append({"height": height, "perc": perc, "color": color})
-
-    return histogram
-
-
-def pl_graph_data_distribution(graph, color_function, colorscale):
-
-    node_averages = []
-    for node_id, member_ids in graph["nodes"].items():
-        member_colors = color_function[member_ids]
-        node_averages.append(np.mean(member_colors))
-
-    histogram = pl_build_histogram(node_averages, colorscale)
-
-    return histogram
+pl_build_histogram = build_histogram
+pl_graph_data_distribution = graph_data_distribution
 
 
 def scomplex_to_graph(
@@ -144,6 +96,7 @@ def scomplex_to_graph(
 
     return json_dict
 
+
 def get_mapper_graph(
     simplicial_complex,
     color_function=None,
@@ -175,7 +128,9 @@ def get_mapper_graph(
 
     """
     if not len(simplicial_complex["nodes"]) > 0:
-        raise Exception("A mapper graph should have more than 0 nodes. This might be because your clustering algorithm might be too sensitive and be classifying all points as noise.")
+        raise Exception(
+            "A mapper graph should have more than 0 nodes. This might be because your clustering algorithm might be too sensitive and be classifying all points as noise."
+        )
 
     color_function = init_color_function(simplicial_complex, color_function)
 
@@ -193,7 +148,9 @@ def get_mapper_graph(
         simplicial_complex, color_function, colorscale
     )
     mapper_summary = format_meta(
-        simplicial_complex, color_function_name=color_function_name, custom_meta=custom_meta
+        simplicial_complex,
+        color_function_name=color_function_name,
+        custom_meta=custom_meta,
     )
 
     return json_graph, mapper_summary, colorf_distribution
@@ -542,6 +499,7 @@ def hovering_widgets(
     trace.on_hover(do_on_hover)
     return ipw.VBox([ipw.HBox([graph_fw, fwc]), clust_textbox, member_textbox])
 
+
 def _get_plotly_data(E, coords):
     # E : the list of tuples representing the graph edges
     # coords: list of node coordinates assigned by igraph.Layout
@@ -592,7 +550,6 @@ def _pl_format_tooltip(
 
     projection_stats = _format_projection_statistics(member_ids, lens, lens_names)
     cluster_stats = _format_cluster_statistics(member_ids, X, X_names)
-
 
     member_histogram = pl_build_histogram(color_function[member_ids], colorscale)
 

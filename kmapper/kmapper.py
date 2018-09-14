@@ -23,7 +23,44 @@ from .visuals import (
     format_mapper_data,
     build_histogram,
     graph_data_distribution,
+    colorscale_default,
 )
+
+
+# palette = [
+#     "#0500ff",
+#     "#0300ff",
+#     "#0100ff",
+#     "#0002ff",
+#     "#0022ff",
+#     "#0044ff",
+#     "#0064ff",
+#     "#0084ff",
+#     "#00a4ff",
+#     "#00a4ff",
+#     "#00c4ff",
+#     "#00e4ff",
+#     "#00ffd0",
+#     "#00ff83",
+#     "#00ff36",
+#     "#17ff00",
+#     "#65ff00",
+#     "#b0ff00",
+#     "#fdff00",
+#     "#FFf000",
+#     "#FFdc00",
+#     "#FFc800",
+#     "#FFb400",
+#     "#FFa000",
+#     "#FF8c00",
+#     "#FF7800",
+#     "#FF6400",
+#     "#FF5000",
+#     "#FF3c00",
+#     "#FF2800",
+#     "#FF1400",
+#     "#FF0000",
+# ]
 
 
 class KeplerMapper(object):
@@ -580,7 +617,9 @@ class KeplerMapper(object):
             graph, color_function, X, X_names, lens, lens_names, custom_tooltips, env
         )
 
-        histogram = graph_data_distribution(graph, color_function)
+        colorscale = colorscale_default
+
+        histogram = graph_data_distribution(graph, color_function, colorscale)
 
         mapper_summary = format_meta(graph, custom_meta)
 
@@ -600,6 +639,7 @@ class KeplerMapper(object):
             histogram=histogram,
             dist_label="Node",
             mapper_data=mapper_data,
+            colorscale=colorscale,
             js_text=js_text,
             css_text=css_text,
             show_tooltips=True,

@@ -22,14 +22,14 @@ var size = d3.scale.pow().exponent(1)
            .domain([1,100])
            .range([8,24]);
 
-var palette = [
-  '#0500ff', '#0300ff', '#0100ff', '#0002ff', '#0022ff', '#0044ff',
-  '#0064ff', '#0084ff', '#00a4ff', '#00a4ff', '#00c4ff', '#00e4ff',
-  '#00ffd0', '#00ff83', '#00ff36', '#17ff00', '#65ff00', '#b0ff00',
-  '#fdff00', '#FFf000', '#FFdc00', '#FFc800', '#FFb400', '#FFa000',
-  '#FF8c00', '#FF7800', '#FF6400', '#FF5000', '#FF3c00', '#FF2800',
-  '#FF1400', '#FF0000'
-];
+// var palette = [
+//   '#0500ff', '#0300ff', '#0100ff', '#0002ff', '#0022ff', '#0044ff',
+//   '#0064ff', '#0084ff', '#00a4ff', '#00a4ff', '#00c4ff', '#00e4ff',
+//   '#00ffd0', '#00ff83', '#00ff36', '#17ff00', '#65ff00', '#b0ff00',
+//   '#fdff00', '#FFf000', '#FFdc00', '#FFc800', '#FFb400', '#FFa000',
+//   '#FF8c00', '#FF7800', '#FF6400', '#FF5000', '#FF3c00', '#FF2800',
+//   '#FF1400', '#FF0000'
+// ];
 
 // Variety of variable inits
 var highlight_color = "blue";
@@ -115,14 +115,24 @@ d3.select("#help_control").on("click", function() {
 });
 
 
-// Color settings: Ordinal Scale of ["0"-"30"] hot-to-cold
-var color = d3.scale.ordinal()
-  .domain(["0","1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-            "11", "12", "13","14","15","16","17","18","19","20",
-            "21","22","23","24","25","26","27","28","29","30"])
-  .range(palette);
 
-// var color = d3.scale.category10();
+/**
+ * 
+ * Set up color scale
+ * 
+ * 
+ */
+
+var colorscale = JSON.parse(document.getElementById("json_colorscale").dataset.colorscale);
+var domain = colorscale.map((x)=>x[0])
+var palette = colorscale.map((x)=>x[1])
+
+console.log(domain)
+console.log(palette)
+// Color settings: Ordinal Scale of ["0"-"30"] hot-to-cold
+var color = d3.scale.linear()
+  .domain(domain)
+  .range(palette);
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -133,7 +143,6 @@ var color = d3.scale.ordinal()
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-
 
 
 var graph = JSON.parse(document.getElementById("json_graph").dataset.graph);
@@ -157,9 +166,7 @@ var link = g.selectAll(".link")
               .attr("class", "link")
               .style("stroke-width", function(d) { return d.w * nominal_stroke; })
               .style("stroke-width", function(d) { return d.w * nominal_stroke; })
-              //.style("stroke", function(d) {
-              //  if (isNumber(d.score) && d.score>=0) return color(d.score);
-              //  else return default_link_color; })
+
 
 var node = g.selectAll(".node")
             .data(graph.nodes)
@@ -216,7 +223,10 @@ var circle = node.append("path")
     .type(function(d) { return d.type; }))
   .attr("class", "circle")
   .style(tocolor, function(d) {
-    return color(d.color);});
+    console.log("Node color:", d.color);
+    console.log("becomes color ", color(d.color));
+    return color(d.color);
+  });
 //.style("filter", "url(#drop-shadow)");
 
 

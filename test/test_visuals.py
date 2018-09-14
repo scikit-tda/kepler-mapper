@@ -113,14 +113,14 @@ class TestVisualHelpers:
         """ The histogram colors dont seem to match the node colors, this should confirm the colors will match and we need to look at the javascript instead.
         """
 
-        color_function = np.array([0.55]*10 + [0.0]*10)
-        member_ids = [1,2,3,4,5,6]
+        color_function = np.array([0.55] * 10 + [0.0] * 10)
+        member_ids = [1, 2, 3, 4, 5, 6]
         hist = build_histogram(color_function[member_ids])
-        c = round(_color_function(member_ids, color_function),2)
-        single_bar = [bar for bar in hist if bar['perc'] == 100.0]
+        c = round(_color_function(member_ids, color_function), 2)
+        single_bar = [bar for bar in hist if bar["perc"] == 100.0]
 
         assert len(single_bar) == 1
-        assert _map_val2color(c, 0.,1.) == single_bar[0]['color']
+        assert _map_val2color(c, 0., 1.) == single_bar[0]["color"]
 
     def test_color_function_size(self):
         nodes = {"a": [1, 2, 3], "b": [4, 5, 6, 7, 8, 9]}

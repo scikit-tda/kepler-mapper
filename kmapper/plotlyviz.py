@@ -1,18 +1,20 @@
 from __future__ import division
 
+import numpy as np
+
 from .visuals import (
     init_color_function,
     _size_node,
     _format_projection_statistics,
     _format_cluster_statistics,
+    _color_function,
     format_meta,
     _to_html_format,
     _map_val2color,
     graph_data_distribution,
     build_histogram,
+    _tooltip_components,
 )
-
-import numpy as np
 
 try:
     import igraph as ig
@@ -42,10 +44,6 @@ colorscale = [
 ]
 
 
-pl_build_histogram = build_histogram
-pl_graph_data_distribution = graph_data_distribution
-
-
 def scomplex_to_graph(
     simplicial_complex,
     color_function,
@@ -61,22 +59,14 @@ def scomplex_to_graph(
     node_id_to_num = {}
     for i, (node_id, member_ids) in enumerate(simplicial_complex["nodes"].items()):
         node_id_to_num[node_id] = i
-        projection_stats, cluster_stats, member_histogram = _pl_format_tooltip(
-            member_ids,
-            custom_tooltips,
-            X,
-            X_names,
-            lens,
-            lens_names,
-            color_function,
-            i,
-            colorscale,
+        projection_stats, cluster_stats, member_histogram = _tooltip_components(
+            member_ids, X, X_names, lens, lens_names, color_function, i, colorscale
         )
         n = {
             "id": i,
             "name": node_id,
             "member_ids": member_ids,
-            "color": _pl_color_function(member_ids, color_function),
+            "color": _color_function(member_ids, color_function),
             "size": _size_node(member_ids),
             "cluster": cluster_stats,
             "distribution": member_histogram,
@@ -144,7 +134,7 @@ def get_mapper_graph(
         custom_tooltips,
         colorscale=colorscale,
     )
-    colorf_distribution = pl_graph_data_distribution(
+    colorf_distribution = graph_data_distribution(
         simplicial_complex, color_function, colorscale
     )
     mapper_summary = format_meta(
@@ -529,33 +519,6 @@ def _text_mapper_summary(mapper_summary):
     return text
 
 
-def _pl_format_tooltip(
-    member_ids,
-    custom_tooltips,
-    X,
-    X_names,
-    lens,
-    lens_names,
-    color_function,
-    node_ID,
-    colorscale,
-):
-
-    # TODO: It looks like custom_tooltips is not supported -- it is never used.
-    custom_tooltips = (
-        custom_tooltips[member_ids] if custom_tooltips is not None else member_ids
-    )
-
-    custom_tooltips = list(custom_tooltips)
-
-    projection_stats = _format_projection_statistics(member_ids, lens, lens_names)
-    cluster_stats = _format_cluster_statistics(member_ids, X, X_names)
-
-    member_histogram = pl_build_histogram(color_function[member_ids], colorscale)
-
-    return projection_stats, cluster_stats, member_histogram
-
-
 def _hover_format(member_ids, custom_tooltips, X, X_names, lens, lens_names):
     cluster_data = _format_cluster_statistics(member_ids, X, X_names)
     tooltip = ""
@@ -565,7 +528,3 @@ def _hover_format(member_ids, custom_tooltips, X, X_names, lens, lens_names):
     val_size = cluster_data["size"]
     tooltip += "{val_size}".format(**locals())
     return tooltip
-
-
-def _pl_color_function(member_ids, color_function):
-    return np.mean(color_function[member_ids])

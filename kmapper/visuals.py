@@ -323,6 +323,17 @@ def _format_projection_statistics(member_ids, lens, lens_names):
     return projection_data
 
 
+def _tooltip_components(
+    member_ids, X, X_names, lens, lens_names, color_function, node_ID, colorscale
+):
+    projection_stats = _format_projection_statistics(member_ids, lens, lens_names)
+    cluster_stats = _format_cluster_statistics(member_ids, X, X_names)
+
+    member_histogram = build_histogram(color_function[member_ids], colorscale)
+
+    return projection_stats, cluster_stats, member_histogram
+
+
 def _format_tooltip(
     env,
     member_ids,
@@ -344,11 +355,11 @@ def _format_tooltip(
     # list will render better than numpy arrays
     custom_tooltips = list(custom_tooltips)
 
-    projection_stats = _format_projection_statistics(member_ids, lens, lens_names)
-    cluster_stats = _format_cluster_statistics(member_ids, X, X_names)
-
     colorscale = colorscale_default
-    histogram = build_histogram(color_function[member_ids], colorscale)
+
+    projection_stats, cluster_stats, histogram = _tooltip_components(
+        member_ids, X, X_names, lens, lens_names, color_function, node_ID, colorscale
+    )
 
     tooltip = env.get_template("cluster_tooltip.html").render(
         projection_stats=projection_stats,
@@ -364,13 +375,6 @@ def _format_tooltip(
 
 def _color_function(member_ids, color_function):
     return np.mean(color_function[member_ids])
-    # return _color_idx(np.mean(color_function[member_ids]))
-    # return int(np.mean(color_function[member_ids]) * 30)
-
-
-# def _color_idx(val):
-#     """ Take a value between 0 and 1 and return the idx of color """
-#     return int(val * 30)
 
 
 def _size_node(member_ids):

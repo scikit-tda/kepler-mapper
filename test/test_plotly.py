@@ -10,7 +10,7 @@ import numpy as np
 
 from kmapper import KeplerMapper
 from kmapper.plotlyviz import (
-    pl_build_histogram,
+    build_histogram,
     colorscale,
     get_mapper_graph,
     _map_val2color,
@@ -29,7 +29,7 @@ def sc():
 
 
 def test_histogram_default_colorscale():
-    hist = pl_build_histogram(np.random.random((100, 1)), colorscale)
+    hist = build_histogram(np.random.random((100, 1)), colorscale)
     assert isinstance(hist, list)
     assert isinstance(hist[0], dict)
     assert len(hist) == len(colorscale) - 1

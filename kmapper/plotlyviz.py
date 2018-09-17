@@ -152,10 +152,10 @@ def plotly_graph(
     colorscale=colorscale,
     showscale=True,
     factor_size=3,
-    edge_linecolor="rgb(200,200,200)",
+    edge_linecolor="rgb(180,180,180)",
     edge_linewidth=1.5,
-    node_linecolor="rgb(240,240,240)",
-    node_linewidth=0.5,
+    node_linecolor="rgb(255,255,255)",
+    node_linewidth=1.5,
 ):
     """Generate Plotly data structures that represent the mapper graph
 
@@ -206,6 +206,7 @@ def plotly_graph(
         marker=dict(
             size=node_size.tolist(),
             color=color_vals,
+            opacity=1.0,
             colorscale=colorscale,
             showscale=showscale,
             line=dict(color=node_linecolor, width=node_linewidth),
@@ -246,7 +247,7 @@ def plot_layout(
     title="TDA KMapper",
     width=600,
     height=600,
-    bgcolor="rgba(10,10,10, 0.95)",
+    bgcolor="rgba(255, 255, 255, 1)",
     annotation_text=None,
     annotation_x=0,
     annotation_y=-0.01,

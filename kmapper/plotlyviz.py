@@ -155,7 +155,7 @@ def plotly_graph(
     edge_linecolor="rgb(180,180,180)",
     edge_linewidth=1.5,
     node_linecolor="rgb(255,255,255)",
-    node_linewidth=1.5,
+    node_linewidth=1.0,
 ):
     """Generate Plotly data structures that represent the mapper graph
 

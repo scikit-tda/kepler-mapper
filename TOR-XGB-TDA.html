@@ -1,0 +1,1617 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-124965309-4']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Detecting Encrypted TOR Traffic with Boosting and Topological Data Analysis &mdash; KeplerMapper 1.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+
+          <a href="https://scikit-tda.org">
+            <big>a scikit-tda project</big>
+          </a>
+
+
+
+          
+            <a href="index.html" class="icon icon-home"> KeplerMapper
+          
+
+          
+            
+            <img src="_static/logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">Reference</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="KeplerMapper Newsgroup20 Pipeline.html">KeplerMapper &amp; NLP examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="KeplerMapper usage in Jupyter Notebook.html">Using Kepler Mapper in Jupyter Notebook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Confidence Graphs.html">Confidence Graphs: Representing Model Uncertainty in Deep Learning</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">KeplerMapper</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="https://scikit-tda.org">Scikit-TDA</a>&raquo;<a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Detecting Encrypted TOR Traffic with Boosting and Topological Data Analysis</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/TOR-XGB-TDA.ipynb.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 8ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="Detecting-Encrypted-TOR-Traffic-with-Boosting-and-Topological-Data-Analysis">
+<h1>Detecting Encrypted TOR Traffic with Boosting and Topological Data Analysis<a class="headerlink" href="#Detecting-Encrypted-TOR-Traffic-with-Boosting-and-Topological-Data-Analysis" title="Permalink to this headline">¶</a></h1>
+<p><em>HJ van Veen</em> - <a class="reference external" href="https://mlwave.com">MLWave</a></p>
+<p><strong>We establish strong baselines for both supervised and unsupervised
+detection of encrypted TOR traffic.</strong></p>
+<p>**Note: This article uses the 5-second lag dataset. For better
+comparison we will use the 15-second lag dataset in the near future.</p>
+<div class="section" id="Introduction">
+<h2>Introduction<a class="headerlink" href="#Introduction" title="Permalink to this headline">¶</a></h2>
+<p>Gradient Boosted Decision Trees (GBDT) is a very powerful learning
+algorithm for supervised learning on tabular data [1]. Modern
+implementations include XGBoost [2], Catboost [3], LightGBM [4] and
+scikit-learn’s GradientBoostingClassifier [5]. Of these, especially
+XGBoost has seen tremendous successes in machine learning competitions
+[6], starting with its introduction during the Higgs Boson Detection
+challenge in 2014 [7]. The success of XGBoost can be explained on
+multiple dimensions: It is a robust implementation of the original
+algorithms, it is very fast – allowing data scientists to quickly find
+better parameters [8], it does not suffer much from overfit, is
+scale-invariant, and it has an active community providing constant
+improvements, such as early stopping [9] and GPU support [10].</p>
+<p>Anomaly detection algorithms automatically find samples that are
+different from regular samples. Many methods exist. We use the Isolation
+Forest in combination with nearest neighbor distances. The Isolation
+Forest works by randomly splitting up the data [11]. Outliers, on
+average, are easier to isolate through splitting. Nearest neighbor
+distance looks at the summed distances for a sample and its five nearest
+neighbors. Outliers, on average, have a larger distance between their
+nearest neighbors than regular samples [12].</p>
+<p>Topological Data Analysis (TDA) is concerned with the meaning, shape,
+and connectedness of data [13]. Benefits of TDA include: Unsupervised
+data exploration / automatic hypothesis generation, ability to deal with
+noise and missing values, invariance, and the generation of meaningful
+compressed summaries. TDA has shown efficient applications in a number
+of diverse fields: healthcare [14], computational biology [15], control
+theory [16], community detection [17], machine learning [18], sports
+analysis [19], and information security [20]. One tool from TDA is the
+<span class="math notranslate nohighlight">\(MAPPER\)</span> algorithm. <span class="math notranslate nohighlight">\(MAPPER\)</span> turns data and data projections
+into a graph by covering it with overlapping intervals and clustering
+[21]. To guide exploration, the nodes of the graph may be colored with a
+function of interest [22]. There are an increasing number of
+implementations of <span class="math notranslate nohighlight">\(MAPPER\)</span>. We use the open source implementation
+KeplerMapper from scikit-TDA [23].</p>
+<p>The TOR network allows users to communicate and host content while
+preserving privacy and anonimity [24]. As such, it can be used by
+dissidents and other people who prefer not to be tracked by commercial
+companies or governments. But these strong privacy and anonimity
+features are also attractive to criminals. A 2016 study in ‘Survival -
+Global Politics and Strategy’ found at least 57% of TOR websites are
+involved in illicit behavior, ranging from the trade in illegal arms,
+counterfeit ID documents, pornography, and drugs, money laundering &amp;
+credit card fraud, and the sharing of violent material, such as bomb
+making tutorials and terrorist propaganda [25].</p>
+<p>Network Intrusion Detection Systems are a first line of defense for
+governments and companies [26]. An undetected hacker will try to elevate
+their priviledges, moving from the weakest link to more hardened
+system-critical network nodes [27]. If the hacker’s goal is to get
+access to sensitive data (for instance: for resale -, industrial
+espionage -, or extortion purposes) then any stolen data needs to be
+exfiltrated. Similarly, cryptolockers often need to communicate with a
+command &amp; control server outside the network. Depending on the level of
+sophistication of the malware or hackers, exfiltration may be open and
+visible, run encrypted through the TOR network in an effort to hide the
+destination, or use advanced DNS tunneling techniques.</p>
+</div>
+<div class="section" id="Motivation">
+<h2>Motivation<a class="headerlink" href="#Motivation" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Current Network Intrusion Detection Systems, much like the old spam
+detectors, rely mostly on rules, signatures, and anomaly detection.
+Labeled data is scarce. Writing rules is a very costly task requiring
+domain expertise. Signatures may fail to catch new types of attacks
+until they are updated. Anomalous/unusual behavior is not necessarily
+suspicous/adversarial behavior.</li>
+<li>Machine Learning for Information Security suffers a lot from poor
+false positive rates. False positives lead to alarm fatigue and can
+swamp an intelligence analyst with irrelevant work.</li>
+<li>Despite the possibility of false positives, it is often better to be
+safe than sorry. Suspicious network behavior, such as outgoing
+connections to the TOR network, require immediate attention. A
+network node can be shut down remotely, after which a security
+engineer can investigate the machine. The best practice of a
+multi-layered security makes this possible [28]: Instead of a single
+firewall to rule them all, hackers can be detected in various stages
+of their network intrusion, up to the final step of data
+exfilitration.</li>
+</ul>
+</div>
+<div class="section" id="Data">
+<h2>Data<a class="headerlink" href="#Data" title="Permalink to this headline">¶</a></h2>
+<p>We use a dataset written for the paper “Characterization of Tor Traffic
+Using Time Based Features” (Lashkari et al.) [29], graciously provided
+by the Canadian Institute for Cybersecurity [30]. This dataset combines
+older research on nonTOR network traffic with more recently captured TOR
+traffic (both were created on the same network) [31]. The data includes
+features that are more specific to the network used, such as the source
+and destination IP/Port, and a range of time-based features with a 5
+second lag.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Feature</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>‘Source IP’</td>
+<td>Object</td>
+<td>Source IP4 Address.
+String with dots.</td>
+</tr>
+<tr class="row-odd"><td>’ Source Port’</td>
+<td>Float</td>
+<td>Source Port sending
+packets.</td>
+</tr>
+<tr class="row-even"><td>’ Destination IP’</td>
+<td>Object</td>
+<td>Destination IP4
+Address.</td>
+</tr>
+<tr class="row-odd"><td>’ Destination Port’</td>
+<td>Float</td>
+<td>Destination Port
+receiving packets.</td>
+</tr>
+<tr class="row-even"><td>’ Protocol’</td>
+<td>Float</td>
+<td>Integer [5-17]
+denoting protocol
+used.</td>
+</tr>
+<tr class="row-odd"><td>’ Flow Duration’</td>
+<td>Float</td>
+<td>Length of connection
+in seconds</td>
+</tr>
+<tr class="row-even"><td>’ Flow Bytes/s’</td>
+<td>Float</td>
+<td>Bytes per seconds
+send</td>
+</tr>
+<tr class="row-odd"><td>’ Flow Packets/s’</td>
+<td>Object</td>
+<td>Packets per second
+send. Contains
+<code class="docutils literal notranslate"><span class="pre">&quot;infinity&quot;</span></code>
+strings.</td>
+</tr>
+<tr class="row-even"><td>’ Flow IAT Mean’</td>
+<td>Float</td>
+<td>Flow Inter Arrival
+Time.</td>
+</tr>
+<tr class="row-odd"><td>’ Flow IAT Std’</td>
+<td>Float</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>’ Flow IAT Max’</td>
+<td>Float</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>’ Flow IAT Min’</td>
+<td>Float</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>‘Fwd IAT Mean’</td>
+<td>Float</td>
+<td>Forward Inter Arrival
+Time.</td>
+</tr>
+<tr class="row-odd"><td>’ Fwd IAT Std’</td>
+<td>Float</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>’ Fwd IAT Max’</td>
+<td>Float</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>’ Fwd IAT Min’</td>
+<td>Float</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>‘Bwd IAT Mean’</td>
+<td>Float</td>
+<td>Backwards Inter
+Arrival Time.</td>
+</tr>
+<tr class="row-odd"><td>’ Bwd IAT Std’</td>
+<td>Float</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>’ Bwd IAT Max’</td>
+<td>Float</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>’ Bwd IAT Min’</td>
+<td>Float</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>‘Active Mean’</td>
+<td>Float</td>
+<td>Average amount of
+time in seconds
+before connection
+went idle.</td>
+</tr>
+<tr class="row-odd"><td>’ Active Std’</td>
+<td>Float</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>’ Active Max’</td>
+<td>Float</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>’ Active Min’</td>
+<td>Float</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>‘Idle Mean’</td>
+<td>Float</td>
+<td>Average amount of
+time in seconds
+before connection
+became active.</td>
+</tr>
+<tr class="row-odd"><td>’ Idle Std’</td>
+<td>Float</td>
+<td>Zero variance
+feature.</td>
+</tr>
+<tr class="row-even"><td>’ Idle Max’</td>
+<td>Float</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>’ Idle Min’</td>
+<td>Float</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>‘label’</td>
+<td>Object</td>
+<td>Either <code class="docutils literal notranslate"><span class="pre">&quot;nonTOR&quot;</span></code>
+or <code class="docutils literal notranslate"><span class="pre">&quot;TOR&quot;</span></code>. ~17%
+TOR signal.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="Experimental-setup">
+<h2>Experimental setup<a class="headerlink" href="#Experimental-setup" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Supervised ML. We establish a strong baseline with XGBoost on the
+full data and on a subset (only time-based features, which generalize
+better to new domains). We follow the dataset standard of creating a
+20% holdout validation set, and use 5-fold stratified
+cross-validation for parameter tuning [32]. For tuning we use random
+search on sane parameter ranges, as random search is easy to
+implement and given enough time, will equal or beat more
+sophisticated methods [33]. We do not use feature selection, but opt
+to let our learning algorithm deal with those. Missing values are
+also handled by XGBoost and not manually imputed or hardcoded.</li>
+<li>Unsupervised ML. We use <span class="math notranslate nohighlight">\(MAPPER\)</span> in combination with the
+Isolation Forest and the summed distances to the five nearest
+neighbors. We use an overlap percentage of 150% and 40 intervals per
+dimension for a total of 1600 hypercubes. Clustering is done with
+agglomerative clustering using the euclidean distance metric and 3
+clusters per interval. For these experiments we use only the
+time-based features. We don’t scale the data, despite only Isolation
+Forest being scale-invariant.</li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">xgboost</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">model_selection</span><span class="p">,</span> <span class="n">metrics</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Data-Prep">
+<h2>Data Prep<a class="headerlink" href="#Data-Prep" title="Permalink to this headline">¶</a></h2>
+<p>There are string values <code class="docutils literal notranslate"><span class="pre">&quot;Infinity&quot;</span></code> inside the data, causing mixed
+types. We need to label-encode the target column. We turn the IP
+addresses into floats by removing the dots.</p>
+<p>We also create a subset of features by removing <code class="docutils literal notranslate"><span class="pre">Source</span> <span class="pre">Port</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Source</span> <span class="pre">IP</span></code>, <code class="docutils literal notranslate"><span class="pre">Destination</span> <span class="pre">Port</span></code>, <code class="docutils literal notranslate"><span class="pre">Destination</span> <span class="pre">IP</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">Protocol</span></code>. This to avoid overfitting/improve future generalization
+and focus only on the time-based features, like most other researchers
+have done.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;CSV/Scenario-A/merged_5s.csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">df</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;Infinity&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">({</span><span class="s2">&quot;nonTOR&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;TOR&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;Source IP&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Source IP&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)))</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot; Destination IP&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot; Destination IP&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">features_all</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span>
+            <span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]]</span>
+
+<span class="n">features</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span>
+            <span class="p">[</span><span class="s1">&#39;Source IP&#39;</span><span class="p">,</span>
+             <span class="s1">&#39; Source Port&#39;</span><span class="p">,</span>
+             <span class="s1">&#39; Destination IP&#39;</span><span class="p">,</span>
+             <span class="s1">&#39; Destination Port&#39;</span><span class="p">,</span>
+             <span class="s1">&#39; Protocol&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;label&#39;</span><span class="p">]]</span>
+<span class="n">features</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[4]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>[&#39; Flow Duration&#39;,
+ &#39; Flow Bytes/s&#39;,
+ &#39; Flow Packets/s&#39;,
+ &#39; Flow IAT Mean&#39;,
+ &#39; Flow IAT Std&#39;,
+ &#39; Flow IAT Max&#39;,
+ &#39; Flow IAT Min&#39;,
+ &#39;Fwd IAT Mean&#39;,
+ &#39; Fwd IAT Std&#39;,
+ &#39; Fwd IAT Max&#39;,
+ &#39; Fwd IAT Min&#39;,
+ &#39;Bwd IAT Mean&#39;,
+ &#39; Bwd IAT Std&#39;,
+ &#39; Bwd IAT Max&#39;,
+ &#39; Bwd IAT Min&#39;,
+ &#39;Active Mean&#39;,
+ &#39; Active Std&#39;,
+ &#39; Active Max&#39;,
+ &#39; Active Min&#39;,
+ &#39;Idle Mean&#39;,
+ &#39; Idle Std&#39;,
+ &#39; Idle Max&#39;,
+ &#39; Idle Min&#39;]
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">features</span><span class="p">])</span>
+<span class="n">X_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">features_all</span><span class="p">])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+((84194, 23), 0.17231631707722642)
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Local-evaluation-setup">
+<h2>Local evaluation setup<a class="headerlink" href="#Local-evaluation-setup" title="Permalink to this headline">¶</a></h2>
+<p>We create a stratified holdout set of 20%. Any modeling choices (such as
+parameter tuning) are guided by 5-fold stratified cross-validation on
+the remaining dataset.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">splitter</span> <span class="o">=</span> <span class="n">model_selection</span><span class="o">.</span><span class="n">StratifiedShuffleSplit</span><span class="p">(</span>
+    <span class="n">n_splits</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">train_index</span><span class="p">,</span> <span class="n">test_index</span> <span class="ow">in</span> <span class="n">splitter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">X_train</span><span class="p">,</span> <span class="n">X_holdout</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
+    <span class="n">X_train_all</span><span class="p">,</span> <span class="n">X_holdout_all</span> <span class="o">=</span> <span class="n">X_all</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">X_all</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
+    <span class="n">y_train</span><span class="p">,</span> <span class="n">y_holdout</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">X_holdout</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+((67355, 23), (16839, 23))
+</pre></div></div>
+</div>
+<div class="section" id="5-fold-non-tuned-XGBoost">
+<h3>5-fold non-tuned XGBoost<a class="headerlink" href="#5-fold-non-tuned-XGBoost" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">model</span> <span class="o">=</span> <span class="n">xgboost</span><span class="o">.</span><span class="n">XGBClassifier</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+<span class="n">skf</span> <span class="o">=</span> <span class="n">model_selection</span><span class="o">.</span><span class="n">StratifiedKFold</span><span class="p">(</span>
+    <span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">shuffle</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+    <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">train_index</span><span class="p">,</span> <span class="n">test_index</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">skf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)):</span>
+    <span class="n">X_train_fold</span><span class="p">,</span> <span class="n">X_test_fold</span> <span class="o">=</span> <span class="n">X_train</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">X_train</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
+    <span class="n">y_train_fold</span><span class="p">,</span> <span class="n">y_test_fold</span> <span class="o">=</span> <span class="n">y_train</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">y_train</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_fold</span><span class="p">,</span> <span class="n">y_train_fold</span><span class="p">)</span>
+    <span class="n">probas</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test_fold</span><span class="p">)[:,</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">preds</span> <span class="o">=</span> <span class="p">(</span><span class="n">probas</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Fold: </span><span class="si">%d</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">X_train_fold</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">X_test_fold</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">classification_report</span><span class="p">(</span><span class="n">y_test_fold</span><span class="p">,</span> <span class="n">preds</span><span class="p">,</span> <span class="n">target_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;nonTOR&quot;</span><span class="p">,</span> <span class="s2">&quot;TOR&quot;</span><span class="p">]))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Confusion Matrix: </span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">%</span><span class="k">metrics</span>.confusion_matrix(y_test_fold, preds))
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Log loss : </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">log_loss</span><span class="p">(</span><span class="n">y_test_fold</span><span class="p">,</span> <span class="n">probas</span><span class="p">)))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;AUC      : </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_test_fold</span><span class="p">,</span> <span class="n">probas</span><span class="p">)))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Accuracy : </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test_fold</span><span class="p">,</span> <span class="n">preds</span><span class="p">)))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Precision: </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">precision_score</span><span class="p">(</span><span class="n">y_test_fold</span><span class="p">,</span> <span class="n">preds</span><span class="p">)))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Recall   : </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">recall_score</span><span class="p">(</span><span class="n">y_test_fold</span><span class="p">,</span> <span class="n">preds</span><span class="p">)))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;F1-score : </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">f1_score</span><span class="p">(</span><span class="n">y_test_fold</span><span class="p">,</span> <span class="n">preds</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+XGBClassifier(base_score=0.5, colsample_bylevel=1, colsample_bytree=1,
+       gamma=0, learning_rate=0.1, max_delta_step=0, max_depth=3,
+       min_child_weight=1, missing=None, n_estimators=100, nthread=-1,
+       objective=&#39;binary:logistic&#39;, reg_alpha=0, reg_lambda=1,
+       scale_pos_weight=1, seed=0, silent=True, subsample=1)
+------------------------------------------------------------
+Fold: 0 ((53883, 23)/(13472, 23))
+             precision    recall  f1-score   support
+
+     nonTOR       0.98      0.99      0.99     11150
+        TOR       0.93      0.93      0.93      2322
+
+avg / total       0.98      0.98      0.98     13472
+
+Confusion Matrix:
+[[10992   158]
+ [  174  2148]]
+
+Log loss : 0.079730
+AUC      : 0.994554
+Accuracy : 0.975356
+Precision: 0.931483
+Recall   : 0.925065
+F1-score : 0.928263
+------------------------------------------------------------
+Fold: 1 ((53884, 23)/(13471, 23))
+             precision    recall  f1-score   support
+
+     nonTOR       0.99      0.98      0.98     11150
+        TOR       0.92      0.93      0.92      2321
+
+avg / total       0.97      0.97      0.97     13471
+
+Confusion Matrix:
+[[10951   199]
+ [  163  2158]]
+
+Log loss : 0.081962
+AUC      : 0.994286
+Accuracy : 0.973127
+Precision: 0.915571
+Recall   : 0.929772
+F1-score : 0.922617
+------------------------------------------------------------
+Fold: 2 ((53884, 23)/(13471, 23))
+             precision    recall  f1-score   support
+
+     nonTOR       0.98      0.98      0.98     11150
+        TOR       0.93      0.92      0.92      2321
+
+avg / total       0.97      0.97      0.97     13471
+
+Confusion Matrix:
+[[10982   168]
+ [  182  2139]]
+
+Log loss : 0.083443
+AUC      : 0.993946
+Accuracy : 0.974018
+Precision: 0.927178
+Recall   : 0.921586
+F1-score : 0.924373
+------------------------------------------------------------
+Fold: 3 ((53884, 23)/(13471, 23))
+             precision    recall  f1-score   support
+
+     nonTOR       0.98      0.98      0.98     11150
+        TOR       0.92      0.93      0.93      2321
+
+avg / total       0.97      0.97      0.97     13471
+
+Confusion Matrix:
+[[10974   176]
+ [  170  2151]]
+
+Log loss : 0.082286
+AUC      : 0.993697
+Accuracy : 0.974315
+Precision: 0.924366
+Recall   : 0.926756
+F1-score : 0.925559
+------------------------------------------------------------
+Fold: 4 ((53885, 23)/(13470, 23))
+             precision    recall  f1-score   support
+
+     nonTOR       0.99      0.98      0.98     11149
+        TOR       0.93      0.93      0.93      2321
+
+avg / total       0.98      0.97      0.97     13470
+
+Confusion Matrix:
+[[10978   171]
+ [  166  2155]]
+
+Log loss : 0.080182
+AUC      : 0.993894
+Accuracy : 0.974981
+Precision: 0.926483
+Recall   : 0.928479
+F1-score : 0.927480
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Hyper-parameter-tuning">
+<h3>Hyper parameter tuning<a class="headerlink" href="#Hyper-parameter-tuning" title="Permalink to this headline">¶</a></h3>
+<p>We found the below parameters by running a random gridsearch on the
+first fold in ~50 iterations (minimizing log loss). We use an AWS
+distributed closed-source auto-tuning library called “Cher” with the
+following parameter ranges:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;XGBClassifier&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;max_depth&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">12</span><span class="p">),</span>
+    <span class="s2">&quot;n_estimators&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">2500</span><span class="p">),</span>
+    <span class="s2">&quot;objective&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;binary:logistic&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;missing&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+    <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">10.</span><span class="p">,</span> <span class="mf">100.</span><span class="p">],</span>
+    <span class="s2">&quot;learning_rate&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.09</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.1</span> <span class="p">,</span><span class="mf">0.1</span><span class="p">],</span>
+    <span class="s2">&quot;min_child_weight&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+    <span class="s2">&quot;max_delta_step&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
+    <span class="s2">&quot;nthread&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;subsample&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">i</span><span class="o">/</span><span class="mf">100.</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">100</span><span class="p">)],</span>
+    <span class="s2">&quot;colsample_bytree&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">i</span><span class="o">/</span><span class="mf">100.</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">100</span><span class="p">)],</span>
+    <span class="s2">&quot;colsample_bylevel&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">i</span><span class="o">/</span><span class="mf">100.</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">100</span><span class="p">)],</span>
+    <span class="s2">&quot;reg_alpha&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.00000001</span><span class="p">,</span> <span class="mf">0.00000005</span><span class="p">,</span> <span class="mf">0.0000005</span><span class="p">,</span> <span class="mf">0.000005</span><span class="p">],</span>
+    <span class="s2">&quot;reg_lambda&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+    <span class="s2">&quot;scale_pos_weight&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;base_score&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+    <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">999999</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">model</span> <span class="o">=</span> <span class="n">xgboost</span><span class="o">.</span><span class="n">XGBClassifier</span><span class="p">(</span><span class="n">base_score</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">colsample_bylevel</span><span class="o">=</span><span class="mf">0.68</span><span class="p">,</span> <span class="n">colsample_bytree</span><span class="o">=</span><span class="mf">0.84</span><span class="p">,</span>
+    <span class="n">gamma</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">max_delta_step</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span>
+    <span class="n">min_child_weight</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">missing</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">n_estimators</span><span class="o">=</span><span class="mi">1122</span><span class="p">,</span> <span class="n">nthread</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">objective</span><span class="o">=</span><span class="s1">&#39;binary:logistic&#39;</span><span class="p">,</span> <span class="n">reg_alpha</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">reg_lambda</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">scale_pos_weight</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">189548</span><span class="p">,</span> <span class="n">silent</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">subsample</span><span class="o">=</span><span class="mf">0.98</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="5-fold-tuned-XGBoost">
+<h3>5-fold tuned XGBoost<a class="headerlink" href="#5-fold-tuned-XGBoost" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">print</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">train_index</span><span class="p">,</span> <span class="n">test_index</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">skf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)):</span>
+    <span class="n">X_train_fold</span><span class="p">,</span> <span class="n">X_test_fold</span> <span class="o">=</span> <span class="n">X_train</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">X_train</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
+    <span class="n">y_train_fold</span><span class="p">,</span> <span class="n">y_test_fold</span> <span class="o">=</span> <span class="n">y_train</span><span class="p">[</span><span class="n">train_index</span><span class="p">],</span> <span class="n">y_train</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_fold</span><span class="p">,</span> <span class="n">y_train_fold</span><span class="p">)</span>
+    <span class="n">probas</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test_fold</span><span class="p">)[:,</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">preds</span> <span class="o">=</span> <span class="p">(</span><span class="n">probas</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Fold: </span><span class="si">%d</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">X_train_fold</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">X_test_fold</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">classification_report</span><span class="p">(</span><span class="n">y_test_fold</span><span class="p">,</span> <span class="n">preds</span><span class="p">,</span> <span class="n">target_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;nonTOR&quot;</span><span class="p">,</span> <span class="s2">&quot;TOR&quot;</span><span class="p">]))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Confusion Matrix: </span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">%</span><span class="k">metrics</span>.confusion_matrix(y_test_fold, preds))
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Log loss : </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">log_loss</span><span class="p">(</span><span class="n">y_test_fold</span><span class="p">,</span> <span class="n">probas</span><span class="p">)))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;AUC      : </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_test_fold</span><span class="p">,</span> <span class="n">probas</span><span class="p">)))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Accuracy : </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test_fold</span><span class="p">,</span> <span class="n">preds</span><span class="p">)))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Precision: </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">precision_score</span><span class="p">(</span><span class="n">y_test_fold</span><span class="p">,</span> <span class="n">preds</span><span class="p">)))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Recall   : </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">recall_score</span><span class="p">(</span><span class="n">y_test_fold</span><span class="p">,</span> <span class="n">preds</span><span class="p">)))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;F1-score : </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">f1_score</span><span class="p">(</span><span class="n">y_test_fold</span><span class="p">,</span> <span class="n">preds</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+XGBClassifier(base_score=0.5, colsample_bylevel=0.68, colsample_bytree=0.84,
+       gamma=0.1, learning_rate=0.1, max_delta_step=0, max_depth=11,
+       min_child_weight=1, missing=None, n_estimators=1122, nthread=-1,
+       objective=&#39;binary:logistic&#39;, reg_alpha=0.0, reg_lambda=4,
+       scale_pos_weight=1, seed=189548, silent=True, subsample=0.98)
+------------------------------------------------------------
+Fold: 0 ((53883, 23)/(13472, 23))
+             precision    recall  f1-score   support
+
+     nonTOR       1.00      0.99      0.99     11150
+        TOR       0.97      0.98      0.97      2322
+
+avg / total       0.99      0.99      0.99     13472
+
+Confusion Matrix:
+[[11081    69]
+ [   49  2273]]
+
+Log loss : 0.023747
+AUC      : 0.999279
+Accuracy : 0.991241
+Precision: 0.970538
+Recall   : 0.978898
+F1-score : 0.974700
+------------------------------------------------------------
+Fold: 1 ((53884, 23)/(13471, 23))
+             precision    recall  f1-score   support
+
+     nonTOR       1.00      0.99      0.99     11150
+        TOR       0.97      0.98      0.97      2321
+
+avg / total       0.99      0.99      0.99     13471
+
+Confusion Matrix:
+[[11071    79]
+ [   52  2269]]
+
+Log loss : 0.029423
+AUC      : 0.999100
+Accuracy : 0.990275
+Precision: 0.966354
+Recall   : 0.977596
+F1-score : 0.971943
+------------------------------------------------------------
+Fold: 2 ((53884, 23)/(13471, 23))
+             precision    recall  f1-score   support
+
+     nonTOR       0.99      0.99      0.99     11150
+        TOR       0.97      0.97      0.97      2321
+
+avg / total       0.99      0.99      0.99     13471
+
+Confusion Matrix:
+[[11081    69]
+ [   68  2253]]
+
+Log loss : 0.030811
+AUC      : 0.998910
+Accuracy : 0.989830
+Precision: 0.970284
+Recall   : 0.970702
+F1-score : 0.970493
+------------------------------------------------------------
+Fold: 3 ((53884, 23)/(13471, 23))
+             precision    recall  f1-score   support
+
+     nonTOR       0.99      1.00      0.99     11150
+        TOR       0.98      0.97      0.97      2321
+
+avg / total       0.99      0.99      0.99     13471
+
+Confusion Matrix:
+[[11098    52]
+ [   68  2253]]
+
+Log loss : 0.023899
+AUC      : 0.999352
+Accuracy : 0.991092
+Precision: 0.977440
+Recall   : 0.970702
+F1-score : 0.974060
+------------------------------------------------------------
+Fold: 4 ((53885, 23)/(13470, 23))
+             precision    recall  f1-score   support
+
+     nonTOR       0.99      1.00      1.00     11149
+        TOR       0.98      0.97      0.98      2321
+
+avg / total       0.99      0.99      0.99     13470
+
+Confusion Matrix:
+[[11100    49]
+ [   60  2261]]
+
+Log loss : 0.024206
+AUC      : 0.999168
+Accuracy : 0.991908
+Precision: 0.978788
+Recall   : 0.974149
+F1-score : 0.976463
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Holdout-set-evaluation">
+<h3>Holdout set evaluation<a class="headerlink" href="#Holdout-set-evaluation" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">probas</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_holdout</span><span class="p">)[:,</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">preds</span> <span class="o">=</span> <span class="p">(</span><span class="n">probas</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">classification_report</span><span class="p">(</span><span class="n">y_holdout</span><span class="p">,</span> <span class="n">preds</span><span class="p">,</span> <span class="n">target_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;nonTOR&quot;</span><span class="p">,</span> <span class="s2">&quot;TOR&quot;</span><span class="p">]))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Confusion Matrix: </span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">%</span><span class="k">metrics</span>.confusion_matrix(y_holdout, preds))
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Log loss : </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">log_loss</span><span class="p">(</span><span class="n">y_holdout</span><span class="p">,</span> <span class="n">probas</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;AUC      : </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_holdout</span><span class="p">,</span> <span class="n">probas</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Accuracy : </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_holdout</span><span class="p">,</span> <span class="n">preds</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Precision: </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">precision_score</span><span class="p">(</span><span class="n">y_holdout</span><span class="p">,</span> <span class="n">preds</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Recall   : </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">recall_score</span><span class="p">(</span><span class="n">y_holdout</span><span class="p">,</span> <span class="n">preds</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;F1-score : </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">f1_score</span><span class="p">(</span><span class="n">y_holdout</span><span class="p">,</span> <span class="n">preds</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+             precision    recall  f1-score   support
+
+     nonTOR       1.00      0.99      1.00     13937
+        TOR       0.97      0.98      0.98      2902
+
+avg / total       0.99      0.99      0.99     16839
+
+Confusion Matrix:
+[[13862    75]
+ [   64  2838]]
+
+Log loss : 0.024852
+AUC      : 0.999289
+Accuracy : 0.991745
+Precision: 0.974253
+Recall   : 0.977946
+F1-score : 0.976096
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Results">
+<h3>Results<a class="headerlink" href="#Results" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Model</th>
+<th class="head">Precision</th>
+<th class="head">Recall</th>
+<th class="head">F1-Score</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Logistic
+Regression
+(Singh et al.,
+2018) [34]</td>
+<td>0.87</td>
+<td>0.87</td>
+<td>0.87</td>
+</tr>
+<tr class="row-odd"><td>SVM (Singh et
+al., 2018)</td>
+<td>0.9</td>
+<td>0.9</td>
+<td>0.9</td>
+</tr>
+<tr class="row-even"><td>Naïve Bayes
+(Singh et al.,
+2018)</td>
+<td>0.91</td>
+<td>0.6</td>
+<td>0.7</td>
+</tr>
+<tr class="row-odd"><td>C4.5 Decision
+Tree + Feature
+Selection
+(Lashkari et
+al., 2017) [29]</td>
+<td>0.948</td>
+<td>0.934</td>
+<td><ul class="first last simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td>Deep Learning
+(Singh et al.,
+2018)</td>
+<td>0.95</td>
+<td>0.95</td>
+<td>0.95</td>
+</tr>
+<tr class="row-odd"><td>Random Forest
+(Singh et al.,
+2018)</td>
+<td>0.96</td>
+<td>0.96</td>
+<td>0.96</td>
+</tr>
+<tr class="row-even"><td><strong>XGBoost +
+Tuning</strong></td>
+<td><strong>0.974</strong></td>
+<td><strong>0.977</strong></td>
+<td><strong>0.976</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="Holdout-evaluation-with-all-the-available-features">
+<h3>Holdout evaluation with all the available features<a class="headerlink" href="#Holdout-evaluation-with-all-the-available-features" title="Permalink to this headline">¶</a></h3>
+<p>Using all the features results in near perfect performance, suggesting
+“leaky” features (These features are not to be used for predictive
+modeling, but are there for completeness). Nevertheless we show how
+using all features also results in a strong baseline over previous
+research.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_all</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">probas</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_holdout_all</span><span class="p">)[:,</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">preds</span> <span class="o">=</span> <span class="p">(</span><span class="n">probas</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">classification_report</span><span class="p">(</span><span class="n">y_holdout</span><span class="p">,</span> <span class="n">preds</span><span class="p">,</span> <span class="n">target_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;nonTOR&quot;</span><span class="p">,</span> <span class="s2">&quot;TOR&quot;</span><span class="p">]))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Confusion Matrix: </span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">%</span><span class="k">metrics</span>.confusion_matrix(y_holdout, preds))
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Log loss : </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">log_loss</span><span class="p">(</span><span class="n">y_holdout</span><span class="p">,</span> <span class="n">probas</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;AUC      : </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_holdout</span><span class="p">,</span> <span class="n">probas</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Accuracy : </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_holdout</span><span class="p">,</span> <span class="n">preds</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Precision: </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">precision_score</span><span class="p">(</span><span class="n">y_holdout</span><span class="p">,</span> <span class="n">preds</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Recall   : </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">recall_score</span><span class="p">(</span><span class="n">y_holdout</span><span class="p">,</span> <span class="n">preds</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+             precision    recall  f1-score   support
+
+     nonTOR       1.00      1.00      1.00     13937
+        TOR       1.00      1.00      1.00      2902
+
+avg / total       1.00      1.00      1.00     16839
+
+Confusion Matrix:
+[[13935     2]
+ [    0  2902]]
+
+Log loss : 0.000455
+AUC      : 1.000000
+Accuracy : 0.999881
+Precision: 0.999311
+Recall   : 1.000000
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Results">
+<h3>Results<a class="headerlink" href="#Results" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="60%" />
+<col width="15%" />
+<col width="11%" />
+<col width="15%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Model</th>
+<th class="head">Precision</th>
+<th class="head">Recall</th>
+<th class="head">Accuracy</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>ANN (Hodo et al., 2017) [35]</td>
+<td>0.983</td>
+<td>0.937</td>
+<td>0.991</td>
+</tr>
+<tr class="row-odd"><td>SVM (Hodo et al., 2017)</td>
+<td>0.79</td>
+<td>0.67</td>
+<td>0.94</td>
+</tr>
+<tr class="row-even"><td>ANN + Feature Selection (Hodo et al., 2017)</td>
+<td>0.998</td>
+<td>0.988</td>
+<td>0.998</td>
+</tr>
+<tr class="row-odd"><td>SVM + Feature Selection (Hodo et al., 2017)</td>
+<td>0.8</td>
+<td>0.984</td>
+<td>0.881</td>
+</tr>
+<tr class="row-even"><td><strong>XGBoost + Tuning</strong></td>
+<td><strong>0.999</strong></td>
+<td><strong>1.</strong></td>
+<td><strong>0.999</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="Topological-Data-Analysis">
+<h2>Topological Data Analysis<a class="headerlink" href="#Topological-Data-Analysis" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">kmapper</span> <span class="kn">as</span> <span class="nn">km</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">ensemble</span><span class="p">,</span> <span class="n">cluster</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;CSV/Scenario-A/merged_5s.csv&quot;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;Infinity&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot; Flow Bytes/s&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot; Flow Bytes/s&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot; Flow Packets/s&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot; Flow Packets/s&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">({</span><span class="s2">&quot;nonTOR&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;TOR&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;Source IP&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Source IP&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)))</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot; Destination IP&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot; Destination IP&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)))</span>
+<span class="n">df</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="n">features</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span>
+            <span class="p">[</span><span class="s1">&#39;Source IP&#39;</span><span class="p">,</span>
+             <span class="s1">&#39; Source Port&#39;</span><span class="p">,</span>
+             <span class="s1">&#39; Destination IP&#39;</span><span class="p">,</span>
+             <span class="s1">&#39; Destination Port&#39;</span><span class="p">,</span>
+             <span class="s1">&#39; Protocol&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;label&#39;</span><span class="p">]]</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">features</span><span class="p">])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+
+<span class="n">projector</span> <span class="o">=</span> <span class="n">ensemble</span><span class="o">.</span><span class="n">IsolationForest</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">projector</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">lens1</span> <span class="o">=</span> <span class="n">projector</span><span class="o">.</span><span class="n">decision_function</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">mapper</span> <span class="o">=</span> <span class="n">km</span><span class="o">.</span><span class="n">KeplerMapper</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">lens2</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s2">&quot;knn_distance_5&quot;</span><span class="p">)</span>
+
+<span class="n">lens</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">lens1</span><span class="p">,</span> <span class="n">lens2</span><span class="p">]</span>
+
+<span class="n">G</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+    <span class="n">lens</span><span class="p">,</span>
+    <span class="n">X</span><span class="p">,</span>
+    <span class="n">nr_cubes</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
+    <span class="n">overlap_perc</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span>
+    <span class="n">clusterer</span><span class="o">=</span><span class="n">cluster</span><span class="o">.</span><span class="n">AgglomerativeClustering</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+
+<span class="n">_</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span>
+    <span class="n">G</span><span class="p">,</span>
+    <span class="n">custom_tooltips</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+    <span class="n">color_function</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+    <span class="n">path_html</span><span class="o">=</span><span class="s2">&quot;tor-tda.html&quot;</span><span class="p">,</span>
+    <span class="n">inverse_X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span>
+    <span class="n">inverse_X_names</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">features</span><span class="p">]</span><span class="o">.</span><span class="n">columns</span><span class="p">),</span>
+    <span class="n">projected_X</span><span class="o">=</span><span class="n">lens</span><span class="p">,</span>
+    <span class="n">projected_X_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;IsolationForest&quot;</span><span class="p">,</span> <span class="s2">&quot;KNN-distance 5&quot;</span><span class="p">],</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Detecting encrypted Tor Traffic with Isolation Forest and Nearest Neighbor Distance&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="Image-of-output">
+<h3>Image of output<a class="headerlink" href="#Image-of-output" title="Permalink to this headline">¶</a></h3>
+<div class="figure" id="id2">
+<img alt="TDA image" src="https://i.imgur.com/1puM29w.jpg" />
+<p class="caption"><span class="caption-text">TDA image</span></p>
+</div>
+</div>
+<div class="section" id="Link-to-output">
+<h3>Link to output<a class="headerlink" href="#Link-to-output" title="Permalink to this headline">¶</a></h3>
+<p>TDA Tor Graph</p>
+</div>
+</div>
+<div class="section" id="Discussion">
+<h2>Discussion<a class="headerlink" href="#Discussion" title="Permalink to this headline">¶</a></h2>
+<p>Both deep learning and unsupervised TDA may benefit from more data and
+rawer features. One strength of deep learning is its ability to
+automaticly generate useful features. A properly tuned and architected
+RNN/LSTM or ConvNet on more data will likely beat or equal gradient
+boosting [36]. Likewise for TDA: TDA is very good at extracting
+structure from raw time-series data. Using the preprocessed 5 second
+lag-features turns the problem more into a classification problem, than
+a temporal /forecasting problem.</p>
+<p>The XGBoost baseline can be further improved: Other authors showed
+feature selection to be effective at discarding noise. Stacked
+generalization can improve many pure classification problems, at the
+cost of an increased complexity and latency. Likewise with feature
+expansion through feature interactions, the score can be improved a
+small bit [37].</p>
+<p>The graph created with <span class="math notranslate nohighlight">\(MAPPER\)</span> shows a concentration of anomalous
+samples that are predominantly nonTor traffic. This confirms our earlier
+note that anomalous behavior is not necessarily suspicious behavior. The
+separation could be better, but it is already possible to identify
+different types of Tor traffic, and see how they differ (an above
+average or below average <code class="docutils literal notranslate"><span class="pre">Flow</span> <span class="pre">Duration</span></code> can both signal Tor traffic.)</p>
+<p>The large <code class="docutils literal notranslate"><span class="pre">max_depth=11</span></code> found by XGBoost on this relatively small
+dataset signals that either the problem is very complex (and needs large
+complexity to be solved well), or that memorization of patterns is
+important for good performance on this dataset (larger <code class="docutils literal notranslate"><span class="pre">max_depth</span></code>’s
+find more feature interactions and are better at memorization).</p>
+</div>
+<div class="section" id="Thanks">
+<h2>Thanks<a class="headerlink" href="#Thanks" title="Permalink to this headline">¶</a></h2>
+<p>Thanks to dr. Satnam Singh and Balamurali A R for the inspiring
+<a class="reference external" href="https://www.analyticsvidhya.com/blog/2018/07/using-power-deep-learning-cyber-security/">article</a>.
+Thanks to my colleagues at Nubank InfoSec, especially Jonas Abreu, for
+helpful discussions and consulting on domain expertise. Thanks to the
+Canadian Institute for Cybersecurity (dr. Lashkari et al.) for creating
+and providing the data used [38], and writing the original paper with
+great clarity.</p>
+</div>
+<div class="section" id="References">
+<h2>References<a class="headerlink" href="#References" title="Permalink to this headline">¶</a></h2>
+<p><strong>[1]</strong> Freund, Schapire (1999). <a class="reference external" href="https://cseweb.ucsd.edu/~yfreund/papers/IntroToBoosting.pdf">A short introduction to
+boosting</a>
+<strong>[2]</strong> Chen, Tianqi and Guestrin, Carlos (2016) <a class="reference external" href="http://www.kdd.org/kdd2016/papers/files/rfp0697-chenAemb.pdf">XGBoost: A Scalable
+Tree Boosting
+System</a>
+<strong>[3]</strong> Liudmila Prokhorenkova, Gleb Gusev, Aleksandr Vorobev, Anna
+Veronika Dorogush, Andrey Gulin (2017) <a class="reference external" href="https://arxiv.org/abs/1706.09516">CatBoost: unbiased boosting
+with categorical features</a> <strong>[4]</strong>
+Guolin Ke, Qi Meng, Thomas Finley, Taifeng Wang, Wei Chen, Weidong Ma,
+Qiwei Ye, and Tie-Yan Liu. (2017) <a class="reference external" href="https://papers.nips.cc/paper/6907-lightgbm-a-highly-efficient-gradient-boosting-decision-tree.pdf">LightGBM: A Highly Efficient
+Gradient Boosting Decision
+Tree.</a>
+<strong>[5]</strong> Pedregosa, F. and Varoquaux, G. and Gramfort, A. and Michel, V.
+and Thirion, B. and Grisel, O. and Blondel, M. and Prettenhofer, P. and
+Weiss, R. and Dubourg, V. and Vanderplas, J. and Passos, A. and
+Cournapeau, D. and Brucher, M. and Perrot, M. and Duchesnay, E. (2011)
+<a class="reference external" href="http://www.jmlr.org/papers/volume12/pedregosa11a/pedregosa11a.pdf">Scikit-learn: Machine Learning in
+Python</a>
+<strong>[6]</strong> Community (2014-). <a class="reference external" href="https://github.com/dmlc/xgboost/tree/master/demo">Awesome
+XGBoost</a> <strong>[7]</strong>
+CERN and Kaggle (2014) <a class="reference external" href="https://www.kaggle.com/c/higgs-boson">Higgs Boson Machine Learning
+Challenge</a> <strong>[8]</strong> Tianqi Chen
+on Quora (2015) <a class="reference external" href="https://www.quora.com/What-makes-xgboost-run-much-faster-than-many-other-implementations-of-gradient-boosting">What makes xgboost run much faster than many other
+implementations of gradient
+boosting?</a>
+<strong>[9]</strong> Zygmunt Zając (2015) <a class="reference external" href="https://github.com/drivendata/countable-care-3rd-place/blob/master/src/xgboost_colsub.py">Early
+stopping</a>
+<strong>[10]</strong> Rory Mitchell, Andrey Adinets, Thejaswi Rao, Eibe Frank (2018)
+<a class="reference external" href="https://arxiv.org/abs/1806.11248">XGBoost: Scalable GPU Accelerated
+Learning</a> <strong>[11]</strong> Fei Tony Liu,
+Kai Ming Ting, Zhi-Hua Zhou (2008) <a class="reference external" href="https://cs.nju.edu.cn/zhouzh/zhouzh.files/publication/icdm08b.pdf">Isolation
+Forest</a>
+<strong>[12]</strong> Sridhar Ramaswamy, Rajeev Rastogi, and Kyuseok Shim. (2000)
+<a class="reference external" href="https://dl.acm.org/citation.cfm?id=335437">Efficient algorithms for mining outliers from large data
+sets</a> <strong>[13]</strong> Gunnar
+Carlsson (2008) <a class="reference external" href="https://web.stanford.edu/group/mmds/slides2008/carlsson.pdf">Topology and
+Data</a>
+<strong>[14]</strong> Devi Ramanan (2015) <a class="reference external" href="https://www.ayasdi.com/blog/healthcare/identification-of-type-2-diabetes-subgroups-through-topological-data-analysis-of-patient-similarity/">Identification of Type 2 Diabetes
+Subgroups through Topological Data Analysis of Patient
+Similarity</a>
+<strong>[15]</strong> Pablo G. Cámara (2017) <a class="reference external" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5624534/">Topological methods for genomics:
+present and future
+directions</a>
+<strong>[16]</strong> Wei Guo, Ashis Gopal Banerjee (2017) <a class="reference external" href="https://www.researchgate.net/publication/314185934_Identification_of_Key_Features_Using_Topological_Data_Analysis_for_Accurate_Prediction_of_Manufacturing_System_Outputs">Identification of Key
+Features Using Topological Data Analysis for Accurate Prediction of
+Manufacturing System
+Outputs</a>
+<strong>[17]</strong> Mustafa Hajij, Bei Wang, Paul Rosen (2018) <a class="reference external" href="https://arxiv.org/pdf/1804.11242.pdf">MOG: Mapper on
+Graphs for Relationship Preserving
+Clustering</a> <strong>[18]</strong> Anthony
+Bak (2015) <a class="reference external" href="http://topology.cs.wisc.edu/Bak.pdf">Topology and Machine
+Learning</a> <strong>[19]</strong> Muthu
+Alagappan (2012) <a class="reference external" href="http://www.sloansportsconference.com/?p=5431">From 5 to 13: Redefining the Positions in
+Basketball</a> <strong>[20]</strong>
+Marc Coudriau, Abdelkader Lahmadi, Jérôme François (2016) <a class="reference external" href="https://ieeexplore.ieee.org/document/7823920/">Topological
+analysis and visualisation of network monitoring data: Darknet case
+study</a> <strong>[21]</strong>
+Gurjeet Singh, Facundo Mémoli, and Gunnar Carlsson (2007) <a class="reference external" href="https://research.math.osu.edu/tgda/mapperPBG.pdf">Topological
+Methods for the Analysis of High Dimensional Data Sets and 3D Object
+Recognition</a>
+<strong>[22]</strong> P. Y. Lum, G. Singh, A. Lehman, T. Ishkanov, M.
+Vejdemo-Johansson, M. Alagappan, J. Carlsson &amp; G. Carlsson (2009)
+<a class="reference external" href="https://www.nature.com/articles/srep01236">Extracting insights from the shape of complex data using
+topology</a> <strong>[23]</strong> Hendrik
+Jacob van Veen, and Nathaniel Saul (2017)
+<a class="reference external" href="https://github.com/mlwave/kepler-mapper">KeplerMapper</a> <strong>[24]</strong>
+Karsten Loesing and Steven J. Murdoch and Roger Dingledine (2010) <a class="reference external" href="https://torproject.org/">A
+Case Study on Measuring Statistical Data in the Tor Anonymity
+Network</a> <strong>[25]</strong> Daniel Moore, Thomas Rid
+(2016) <a class="reference external" href="https://www.tandfonline.com/doi/full/10.1080/00396338.2016.1142085">Cryptopolitik and the
+Darknet</a>
+<strong>[26]</strong> Stephen Northcutt, Judy Novak (2002) Network Intrusion
+Detection, Third Edition <strong>[27]</strong> Justin Grana, David Wolpert, Joshua
+Neil, Dongping Xie, Tanmoy Bhattacharya, Russell Bent (2016) <a class="reference external" href="https://arxiv.org/abs/1609.00104">A
+Likelihood Ratio Detector for Identifying Within-Perimeter Computer
+Network Attacks.</a> <strong>[28]</strong> Simon
+Denman (2012) <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S1353485812700430">Why multi-layered security is still the best
+defence</a>
+<strong>[29]</strong> Arash Habibi Lashkari, Gerard Draper Gil, Mohammad Saiful Islam
+Mamun, Ali A. Ghorbani (2017) <a class="reference external" href="https://www.researchgate.net/publication/314521450_Characterization_of_Tor_Traffic_using_Time_based_Features">Characterization of Tor Traffic using
+Time based
+Features</a>
+<strong>[30]</strong> Canadian Institute for Cybersecurity (Retrieved: 2018)
+<a class="reference external" href="https://www.unb.ca/cic/">Canadian Institute for Cybersecurity</a>
+<strong>[31]</strong> Draper-Gil, G., Lashkari, A. H., Mamun, M. S. I., and Ghorbani,
+A. A. (2016). <a class="reference external" href="https://pdfs.semanticscholar.org/2886/2175a0426761c4f41fdbbec5b244026c4010.pdf">Characterization of encrypted and vpn traffic using
+time-related
+features</a>
+<strong>[32]</strong> Trevor Hastie, Robert Tibshirani, Jerome H. Friedman (2001)
+<a class="reference external" href="https://web.stanford.edu/~hastie/Papers/ESLII.pdf">The Elements of Statistical
+Learning</a> <strong>[33]</strong>
+James Bergstra, Yoshua Bengio (2012) <a class="reference external" href="http://www.jmlr.org/papers/volume13/bergstra12a/bergstra12a.pdf">Random Search for
+Hyper-Parameter
+Optimization</a>
+<strong>[34]</strong> Satnam Singh, Balamurali A R (2018) <a class="reference external" href="https://www.acalvio.com/wp-content/uploads/2018/07/Detecting-Anonymised-Network-Traffic-using-Deep-Learning.pdf">Using Deep Learning for
+Information
+Security</a>
+<strong>[35]</strong> Elike Hodo, Xavier Bellekens, Ephraim Iorkyase, Andrew
+Hamilton, Christos Tachtatzis, Robert Atkinson (2017) <a class="reference external" href="https://arxiv.org/abs/1708.08725">Machine
+Learning Approach for Detection of nonTor
+Traffic</a> <strong>[36]</strong> Gábor Melis,
+Chris Dyer, Phil Blunsom (2017) <a class="reference external" href="https://arxiv.org/abs/1707.05589">On the State of the Art of Evaluation
+in Neural Language Models</a> <strong>[37]</strong>
+Marios Michailidis (2017) <a class="reference external" href="http://discovery.ucl.ac.uk/10031000/1/Full_copy.pdf">Investigating machine learning methods in
+recommender
+systems</a>
+<strong>[38]</strong> Canadian Institute for Cybersecurity (2016) <a class="reference external" href="https://www.unb.ca/cic/datasets/tor.html">Tor-nonTor
+dataset (ISCXTor2016)</a></p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Hendrik Jacob van Veen and Nathaniel Saul.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -44,6 +44,44 @@ colorscale = [
 ]
 
 
+
+def plotlyviz(scomplex):
+    kmgraph,  mapper_summary, n_color_distribution = get_mapper_graph(scomplex, colorscale=pl_matter,
+                                                                      color_function=None)
+    annotation=get_kmgraph_meta(mapper_summary)
+    
+    plgraph_data = plotly_graph(kmgraph, graph_layout='kk') #, colorscale=pl_matter,  
+                            #factor_size=3, edge_linewidth=1.5, node_linecolor='rgba(240, 240, 240, 0.95)')
+    title = 'Topological network associated to<br> the cat dataset'
+    layout = plot_layout(title=title,  width=600, height=500, annotation_text=annotation,
+                        ) # bgcolor='rgba(240, 240, 240)' )#,  left=10, bottom=35)
+    fw_graph = go.FigureWidget(data=plgraph_data, layout=layout)
+    return fw_graph
+
+def plotlyviz_dashboard(scomplex):
+    
+    kmgraph,  mapper_summary, n_color_distribution = get_mapper_graph(scomplex, colorscale=pl_matter,
+                                                                      color_function=None)
+    annotation=get_kmgraph_meta(mapper_summary)
+    
+    plgraph_data = plotly_graph(kmgraph, graph_layout='kk') #, colorscale=pl_matter,  
+                            #factor_size=3, edge_linewidth=1.5, node_linecolor='rgba(240, 240, 240, 0.95)')
+    title = 'Topological network associated to<br> the cat dataset'
+    layout = plot_layout(title=title,  width=600, height=500, annotation_text=annotation,
+                        ) # bgcolor='rgba(240, 240, 240)' )#,  left=10, bottom=35)
+    fw_graph = go.FigureWidget(data=plgraph_data, layout=layout)
+    fw_hist = node_hist_fig(n_color_distribution,  left=25, right=25) # default width=400, height=300,
+    fw_summary = summary_fig(mapper_summary, height=300,  left=20, right=20) # default width=600, height=300,
+    dashboard = hovering_widgets(kmgraph, fw_graph, member_textbox_width=800)
+    ipw.VBox([fw_graph, ipw.HBox([fw_summary, fw_hist])])
+    
+    return dashboard
+
+
+
+
+
+
 def scomplex_to_graph(
     simplicial_complex,
     color_function,

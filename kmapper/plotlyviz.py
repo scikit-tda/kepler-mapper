@@ -29,7 +29,7 @@ except ImportError:
     raise
 
 
-colorscale = [
+default_colorscale = [
     [0.0, "rgb(68, 1, 84)"],  # Viridis
     [0.1, "rgb(72, 35, 116)"],
     [0.2, "rgb(64, 67, 135)"],
@@ -45,37 +45,35 @@ colorscale = [
 
 
 
-def plotlyviz(scomplex):
-    kmgraph,  mapper_summary, n_color_distribution = get_mapper_graph(scomplex, colorscale=pl_matter,
+def plotlyviz(scomplex, colorscale=None, title="Kepler Mapper", dashboard=False, vbox=False):
+    
+
+    colorscale = colorscale or default_colorscale
+
+    kmgraph,  mapper_summary, n_color_distribution = get_mapper_graph(scomplex, colorscale=colorscale,
                                                                       color_function=None)
     annotation=get_kmgraph_meta(mapper_summary)
     
-    plgraph_data = plotly_graph(kmgraph, graph_layout='kk') #, colorscale=pl_matter,  
-                            #factor_size=3, edge_linewidth=1.5, node_linecolor='rgba(240, 240, 240, 0.95)')
-    title = 'Topological network associated to<br> the cat dataset'
+    plgraph_data = plotly_graph(kmgraph, graph_layout='kk', colorscale=colorscale,  
+                                factor_size=3, edge_linewidth=1.5, node_linecolor='rgb(200,200,200)')
+
     layout = plot_layout(title=title,  width=600, height=500, annotation_text=annotation,
-                        ) # bgcolor='rgba(240, 240, 240)' )#,  left=10, bottom=35)
+                          bgcolor='rgba(240, 240, 240, 0.95)',  left=10, bottom=35)
     fw_graph = go.FigureWidget(data=plgraph_data, layout=layout)
+    
+    if dashboard or vbox:
+        fw_hist = node_hist_fig(n_color_distribution,  left=25, right=25) # default width=400, height=300,
+        fw_summary = summary_fig(mapper_summary, height=300,  left=20, right=20) # default width=600, height=300,
+        dashboard = hovering_widgets(kmgraph, fw_graph, member_textbox_width=800)
+        
+        if vbox:
+            return ipw.VBox([fw_graph, ipw.HBox([fw_summary, fw_hist])])
+        return dashboard
+
+    
     return fw_graph
 
-def plotlyviz_dashboard(scomplex):
-    
-    kmgraph,  mapper_summary, n_color_distribution = get_mapper_graph(scomplex, colorscale=pl_matter,
-                                                                      color_function=None)
-    annotation=get_kmgraph_meta(mapper_summary)
-    
-    plgraph_data = plotly_graph(kmgraph, graph_layout='kk') #, colorscale=pl_matter,  
-                            #factor_size=3, edge_linewidth=1.5, node_linecolor='rgba(240, 240, 240, 0.95)')
-    title = 'Topological network associated to<br> the cat dataset'
-    layout = plot_layout(title=title,  width=600, height=500, annotation_text=annotation,
-                        ) # bgcolor='rgba(240, 240, 240)' )#,  left=10, bottom=35)
-    fw_graph = go.FigureWidget(data=plgraph_data, layout=layout)
-    fw_hist = node_hist_fig(n_color_distribution,  left=25, right=25) # default width=400, height=300,
-    fw_summary = summary_fig(mapper_summary, height=300,  left=20, right=20) # default width=600, height=300,
-    dashboard = hovering_widgets(kmgraph, fw_graph, member_textbox_width=800)
-    ipw.VBox([fw_graph, ipw.HBox([fw_summary, fw_hist])])
-    
-    return dashboard
+
 
 
 
@@ -129,7 +127,7 @@ def get_mapper_graph(
     simplicial_complex,
     color_function=None,
     color_function_name=None,
-    colorscale=colorscale,
+    colorscale=default_colorscale,
     custom_tooltips=None,
     custom_meta=None,
     X=None,
@@ -187,7 +185,7 @@ def get_mapper_graph(
 def plotly_graph(
     kmgraph,
     graph_layout="kk",
-    colorscale=colorscale,
+    colorscale=default_colorscale,
     showscale=True,
     factor_size=3,
     edge_linecolor="rgb(180,180,180)",

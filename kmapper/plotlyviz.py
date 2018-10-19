@@ -20,6 +20,7 @@ try:
     import igraph as ig
     import plotly.graph_objs as go
     import ipywidgets as ipw
+    import plotly.io as pio
 except ImportError:
     print(
         """To use the plotly visualization tools, you must have the packages python-igraph, plotly, and ipywidgets installed in your environment."""
@@ -43,41 +44,111 @@ default_colorscale = [
     [1.0, "rgb(253, 231, 36)"],
 ]
 
+def mpl_to_plotly(cmap, n_entries):
+    h = 1.0 / (n_entries-1)
+    pl_colorscale = []
+    for k in range(n_entries):
+        C = list(map(np.uint8, np.array(cmap(k*h)[:3]) * 255))
+        pl_colorscale.append([round(k*h, 2), 'rgb' + str((C[0], C[1], C[2]))]) # Python 2.7+
+        # pl_colorscale.append([round(k*h, 2), f'rgb({C[0]}, {C[1]}, {C[2]})']) # Python 3.6+
+    return pl_colorscale
 
 
-def plotlyviz(scomplex, colorscale=None, title="Kepler Mapper", dashboard=False, vbox=False):
-    
+def plotlyviz(
+    scomplex,
+    colorscale=default_colorscale,
+    title="Kepler Mapper",
+    graph_layout="kk",
+    color_function=None,
+    color_function_name=None,
+    dashboard=False,
+    graph_data=False,
+    factor_size=3, 
+    edge_linewidth=1.5,
+    node_linecolor="rgb(200,200,200)",
+    width=600,
+    height=500,
+    bgcolor="rgba(240, 240, 240, 0.95)",
+    left=10,
+    bottom=35,
+    summary_height=300,
+    summary_width=600, 
+    summary_left=20,
+    summary_right=20,
+    hist_left=25,
+    hist_right=25,
+    member_textbox_width=800,
+    filename=None
+):
 
-    colorscale = colorscale or default_colorscale
+    kmgraph, mapper_summary, n_color_distribution = get_mapper_graph(
+        scomplex, colorscale=colorscale, color_function=color_function,
+        color_function_name=color_function_name
+    )
 
-    kmgraph,  mapper_summary, n_color_distribution = get_mapper_graph(scomplex, colorscale=colorscale,
-                                                                      color_function=None)
-    annotation=get_kmgraph_meta(mapper_summary)
-    
-    plgraph_data = plotly_graph(kmgraph, graph_layout='kk', colorscale=colorscale,  
-                                factor_size=3, edge_linewidth=1.5, node_linecolor='rgb(200,200,200)')
 
-    layout = plot_layout(title=title,  width=600, height=500, annotation_text=annotation,
-                          bgcolor='rgba(240, 240, 240, 0.95)',  left=10, bottom=35)
-    fw_graph = go.FigureWidget(data=plgraph_data, layout=layout)
-    
-    if dashboard or vbox:
-        fw_hist = node_hist_fig(n_color_distribution,  left=25, right=25) # default width=400, height=300,
-        fw_summary = summary_fig(mapper_summary, height=300,  left=20, right=20) # default width=600, height=300,
-        dashboard = hovering_widgets(kmgraph, fw_graph, member_textbox_width=800)
+    annotation = get_kmgraph_meta(mapper_summary)
+
+    plgraph_data = plotly_graph(
+        kmgraph,
+        graph_layout=graph_layout,
+        colorscale=colorscale,
+        factor_size=factor_size,
+        edge_linewidth=edge_linewidth,
+        node_linecolor=node_linecolor,
+    )
+
+    layout = plot_layout(
+        title=title,
+        width=width,
+        height=height,
+        annotation_text=annotation,
+        bgcolor=bgcolor,
+        left=left,
+        bottom=bottom,
+    )
+    result = go.FigureWidget(data=plgraph_data, layout=layout)
+
+    """
+        The generated FigureWidget can be updated (by performing a restyle or relayout). For example, let us add a title 
+        to the colorbar (the name of the color function, if any),
+        and set the title font size. To perform these updates faster, Plotly 3.+ provides a context manager that batches up all data and layout updates:
+
+    """
+
+    if color_function_name:
+        with result.batch_update():
+            result.data[1].marker.colorbar.title = color_function_name
+            result.data[1].marker.colorbar.titlefont.size = 10
+
+    """
+        To display more info on the generated kmapper-graph, define two more FigureWidget(s):  
+        the global node distribution figure, and a dummy figure
+        that displays info on the  algorithms involved in getting the graph from data, as well as  sklearn  class instances.
+
+        A FigureWidget has event listeners for hovering, clicking or selecting. Using the first one for `fw_graph`
+        we   define, via the function `hovering_widgets()`, widgets that display the node distribution, when the node is hovered over, and two textboxes for the cluster size and the member ids/labels of the hovered node members:
+    """
+
+    if dashboard or graph_data:
+        fw_hist = node_hist_fig(
+            n_color_distribution, left=hist_left, right=hist_right
+        )  
+        fw_summary = summary_fig(
+            mapper_summary, width=summary_width, height=summary_height, left=summary_left, right=summary_right
+        )
+
+        fw_graph = result
+        result = hovering_widgets(kmgraph, fw_graph, member_textbox_width=member_textbox_width)
+
+        if graph_data:
+            result = ipw.VBox([fw_graph, ipw.HBox([fw_summary, fw_hist])])
         
-        if vbox:
-            return ipw.VBox([fw_graph, ipw.HBox([fw_summary, fw_hist])])
-        return dashboard
+    if filename:
+        pio.write_image(result, filename)#or 'mapper-cat.png'
 
+    return result
     
-    return fw_graph
-
-
-
-
-
-
 
 
 def scomplex_to_graph(

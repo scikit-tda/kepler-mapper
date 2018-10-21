@@ -204,7 +204,7 @@ def format_mapper_data(
     return json_dict
 
 
-def build_histogram(data, nbins=10, colorscale=None):
+def build_histogram(data, colorscale=None, nbins=10):
     """ Build histogram of data based on values of color_function
     """
 

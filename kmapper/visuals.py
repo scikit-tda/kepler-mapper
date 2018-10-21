@@ -160,7 +160,7 @@ def format_meta(graph, custom_meta=None, color_function_name=None):
 
 
 def format_mapper_data(
-    graph, color_function, X, X_names, lens, lens_names, custom_tooltips, env
+    graph, color_function, X, X_names, lens, lens_names, custom_tooltips, env, nbins=10
 ):
     # import pdb; pdb.set_trace()
     json_dict = {"nodes": [], "links": []}
@@ -180,6 +180,7 @@ def format_mapper_data(
             lens_names,
             color_function,
             node_id,
+            nbins
         )
 
         n = {
@@ -203,7 +204,7 @@ def format_mapper_data(
     return json_dict
 
 
-def build_histogram(data, colorscale=None):
+def build_histogram(data, nbins=10, colorscale=None):
     """ Build histogram of data based on values of color_function
     """
 
@@ -214,7 +215,7 @@ def build_histogram(data, colorscale=None):
     colorscale = _colors_to_rgb(colorscale)
 
     h_min, h_max = 0, 1
-    hist, bin_edges = np.histogram(data, range=(h_min, h_max), bins=10)
+    hist, bin_edges = np.histogram(data, range=(h_min, h_max), bins=nbins)
     bin_mids = np.mean(np.array(list(zip(bin_edges, bin_edges[1:]))), axis=1)
 
     histogram = []
@@ -230,14 +231,14 @@ def build_histogram(data, colorscale=None):
     return histogram
 
 
-def graph_data_distribution(graph, color_function, colorscale):
+def graph_data_distribution(graph, color_function, colorscale, nbins=10):
 
     node_averages = []
     for node_id, member_ids in graph["nodes"].items():
         member_colors = color_function[member_ids]
         node_averages.append(np.mean(member_colors))
 
-    histogram = build_histogram(node_averages, colorscale)
+    histogram = build_histogram(node_averages, colorscale=colorscale, nbins=nbins)
 
     return histogram
 
@@ -324,12 +325,12 @@ def _format_projection_statistics(member_ids, lens, lens_names):
 
 
 def _tooltip_components(
-    member_ids, X, X_names, lens, lens_names, color_function, node_ID, colorscale
+    member_ids, X, X_names, lens, lens_names, color_function, node_ID, colorscale, nbins=10
 ):
     projection_stats = _format_projection_statistics(member_ids, lens, lens_names)
     cluster_stats = _format_cluster_statistics(member_ids, X, X_names)
 
-    member_histogram = build_histogram(color_function[member_ids], colorscale)
+    member_histogram = build_histogram(color_function[member_ids], colorscale=colorscale, nbins=nbins)
 
     return projection_stats, cluster_stats, member_histogram
 
@@ -344,6 +345,7 @@ def _format_tooltip(
     lens_names,
     color_function,
     node_ID,
+    nbins
 ):
     # TODO: Allow customization in the form of aggregate per node and per entry in node.
     # TODO: Allow users to turn off tooltip completely.
@@ -358,7 +360,7 @@ def _format_tooltip(
     colorscale = colorscale_default
 
     projection_stats, cluster_stats, histogram = _tooltip_components(
-        member_ids, X, X_names, lens, lens_names, color_function, node_ID, colorscale
+        member_ids, X, X_names, lens, lens_names, color_function, node_ID, colorscale, nbins
     )
 
     tooltip = env.get_template("cluster_tooltip.html").render(

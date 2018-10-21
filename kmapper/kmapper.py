@@ -550,6 +550,7 @@ class KeplerMapper(object):
         lens=None,
         lens_names=[],
         show_tooltips=True,
+        nbins=10
     ):
         """Generate a visualization of the simplicial complex mapper output. Turns the complex dictionary into a HTML/D3.js visualization
 
@@ -585,6 +586,9 @@ class KeplerMapper(object):
         show_tooltips: bool, default is True.
             If false, completely disable tooltips. This is useful when using output in space-tight pages or will display node data in custom ways.
 
+        nbins: int, default is 10
+            Number of bins shown in histogram of tooltip color distributions.
+
         Returns
         ------
         html: string
@@ -614,7 +618,7 @@ class KeplerMapper(object):
         color_function = init_color_function(graph, color_function)
 
         mapper_data = format_mapper_data(
-            graph, color_function, X, X_names, lens, lens_names, custom_tooltips, env
+            graph, color_function, X, X_names, lens, lens_names, custom_tooltips, env, nbins
         )
 
         colorscale = colorscale_default

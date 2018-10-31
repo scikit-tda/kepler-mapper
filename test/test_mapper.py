@@ -12,7 +12,8 @@ from scipy import sparse
 from scipy.spatial import distance
 from sklearn import neighbors
 
-class TestLogging():
+
+class TestLogging:
     """ Simple tests that confirm map completes at each logging level
     """
 
@@ -60,8 +61,8 @@ class TestDataAccess:
         data[ids] = 2
 
         graph = mapper.map(data)
-        graph['nodes']['new node'] = ids
-        mems = mapper.data_from_cluster_id('new node', graph, data)
+        graph["nodes"]["new node"] = ids
+        mems = mapper.data_from_cluster_id("new node", graph, data)
         np.testing.assert_array_equal(data[ids], mems)
 
     def test_wrong_id(self):
@@ -69,21 +70,26 @@ class TestDataAccess:
         data = np.random.rand(100, 2)
 
         graph = mapper.map(data)
-        mems = mapper.data_from_cluster_id('new node', graph, data)
+        mems = mapper.data_from_cluster_id("new node", graph, data)
         np.testing.assert_array_equal(mems, np.array([]))
 
 
 class TestMap:
     def test_simplices(self):
         mapper = KeplerMapper()
-        
+
         X = np.random.rand(100, 2)
         lens = mapper.fit_transform(X)
-        graph = mapper.map(lens, X=X, cover=Cover(n_cubes=3, perc_overlap=1.5), clusterer=cluster.DBSCAN(metric='euclidean', min_samples=3))
+        graph = mapper.map(
+            lens,
+            X=X,
+            cover=Cover(n_cubes=3, perc_overlap=1.5),
+            clusterer=cluster.DBSCAN(metric="euclidean", min_samples=3),
+        )
         assert max([len(s) for s in graph["simplices"]]) <= 2
 
-        nodes = [n for n in graph['simplices'] if len(n) == 1]
-        edges = [n for n in graph['simplices'] if len(n) == 2]
+        nodes = [n for n in graph["simplices"] if len(n) == 1]
+        edges = [n for n in graph["simplices"] if len(n) == 2]
         assert len(nodes) == 3
         assert len(edges) == 3
 
@@ -91,23 +97,36 @@ class TestMap:
         mapper = KeplerMapper()
 
         X = np.random.rand(100, 2)
-        X_pdist = distance.squareform(distance.pdist(X, metric='euclidean'))
+        X_pdist = distance.squareform(distance.pdist(X, metric="euclidean"))
 
         lens = mapper.fit_transform(X_pdist)
 
-        graph = mapper.map(lens, X=X_pdist, cover=Cover(n_cubes=10, perc_overlap=0.8), clusterer=cluster.DBSCAN(metric='precomputed', min_samples=3), precomputed=True)
-        graph2 = mapper.map(lens, X=X, cover=Cover(n_cubes=10, perc_overlap=0.8), clusterer=cluster.DBSCAN(metric='euclidean', min_samples=3))
+        graph = mapper.map(
+            lens,
+            X=X_pdist,
+            cover=Cover(n_cubes=10, perc_overlap=0.8),
+            clusterer=cluster.DBSCAN(metric="precomputed", min_samples=3),
+            precomputed=True,
+        )
+        graph2 = mapper.map(
+            lens,
+            X=X,
+            cover=Cover(n_cubes=10, perc_overlap=0.8),
+            clusterer=cluster.DBSCAN(metric="euclidean", min_samples=3),
+        )
 
-        assert graph['links'] == graph2['links']
-        assert graph['nodes'] == graph2['nodes']
-        assert graph['simplices'] == graph2['simplices']
+        assert graph["links"] == graph2["links"]
+        assert graph["nodes"] == graph2["nodes"]
+        assert graph["simplices"] == graph2["simplices"]
 
     def test_precomputed_with_knn_lens(self):
         mapper = KeplerMapper()
 
         X = np.random.rand(100, 5)
 
-        lens = mapper.fit_transform(X, projection="knn_distance_3", distance_matrix="chebyshev")
+        lens = mapper.fit_transform(
+            X, projection="knn_distance_3", distance_matrix="chebyshev"
+        )
         assert lens.shape == (100, 1)
 
     def test_affinity_prop_clustering(self):
@@ -116,11 +135,10 @@ class TestMap:
         X = np.random.rand(100, 2)
         lens = mapper.fit_transform(X)
 
-        graph = mapper.map(lens, X, 
-            clusterer=cluster.AffinityPropagation())
+        graph = mapper.map(lens, X, clusterer=cluster.AffinityPropagation())
 
 
-class TestLens():
+class TestLens:
     # TODO: most of these tests only accommodate the default option. They need to be extended to incorporate all possible transforms.
 
     # one test for each option supported
@@ -130,13 +148,13 @@ class TestLens():
         data = np.random.rand(100, 10)
 
         options = [
-            ['sum', np.sum],
-            ['mean', np.mean],
-            ['median', np.median],
-            ['max', np.max],
-            ['min', np.min],
-            ['std', np.std],
-            ['l2norm', np.linalg.norm],
+            ["sum", np.sum],
+            ["mean", np.mean],
+            ["median", np.median],
+            ["max", np.max],
+            ["min", np.min],
+            ["std", np.std],
+            ["l2norm", np.linalg.norm],
         ]
 
         first_point = data[0]
@@ -156,7 +174,9 @@ class TestLens():
 
         nn = neighbors.NearestNeighbors(n_neighbors=4)
         nn.fit(data)
-        lens_confirm = np.sum(nn.kneighbors(data, n_neighbors=4, return_distance=True)[0], axis=1).reshape((-1,1))
+        lens_confirm = np.sum(
+            nn.kneighbors(data, n_neighbors=4, return_distance=True)[0], axis=1
+        ).reshape((-1, 1))
 
         assert lens.shape == (100, 1)
         np.testing.assert_array_equal(lens, lens_confirm)
@@ -165,9 +185,9 @@ class TestLens():
         # todo, test other distance_matrix functions
         mapper = KeplerMapper(verbose=4)
         X = np.random.rand(100, 10)
-        lens = mapper.fit_transform(X, distance_matrix='euclidean')
+        lens = mapper.fit_transform(X, distance_matrix="euclidean")
 
-        X_pdist = distance.squareform(distance.pdist(X, metric='euclidean'))
+        X_pdist = distance.squareform(distance.pdist(X, metric="euclidean"))
         lens2 = mapper.fit_transform(X_pdist)
 
         np.testing.assert_array_equal(lens, lens2)
@@ -197,8 +217,7 @@ class TestLens():
     def test_project_sklearn_class(self):
         mapper = KeplerMapper()
         data = np.random.rand(100, 5)
-        lens = mapper.project(data, projection=PCA(
-            n_components=1), scaler=None)
+        lens = mapper.project(data, projection=PCA(n_components=1), scaler=None)
 
         pca = PCA(n_components=1)
         lens_confirm = pca.fit_transform(data)
@@ -215,8 +234,7 @@ class TestLens():
 
         # hard to test this, at least it doesn't fail
         assert lens.shape == (100, 1)
-        np.testing.assert_array_equal(
-            lens, lasso.predict(data).reshape((100, 1)))
+        np.testing.assert_array_equal(lens, lasso.predict(data).reshape((100, 1)))
 
     def test_tuple_projection_fit(self):
         mapper = KeplerMapper()
@@ -247,54 +265,60 @@ class TestLens():
 
         mapper = KeplerMapper()
 
-        lens_1 = mapper.fit_transform(input_data,
-                                      projection=[[0, 1], "sum"],
-                                      scaler=None)
+        lens_1 = mapper.fit_transform(
+            input_data, projection=[[0, 1], "sum"], scaler=None
+        )
         expected_output_1 = np.array([[3], [7], [11], [15]])
 
-        lens_2 = mapper.fit_transform(input_data,
-                                      projection=[[0, 1], "sum"])
+        lens_2 = mapper.fit_transform(input_data, projection=[[0, 1], "sum"])
         expected_output_2 = np.array([[0], [0.33], [0.66], [1.]])
 
-        lens_3 = mapper.fit_transform(input_data,
-                                      projection=[[0, 1], "mean"],
-                                      scaler=None)
+        lens_3 = mapper.fit_transform(
+            input_data, projection=[[0, 1], "mean"], scaler=None
+        )
         expected_output_3 = np.array([[1.5], [3.5], [5.5], [7.5]])
 
-        lens_4 = mapper.fit_transform(input_data,
-                                      projection=[[1], "mean"],
-                                      scaler=None)
+        lens_4 = mapper.fit_transform(input_data, projection=[[1], "mean"], scaler=None)
         expected_output_4 = np.array([[2], [4], [6], [8]])
 
-        lens_5 = mapper.fit_transform(input_data,
-                                      projection=[[0, 1], "l2norm"],
-                                      scaler=None,
-                                      distance_matrix=[False, "pearson"])
+        lens_5 = mapper.fit_transform(
+            input_data,
+            projection=[[0, 1], "l2norm"],
+            scaler=None,
+            distance_matrix=[False, "pearson"],
+        )
         expected_output_5 = np.array([[2.236], [5.], [7.81], [10.630]])
 
-        lens_6 = mapper.fit_transform(input_data,
-                                      projection=[[0, 1], [0, 1]],
-                                      scaler=None,
-                                      distance_matrix=[False, "cosine"])
-        expected_output_6 = np.array([[0., 0.016],
-                                      [0.016, 0.], [0.026, 0.0013], [0.032, 0.0028]])
+        lens_6 = mapper.fit_transform(
+            input_data,
+            projection=[[0, 1], [0, 1]],
+            scaler=None,
+            distance_matrix=[False, "cosine"],
+        )
+        expected_output_6 = np.array(
+            [[0., 0.016], [0.016, 0.], [0.026, 0.0013], [0.032, 0.0028]]
+        )
 
-        lens_7 = mapper.fit_transform(input_data,
-                                      projection=[[0, 1], "l2norm"],
-                                      scaler=None,
-                                      distance_matrix=[False, "cosine"])
-        expected_output_7 = np.array(
-            [[0.044894], [0.01643], [0.026617], [0.032508]])
+        lens_7 = mapper.fit_transform(
+            input_data,
+            projection=[[0, 1], "l2norm"],
+            scaler=None,
+            distance_matrix=[False, "cosine"],
+        )
+        expected_output_7 = np.array([[0.044894], [0.01643], [0.026617], [0.032508]])
 
         lens_8 = mapper.fit_transform(input_data, projection=[[0, 1], "sum"])
         lens_9 = mapper.fit_transform(input_data, projection="sum")
 
-        lens_10 = mapper.fit_transform(input_data, projection="sum",
-                                       scaler=StandardScaler())
-        lens_11 = mapper.fit_transform(input_data, projection=[[0, 1], "sum"],
-                                       scaler=[None, StandardScaler()])
+        lens_10 = mapper.fit_transform(
+            input_data, projection="sum", scaler=StandardScaler()
+        )
+        lens_11 = mapper.fit_transform(
+            input_data, projection=[[0, 1], "sum"], scaler=[None, StandardScaler()]
+        )
         expected_output_10 = np.array(
-            [[-1.341641], [-0.447214], [0.447214], [1.341641]])
+            [[-1.341641], [-0.447214], [0.447214], [1.341641]]
+        )
 
         np.testing.assert_array_equal(lens_1, expected_output_1)
         np.testing.assert_allclose(lens_2, expected_output_2, atol=atol_big)
@@ -304,9 +328,7 @@ class TestLens():
         np.testing.assert_allclose(lens_6, expected_output_6, atol=atol_small)
         np.testing.assert_allclose(lens_7, expected_output_7, atol=atol_small)
         np.testing.assert_allclose(lens_8, lens_9, atol=atol_small)
-        np.testing.assert_allclose(
-            lens_10, expected_output_10, atol=atol_small)
+        np.testing.assert_allclose(lens_10, expected_output_10, atol=atol_small)
         np.testing.assert_array_equal(lens_10, lens_11)
         assert not np.array_equal(lens_10, lens_2)
         assert not np.array_equal(lens_10, lens_1)
-

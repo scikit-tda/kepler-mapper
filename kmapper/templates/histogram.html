@@ -6,7 +6,7 @@
 <!-- Render histogram -->
 {% for bar in histogram %}
 
-    <div class="bin" style="height:{{ bar['height'] }}px; background:{{ bar['color'] }}">
+    <div class="bin" style="height:{{ bar['height'] or 1.0 }}px; background:{{ bar['color'] }}">
         <div>{{ bar['perc'] }}%</div>
     </div>     
   

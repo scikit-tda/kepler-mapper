@@ -10,8 +10,6 @@
 
 This is a Python implementation of the TDA Mapper algorithm  for visualization of high-dimensional data. For complete documentation, see [https://kepler-mapper.scikit-tda.org](https://kepler-mapper.scikit-tda.org).
 
-
-
 KeplerMapper employs approaches based on the Mapper algorithm (Singh et al.) as first described in the paper "Topological Methods for the Analysis of High Dimensional Data Sets and 3D Object Recognition".
 
 KeplerMapper can make use of Scikit-Learn API compatible cluster and scaling algorithms.
@@ -27,14 +25,16 @@ KeplerMapper requires:
   - NumPy
   - Scikit-learn
 
-Running some of the examples requires:
+Using the plotly visualizations requires a few extra libraries:
+
+  - Python-Igraph
+  - Plotly 
+  - Ipywidgets
+
+Additionally, running some of the examples requires:
 
   - matplotlib
-
-Visualizations load external resources:
-
-  - Roboto Webfont (Google)
-  - D3.js (Mike Bostock)
+  - umap-learn
 
 
 ### Installation

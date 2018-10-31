@@ -7,17 +7,19 @@ import numpy as np
 # TODO: Incorporate @pablodecm's cover API.
 
 
-class Cover():
+class Cover:
     """Helper class that defines the default covering scheme
     """
 
-    def __init__(self,
-                 n_cubes=10,
-                 perc_overlap=0.2,
-                 # Deprecated parameters:
-                 nr_cubes=None,
-                 overlap_perc=None,
-                 limits=None):
+    def __init__(
+        self,
+        n_cubes=10,
+        perc_overlap=0.2,
+        # Deprecated parameters:
+        nr_cubes=None,
+        overlap_perc=None,
+        limits=None,
+    ):
         """
         limits: Numpy Array (n_dim,2)
             (lower bound, upper bound) for every dimension
@@ -35,16 +37,20 @@ class Cover():
 
         if overlap_perc is not None or nr_cubes is not None:
             warnings.warn(
-                "Arguements `overlap_perc` and `nr_cubes` have been replaced with `perc_overlap` and `n_cubes`. Use `perc_overlap` and `n_cubes` instead. They will be removed in future releases.", DeprecationWarning)
+                "Arguements `overlap_perc` and `nr_cubes` have been replaced with `perc_overlap` and `n_cubes`. Use `perc_overlap` and `n_cubes` instead. They will be removed in future releases.",
+                DeprecationWarning,
+            )
 
         self.limits = limits
 
         # Check limits can actually be handled and are set appropriately
         NoneType = type(None)
-        assert isinstance(self.limits, (list, np.ndarray, type(None))), 'limits should either be an array or None'
+        assert isinstance(
+            self.limits, (list, np.ndarray, type(None))
+        ), "limits should either be an array or None"
         if isinstance(self.limits, (list, np.ndarray)):
             self.limits = np.array(self.limits)
-            assert self.limits.shape[1] == 2, 'limits should be (n_dim,2) in shape'
+            assert self.limits.shape[1] == 2, "limits should be (n_dim,2) in shape"
 
     def define_bins(self, data):
         """Returns an iterable of all bins in the cover.
@@ -69,25 +75,28 @@ class Cover():
             limits_array = np.zeros(self.limits.shape)
             limits_array[:, 0] = np.min(indexless_data, axis=0)
             limits_array[:, 1] = np.max(indexless_data, axis=0)
-            limits_array[self.limits != np.float('inf')] = 0
-            self.limits[self.limits == np.float('inf')] = 0
+            limits_array[self.limits != np.float("inf")] = 0
+            self.limits[self.limits == np.float("inf")] = 0
             bounds_arr = self.limits + limits_array
             """ bounds_arr[i,j] = self.limits[i,j] if self.limits[i,j] == inf
                 bounds_arr[i,j] = max/min(indexless_data[i]) if self.limits == inf """
             bounds = (bounds_arr[:, 0], bounds_arr[:, 1])
 
             # Check new bounds are actually sensible - do they cover the range of values in the dataset?
-            if not ((np.min(indexless_data, axis=0) >= bounds_arr[:, 0]).all() or
-                    (np.max(indexless_data, axis=0) <= bounds_arr[:, 1]).all()):
-                warnings.warn('The limits given do not cover the entire range of the lens functions\n' + \
-                              'Actual Minima: %s\tInput Minima: %s\n' % (
-                              np.min(indexless_data, axis=0), bounds_arr[:, 0]) + \
-                              'Actual Maxima: %s\tInput Maxima: %s\n' % (
-                              np.max(indexless_data, axis=0), bounds_arr[:, 1]))
+            if not (
+                (np.min(indexless_data, axis=0) >= bounds_arr[:, 0]).all()
+                or (np.max(indexless_data, axis=0) <= bounds_arr[:, 1]).all()
+            ):
+                warnings.warn(
+                    "The limits given do not cover the entire range of the lens functions\n"
+                    + "Actual Minima: %s\tInput Minima: %s\n"
+                    % (np.min(indexless_data, axis=0), bounds_arr[:, 0])
+                    + "Actual Maxima: %s\tInput Maxima: %s\n"
+                    % (np.max(indexless_data, axis=0), bounds_arr[:, 1])
+                )
 
         else:  # It must be None, as we checked to see if it is array-like or None in __init__
-            bounds = (np.min(indexless_data, axis=0),
-                      np.max(indexless_data, axis=0))
+            bounds = (np.min(indexless_data, axis=0), np.max(indexless_data, axis=0))
 
         # We chop up the min-max column ranges into 'n_cubes' parts
         self.chunk_dist = (bounds[1] - bounds[0]) / self.n_cubes
@@ -108,12 +117,14 @@ class Cover():
         if type(self.n_cubes) is not list:
             cubes = [self.n_cubes] * self.nr_dimensions
         else:
-            assert len(self.n_cubes) == self.nr_dimensions, "There are {} ({}) dimensions specified but {} dimensions needing specification. If you supply specific number of cubes for each dimension, please supply the correct number.".format(
-                len(self.n_cubes), self.n_cubes, self.nr_dimensions)
+            assert (
+                len(self.n_cubes) == self.nr_dimensions
+            ), "There are {} ({}) dimensions specified but {} dimensions needing specification. If you supply specific number of cubes for each dimension, please supply the correct number.".format(
+                len(self.n_cubes), self.n_cubes, self.nr_dimensions
+            )
             cubes = self.n_cubes
 
-        coordinates = map(np.asarray, product(
-            *(range(i) for i in cubes)))
+        coordinates = map(np.asarray, product(*(range(i) for i in cubes)))
         return coordinates
 
     def find_entries(self, data, cube, verbose=0):
@@ -139,8 +150,7 @@ class Cover():
         upper_bound = lower_bound + chunk + overlap
 
         # Slice the hypercube
-        entries = (data[:, self.di] >= lower_bound) & \
-                  (data[:, self.di] < upper_bound)
+        entries = (data[:, self.di] >= lower_bound) & (data[:, self.di] < upper_bound)
 
         hypercube = data[np.invert(np.any(entries == False, axis=1))]
 
@@ -151,4 +161,5 @@ class CubicalCover(Cover):
     """
     Explicit definition of a cubical cover as the default behavior of the cover class
     """
+
     pass

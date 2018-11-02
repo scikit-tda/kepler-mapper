@@ -127,6 +127,10 @@ def init_color_function(graph, color_function=None):
     # MinMax Scaling to be friendly to non-scaled input.
     scaler = preprocessing.MinMaxScaler()
     color_function = scaler.fit_transform(color_function).ravel()
+
+    # "Scaler might have floating point issues, 1.0000...0002". Force max and min
+    color_function[color_function > 1] = 1
+    color_function[color_function < 0] = 0
     return color_function
 
 

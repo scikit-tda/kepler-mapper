@@ -1,9 +1,71 @@
+Alpha
+
+1.1.6 (Nov 8, 2018)
+	Plotly visualization interface.
+	Networkx adapter
+	Bug fixes 
+	Scikit-tda integration
+
+1.1.2
+	Bug fix, setup.py did not include static directory so installation visualizations did not work when installed from pypi.
+	Add Jupyter notebook support
+1.1
+    Massive visualization upgrades
+    Separation of HTML, JS, CSS, and Python code
+    New nerves and covers API
+    Documentation site
+
+1.0.1
+	Convert versioning scheme to major.minor.micro
+	Restructure library to be compatible with PyPi installation
+	Minor bug fixes
+	Include preliminary unit test suite
+	Refactor, extract helper classes and helper functions
+
+
 Pre-alpha
 
-v00001
-		Wrote class
-		Wrote documentation
-		Added license
+v00009
+
+v00008
+
+v00007
+		Add L2^Norm Lens
+		Add Winsconsin Breast Cancer Data Anomaly Detection Example
+		Fixed bug: k-means with set number of clusters higher than min_cluster_samples
+		Add self.inverse_X for new future feature: transforming on unseen data.
+
+v00006
+		Removed link_local functionality
+		Halved the number of edges drawn (no two-way edges)
+		Added support for clustering on the inverse image
+		Refactored code (see updated documentation)
+		Added code comments
+		Added feature to use reducers/manifold learning/dimensions and stat functions
+		Added 7 projections/lenses from statistics
+
+v00005
+		Made Python 3 compatible
+		Ability to turn off title, meta and tooltips
+		Ability to set the window height and width of HTML output
+		Added basic support for another color function: average signal
+		De-emphasized link_local functionality, since its current implementation is no good.
+
+v00004
+		Added dimensionality reduction
+		Added "digits" case study
+		changed fit to fit_transform and return of data
+		added tooltips
+		added support for custom tooltips
+
+v00003
+		Refactored dimension index to use a list of arbitrary dimensions
+		Improved verbosity
+		Added levels of verbosity
+		Decreased number of code lines by using a single approach
+		Added sample to explain local linkage True vs. False
+		Added side-view for animal point-cloud data
+		Added a gallery in the example directory
 
 v00002
 		Added a multi-dimensional mode: use all dimensions.
@@ -15,62 +77,7 @@ v00002
 		Added todo
 		Added release log
 
-v00003
-		Refactored dimension index to use a list of arbitrary dimensions
-		Improved verbosity
-		Added levels of verbosity
-		Decreased number of code lines by using a single approach
-		Added sample to explain local linkage True vs. False
-		Added side-view for animal point-cloud data
-		Added a gallery in the example directory
-
-v00004
-		Added dimensionality reduction
-		Added "digits" case study
-		changed fit to fit_transform and return of data
-		added tooltips
-		added support for custom tooltips
-
-Alpha
-
-v00005
-		Made Python 3 compatible
-		Ability to turn off title, meta and tooltips
-		Ability to set the window height and width of HTML output
-		Added basic support for another color function: average signal
-		De-emphasized link_local functionality, since its current implementation is no good.
-
-v00006
-		Removed link_local functionality
-		Halved the number of edges drawn (no two-way edges)
-		Added support for clustering on the inverse image
-		Refactored code (see updated documentation)
-		Added code comments
-		Added feature to use reducers/manifold learning/dimensions and stat functions
-		Added 7 projections/lenses from statistics
-
-v00007
-		Add L2^Norm Lens
-		Add Winsconsin Breast Cancer Data Anomaly Detection Example
-		Fixed bug: k-means with set number of clusters higher than min_cluster_samples
-		Add self.inverse_X for new future feature: transforming on unseen data.
-
-v00008
-v00009
-
-1.0.1
-		Convert versioning scheme to major.minor.micro
-		Restructure library to be compatible with PyPi installation
-		Minor bug fixes
-		Include preliminary unit test suite
-		Refactor, extract helper classes and helper functions
-
-1.1
-    Massive visualization upgrades
-    Separation of HTML, JS, CSS, and Python code
-    New nerves and covers API
-    Documentation site
-
-1.1.2
-		Bug fix, setup.py did not include static directory so installation visualizations did not work when installed from pypi.
-		Add Jupyter notebook support
+v00001
+		Wrote class
+		Wrote documentation
+		Added license

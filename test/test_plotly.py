@@ -48,8 +48,9 @@ def test_format_meta(sc):
     mapper_summary = format_meta(sc, "Nada custom meta", "foo")
     assert mapper_summary["custom_meta"] == "Nada custom meta"
     assert (
-        mapper_summary["n_total"] <= 200
-    ), "Some points can disappear because of noise in clustering."
+        mapper_summary["n_total"] <= 300 and
+        mapper_summary["n_total"] >= 200
+    ), "Some points become repeated in multiple nodes."
 
 
 def test_to_html_format():

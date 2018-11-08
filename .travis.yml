@@ -5,9 +5,21 @@ python:
   - "3.5"
   - "3.6"
 
+matrix:
+include:
+  - python: 3.7
+    dist: xenial
+    sudo: true
+
+before_install:
+    # Tricks to avoid matplotlib error about X11:
+    # 'no display name and no $DISPLAY environment variable'
+    # http://docs.travis-ci.com/user/gui-and-headless-browsers/#Starting-a-Web-Server
+    - "export DISPLAY=:99.0"
+    - "sh -e /etc/init.d/xvfb start"
+
 install:
-  - pip install .
-  - pip install python-igraph plotly ipywidgets
+  - pip install ".[testing]"
   - pip install pytest-cov
 
 script:

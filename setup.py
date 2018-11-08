@@ -6,16 +6,26 @@ with open('README.md') as f:
     long_description = f.read()
 
 setup(name='kmapper',
-      version='1.1.6.dev0',
+      version='1.1.6',
       description='Python implementation of Mapper algorithm for Topological Data Analysis.',
       long_description=long_description,
       long_description_content_type="text/markdown",	
       author='HJ van Veen, Nathaniel Saul',
       author_email='info@mlwave.com, nat@saulgill.com',
-      url='https://MLWave.github.io/kepler-mapper',
+      url='http://kepler-mapper.scikit-tda.org',
       license='MIT',
       packages=['kmapper'],
       include_package_data=True,
+      extras_require={
+        'testing': [
+          'pytest',
+          'networkx',
+          'matplotlib',
+          'python-igraph',
+          'plotly',
+          'ipywidgets'   
+        ]
+      },
       install_requires=[
         'scikit-learn',
         'numpy',

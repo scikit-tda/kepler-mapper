@@ -362,7 +362,7 @@ def _format_tooltip(
     custom_tooltips = list(custom_tooltips)
 
     colorscale = colorscale_default
-
+    
     projection_stats, cluster_stats, histogram = _tooltip_components(
         member_ids, X, X_names, lens, lens_names, color_function, node_ID, colorscale, nbins
     )

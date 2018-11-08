@@ -7,7 +7,7 @@ class TestNerve:
         nerve = GraphNerve()
 
         groups = {"a": [1, 2, 3, 4], "b": [1, 2, 5], "c": [5, 6, 7]}
-        links, simplices = nerve(groups)
+        links, simplices = nerve.compute(groups)
 
         # all vertices are simplices
         assert all([[k] in simplices for k in groups])
@@ -20,7 +20,7 @@ class TestNerve:
     def test_simplices(self):
         nerve = GraphNerve()
         groups = {"a": [1, 2, 3, 4], "b": [1, 2, 5], "c": [1, 5, 6, 7]}
-        links, simplices = nerve(groups)
+        links, simplices = nerve.compute(groups)
 
         simplices = [set(s) for s in simplices]
         assert {"a", "b"} in simplices
@@ -33,7 +33,7 @@ class TestNerve:
         nerve = GraphNerve(min_intersection=2)
 
         groups = {"a": [1, 2, 3, 4], "b": [1, 2, 5], "c": [5, 6, 7]}
-        links, simplices = nerve(groups)
+        links, simplices = nerve.compute(groups)
 
         # all vertices are simplices
         assert all([[k] in simplices for k in groups])
@@ -46,7 +46,7 @@ class TestNerve:
     def test_finds_a_link(self):
         nerve = GraphNerve()
         groups = {"a": [1, 2, 3, 4], "b": [1, 2, 3, 4]}
-        links, _ = nerve(groups)
+        links, _ = nerve.compute(groups)
 
         assert "a" in links or "b" in links
         assert links["a"] == ["b"] or links["b"] == ["a"]
@@ -55,7 +55,7 @@ class TestNerve:
         nerve = GraphNerve()
         groups = {"a": [1, 2, 3, 4], "b": [5, 6, 7]}
 
-        links, _ = nerve(groups)
+        links, _ = nerve.compute(groups)
         assert not links
 
     def test_pass_through_result(self):
@@ -63,6 +63,6 @@ class TestNerve:
         groups = {"a": [1], "b": [2]}
 
         res = dict()
-        links, _ = nerve(groups)
+        links, _ = nerve.compute(groups)
 
         assert res == links

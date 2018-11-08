@@ -78,22 +78,19 @@ class KeplerMapper(object):
     KM has a number of nice features, some which get forgotten.
         - project : Some projections it makes sense to use a distance matrix, such as knn_distance_#. Using `distance_matrix = <metric>` for a custom metric.
         - fit_transform : Applies a sequence of projections. Currently, this API is a little confusing and will be changed in the future. 
-        - 
+    
 
+    
+    Parameters
+    ===========
 
+    verbose: int, default is 0
+        Logging level. Currently 3 levels (0,1,2) are supported. For no logging, set `verbose=0`. For some logging, set `verbose=1`. For complete logging, set `verbose=2`.
+        
     """
 
     def __init__(self, verbose=0):
-        """
-        Inputs
-        ======
 
-        verbose: int, default is 0
-            Logging level. Currently 3 levels (0,1,2) are supported.
-                - for no logging, set `verbose=0`, 
-                - for some logging, set `verbose=1`,
-                - for complete logging, set `verbose=2`
-        """
 
         # TODO: move as many of the arguments from fit_transform and map into here.
         self.verbose = verbose
@@ -271,8 +268,6 @@ class KeplerMapper(object):
         distance_matrix=False,
     ):
         """ Same as .project() but accepts lists for arguments so you can chain.
-
-            Deprecated.
 
         """
 
@@ -508,7 +503,7 @@ class KeplerMapper(object):
                 if self.verbose > 1:
                     print("Cube_%s is empty.\n" % (i))
 
-        links, simplices = nerve(nodes)
+        links, simplices = nerve.compute(nodes)
 
         graph["nodes"] = nodes
         graph["links"] = links
@@ -590,12 +585,13 @@ class KeplerMapper(object):
             Number of bins shown in histogram of tooltip color distributions.
 
         Returns
-        ------
+        --------
         html: string
             Returns the same html that is normally output to `path_html`. Complete graph and data ready for viewing.
 
         Examples
-        -------
+        ---------
+
         >>> mapper.visualize(simplicial_complex, path_html="mapper_visualization_output.html",
                             custom_meta={'Data': 'MNIST handwritten digits', 
                                          'Created by': 'Franklin Roosevelt'

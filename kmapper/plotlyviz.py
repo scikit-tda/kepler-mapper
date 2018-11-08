@@ -80,6 +80,51 @@ def plotlyviz(
     member_textbox_width=800,
     filename=None
 ):
+    """
+        Visualizations and dashboards for kmapper graphs using Plotly. This method is suitable for use in Jupyter notebooks.
+
+        Parameters
+        -----------
+
+        scomplex: dict
+            Simplicial complex is the output from the KeplerMapper `map` method.
+    
+        title: str
+            Title of output graphic
+
+        graph_layout: igraph layout; 
+            recommended 'kk' (kamada-kawai) or 'fr' (fruchterman-reingold)
+        
+        colorscale: 
+             Plotly colorscale(colormap) to color graph nodes
+
+
+        dashboard: bool, default is False
+            If true, display complete dashboard of node information
+
+        graph_data: bool, default is False
+            If true, display graph metadata
+
+        factor_size: double, default is 3
+            a factor for the node size
+
+        edge_linewidth : double, default is 1.5
+        node_linecolor: color str, default is "rgb(200,200,200)"
+        width: int, default is 600,
+        height: int, default is 500,
+        bgcolor: color str, default is "rgba(240, 240, 240, 0.95)",
+        left: int, default is 10,
+        bottom: int, default is 35,
+        summary_height: int, default is 300,
+        summary_width: int, default is 600, 
+        summary_left: int, default is 20,
+        summary_right: int, default is 20,
+        hist_left: int, default is 25,
+        hist_right: int, default is 25,
+        member_textbox_width: int, default is 800, 
+        filename: str, default is None
+            if filename is given, the graphic will be saved to that file.
+    """
 
     kmgraph, mapper_summary, n_color_distribution = get_mapper_graph(
         scomplex, colorscale=colorscale, color_function=color_function,

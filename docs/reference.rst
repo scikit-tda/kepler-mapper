@@ -1,19 +1,12 @@
 
-Reference
-----------
+API Reference
+---------------
 
 .. automodule:: kmapper
 
 
-KeplerMapper
-==============
-.. code:: python
-
-    mapper = km.KeplerMapper(verbose=1)
-
-.. automodule:: kmapper.kmapper
-   :members:
-
+.. autoclass:: KeplerMapper
+    :members: project, fit_transform, map, visualize, data_from_cluster_id
 
 Cover Schemes
 =========================
@@ -29,3 +22,19 @@ Nerves
 
 .. automodule:: kmapper.nerve
    :members:
+
+
+Adapters
+=============
+
+.. automodule:: kmapper.adapter
+    :members:
+
+Visuals
+==========
+
+.. automodule:: kmapper.jupyter
+    :members:
+
+.. automodule:: kmapper.plotlyviz
+    :members: plotlyviz, mpl_to_plotly

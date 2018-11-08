@@ -20,7 +20,7 @@ Contents
 --------
 
 .. toctree::
-  :maxdepth: 2
+  :maxdepth: 1
 
   about
   setup
@@ -29,7 +29,7 @@ Contents
   reference
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
     :caption: Tutorials
 
     KeplerMapper Newsgroup20 Pipeline

@@ -9,6 +9,17 @@ import numpy as np
 
 class Cover:
     """Helper class that defines the default covering scheme
+
+
+    Parameters
+    ------------
+
+    limits: Numpy Array (n_dim,2)
+        (lower bound, upper bound) for every dimension
+        If a value is set to `np.float('inf')`, the bound will be assumed to be the min/max value of the dimension
+        Also, if `limits == None`, the limits are defined by the maximum and minimum value of the lens for all dimensions.
+        i.e. `[[min_1, max_1], [min_2, max_2], [min_3, max_3]]`
+
     """
 
     def __init__(
@@ -20,24 +31,13 @@ class Cover:
         overlap_perc=None,
         limits=None,
     ):
-        """
-        limits: Numpy Array (n_dim,2)
-            (lower bound, upper bound) for every dimension
-            If a value is set to np.float('inf'), the bound will be assumed to be the min/max value of the dimension
-            Also, if limits == None, the limits are defined by the maximum and minimum value of the lens
-            for all dimensions.
-            i.e.
-                [[min_1, max_1],
-                 [min_2, max_2],
-                 [min_3, max_3]]
-        """
 
         self.n_cubes = nr_cubes if nr_cubes else n_cubes
         self.perc_overlap = overlap_perc if overlap_perc else perc_overlap
 
         if overlap_perc is not None or nr_cubes is not None:
             warnings.warn(
-                "Arguements `overlap_perc` and `nr_cubes` have been replaced with `perc_overlap` and `n_cubes`. Use `perc_overlap` and `n_cubes` instead. They will be removed in future releases.",
+                "Arguments `overlap_perc` and `nr_cubes` have been replaced with `perc_overlap` and `n_cubes`. Use `perc_overlap` and `n_cubes` instead. They will be removed in future releases.",
                 DeprecationWarning,
             )
 
@@ -58,7 +58,7 @@ class Cover:
         Warning: This function must assume that the first column of data are indices.
         
         Examples
-        =========
+        ---------
 
             If there are 4 cubes per dimension and 3 dimensions return the bottom left (origin) coordinates of 64 hypercubes, as a sorted list of Numpy arrays
         """
@@ -159,7 +159,7 @@ class Cover:
 
 class CubicalCover(Cover):
     """
-    Explicit definition of a cubical cover as the default behavior of the cover class
+    Explicit definition of a cubical cover as the default behavior of the cover class. This is currently identical to the default cover class.
     """
 
     pass

@@ -5,24 +5,29 @@ from collections import defaultdict
 class Nerve:
     """Base class for implementations of a nerve finder to build a Mapper complex.
 
-    __call__: Return all simplices found by the nerve finder
     """
 
     def __init__(self):
         pass
 
-    def __call__(self, nodes, links):
+    def compute(self, nodes, links):
         raise NotImplementedError()
 
 
 class GraphNerve(Nerve):
     """ Creates the 1-skeleton of the Mapper complex.
+
+    Parameters
+    -----------
+
+    min_intersection: int, default is 1
+        Minimum intersection considered when computing the nerve. An edge will be created only when the intersection between two nodes is greater than or equal to `min_intersection`
     """
 
     def __init__(self, min_intersection=1):
         self.min_intersection = min_intersection
 
-    def __call__(self, nodes):
+    def compute(self, nodes):
         """Helper function to find edges of the overlapping clusters.
 
         Parameters
@@ -63,5 +68,5 @@ class SimplicialNerve(Nerve):
     Warning: Not implemented yet.
     """
 
-    def __call__(self, nodes, links=None):
+    def compute(self, nodes, links=None):
         pass

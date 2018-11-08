@@ -7,6 +7,17 @@
 
 def to_networkx(graph):
     """ Convert a Mapper 1-complex to a networkx graph.
+
+    Parameters
+    -----------
+
+    graph: dictionary, graph object returned from `kmapper.map`
+
+    Returns
+    --------
+
+    g: graph as networkx.Graph() object
+
     """
 
     # import here so networkx is not always required.

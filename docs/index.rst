@@ -32,8 +32,16 @@ Contents
     :maxdepth: 1
     :caption: Tutorials
 
-    KeplerMapper Newsgroup20 Pipeline
+    Adapters
+    Plotly Demo
     KeplerMapper usage in Jupyter Notebook
+
+.. toctree::
+    :maxdepth: 1
+    :caption: Advanced Tutorials
+
+    KeplerMapper Newsgroup20 Pipeline
+    TOR-XGB-TDA
     Confidence Graphs
     self-guessing
 

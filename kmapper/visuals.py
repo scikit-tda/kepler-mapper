@@ -3,6 +3,22 @@ import numpy as np
 from sklearn import preprocessing
 import json
 from collections import defaultdict
+from ast import literal_eval
+
+
+colorscale_default = [
+    [0.0, "rgb(68, 1, 84)"],  # Viridis
+    [0.1, "rgb(72, 35, 116)"],
+    [0.2, "rgb(64, 67, 135)"],
+    [0.3, "rgb(52, 94, 141)"],
+    [0.4, "rgb(41, 120, 142)"],
+    [0.5, "rgb(32, 144, 140)"],
+    [0.6, "rgb(34, 167, 132)"],
+    [0.7, "rgb(68, 190, 112)"],
+    [0.8, "rgb(121, 209, 81)"],
+    [0.9, "rgb(189, 222, 38)"],
+    [1.0, "rgb(253, 231, 36)"],
+]
 
 
 palette = [
@@ -41,6 +57,63 @@ palette = [
 ]
 
 
+def _colors_to_rgb(colorscale):
+    """ Ensure that the color scale is formatted in rgb strings. 
+        If the colorscale is a hex string, then convert to rgb.
+    """
+    if colorscale[0][1][0] == "#":
+        plotly_colors = np.array(colorscale)[:, 1].tolist()
+        for k, hexcode in enumerate(plotly_colors):
+            hexcode = hexcode.lstrip("#")
+            hex_len = len(hexcode)
+            step = hex_len // 3
+            colorscale[k][1] = "rgb" + str(
+                tuple(int(hexcode[j : j + step], 16) for j in range(0, hex_len, step))
+            )
+
+    return colorscale
+
+
+def _to_html_format(st):
+    return st.replace("\n", "<br>")
+
+
+def _map_val2color(val, vmin, vmax, colorscale=None):
+    """ Maps a value val in [vmin, vmax] to the corresponding color in
+        the colorscale
+        returns the rgb color code of that color
+    """
+    colorscale = colorscale or colorscale_default
+
+    if vmin >= vmax:
+        raise ValueError("vmin should be < vmax")
+
+    scale = list(map(float, np.array(colorscale)[:, 0]))
+    colors = np.array(colorscale)[:, 1]
+
+    colors_01 = (
+        np.array(list(map(literal_eval, [color[3:] for color in colors]))) / 255.
+    )
+
+    v = (val - vmin) / float((vmax - vmin))  # val is mapped to v in[0,1]
+
+    idx = 0
+    # sequential search for the two   consecutive indices idx, idx+1 such that
+    # v belongs to the interval  [scale[idx], scale[idx+1]
+    while v > scale[idx + 1]:
+        idx += 1
+    left_scale_val = scale[idx]
+    right_scale_val = scale[idx + 1]
+    vv = (v - left_scale_val) / (right_scale_val - left_scale_val)
+
+    # get the triplet of three values in [0,1] that represent the rgb color
+    # corresponding to val
+    val_color01 = colors_01[idx] + vv * (colors_01[idx + 1] - colors_01[idx])
+    val_color_0255 = list(map(np.uint8, 255 * val_color01))
+
+    return "rgb" + str(tuple(val_color_0255))
+
+
 def init_color_function(graph, color_function=None):
     # If no color_function provided we color by row order in data set
     # Reshaping to 2-D array is required for sklearn 0.19
@@ -57,13 +130,23 @@ def init_color_function(graph, color_function=None):
     return color_function
 
 
-def format_meta(graph, custom_meta=None):
-
+def format_meta(graph, custom_meta=None, color_function_name=None):
     n = [l for l in graph["nodes"].values()]
     n_unique = len(set([i for s in n for i in s]))
 
     if custom_meta is None:
         custom_meta = graph["meta_data"]
+
+        if "clusterer" in custom_meta.keys():
+            clusterer = custom_meta["clusterer"]
+            custom_meta["clusterer"] = _to_html_format(clusterer)
+
+        if "projection" in custom_meta.keys():
+            projection = custom_meta["projection"]
+            custom_meta["projection"] = _to_html_format(projection)
+
+        if color_function_name is not None:
+            custom_meta["color_function"] = color_function_name
 
     mapper_summary = {
         "custom_meta": custom_meta,
@@ -77,7 +160,7 @@ def format_meta(graph, custom_meta=None):
 
 
 def format_mapper_data(
-    graph, color_function, X, X_names, lens, lens_names, custom_tooltips, env
+    graph, color_function, X, X_names, lens, lens_names, custom_tooltips, env, nbins=10
 ):
     # import pdb; pdb.set_trace()
     json_dict = {"nodes": [], "links": []}
@@ -97,6 +180,7 @@ def format_mapper_data(
             lens_names,
             color_function,
             node_id,
+            nbins
         )
 
         n = {
@@ -120,34 +204,41 @@ def format_mapper_data(
     return json_dict
 
 
-def build_histogram(data):
-    # Build histogram of data based on values of color_function
+def build_histogram(data, colorscale=None, nbins=10):
+    """ Build histogram of data based on values of color_function
+    """
+
+    if colorscale is None:
+        colorscale = colorscale_default
+
+    # TODO: we should weave this method of handling colors into the normal build_histogram and combine both functions
+    colorscale = _colors_to_rgb(colorscale)
 
     h_min, h_max = 0, 1
-    hist, bin_edges = np.histogram(data, range=(h_min, h_max), bins=10)
-
+    hist, bin_edges = np.histogram(data, range=(h_min, h_max), bins=nbins)
     bin_mids = np.mean(np.array(list(zip(bin_edges, bin_edges[1:]))), axis=1)
 
     histogram = []
     max_bucket_value = max(hist)
     sum_bucket_value = sum(hist)
     for bar, mid in zip(hist, bin_mids):
-        height = int(((bar / max_bucket_value) * 100) + 1)
+        height = np.floor(((bar / max_bucket_value) * 100) + 0.5)
         perc = round((bar / sum_bucket_value) * 100., 1)
-        color = palette[_color_idx(mid)]
+        color = _map_val2color(mid, 0., 1., colorscale)
 
         histogram.append({"height": height, "perc": perc, "color": color})
+
     return histogram
 
 
-def graph_data_distribution(graph, color_function):
+def graph_data_distribution(graph, color_function, colorscale, nbins=10):
 
     node_averages = []
     for node_id, member_ids in graph["nodes"].items():
         member_colors = color_function[member_ids]
         node_averages.append(np.mean(member_colors))
 
-    histogram = build_histogram(node_averages)
+    histogram = build_histogram(node_averages, colorscale=colorscale, nbins=nbins)
 
     return histogram
 
@@ -233,6 +324,17 @@ def _format_projection_statistics(member_ids, lens, lens_names):
     return projection_data
 
 
+def _tooltip_components(
+    member_ids, X, X_names, lens, lens_names, color_function, node_ID, colorscale, nbins=10
+):
+    projection_stats = _format_projection_statistics(member_ids, lens, lens_names)
+    cluster_stats = _format_cluster_statistics(member_ids, X, X_names)
+
+    member_histogram = build_histogram(color_function[member_ids], colorscale=colorscale, nbins=nbins)
+
+    return projection_stats, cluster_stats, member_histogram
+
+
 def _format_tooltip(
     env,
     member_ids,
@@ -243,6 +345,7 @@ def _format_tooltip(
     lens_names,
     color_function,
     node_ID,
+    nbins
 ):
     # TODO: Allow customization in the form of aggregate per node and per entry in node.
     # TODO: Allow users to turn off tooltip completely.
@@ -254,10 +357,11 @@ def _format_tooltip(
     # list will render better than numpy arrays
     custom_tooltips = list(custom_tooltips)
 
-    projection_stats = _format_projection_statistics(member_ids, lens, lens_names)
-    cluster_stats = _format_cluster_statistics(member_ids, X, X_names)
-
-    histogram = build_histogram(color_function[member_ids])
+    colorscale = colorscale_default
+    
+    projection_stats, cluster_stats, histogram = _tooltip_components(
+        member_ids, X, X_names, lens, lens_names, color_function, node_ID, colorscale, nbins
+    )
 
     tooltip = env.get_template("cluster_tooltip.html").render(
         projection_stats=projection_stats,
@@ -272,13 +376,7 @@ def _format_tooltip(
 
 
 def _color_function(member_ids, color_function):
-    return _color_idx(np.mean(color_function[member_ids]))
-    # return int(np.mean(color_function[member_ids]) * 30)
-
-
-def _color_idx(val):
-    """ Take a value between 0 and 1 and return the idx of color """
-    return int(val * 30)
+    return np.mean(color_function[member_ids])
 
 
 def _size_node(member_ids):

@@ -34,6 +34,8 @@
 import sys
 sys.path.append("../.")
 
+googleanalytics_id = 'UA-124965309-4'
+
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
@@ -44,6 +46,7 @@ extensions = [
     'sphinx.ext.autosummary',
     'sphinx.ext.githubpages',
     'nbsphinx',
+    'sphinxcontrib.googleanalytics',
 ]
 
 numpydoc_show_class_members = False

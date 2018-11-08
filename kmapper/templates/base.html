@@ -17,7 +17,9 @@
 
   <!-- Storage of data so D3 can access it later. This is in <body> so Chrome doesn't wholesale move all head content to body. -->
   <div id="json_graph" data-graph='{{ mapper_data|tojson|safe }}' style="display:none"></div>
-  
+  <div id="json_colorscale" data-colorscale='{{ colorscale|tojson|safe }}'
+  style="display:none"></div>
+
   <div id="canvas">
       <!-- Graph will go in here -->
   </div>

@@ -2,7 +2,7 @@ import pytest
 from kmapper import GraphNerve
 
 
-class TestNerve():
+class TestNerve:
     def test_graphnerve(self):
         nerve = GraphNerve()
 
@@ -17,11 +17,22 @@ class TestNerve():
         assert "b" in links["a"] or "a" in links["b"]
         assert "c" in links["b"] or "b" in links["c"]
 
+    def test_simplices(self):
+        nerve = GraphNerve()
+        groups = {"a": [1, 2, 3, 4], "b": [1, 2, 5], "c": [1, 5, 6, 7]}
+        links, simplices = nerve(groups)
+
+        simplices = [set(s) for s in simplices]
+        assert {"a", "b"} in simplices
+        assert {"a", "b", "c"} not in simplices
+        assert max([len(s) for s in simplices]) == 2
+        assert len([n for n in simplices if len(n) == 1]) == 3
+        assert len([n for n in simplices if len(n) == 2]) == 3
 
     def test_min_intersection(self):
         nerve = GraphNerve(min_intersection=2)
 
-        groups = {"a": [1,2,3,4], "b": [1,2,5], "c": [5,6,7]}
+        groups = {"a": [1, 2, 3, 4], "b": [1, 2, 5], "c": [5, 6, 7]}
         links, simplices = nerve(groups)
 
         # all vertices are simplices
@@ -32,11 +43,6 @@ class TestNerve():
         assert "b" in links["a"] or "a" in links["b"]
         assert "c" not in links["b"] and "b" not in links["c"]
 
-
-class TestLinker():
-    # TODO: eventually we will make linker its own class that will be able to
-    #       construct general simplicial complexes and
-    #       something suitable for computing persistent homology
     def test_finds_a_link(self):
         nerve = GraphNerve()
         groups = {"a": [1, 2, 3, 4], "b": [1, 2, 3, 4]}

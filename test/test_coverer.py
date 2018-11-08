@@ -7,10 +7,8 @@ from kmapper import KeplerMapper
 from kmapper.cover import Cover
 
 
-
-
-@pytest.mark.parametrize('CoverClass', [Cover])
-class TestCoverBasic():
+@pytest.mark.parametrize("CoverClass", [Cover])
+class TestCoverBasic:
     def test_cube_dim(self, CoverClass):
 
         data = np.arange(30).reshape(10, 3)
@@ -24,7 +22,7 @@ class TestCoverBasic():
         c = CoverClass(n_cubes=10)
         cubes = c.define_bins(data)
 
-        assert len(list(cubes)) == 10**2, "idx column is ignored"
+        assert len(list(cubes)) == 10 ** 2, "idx column is ignored"
 
     def test_single_dim(self, CoverClass):
         data = np.arange(20).reshape(10, 2)
@@ -74,7 +72,8 @@ class TestCoverBasic():
         graph = mapper.map(data, coverer=CoverClass())
         mapper.visualize(graph)
 
-class TestCover():
+
+class TestCover:
     def test_diff_overlap_per_dim(self):
         data = np.random.rand(100, 10)
         c = Cover(overlap_perc=[2, 10])
@@ -90,7 +89,6 @@ class TestCover():
         c = Cover(n_cubes=[5, 10])
         cubes = list(c.define_bins(data))
         _ = c.find_entries(data, cubes[0])
-
 
     def test_chunk_dist(self):
         data = np.arange(20).reshape(10, 2)
@@ -126,19 +124,15 @@ class TestCover():
 
 class TestCoverBounds:
     def test_bounds(self):
-        data_vals = np.arange(40).reshape(20,2)
-        data = np.zeros((20,3))
-        data[:,0] = np.arange(20,dtype=int)  # Index row
-        data[:,1:3] = data_vals
+        data_vals = np.arange(40).reshape(20, 2)
+        data = np.zeros((20, 3))
+        data[:, 0] = np.arange(20, dtype=int)  # Index row
+        data[:, 1:3] = data_vals
 
-        limits = np.array([[np.float('inf'), np.float('inf')],[-10,100]])
+        limits = np.array([[np.float("inf"), np.float("inf")], [-10, 100]])
         cover = Cover(n_cubes=10, limits=limits)
-        cubes=cover.define_bins(data)
+        cubes = cover.define_bins(data)
 
         start = cover.d
         end = cover.end
-        assert np.array_equal(np.array([start, end]), np.array([[0,-10], [38,100]]))
-
-
-
-
+        assert np.array_equal(np.array([start, end]), np.array([[0, -10], [38, 100]]))

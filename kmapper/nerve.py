@@ -52,7 +52,8 @@ class GraphNerve(Nerve):
             ):
                 result[candidate[0]].append(candidate[1])
 
-        simplices = [[n] for n in nodes] + [[x] + result[x] for x in result]
+        edges = [[x, end] for x in result for end in result[x]]
+        simplices = [[n] for n in nodes] + edges
         return result, simplices
 
 

@@ -5,21 +5,10 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <script type="text/javascript">
-
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-124965309-4']);
-      _gaq.push(['_trackPageview']);
-
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-    </script>
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Reference &mdash; KeplerMapper 1.0.1 documentation</title>
+  <title>API Reference &mdash; KeplerMapper 1.1.6 documentation</title>
   
 
   
@@ -40,11 +29,26 @@
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="KeplerMapper &amp; NLP examples" href="KeplerMapper Newsgroup20 Pipeline.html" />
+    <link rel="next" title="Adapters example" href="Adapters.html" />
     <link rel="prev" title="Examples" href="examples.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
+
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+    ga('create', 'UA-124965309-4', 'auto');
+    ga('send', 'pageview');
+  </script>
+    <!-- End Google Analytics -->
+
+
+
 
 </head>
 
@@ -80,7 +84,7 @@
             
             
               <div class="version">
-                1.0
+                1.1.6
               </div>
             
           
@@ -109,17 +113,27 @@
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#keplermapper">KeplerMapper</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#cover-schemes">Cover Schemes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-kmapper.nerve">Nerves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-kmapper.adapter">Adapters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-kmapper.jupyter">Visuals</a></li>
 </ul>
 </li>
 </ul>
 <p class="caption"><span class="caption-text">Tutorials</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="KeplerMapper Newsgroup20 Pipeline.html">KeplerMapper &amp; NLP examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Adapters.html">Adapters example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plotly Demo.html">Plotlyviz features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plotly Demo.html#Color-palettes">Color palettes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plotly Demo.html#Different-Layouts">Different Layouts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plotly Demo.html#Further-customization">Further customization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="KeplerMapper usage in Jupyter Notebook.html">Using Kepler Mapper in Jupyter Notebook</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Advanced Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="KeplerMapper Newsgroup20 Pipeline.html">KeplerMapper &amp; NLP examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TOR-XGB-TDA.html">Detecting Encrypted TOR Traffic with Boosting and Topological Data Analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Confidence Graphs.html">Confidence Graphs: Representing Model Uncertainty in Deep Learning</a></li>
 </ul>
 
@@ -166,7 +180,7 @@
     
       <li><a href="https://scikit-tda.org">Scikit-TDA</a>&raquo;<a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Reference</li>
+      <li>API Reference</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -205,15 +219,10 @@
 }
 </style>
 <div class="section" id="module-kmapper">
-<span id="reference"></span><h1>Reference<a class="headerlink" href="#module-kmapper" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="keplermapper">
-<h2>KeplerMapper<a class="headerlink" href="#keplermapper" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mapper</span> <span class="o">=</span> <span class="n">km</span><span class="o">.</span><span class="n">KeplerMapper</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</pre></div>
-</div>
-<span class="target" id="module-kmapper.kmapper"></span><dl class="class">
-<dt id="kmapper.kmapper.KeplerMapper">
-<em class="property">class </em><code class="descclassname">kmapper.kmapper.</code><code class="descname">KeplerMapper</code><span class="sig-paren">(</span><em>verbose=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/kmapper.html#KeplerMapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.kmapper.KeplerMapper" title="Permalink to this definition">¶</a></dt>
+<span id="api-reference"></span><h1>API Reference<a class="headerlink" href="#module-kmapper" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="kmapper.KeplerMapper">
+<em class="property">class </em><code class="descclassname">kmapper.</code><code class="descname">KeplerMapper</code><span class="sig-paren">(</span><em>verbose=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/kmapper.html#KeplerMapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.KeplerMapper" title="Permalink to this definition">¶</a></dt>
 <dd><p>With this class you can build topological networks from (high-dimensional) data.</p>
 <ol class="arabic simple">
 <li>Fit a projection/lens/function to a dataset and transform it.
@@ -230,52 +239,71 @@ connect these with an edge.</li>
 <dd><ul class="first last simple">
 <li>project : Some projections it makes sense to use a distance matrix, such as knn_distance_#. Using <cite>distance_matrix = &lt;metric&gt;</cite> for a custom metric.</li>
 <li>fit_transform : Applies a sequence of projections. Currently, this API is a little confusing and will be changed in the future.</li>
-<li></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
-<dt id="kmapper.kmapper.KeplerMapper.data_from_cluster_id">
-<code class="descname">data_from_cluster_id</code><span class="sig-paren">(</span><em>cluster_id</em>, <em>graph</em>, <em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/kmapper.html#KeplerMapper.data_from_cluster_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.kmapper.KeplerMapper.data_from_cluster_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the original data of each cluster member for a given cluster ID</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>cluster_id</strong> <span class="classifier-delimiter">:</span> <span class="classifier">String</span></dt>
-<dd><p class="first last">ID of the cluster.</p>
-</dd>
-<dt><strong>graph</strong> <span class="classifier-delimiter">:</span> <span class="classifier">dict</span></dt>
-<dd><p class="first last">The resulting dictionary after applying map()</p>
-</dd>
-<dt><strong>data</strong> <span class="classifier-delimiter">:</span> <span class="classifier">Numpy Array</span></dt>
-<dd><p class="first last">Original dataset. Accepts both 1-D and 2-D array.</p>
-</dd>
-</dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>entries:</strong></dt>
-<dd><p class="first last">rows of cluster member data as Numpy array.</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>verbose: int, default is 0</strong></dt>
+<dd><p class="first last">Logging level. Currently 3 levels (0,1,2) are supported. For no logging, set <cite>verbose=0</cite>. For some logging, set <cite>verbose=1</cite>. For complete logging, set <cite>verbose=2</cite>.</p>
 </dd>
 </dl>
 </td>
 </tr>
 </tbody>
 </table>
+<dl class="method">
+<dt id="kmapper.KeplerMapper.project">
+<code class="descname">project</code><span class="sig-paren">(</span><em>X</em>, <em>projection='sum'</em>, <em>scaler=MinMaxScaler(copy=True</em>, <em>feature_range=(0</em>, <em>1))</em>, <em>distance_matrix=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/kmapper.html#KeplerMapper.project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.KeplerMapper.project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the projection/lens from a dataset. Input the data set. Specify a projection/lens type. Output the projected data/lens.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>X</strong> <span class="classifier-delimiter">:</span> <span class="classifier">Numpy Array</span></dt>
+<dd><p class="first last">The data to fit a projection/lens to.</p>
+</dd>
+<dt><strong>projection :</strong></dt>
+<dd><p class="first last">Projection parameter is either a string, a Scikit-learn class with fit_transform, like manifold.TSNE(), or a list of dimension indices. A string from [“sum”, “mean”, “median”, “max”, “min”, “std”, “dist_mean”, “l2norm”, “knn_distance_n”]. If using knn_distance_n write the number of desired neighbors in place of n: knn_distance_5 for summed distances to 5 nearest neighbors. Default = “sum”.</p>
+</dd>
+<dt><strong>scaler</strong> <span class="classifier-delimiter">:</span> <span class="classifier">Scikit-Learn API compatible scaler.</span></dt>
+<dd><p class="first last">Scaler of the data applied before mapping. Use None for no scaling. Default = preprocessing.MinMaxScaler() if None, do no scaling, else apply scaling to the projection. Default: Min-Max scaling</p>
+</dd>
+<dt><strong>distance_matrix</strong> <span class="classifier-delimiter">:</span> <span class="classifier">Either str or None</span></dt>
+<dd><p class="first last">If not None, then any of [“braycurtis”, “canberra”, “chebyshev”, “cityblock”, “correlation”, “cosine”, “dice”, “euclidean”, “hamming”, “jaccard”, “kulsinski”, “mahalanobis”, “matching”, “minkowski”, “rogerstanimoto”, “russellrao”, “seuclidean”, “sokalmichener”, “sokalsneath”, “sqeuclidean”, “yule”]. 
+If False do nothing, else create a squared distance matrix with the chosen metric, before applying the projection.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>lens</strong> <span class="classifier-delimiter">:</span> <span class="classifier">Numpy Array</span></dt>
+<dd><p class="first last">projected data.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">projected_data</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="n">scaler</span><span class="o">=</span><span class="n">km</span><span class="o">.</span><span class="n">preprocessing</span><span class="o">.</span><span class="n">MinMaxScaler</span><span class="p">()</span> <span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
-<dt id="kmapper.kmapper.KeplerMapper.fit_transform">
-<code class="descname">fit_transform</code><span class="sig-paren">(</span><em>X</em>, <em>projection='sum'</em>, <em>scaler=MinMaxScaler(copy=True</em>, <em>feature_range=(0</em>, <em>1))</em>, <em>distance_matrix=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/kmapper.html#KeplerMapper.fit_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.kmapper.KeplerMapper.fit_transform" title="Permalink to this definition">¶</a></dt>
+<dt id="kmapper.KeplerMapper.fit_transform">
+<code class="descname">fit_transform</code><span class="sig-paren">(</span><em>X</em>, <em>projection='sum'</em>, <em>scaler=MinMaxScaler(copy=True</em>, <em>feature_range=(0</em>, <em>1))</em>, <em>distance_matrix=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/kmapper.html#KeplerMapper.fit_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.KeplerMapper.fit_transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Same as .project() but accepts lists for arguments so you can chain.</p>
-<p>Deprecated.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="kmapper.kmapper.KeplerMapper.map">
-<code class="descname">map</code><span class="sig-paren">(</span><em>lens</em>, <em>X=None</em>, <em>clusterer=DBSCAN(algorithm='auto'</em>, <em>eps=0.5</em>, <em>leaf_size=30</em>, <em>metric='euclidean'</em>, <em>metric_params=None</em>, <em>min_samples=3</em>, <em>n_jobs=1</em>, <em>p=None)</em>, <em>cover=&lt;kmapper.cover.Cover object&gt;</em>, <em>nerve=&lt;kmapper.nerve.GraphNerve object&gt;</em>, <em>precomputed=False</em>, <em>overlap_perc=None</em>, <em>nr_cubes=None</em>, <em>coverer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/kmapper.html#KeplerMapper.map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.kmapper.KeplerMapper.map" title="Permalink to this definition">¶</a></dt>
+<dt id="kmapper.KeplerMapper.map">
+<code class="descname">map</code><span class="sig-paren">(</span><em>lens</em>, <em>X=None</em>, <em>clusterer=DBSCAN(algorithm='auto'</em>, <em>eps=0.5</em>, <em>leaf_size=30</em>, <em>metric='euclidean'</em>, <em>metric_params=None</em>, <em>min_samples=3</em>, <em>n_jobs=None</em>, <em>p=None)</em>, <em>cover=&lt;kmapper.cover.Cover object&gt;</em>, <em>nerve=&lt;kmapper.nerve.GraphNerve object&gt;</em>, <em>precomputed=False</em>, <em>overlap_perc=None</em>, <em>nr_cubes=None</em>, <em>coverer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/kmapper.html#KeplerMapper.map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.KeplerMapper.map" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply Mapper algorithm on this projection and build a simplicial complex. Returns a dictionary with nodes and links.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -332,54 +360,14 @@ to the clusterer to fit on for each hypercube.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="kmapper.kmapper.KeplerMapper.project">
-<code class="descname">project</code><span class="sig-paren">(</span><em>X</em>, <em>projection='sum'</em>, <em>scaler=MinMaxScaler(copy=True</em>, <em>feature_range=(0</em>, <em>1))</em>, <em>distance_matrix=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/kmapper.html#KeplerMapper.project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.kmapper.KeplerMapper.project" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates the projection/lens from a dataset. Input the data set. Specify a projection/lens type. Output the projected data/lens.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>X</strong> <span class="classifier-delimiter">:</span> <span class="classifier">Numpy Array</span></dt>
-<dd><p class="first last">The data to fit a projection/lens to.</p>
-</dd>
-<dt><strong>projection :</strong></dt>
-<dd><p class="first last">Projection parameter is either a string, a Scikit-learn class with fit_transform, like manifold.TSNE(), or a list of dimension indices. A string from [“sum”, “mean”, “median”, “max”, “min”, “std”, “dist_mean”, “l2norm”, “knn_distance_n”]. If using knn_distance_n write the number of desired neighbors in place of n: knn_distance_5 for summed distances to 5 nearest neighbors. Default = “sum”.</p>
-</dd>
-<dt><strong>scaler</strong> <span class="classifier-delimiter">:</span> <span class="classifier">Scikit-Learn API compatible scaler.</span></dt>
-<dd><p class="first last">Scaler of the data applied before mapping. Use None for no scaling. Default = preprocessing.MinMaxScaler() if None, do no scaling, else apply scaling to the projection. Default: Min-Max scaling</p>
-</dd>
-<dt><strong>distance_matrix</strong> <span class="classifier-delimiter">:</span> <span class="classifier">Either str or None</span></dt>
-<dd><p class="first last">If not None, then any of [“braycurtis”, “canberra”, “chebyshev”, “cityblock”, “correlation”, “cosine”, “dice”, “euclidean”, “hamming”, “jaccard”, “kulsinski”, “mahalanobis”, “matching”, “minkowski”, “rogerstanimoto”, “russellrao”, “seuclidean”, “sokalmichener”, “sokalsneath”, “sqeuclidean”, “yule”]. 
-If False do nothing, else create a squared distance matrix with the chosen metric, before applying the projection.</p>
-</dd>
-</dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>lens</strong> <span class="classifier-delimiter">:</span> <span class="classifier">Numpy Array</span></dt>
-<dd><p class="first last">projected data.</p>
-</dd>
-</dl>
-</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">projected_data</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="n">scaler</span><span class="o">=</span><span class="n">km</span><span class="o">.</span><span class="n">preprocessing</span><span class="o">.</span><span class="n">MinMaxScaler</span><span class="p">()</span> <span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="kmapper.kmapper.KeplerMapper.visualize">
-<code class="descname">visualize</code><span class="sig-paren">(</span><em>graph</em>, <em>color_function=None</em>, <em>custom_tooltips=None</em>, <em>custom_meta=None</em>, <em>path_html='mapper_visualization_output.html'</em>, <em>title='Kepler Mapper'</em>, <em>save_file=True</em>, <em>X=None</em>, <em>X_names=[]</em>, <em>lens=None</em>, <em>lens_names=[]</em>, <em>show_tooltips=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/kmapper.html#KeplerMapper.visualize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.kmapper.KeplerMapper.visualize" title="Permalink to this definition">¶</a></dt>
+<dt id="kmapper.KeplerMapper.visualize">
+<code class="descname">visualize</code><span class="sig-paren">(</span><em>graph</em>, <em>color_function=None</em>, <em>custom_tooltips=None</em>, <em>custom_meta=None</em>, <em>path_html='mapper_visualization_output.html'</em>, <em>title='Kepler Mapper'</em>, <em>save_file=True</em>, <em>X=None</em>, <em>X_names=[]</em>, <em>lens=None</em>, <em>lens_names=[]</em>, <em>show_tooltips=True</em>, <em>nbins=10</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/kmapper.html#KeplerMapper.visualize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.KeplerMapper.visualize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate a visualization of the simplicial complex mapper output. Turns the complex dictionary into a HTML/D3.js visualization</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
 <dt><strong>graph</strong> <span class="classifier-delimiter">:</span> <span class="classifier">dict</span></dt>
 <dd><p class="first last">Simplicial complex output from the <cite>map</cite> method.</p>
 </dd>
@@ -410,24 +398,54 @@ If False do nothing, else create a squared distance matrix with the chosen metri
 <dt><strong>show_tooltips: bool, default is True.</strong></dt>
 <dd><p class="first last">If false, completely disable tooltips. This is useful when using output in space-tight pages or will display node data in custom ways.</p>
 </dd>
-<dt><strong>Returns</strong></dt>
-<dd></dd>
-<dt><strong>——</strong></dt>
-<dd></dd>
+<dt><strong>nbins: int, default is 10</strong></dt>
+<dd><p class="first last">Number of bins shown in histogram of tooltip color distributions.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
 <dt><strong>html: string</strong></dt>
 <dd><p class="first last">Returns the same html that is normally output to <cite>path_html</cite>. Complete graph and data ready for viewing.</p>
 </dd>
-<dt><strong>Examples</strong></dt>
-<dd></dd>
-<dt><strong>——-</strong></dt>
-<dd></dd>
-<dt><strong>&gt;&gt;&gt; mapper.visualize(simplicial_complex, path_html=”mapper_visualization_output.html”,</strong></dt>
-<dd><dl class="first docutils">
-<dt>custom_meta={‘Data’: ‘MNIST handwritten digits’, </dt>
-<dd><p class="first last">‘Created by’: ‘Franklin Roosevelt’</p>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mapper</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">simplicial_complex</span><span class="p">,</span> <span class="n">path_html</span><span class="o">=</span><span class="s2">&quot;mapper_visualization_output.html&quot;</span><span class="p">,</span>
+<span class="go">                    custom_meta={&#39;Data&#39;: &#39;MNIST handwritten digits&#39;, </span>
+<span class="go">                                 &#39;Created by&#39;: &#39;Franklin Roosevelt&#39;</span>
+<span class="go">                    }, )</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="kmapper.KeplerMapper.data_from_cluster_id">
+<code class="descname">data_from_cluster_id</code><span class="sig-paren">(</span><em>cluster_id</em>, <em>graph</em>, <em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/kmapper.html#KeplerMapper.data_from_cluster_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.KeplerMapper.data_from_cluster_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the original data of each cluster member for a given cluster ID</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>cluster_id</strong> <span class="classifier-delimiter">:</span> <span class="classifier">String</span></dt>
+<dd><p class="first last">ID of the cluster.</p>
+</dd>
+<dt><strong>graph</strong> <span class="classifier-delimiter">:</span> <span class="classifier">dict</span></dt>
+<dd><p class="first last">The resulting dictionary after applying map()</p>
+</dd>
+<dt><strong>data</strong> <span class="classifier-delimiter">:</span> <span class="classifier">Numpy Array</span></dt>
+<dd><p class="first last">Original dataset. Accepts both 1-D and 2-D array.</p>
 </dd>
 </dl>
-<p class="last">}, )</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>entries:</strong></dt>
+<dd><p class="first last">rows of cluster member data as Numpy array.</p>
 </dd>
 </dl>
 </td>
@@ -438,7 +456,6 @@ If False do nothing, else create a squared distance matrix with the chosen metri
 
 </dd></dl>
 
-</div>
 <div class="section" id="cover-schemes">
 <h2>Cover Schemes<a class="headerlink" href="#cover-schemes" title="Permalink to this headline">¶</a></h2>
 <p>Cover schemes provide a customizable way of defining a cover for your lens.</p>
@@ -446,6 +463,22 @@ If False do nothing, else create a squared distance matrix with the chosen metri
 <dt id="kmapper.cover.Cover">
 <em class="property">class </em><code class="descclassname">kmapper.cover.</code><code class="descname">Cover</code><span class="sig-paren">(</span><em>n_cubes=10</em>, <em>perc_overlap=0.2</em>, <em>nr_cubes=None</em>, <em>overlap_perc=None</em>, <em>limits=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/cover.html#Cover"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.cover.Cover" title="Permalink to this definition">¶</a></dt>
 <dd><p>Helper class that defines the default covering scheme</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>limits: Numpy Array (n_dim,2)</strong></dt>
+<dd><p class="first last">(lower bound, upper bound) for every dimension
+If a value is set to <cite>np.float(‘inf’)</cite>, the bound will be assumed to be the min/max value of the dimension
+Also, if <cite>limits == None</cite>, the limits are defined by the maximum and minimum value of the lens for all dimensions.
+i.e. <cite>[[min_1, max_1], [min_2, max_2], [min_3, max_3]]</cite></p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="kmapper.cover.Cover.define_bins">
 <code class="descname">define_bins</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/cover.html#Cover.define_bins"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.cover.Cover.define_bins" title="Permalink to this definition">¶</a></dt>
@@ -489,23 +522,64 @@ If False do nothing, else create a squared distance matrix with the chosen metri
 <dl class="class">
 <dt id="kmapper.cover.CubicalCover">
 <em class="property">class </em><code class="descclassname">kmapper.cover.</code><code class="descname">CubicalCover</code><span class="sig-paren">(</span><em>n_cubes=10</em>, <em>perc_overlap=0.2</em>, <em>nr_cubes=None</em>, <em>overlap_perc=None</em>, <em>limits=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/cover.html#CubicalCover"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.cover.CubicalCover" title="Permalink to this definition">¶</a></dt>
-<dd><p>Explicit definition of a cubical cover as the default behavior of the cover class</p>
+<dd><p>Explicit definition of a cubical cover as the default behavior of the cover class. This is currently identical to the default cover class.</p>
 </dd></dl>
 
 </div>
 <div class="section" id="module-kmapper.nerve">
 <span id="nerves"></span><h2>Nerves<a class="headerlink" href="#module-kmapper.nerve" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="kmapper.nerve.GraphNerve">
-<em class="property">class </em><code class="descclassname">kmapper.nerve.</code><code class="descname">GraphNerve</code><span class="sig-paren">(</span><em>min_intersection=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/nerve.html#GraphNerve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.nerve.GraphNerve" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates the 1-skeleton of the Mapper complex.</p>
-</dd></dl>
-
-<dl class="class">
 <dt id="kmapper.nerve.Nerve">
 <em class="property">class </em><code class="descclassname">kmapper.nerve.</code><code class="descname">Nerve</code><a class="reference internal" href="_modules/kmapper/nerve.html#Nerve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.nerve.Nerve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for implementations of a nerve finder to build a Mapper complex.</p>
-<p>__call__: Return all simplices found by the nerve finder</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="kmapper.nerve.GraphNerve">
+<em class="property">class </em><code class="descclassname">kmapper.nerve.</code><code class="descname">GraphNerve</code><span class="sig-paren">(</span><em>min_intersection=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/nerve.html#GraphNerve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.nerve.GraphNerve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the 1-skeleton of the Mapper complex.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>min_intersection: int, default is 1</strong></dt>
+<dd><p class="first last">Minimum intersection considered when computing the nerve. An edge will be created only when the intersection between two nodes is greater than or equal to <cite>min_intersection</cite></p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="kmapper.nerve.GraphNerve.compute">
+<code class="descname">compute</code><span class="sig-paren">(</span><em>nodes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/nerve.html#GraphNerve.compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.nerve.GraphNerve.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function to find edges of the overlapping clusters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>nodes:</strong></dt>
+<dd><p class="first last">A dictionary with entires <cite>{node id}:{list of ids in node}</cite></p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>edges:</strong></dt>
+<dd><p class="first last">A 1-skeleton of the nerve (intersecting  nodes)</p>
+</dd>
+<dt><strong>simplicies:</strong></dt>
+<dd><p class="first last">Complete list of simplices</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -513,6 +587,156 @@ If False do nothing, else create a squared distance matrix with the chosen metri
 <em class="property">class </em><code class="descclassname">kmapper.nerve.</code><code class="descname">SimplicialNerve</code><a class="reference internal" href="_modules/kmapper/nerve.html#SimplicialNerve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.nerve.SimplicialNerve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates the entire Cech complex of the covering defined by the nodes.</p>
 <p>Warning: Not implemented yet.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-kmapper.adapter">
+<span id="adapters"></span><h2>Adapters<a class="headerlink" href="#module-kmapper.adapter" title="Permalink to this headline">¶</a></h2>
+<p>Adapt Mapper format into other common formats.</p>
+<ul class="simple">
+<li>networkx</li>
+</ul>
+<dl class="function">
+<dt id="kmapper.adapter.to_networkx">
+<code class="descclassname">kmapper.adapter.</code><code class="descname">to_networkx</code><span class="sig-paren">(</span><em>graph</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/adapter.html#to_networkx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.adapter.to_networkx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a Mapper 1-complex to a networkx graph.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>graph: dictionary, graph object returned from `kmapper.map`</strong></dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>g: graph as networkx.Graph() object</strong></dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="kmapper.adapter.to_nx">
+<code class="descclassname">kmapper.adapter.</code><code class="descname">to_nx</code><span class="sig-paren">(</span><em>graph</em><span class="sig-paren">)</span><a class="headerlink" href="#kmapper.adapter.to_nx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a Mapper 1-complex to a networkx graph.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>graph: dictionary, graph object returned from `kmapper.map`</strong></dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>g: graph as networkx.Graph() object</strong></dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-kmapper.jupyter">
+<span id="visuals"></span><h2>Visuals<a class="headerlink" href="#module-kmapper.jupyter" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="kmapper.jupyter.display">
+<code class="descclassname">kmapper.jupyter.</code><code class="descname">display</code><span class="sig-paren">(</span><em>path_html='mapper_visualization_output.html'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/jupyter.html#display"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.jupyter.display" title="Permalink to this definition">¶</a></dt>
+<dd><p>Displays a html file inside a Jupyter Notebook output cell.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>path_html</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">Path to html. Use file name for file inside current working 
+directory. Use <cite>file://</cite> browser url-format for path to local file.
+Use <cite>https://</cite> urls for externally hosted resources.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Thanks to <a class="reference external" href="https://github.com/smartinsightsfromdata">https://github.com/smartinsightsfromdata</a> for the issue:
+<a class="reference external" href="https://github.com/MLWave/kepler-mapper/issues/10">https://github.com/MLWave/kepler-mapper/issues/10</a></p>
+</dd></dl>
+
+<span class="target" id="module-kmapper.plotlyviz"></span><dl class="function">
+<dt id="kmapper.plotlyviz.plotlyviz">
+<code class="descclassname">kmapper.plotlyviz.</code><code class="descname">plotlyviz</code><span class="sig-paren">(</span><em>scomplex, colorscale=[[0.0, 'rgb(68, 1, 84)'], [0.1, 'rgb(72, 35, 116)'], [0.2, 'rgb(64, 67, 135)'], [0.3, 'rgb(52, 94, 141)'], [0.4, 'rgb(41, 120, 142)'], [0.5, 'rgb(32, 144, 140)'], [0.6, 'rgb(34, 167, 132)'], [0.7, 'rgb(68, 190, 112)'], [0.8, 'rgb(121, 209, 81)'], [0.9, 'rgb(189, 222, 38)'], [1.0, 'rgb(253, 231, 36)']], title='Kepler Mapper', graph_layout='kk', color_function=None, color_function_name=None, dashboard=False, graph_data=False, factor_size=3, edge_linewidth=1.5, node_linecolor='rgb(200,200,200)', width=600, height=500, bgcolor='rgba(240, 240, 240, 0.95)', left=10, bottom=35, summary_height=300, summary_width=600, summary_left=20, summary_right=20, hist_left=25, hist_right=25, member_textbox_width=800, filename=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/plotlyviz.html#plotlyviz"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.plotlyviz.plotlyviz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Visualizations and dashboards for kmapper graphs using Plotly. This method is suitable for use in Jupyter notebooks.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>scomplex: dict</strong></dt>
+<dd><p class="first last">Simplicial complex is the output from the KeplerMapper <cite>map</cite> method.</p>
+</dd>
+<dt><strong>title: str</strong></dt>
+<dd><p class="first last">Title of output graphic</p>
+</dd>
+<dt><strong>graph_layout: igraph layout;</strong></dt>
+<dd><p class="first last">recommended ‘kk’ (kamada-kawai) or ‘fr’ (fruchterman-reingold)</p>
+</dd>
+<dt><strong>colorscale:</strong></dt>
+<dd><p class="first last">Plotly colorscale(colormap) to color graph nodes</p>
+</dd>
+<dt><strong>dashboard: bool, default is False</strong></dt>
+<dd><p class="first last">If true, display complete dashboard of node information</p>
+</dd>
+<dt><strong>graph_data: bool, default is False</strong></dt>
+<dd><p class="first last">If true, display graph metadata</p>
+</dd>
+<dt><strong>factor_size: double, default is 3</strong></dt>
+<dd><p class="first last">a factor for the node size</p>
+</dd>
+<dt><strong>edge_linewidth</strong> <span class="classifier-delimiter">:</span> <span class="classifier">double, default is 1.5</span></dt>
+<dd></dd>
+<dt><strong>node_linecolor: color str, default is “rgb(200,200,200)”</strong></dt>
+<dd></dd>
+<dt><strong>width: int, default is 600,</strong></dt>
+<dd></dd>
+<dt><strong>height: int, default is 500,</strong></dt>
+<dd></dd>
+<dt><strong>bgcolor: color str, default is “rgba(240, 240, 240, 0.95)”,</strong></dt>
+<dd></dd>
+<dt><strong>left: int, default is 10,</strong></dt>
+<dd></dd>
+<dt><strong>bottom: int, default is 35,</strong></dt>
+<dd></dd>
+<dt><strong>summary_height: int, default is 300,</strong></dt>
+<dd></dd>
+<dt><strong>summary_width: int, default is 600,</strong></dt>
+<dd></dd>
+<dt><strong>summary_left: int, default is 20,</strong></dt>
+<dd></dd>
+<dt><strong>summary_right: int, default is 20,</strong></dt>
+<dd></dd>
+<dt><strong>hist_left: int, default is 25,</strong></dt>
+<dd></dd>
+<dt><strong>hist_right: int, default is 25,</strong></dt>
+<dd></dd>
+<dt><strong>member_textbox_width: int, default is 800,</strong></dt>
+<dd></dd>
+<dt><strong>filename: str, default is None</strong></dt>
+<dd><p class="first last">if filename is given, the graphic will be saved to that file.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -526,7 +750,7 @@ If False do nothing, else create a squared distance matrix with the chosen metri
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="KeplerMapper Newsgroup20 Pipeline.html" class="btn btn-neutral float-right" title="KeplerMapper &amp; NLP examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="Adapters.html" class="btn btn-neutral float-right" title="Adapters example" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="examples.html" class="btn btn-neutral" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -538,7 +762,7 @@ If False do nothing, else create a squared distance matrix with the chosen metri
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, Hendrik Jacob van Veen and Nathaniel Saul.
+        &copy; Copyright 2018, Hendrik Jacob van Veen and Nathaniel Saul
 
     </p>
   </div>
@@ -560,7 +784,7 @@ If False do nothing, else create a squared distance matrix with the chosen metri
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.0.1',
+            VERSION:'1.1.6',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',

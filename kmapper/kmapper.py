@@ -549,7 +549,7 @@ class KeplerMapper(object):
                 if left_node_itemset == right_node_itemset:
                     nodes_to_remove.append(right_node_key)
                     
-        nodes_removed = [node_id for node_id in nodes_to_remove if nodes.pop(node_id, None is not None)]
+        nodes_removed = [node_id for node_id in nodes_to_remove if nodes.pop(node_id, None) is not None]
         
         assert set(nodes_removed) == set(nodes_to_remove), "Something went wrong in removing duplicate nodes..."
         

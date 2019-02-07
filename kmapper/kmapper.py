@@ -509,34 +509,7 @@ class KeplerMapper(object):
                     print("Cube_%s is empty.\n" % (i))
         
         if remove_duplicate_nodes:
-            nodes_to_remove = []
-            
-            node_items = list(nodes.items())
-            num_nodes = len(node_items)
-            
-            for i in range(num_nodes):
-                left_node_key, left_node_items = node_items[i]
-                left_node_itemset = set(left_node_items)
-                
-                for j in range(i + 1, num_nodes):
-                    right_node_key, right_node_items = node_items[j]
-                    right_node_itemset = set(right_node_items)
-                    
-                    if left_node_itemset == right_node_itemset:
-                        nodes_to_remove.append(right_node_key)
-                        
-            nodes_removed = []
-            for node_id in nodes_to_remove:
-                if nodes.pop(node_id, None) is not None:
-                    nodes_removed.append(node_id)
-            
-            assert set(nodes_removed) == set(nodes_to_remove), "Something went wrong in removing duplicate nodes..."
-            
-            if self.verbose > 0:
-                if len(nodes_removed):
-                    print("Removed duplicate nodes: {}\n".format(nodes_removed))                        
-                else:
-                    print("No duplicate nodes to remove.\n")
+            nodes = self._remove_duplicate_nodes(nodes)
         
         links, simplices = nerve.compute(nodes)
 
@@ -557,6 +530,36 @@ class KeplerMapper(object):
             self._summary(graph, str(datetime.now() - start))
 
         return graph
+    
+    def _remove_duplicate_nodes(self, nodes):
+        nodes_to_remove = []
+            
+        node_items = list(nodes.items())
+        num_nodes = len(node_items)
+
+        # nested for-loops over ranges for upper-left triangle of pairwise matrix of node_ids       
+        for i in range(num_nodes):
+            left_node_key, left_node_items = node_items[i]
+            left_node_itemset = set(left_node_items)
+            
+            for j in range(i + 1, num_nodes):
+                right_node_key, right_node_items = node_items[j]
+                right_node_itemset = set(right_node_items)
+                
+                if left_node_itemset == right_node_itemset:
+                    nodes_to_remove.append(right_node_key)
+                    
+        nodes_removed = [node_id for node_id in nodes_to_remove if nodes.pop(node_id, None is not None)]
+        
+        assert set(nodes_removed) == set(nodes_to_remove), "Something went wrong in removing duplicate nodes..."
+        
+        if self.verbose > 0:
+            if len(nodes_removed):
+                print("Removed duplicate nodes: {}\n".format(nodes_removed))                        
+            else:
+                print("No duplicate nodes to remove.\n")
+                
+        return nodes # deduplicated at this point after all the `pop`ping
 
     def _summary(self, graph, time):
         # TODO: this summary is dependant on the type of Nerve being built.

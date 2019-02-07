@@ -530,7 +530,7 @@ class KeplerMapper(object):
                 if nodes.pop(node_id, None) is not None:
                     nodes_removed.append(node_id)
             
-            assert set(nodes_removed) == set(nodes_to_remove)
+            assert set(nodes_removed) == set(nodes_to_remove), "Something went wrong in removing duplicate nodes..."
             
             if self.verbose > 0:
                 if len(nodes_removed):

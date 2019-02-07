@@ -118,6 +118,21 @@ class TestMap:
         assert graph["links"] == graph2["links"]
         assert graph["nodes"] == graph2["nodes"]
         assert graph["simplices"] == graph2["simplices"]
+        
+    def test_remove_duplicates(self, capsys):
+        mapper = KeplerMapper(verbose=1)
+        X = np.random.rand(100, 5)
+        
+        lens = mapper.project(X)
+        graph = mapper.map(
+            lens,
+            X=X,
+            cover=Cover(n_cubes=3, perc_overlap=1.5),
+            clusterer=cluster.DBSCAN(metric="euclidean", min_samples=3),
+            remove_duplicate_nodes=True   # internally asserts
+        )
+        
+        
 
     def test_precomputed_with_knn_lens(self):
         mapper = KeplerMapper()

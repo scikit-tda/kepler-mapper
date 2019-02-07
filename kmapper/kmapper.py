@@ -325,6 +325,7 @@ class KeplerMapper(object):
         cover=Cover(n_cubes=10, perc_overlap=0.1),
         nerve=GraphNerve(),
         precomputed=False,
+        remove_duplicate_nodes=False,
         # These arguments are all deprecated
         overlap_perc=None,
         nr_cubes=None,
@@ -355,6 +356,10 @@ class KeplerMapper(object):
             is an argument for DBSCAN among others), which 
             will then cause the clusterer to expect a square distance matrix for each hypercube. `precomputed=True` will give a square matrix
             to the clusterer to fit on for each hypercube.
+            
+        remove_duplicate_nodes: Boolean
+            Removes duplicate nodes before edges are determined. A node is considered to be duplicate
+            if it has exactly the same set of points as another node.
 
         nr_cubes: Int (Deprecated)
             The number of intervals/hypercubes to create. Default = 10. (DeprecationWarning: define Cover explicitly in future versions)
@@ -502,7 +507,37 @@ class KeplerMapper(object):
             else:
                 if self.verbose > 1:
                     print("Cube_%s is empty.\n" % (i))
-
+        
+        if remove_duplicate_nodes:
+            nodes_to_remove = []
+            
+            node_items = list(nodes.items())
+            num_nodes = len(node_items)
+            
+            for i in range(num_nodes):
+                left_node_key, left_node_items = node_items[i]
+                left_node_itemset = set(left_node_items)
+                
+                for j in range(i + 1, num_nodes):
+                    right_node_key, right_node_items = node_items[j]
+                    right_node_itemset = set(right_node_items)
+                    
+                    if left_node_itemset == right_node_itemset:
+                        nodes_to_remove.append(right_node_key)
+                        
+            nodes_removed = []
+            for node_id in nodes_to_remove:
+                if nodes.pop(node_id, None) is not None:
+                    nodes_removed.append(node_id)
+            
+            assert set(nodes_removed) == set(nodes_to_remove)
+            
+            if self.verbose > 0:
+                if len(nodes_removed):
+                    print("Removed duplicate nodes: {}\n".format(nodes_removed))                        
+                else:
+                    print("No duplicate nodes to remove.\n")
+        
         links, simplices = nerve.compute(nodes)
 
         graph["nodes"] = nodes

@@ -28,42 +28,6 @@ from .visuals import (
 )
 
 
-# palette = [
-#     "#0500ff",
-#     "#0300ff",
-#     "#0100ff",
-#     "#0002ff",
-#     "#0022ff",
-#     "#0044ff",
-#     "#0064ff",
-#     "#0084ff",
-#     "#00a4ff",
-#     "#00a4ff",
-#     "#00c4ff",
-#     "#00e4ff",
-#     "#00ffd0",
-#     "#00ff83",
-#     "#00ff36",
-#     "#17ff00",
-#     "#65ff00",
-#     "#b0ff00",
-#     "#fdff00",
-#     "#FFf000",
-#     "#FFdc00",
-#     "#FFc800",
-#     "#FFb400",
-#     "#FFa000",
-#     "#FF8c00",
-#     "#FF7800",
-#     "#FF6400",
-#     "#FF5000",
-#     "#FF3c00",
-#     "#FF2800",
-#     "#FF1400",
-#     "#FF0000",
-# ]
-
-
 class KeplerMapper(object):
     """With this class you can build topological networks from (high-dimensional) data.
 

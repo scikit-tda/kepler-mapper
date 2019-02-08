@@ -131,12 +131,38 @@ class TestMap:
             X=X,
             cover=Cover(n_cubes=2, perc_overlap=1),
             clusterer=cluster.DBSCAN(metric="euclidean", min_samples=3),
-            remove_duplicate_nodes=True   # internally asserts
+            remove_duplicate_nodes=True
         )
         
         captured = capsys.readouterr()
         assert "duplicate nodes" in captured[0]
         
+    def test_no_duplicates(self):
+        nodes = defaultdict(list)
+        nodes['cube1_cluster0'] = [0]
+        nodes['cube1_cluster1'] = [1,2]
+        nodes['cube1_cluster2'] = [1,2,3]
+        nodes['cube2_cluster1'] = [2,3,4]
+        
+        size = len(nodes)
+        deduped_nodes = KeplerMapper()._remove_duplicate_nodes(nodes)
+        assert len(deduped_nodes) == len(nodes)
+        assert len(deduped_nodes) == size   
+
+    def test_duplicates_purity(self):
+        nodes = defaultdict(list)
+        nodes['cube1_cluster0'] = [0]
+        nodes['cube1_cluster1'] = [1,2]
+        nodes['cube1_cluster2'] = [1,2,3]
+        nodes['cube2_cluster1'] = [2,3,4]
+
+        deduped_nodes = KeplerMapper()._remove_duplicate_nodes(nodes)
+        assert deduped_nodes['cube2_cluster1'] == [2,3,4]
+
+        nodes['cube2_cluster1'].append(5)
+        assert deduped_nodes['cube2_cluster1'] == [2,3,4]
+
+
     def test_remove_duplicates_direct(self):
         nodes = defaultdict(list)
         nodes['cube1_cluster0'] = [0]
@@ -149,8 +175,9 @@ class TestMap:
         deduped_nodes = mapper._remove_duplicate_nodes(nodes)
         
         assert len(deduped_nodes) < len(nodes)
-        assert len(deduped_nodes) == 4 ## magic number based on testing data above...
-        assert len(deduped_nodes) == len(list(set([frozenset(items) for items in nodes.values()])))        
+        assert len(deduped_nodes) == 4
+        assert 'cube1_cluster1|cube2_cluster0' in deduped_nodes
+
 
     def test_precomputed_with_knn_lens(self):
         mapper = KeplerMapper()

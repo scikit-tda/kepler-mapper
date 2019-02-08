@@ -135,7 +135,7 @@ class TestMap:
         )
         
         captured = capsys.readouterr()
-        assert "Removed duplicate nodes" in captured[0]
+        assert "duplicate nodes" in captured[0]
         
     def test_remove_duplicates_direct(self):
         nodes = defaultdict(list)

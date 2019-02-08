@@ -7,6 +7,7 @@ import itertools
 import os
 import sys
 import warnings
+import copy
 
 from jinja2 import Environment, FileSystemLoader, Template
 import numpy as np
@@ -532,33 +533,37 @@ class KeplerMapper(object):
         return graph
     
     def _remove_duplicate_nodes(self, nodes):
-        nodes_to_remove = []
+        
+        invert_me = copy.deepcopy(nodes)
+        
+        deduped_items = defaultdict(list)
+        
+        # invert node list and merge duplicate nodes
+        [ deduped_items[frozenset(node_items)].append(node_id) for node_id, node_items in invert_me.items() ]
+        
+        
+        total_merged = 0 # count for reporting...
+        deduped_nodes = dict()
+        
+        for frozen_items, node_id_list in deduped_items.items():
+            if len(node_id_list) > 1:    
+                total_merged += len(node_id_list) - 1
             
-        node_items = list(nodes.items())
-        num_nodes = len(node_items)
-
-        # nested for-loops over ranges for upper-left triangle of pairwise matrix of node_ids       
-        for i in range(num_nodes):
-            left_node_key, left_node_items = node_items[i]
-            left_node_itemset = set(left_node_items)
+            node_ids = '|'.join(node_id_list)    
             
-            for j in range(i + 1, num_nodes):
-                right_node_key, right_node_items = node_items[j]
-                right_node_itemset = set(right_node_items)
-                
-                if left_node_itemset == right_node_itemset:
-                    nodes_to_remove.append(right_node_key)
-                    
-        if len(nodes_to_remove):
-            deduped_nodes = nodes.copy()
-            nodes_removed = [node_id for node_id in nodes_to_remove if deduped_nodes.pop(node_id, None) is not None]
-            if self.verbose > 0:
-                print("Removed duplicate nodes: {}\n".format(nodes_removed))                        
-            return deduped_nodes
-        else:
-            if self.verbose > 0:
-                print("No duplicate nodes to remove.\n")
-            return nodes        
+            if self.verbose > 0 and len(node_id_list) > 1:
+                print("Merged duplicate nodes: {}".format(node_ids))    
+            
+            deduped_nodes[node_ids] = list(frozen_items)
+            
+        if self.verbose > 0:
+            if deduped_nodes:
+                print("\Merged {} duplicate nodes.\n".format(total_merged))
+                print("Number of nodes before merger: {}; after merger: {}\n".format( len(nodes), len(deduped_nodes) ))
+            else: 
+                print("No duplicate nodes found to remove.\n")
+            
+        return deduped_nodes
 
     def _summary(self, graph, time):
         # TODO: this summary is dependant on the type of Nerve being built.

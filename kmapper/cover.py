@@ -99,10 +99,13 @@ class Cover:
             bounds = (np.min(indexless_data, axis=0), np.max(indexless_data, axis=0))
 
         # We chop up the min-max column ranges into 'n_cubes' parts
-        self.chunk_dist = (bounds[1] - bounds[0]) / self.n_cubes
+        self.base_dist = (bounds[1] - bounds[0]) / self.n_cubes
 
         # We calculate the overlapping windows distance
-        self.overlap_dist = self.perc_overlap * self.chunk_dist
+        self.overlap_dist = self.perc_overlap * self.base_dist
+        
+        # Chunk dist is the combination of the base dist along with what it gets from the overlap
+        self.chunk_dist = self.base_dist + self.overlap_dist
 
         # We find our starting point
         self.d = bounds[0]
@@ -144,13 +147,14 @@ class Cover:
 
         """
 
-        chunk = self.chunk_dist
+        base = self.base_dist
         overlap = self.overlap_dist
-        lower_bound = self.d + (cube * chunk)
-        upper_bound = lower_bound + chunk + overlap
+        chunk = self.chunk_dist
+        lower_bound = np.clip(self.d + (cube * base) - overlap, a_min=self.d, a_max=None)
+        upper_bound = lower_bound + chunk
 
         # Slice the hypercube
-        entries = (data[:, self.di] >= lower_bound) & (data[:, self.di] < upper_bound)
+        entries = (data[:, self.di] >= lower_bound) & (data[:, self.di] <= upper_bound)
 
         hypercube = data[np.invert(np.any(entries == False, axis=1))]
 

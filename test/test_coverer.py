@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from sklearn import datasets
+from sklearn import datasets, preprocessing
 
 from kmapper import KeplerMapper
 
@@ -90,14 +90,29 @@ class TestCover:
         cubes = list(c.define_bins(data))
         _ = c.find_entries(data, cubes[0])
 
-    def test_chunk_dist(self):
-        data = np.arange(20).reshape(10, 2)
+    def test_chunk_dist(self, capsys):
+        n_cubes_settings = (4, 6, 10)
+        perc_overlap_settings = (.1, .2, .5)
+        feature_range_settings = ( (0,1), (10, 100), (20, 50) )
+        
+        settings = zip(n_cubes_settings, perc_overlap_settings, feature_range_settings)
+        
+        for setting in settings:
+            n_cubes, perc_overlap, feature_range = setting
 
-        cover = Cover(n_cubes=10)
-        _ = cover.define_bins(data)
-        chunks = list(cover.chunk_dist)
-        # TODO: this test is really fagile and has magic number, fix.
-        assert all(i == 1.8 for i in chunks)
+            base_dist = ( feature_range[1] - feature_range[0] ) / n_cubes
+            overlap_dist = base_dist * perc_overlap
+            chunk = base_dist + overlap_dist
+
+            data = np.arange(20).reshape(10, 2)
+            scaler = preprocessing.MinMaxScaler(feature_range=feature_range)
+            data = scaler.fit_transform(data)
+    
+            cover = Cover(n_cubes=n_cubes, perc_overlap=perc_overlap)
+            _ = cover.define_bins(data)
+            chunks = list(cover.chunk_dist)
+    
+            assert all(i == chunk for i in chunks)
 
     def test_bound_is_min(self):
         data = np.arange(30).reshape(10, 3)
@@ -109,9 +124,12 @@ class TestCover:
     def test_entries_in_correct_cubes(self):
         # TODO: this test is a little hacky
 
-        data = np.arange(40).reshape(20, 2)
-
-        cover = Cover(n_cubes=10)
+        data_vals = np.arange(20)
+        data = np.zeros((20, 2))
+        data[:, 0] = np.arange(20, dtype=int)  # Index row
+        data[:, 1] = data_vals
+    
+        cover = Cover(n_cubes=10, perc_overlap=0.2)
         cubes = cover.define_bins(data)
         cubes = list(cubes)
         entries = [cover.find_entries(data, cube) for cube in cubes]

@@ -462,7 +462,7 @@ class KeplerMapper(object):
             if self.verbose > 1:
                 print(
                     "There are %s points in cube %s/%s"
-                    % (hypercube.shape[0], i, total_bins)
+                    % (hypercube.shape[0], i+1, total_bins)
                 )
 
             # If at least min_cluster_samples samples inside the hypercube
@@ -549,17 +549,16 @@ class KeplerMapper(object):
                 if left_node_itemset == right_node_itemset:
                     nodes_to_remove.append(right_node_key)
                     
-        nodes_removed = [node_id for node_id in nodes_to_remove if nodes.pop(node_id, None) is not None]
-        
-        assert set(nodes_removed) == set(nodes_to_remove), "Something went wrong in removing duplicate nodes..."
-        
-        if self.verbose > 0:
-            if len(nodes_removed):
+        if len(nodes_to_remove):
+            deduped_nodes = nodes.copy()
+            nodes_removed = [node_id for node_id in nodes_to_remove if deduped_nodes.pop(node_id, None) is not None]
+            if self.verbose > 0:
                 print("Removed duplicate nodes: {}\n".format(nodes_removed))                        
-            else:
+            return deduped_nodes
+        else:
+            if self.verbose > 0:
                 print("No duplicate nodes to remove.\n")
-                
-        return nodes # deduplicated at this point after all the `pop`ping
+            return nodes        
 
     def _summary(self, graph, time):
         # TODO: this summary is dependant on the type of Nerve being built.

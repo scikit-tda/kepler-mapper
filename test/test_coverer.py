@@ -62,6 +62,30 @@ class TestCoverBasic:
 
         for i, j in zip(range(9), range(1, 10)):
             assert set(entries[i]).union(set(entries[j]))
+            
+    def test_perc_overlap(self, CoverClass):
+        '''
+        2 cubes with 50% overlap and a range of [0,1] should lead to two cubes with intervals:
+            [0, .75]
+            [.25, 1]
+        '''
+        
+        data = np.array([ [0,0],
+                          [1,.25],
+                          [2,.5],
+                          [3,.75],
+                          [4,1]])
+        
+        cover = Cover(n_cubes=2, perc_overlap=0.5)
+        cubes = cover.define_bins(data)
+        cubes = list(cubes)
+        entries = [cover.find_entries(data, cube) for cube in cubes]
+        
+        for i in (0,1,2,3):
+            assert data[i] in entries[0]
+        for i in (1,2,3,4):
+            assert data[i] in entries[1]
+
 
     def test_complete_pipeline(self, CoverClass):
         # TODO: add a mock that asserts the cover was called appropriately.. or test number of cubes etc.

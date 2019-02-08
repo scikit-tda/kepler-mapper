@@ -1,6 +1,8 @@
 import pytest
 import numpy as np
 
+from collections import defaultdict
+
 import warnings
 from kmapper import KeplerMapper, Cover, cluster
 
@@ -119,7 +121,7 @@ class TestMap:
         assert graph["nodes"] == graph2["nodes"]
         assert graph["simplices"] == graph2["simplices"]
         
-    def test_remove_duplicates(self, capsys):
+    def test_remove_duplicates_argument(self, capsys):
         mapper = KeplerMapper(verbose=1)
         X = np.random.rand(100, 5)
         
@@ -127,12 +129,28 @@ class TestMap:
         graph = mapper.map(
             lens,
             X=X,
-            cover=Cover(n_cubes=3, perc_overlap=1.5),
+            cover=Cover(n_cubes=2, perc_overlap=1),
             clusterer=cluster.DBSCAN(metric="euclidean", min_samples=3),
             remove_duplicate_nodes=True   # internally asserts
         )
         
+        captured = capsys.readouterr()
+        assert "Removed duplicate nodes" in captured[0]
         
+    def test_remove_duplicates_direct(self):
+        nodes = defaultdict(list)
+        nodes['cube1_cluster0'] = [0]
+        nodes['cube1_cluster1'] = [1,2]
+        nodes['cube1_cluster2'] = [1,2,3]
+        nodes['cube2_cluster0'] = [1,2]
+        nodes['cube2_cluster1'] = [2,3,4]
+        
+        mapper = KeplerMapper()
+        deduped_nodes = mapper._remove_duplicate_nodes(nodes)
+        
+        assert len(deduped_nodes) < len(nodes)
+        assert len(deduped_nodes) == 4 ## magic number based on testing data above...
+        assert len(deduped_nodes) == len(list(set([frozenset(items) for items in nodes.values()])))        
 
     def test_precomputed_with_knn_lens(self):
         mapper = KeplerMapper()

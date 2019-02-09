@@ -14,51 +14,44 @@ class TestCoverBasic:
 
         data = np.arange(30).reshape(10, 3)
         c = CoverClass(n_cubes=10)
-        cubes = c.define_bins(data)
+        cubes = c.fit(data)
 
         assert all(len(cube) == 2 for cube in cubes)
 
     def test_cube_count(self, CoverClass):
         data = np.arange(30).reshape(10, 3)
         c = CoverClass(n_cubes=10)
-        cubes = c.define_bins(data)
+        cubes = c.fit(data)
 
         assert len(list(cubes)) == 10 ** 2, "idx column is ignored"
 
     def test_single_dim(self, CoverClass):
         data = np.arange(20).reshape(10, 2)
         c = CoverClass(n_cubes=10)
-        cubes = c.define_bins(data)
+        cubes = c.fit(data)
 
         assert all(len(cube) == 1 for cube in cubes)
-
-    def test_nr_dimensions(self, CoverClass):
-        data = np.arange(30).reshape(10, 3)
-
-        c = CoverClass(n_cubes=10)
-        _ = c.define_bins(data)
-        assert c.nr_dimensions == 2
 
     def test_entries_even(self, CoverClass):
         data = np.arange(40).reshape(20, 2)
 
         cover = CoverClass(n_cubes=10)
-        cubes = cover.define_bins(data)
+        cubes = cover.fit(data)
 
         for cube in cubes:
-            entries = cover.find_entries(data, cube)
+            entries = cover.transform_single(data, cube)
             assert len(entries) >= 2
 
     def test_cubes_overlap(self, CoverClass):
         data = np.arange(40).reshape(20, 2)
 
         cover = CoverClass(n_cubes=10)
-        cubes = cover.define_bins(data)
+        cubes = cover.fit(data)
 
         entries = []
         for cube in cubes:
             # turn singleton lists into individual elements
-            res = [i[0] for i in cover.find_entries(data, cube)]
+            res = [i[0] for i in cover.transform_single(data, cube)]
             entries.append(res)
 
         for i, j in zip(range(9), range(1, 10)):
@@ -78,9 +71,9 @@ class TestCoverBasic:
                           [4,1]])
         
         cover = Cover(n_cubes=2, perc_overlap=0.5)
-        cubes = cover.define_bins(data)
+        cubes = cover.fit(data)
         cubes = list(cubes)
-        entries = [cover.find_entries(data, cube) for cube in cubes]
+        entries = [cover.transform_single(data, cube) for cube in cubes]
         
         for i in (0,1,2,3):
             assert data[i] in entries[0]
@@ -100,59 +93,60 @@ class TestCoverBasic:
 
 class TestCover:
     def test_diff_overlap_per_dim(self):
-        data = np.random.rand(100, 10)
-        c = Cover(overlap_perc=[2, 10])
+        data = np.random.rand(100, 3)
+        c = Cover(perc_overlap=[0.4, 0.2])
+        c.fit(data)
 
     def test_define_diff_bins_per_dim(self):
         data = np.arange(30).reshape(10, 3)
         c = Cover(n_cubes=[5, 10])
-        cubes = c.define_bins(data)
+        cubes = c.fit(data)
         assert len(list(cubes)) == 5 * 10
 
-    def test_find_entries_runs_with_diff_bins(self):
+    def test_transform_runs_with_diff_bins(self):
         data = np.arange(30).reshape(10, 3)
         c = Cover(n_cubes=[5, 10])
-        cubes = list(c.define_bins(data))
-        _ = c.find_entries(data, cubes[0])
+        cubes = list(c.fit(data))
+        _ = c.transform_single(data, cubes[0])
 
-    def test_chunk_dist(self):
+    def test_radius_dist(self):
 
         test_cases = [
             {
                 "cubes": 1,
                 "range": [0,4],
                 "overlap": 0.4,
-                "chunk": 4 * (1 + 0.4)
+                "radius": 10. / 3
             },
             {
                 "cubes": 1,
                 "range": [0,4],
-                "overlap": 2.4,
-                "chunk": 4 * (1 + 2.4)
+                "overlap": 0.9,
+                "radius": 20.
             },
             {
                 "cubes": 2,
                 "range": [-4, 4],
                 "overlap": 0.5,
-                "chunk": 6
+                "radius": 4.
             },
             {
-                "cubes": 2,
+                "cubes": 3,
                 "range": [-4, 4],
                 "overlap": 0.5,
-                "chunk": 6
+                "radius": 2.666666666
             },
             {
                 "cubes": 10,
                 "range": [-4, 4],
                 "overlap": 0.5,
-                "chunk": 1.2
+                "radius": 0.8
             },
             {
                 "cubes": 10,
                 "range": [-4, 4],
                 "overlap": 1.0,
-                "chunk": 2.0
+                "radius": np.inf
             }
         ]
 
@@ -167,8 +161,8 @@ class TestCover:
                 n_cubes=test_case['cubes'], 
                 perc_overlap=test_case['overlap']
             )
-            _ = cover.define_bins(data)
-            assert cover.chunk_dist[0] == pytest.approx(test_case['chunk'])
+            _ = cover.fit(data)
+            assert cover.radius_[0] == pytest.approx(test_case['radius'])
 
 
     def test_equal_entries(self):
@@ -188,13 +182,13 @@ class TestCover:
         ids = np.array([x for x in range(lens.shape[0])])
         lens = np.c_[ids, lens]
 
-        bins = cov.define_bins(lens)
+        bins = cov.fit(lens)
 
         bins = list(bins)  # extract list from generator
 
         assert len(bins) == settings["cubes"]
 
-        cube_entries = [cov.find_entries(lens,cube) for cube in bins]
+        cube_entries = [cov.transform_single(lens,cube) for cube in bins]
 
         for c1, c2 in list(zip(cube_entries, cube_entries[1:]))[2:]:
             c1, c2 = c1[:,0], c2[:,0] # indices only
@@ -214,24 +208,14 @@ class TestCover:
         ids = np.array([x for x in range(lens.shape[0])])
         lens = np.c_[ids, lens]
 
-        bins = cov.define_bins(lens)
+        bins = cov.fit(lens)
 
-        bins = list(bins)  # extract list from generator
+        cube_entries = [cov.transform_single(lens,cube) for cube in bins]
 
-        cube_entries = [cov.find_entries(lens,cube) for cube in bins]
- 
-        cubesizes = [len(c) for c in cube_entries]
-        assert len(set(cubesizes)) == 1, "Each cube should have the same number of entries"
 
         overlaps = [len(set(list(c1[:,0])).intersection(set(list(c2[:,0])))) for c1, c2 in zip(cube_entries, cube_entries[1:])]
         assert len(set(overlaps)) == 1, "Each overlap should have the same number of entries. "
 
-    def test_bound_is_min(self):
-        data = np.arange(30).reshape(10, 3)
-        cov = Cover(n_cubes=10)
-        _ = cov.define_bins(data)
-        bounds = list(zip(cov.d, range(1, 10)))
-        assert all(b[0] == b[1] for b in bounds)
 
     def test_entries_in_correct_cubes(self):
         # TODO: this test is a little hacky
@@ -242,9 +226,9 @@ class TestCover:
         data[:, 1] = data_vals
     
         cover = Cover(n_cubes=10, perc_overlap=0.2)
-        cubes = cover.define_bins(data)
+        cubes = cover.fit(data)
         cubes = list(cubes)
-        entries = [cover.find_entries(data, cube) for cube in cubes]
+        entries = [cover.transform_single(data, cube) for cube in cubes]
 
         # inside of each cube is there. Sometimes the edges don't line up.
         for i in range(10):
@@ -261,8 +245,13 @@ class TestCoverBounds:
 
         limits = np.array([[np.float("inf"), np.float("inf")], [-10, 100]])
         cover = Cover(n_cubes=10, limits=limits)
-        cubes = cover.define_bins(data)
+        cubes = cover.fit(data)
 
-        start = cover.d
-        end = cover.end
-        assert np.array_equal(np.array([start, end]), np.array([[0, -10], [38, 100]]))
+        assert np.array_equal(cover.bounds_, np.array([[0, -10], [38, 100]]))
+    
+    def test_bound_is_min(self):
+        data = np.arange(30).reshape(10, 3)
+        cov = Cover(n_cubes=10)
+        _ = cov.fit(data)
+        bounds = list(zip(cov.bounds_[0], range(1, 10)))
+        assert all(b[0] == b[1] for b in bounds)

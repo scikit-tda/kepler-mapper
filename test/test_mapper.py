@@ -85,7 +85,7 @@ class TestMap:
         graph = mapper.map(
             lens,
             X=X,
-            cover=Cover(n_cubes=3, perc_overlap=1.5),
+            cover=Cover(n_cubes=3, perc_overlap=.75),
             clusterer=cluster.DBSCAN(metric="euclidean", min_samples=3),
         )
         assert max([len(s) for s in graph["simplices"]]) <= 2

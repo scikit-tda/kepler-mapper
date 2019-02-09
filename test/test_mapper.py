@@ -85,7 +85,7 @@ class TestMap:
         graph = mapper.map(
             lens,
             X=X,
-            cover=Cover(n_cubes=3, perc_overlap=1.5),
+            cover=Cover(n_cubes=3, perc_overlap=0.75),
             clusterer=cluster.DBSCAN(metric="euclidean", min_samples=3),
         )
         assert max([len(s) for s in graph["simplices"]]) <= 2
@@ -190,7 +190,10 @@ class TestMap:
 
         assert len(deduped_nodes) < len(nodes)
         assert len(deduped_nodes) == 4
-        assert "cube1_cluster1|cube2_cluster0" in deduped_nodes or "cube2_cluster0|cube1_cluster1" in deduped_nodes
+        assert (
+            "cube1_cluster1|cube2_cluster0" in deduped_nodes
+            or "cube2_cluster0|cube1_cluster1" in deduped_nodes
+        )
 
     def test_precomputed_with_knn_lens(self):
         mapper = KeplerMapper()

@@ -308,7 +308,7 @@ class KeplerMapper(object):
             Scikit-learn API compatible clustering algorithm. Must provide `fit` and `predict`.
 
         cover: type kmapper.Cover
-            Cover scheme for lens. Instance of kmapper.cover providing methods `define_bins` and `find_entries`.
+            Cover scheme for lens. Instance of kmapper.cover providing methods `fit` and `transform`.
 
         nerve: kmapper.Nerve
             Nerve builder implementing `__call__(nodes)` API
@@ -391,7 +391,7 @@ class KeplerMapper(object):
         X = np.c_[ids, X]
 
         # Cover scheme defines a list of elements
-        bins = self.cover.define_bins(lens)
+        bins = self.cover.fit(lens)
 
         # Algo's like K-Means, have a set number of clusters. We need this number
         # to adjust for the minimal number of samples inside an interval before
@@ -417,16 +417,7 @@ class KeplerMapper(object):
             total_bins = len(bins)
             print("Creating %s hypercubes." % total_bins)
 
-        for i, cube in enumerate(bins):
-            # Slice the hypercube:
-            #  gather all entries in this element of the cover
-            hypercube = self.cover.find_entries(lens, cube)
-
-            if self.verbose > 1:
-                print(
-                    "There are %s points in cube %s/%s"
-                    % (hypercube.shape[0], i + 1, total_bins)
-                )
+        for i, hypercube in enumerate(self.cover.transform(lens)):
 
             # If at least min_cluster_samples samples inside the hypercube
             if hypercube.shape[0] >= min_cluster_samples:
@@ -463,10 +454,11 @@ class KeplerMapper(object):
 
                         # Append the member id's as integers
                         nodes[cluster_id].append(int(idx))
-                        meta[cluster_id] = {
-                            "size": hypercube.shape[0],
-                            "coordinates": cube,
-                        }
+
+                        # meta[cluster_id] = {
+                        #     "size": hypercube.shape[0],
+                        #     "coordinates": cube,
+                        # }
             else:
                 if self.verbose > 1:
                     print("Cube_%s is empty.\n" % (i))
@@ -509,7 +501,7 @@ class KeplerMapper(object):
         if self.verbose > 0:
             total_merged = len(nodes) - len(deduped_items)
             if total_merged:
-                print("\Merged {} duplicate nodes.\n".format(total_merged))
+                print("Merged {} duplicate nodes.\n".format(total_merged))
                 print(
                     "Number of nodes before merger: {}; after merger: {}\n".format(
                         len(nodes), len(deduped_nodes)

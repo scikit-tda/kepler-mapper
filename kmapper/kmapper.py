@@ -7,7 +7,6 @@ import itertools
 import os
 import sys
 import warnings
-import copy
 
 from jinja2 import Environment, FileSystemLoader, Template
 import numpy as np
@@ -37,7 +36,7 @@ class KeplerMapper(object):
                 Cluster the points inside the interval
                 (Note: we cluster on the inverse image/original data to lessen projection loss).
                 If two clusters/nodes have the same members (due to the overlap), then:
-                connect these with an edge.
+     a           connect these with an edge.
     3)  	Visualize the network using HTML and D3.js.
 
     KM has a number of nice features, some which get forgotten.
@@ -496,32 +495,18 @@ class KeplerMapper(object):
 
         return graph
     
-    def _remove_duplicate_nodes(self, nodes):
-        
-        invert_me = copy.deepcopy(nodes)
-        
-        deduped_items = defaultdict(list)
+    def _remove_duplicate_nodes(self, nodes):    
         
         # invert node list and merge duplicate nodes
-        [ deduped_items[frozenset(node_items)].append(node_id) for node_id, node_items in invert_me.items() ]
+        deduped_items = defaultdict(list)
+        for node_id, items in nodes.items():
+            deduped_items[frozenset(items)].append(node_id)
         
-        
-        total_merged = 0 # count for reporting...
-        deduped_nodes = dict()
-        
-        for frozen_items, node_id_list in deduped_items.items():
-            if len(node_id_list) > 1:    
-                total_merged += len(node_id_list) - 1
-            
-            node_ids = '|'.join(node_id_list)    
-            
-            if self.verbose > 0 and len(node_id_list) > 1:
-                print("Merged duplicate nodes: {}".format(node_ids))    
-            
-            deduped_nodes[node_ids] = list(frozen_items)
-            
+        deduped_nodes = {'|'.join(node_id_list): list(frozen_items) for frozen_items, node_id_list in deduped_items.items()   }
+                    
         if self.verbose > 0:
-            if deduped_nodes:
+            total_merged = len(nodes) - len(deduped_items)
+            if total_merged:
                 print("\Merged {} duplicate nodes.\n".format(total_merged))
                 print("Number of nodes before merger: {}; after merger: {}\n".format( len(nodes), len(deduped_nodes) ))
             else: 

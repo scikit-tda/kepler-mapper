@@ -137,6 +137,21 @@ class TestMap:
         captured = capsys.readouterr()
         assert "duplicate nodes" in captured[0]
         
+    def test_lots_of_repeats(self, capsys):
+        nodes = defaultdict(list)
+        for i in range(4):
+            nodes['cube{}_cluster0'.format(i)] = [0,1]
+        for i in range(3):
+            nodes['cube{}_cluster1'.format(i)] = [1,2]
+        nodes['cube1_cluster2'] = [1,2,3]
+        nodes['cube2_cluster3'] = [2,3,4]
+
+        deduped_nodes = KeplerMapper(verbose=1)._remove_duplicate_nodes(nodes)
+        assert len(deduped_nodes) == 4
+
+        captured = capsys.readouterr()
+        assert "Merged 5 duplicate nodes." in captured[0]
+
     def test_no_duplicates(self):
         nodes = defaultdict(list)
         nodes['cube1_cluster0'] = [0]

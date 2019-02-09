@@ -86,3 +86,4 @@ Standard MIT disclaimer applies, see `DISCLAIMER.md` for full text. Development 
 ## Cite
 
 Nathaniel Saul, & Hendrik Jacob van Veen. (2017, November 17). MLWave/kepler-mapper: 186f (Version 1.0.1). Zenodo. http://doi.org/10.5281/zenodo.1054444
+

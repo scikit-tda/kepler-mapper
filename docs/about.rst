@@ -24,12 +24,12 @@ Bibtex entry:
 
 ::
 
-    @MISC {,
-        author       = "Hendrik Jacob van Veen, and Nathaniel Saul",
+    @MISC {KeplerMapper2019,
+        author       = "Hendrik Jacob van Veen and Nathaniel Saul",
         title        = "KeplerMapper",
         howpublished = "http://doi.org/10.5281/zenodo.1054444",
-        month        = "nov",
-        year         = "2017"
+        month        = "Jan",
+        year         = "2019"
     }
 
 

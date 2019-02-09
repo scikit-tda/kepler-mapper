@@ -1,5 +1,8 @@
 from __future__ import division
 
+from collections.abc import Iterable
+
+
 import warnings
 from itertools import product
 import numpy as np
@@ -8,6 +11,128 @@ import numpy as np
 
 
 class Cover:
+    def __init__(self, n_cubes=10, perc_overlap=0.5, limits=None, verbose=0):
+        self.centers_ = None
+        self.radius_ = None
+        self.inner_range_ = None
+        self.bounds_ = None
+        self.di_ = None
+
+        self.n_cubes = n_cubes
+        self.perc_overlap = perc_overlap
+        self.limits = limits
+        self.verbose = verbose
+
+        # Check limits can actually be handled and are set appropriately
+        assert isinstance(
+            self.limits, (list, np.ndarray, type(None))
+        ), "limits should either be an array or None"
+        if isinstance(self.limits, (list, np.ndarray)):
+            self.limits = np.array(self.limits)
+            assert self.limits.shape[1] == 2, "limits should be (n_dim,2) in shape"
+
+
+    def _compute_bounds(self, data):
+
+        # If self.limits is array-like
+        if isinstance(self.limits, np.ndarray):
+            # limits_array is used so we can change the values of self.limits from None to the min/max
+            limits_array = np.zeros(self.limits.shape)
+            limits_array[:, 0] = np.min(data, axis=0)
+            limits_array[:, 1] = np.max(data, axis=0)
+            limits_array[self.limits != np.float("inf")] = 0
+            self.limits[self.limits == np.float("inf")] = 0
+            bounds_arr = self.limits + limits_array
+            """ bounds_arr[i,j] = self.limits[i,j] if self.limits[i,j] == inf
+                bounds_arr[i,j] = max/min(data[i]) if self.limits == inf """
+            bounds = (bounds_arr[:, 0], bounds_arr[:, 1])
+
+            # Check new bounds are actually sensible - do they cover the range of values in the dataset?
+            if not (
+                (np.min(data, axis=0) >= bounds_arr[:, 0]).all()
+                or (np.max(data, axis=0) <= bounds_arr[:, 1]).all()
+            ):
+                warnings.warn(
+                    "The limits given do not cover the entire range of the lens functions\n"
+                    + "Actual Minima: %s\tInput Minima: %s\n"
+                    % (np.min(data, axis=0), bounds_arr[:, 0])
+                    + "Actual Maxima: %s\tInput Maxima: %s\n"
+                    % (np.max(data, axis=0), bounds_arr[:, 1])
+                )
+
+        else:  # It must be None, as we checked to see if it is array-like or None in __init__
+            bounds = (np.min(data, axis=0), np.max(data, axis=0))  
+
+        return bounds
+
+    def fit(self, data):
+
+        # TODO: support indexing into any columns
+        di = np.array(range(1, data.shape[1]))
+        indexless_data = data[:, di]
+        n_dims = indexless_data.shape[1]
+
+        # support different values along each dimension
+
+        ## -- is a list, needs to be array
+        ## -- is a singleton, needs repeating
+        if isinstance(self.n_cubes, Iterable):
+            n_cubes = np.array(self.n_cubes)
+            assert len(n_cubes) == n_dims, "Custom cubes in each dimension must match number of dimensions"
+        else:
+            n_cubes = np.repeat(self.n_cubes, n_dims)
+        
+        if isinstance(self.perc_overlap, Iterable):
+            perc_overlap = np.array(self.perc_overlap)
+            assert len(perc_overlap) == n_dims, "Custom cubes in each dimension must match number of dimensions"
+        else:
+            perc_overlap = np.repeat(self.perc_overlap, n_dims)
+
+        bounds = self._compute_bounds(indexless_data)
+        
+        ranges = (bounds[1] - bounds[0])
+    
+        # (n-1)/n |range|
+        inner_range = ((n_cubes - 1) / n_cubes) * ranges
+
+        # |range| / (2n ( 1 - p))
+        radius = ranges / (2 * n_cubes * (1 - perc_overlap))
+
+        # 
+        centers_per_dimension = [np.linspace(b,c, num=n) for b, c, n in zip(*bounds, n_cubes)]
+        centers = list(product(*centers_per_dimension))
+
+        self.centers_ = centers
+        self.radius_ = radius
+        self.inner_range_ = inner_range
+        self.bounds_ = bounds
+        self.di_ = di
+
+        return centers
+    
+    def transform_single(self, data, cube):
+        # import pdb; pdb.set_trace()
+        lowerbounds, upperbounds = cube - self.radius_, cube + self.radius_
+
+        # Slice the hypercube
+        entries = (data[:, self.di_] >= lowerbounds) & (data[:, self.di_] <= upperbounds)
+        hypercube = data[np.invert(np.any(entries == False, axis=1))]
+ 
+        return hypercube
+
+    def transform(self, data):
+        hypercubes = [self.transform_single(data, cube) for cube in self.centers_]
+        
+        # Clean out any empty cubes (common in high dimensions)
+        hypercubes = [cube for cube in hypercubes if len(cube)] 
+        return hypercubes
+
+    def fit_transform(self, data):
+        self.fit(data)
+        return self.transform(data)
+
+
+class CoverOld:
     """Helper class that defines the default covering scheme
 
     It calculates the cover based on the following formula for overlap.     (https://arxiv.org/pdf/1706.00204.pdf)
@@ -148,7 +273,7 @@ class Cover:
 
         # We find our starting point
         self.d = bounds[0]
-        
+
         # And our ending point (for testing)
         self.end = bounds[1]
 

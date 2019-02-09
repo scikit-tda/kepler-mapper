@@ -115,29 +115,115 @@ class TestCover:
         cubes = list(c.define_bins(data))
         _ = c.find_entries(data, cubes[0])
 
-    def test_chunk_dist(self, capsys):
-        n_cubes_settings = (4, 6, 10)
-        perc_overlap_settings = (.1, .2, .5)
-        feature_range_settings = ( (0,1), (10, 100), (20, 50) )
-        
-        settings = zip(n_cubes_settings, perc_overlap_settings, feature_range_settings)
-        
-        for setting in settings:
-            n_cubes, perc_overlap, feature_range = setting
+    def test_chunk_dist(self):
 
-            base_dist = ( feature_range[1] - feature_range[0] ) / n_cubes
-            overlap_dist = base_dist * perc_overlap
-            chunk = base_dist + overlap_dist*2
+        test_cases = [
+            {
+                "cubes": 1,
+                "range": [0,4],
+                "overlap": 0.4,
+                "chunk": 4 * (1 + 0.4)
+            },
+            {
+                "cubes": 1,
+                "range": [0,4],
+                "overlap": 2.4,
+                "chunk": 4 * (1 + 2.4)
+            },
+            {
+                "cubes": 2,
+                "range": [-4, 4],
+                "overlap": 0.5,
+                "chunk": 6
+            },
+            {
+                "cubes": 2,
+                "range": [-4, 4],
+                "overlap": 0.5,
+                "chunk": 6
+            },
+            {
+                "cubes": 10,
+                "range": [-4, 4],
+                "overlap": 0.5,
+                "chunk": 1.2
+            },
+            {
+                "cubes": 10,
+                "range": [-4, 4],
+                "overlap": 1.0,
+                "chunk": 2.0
+            }
+        ]
 
-            data = np.arange(20).reshape(10, 2)
-            scaler = preprocessing.MinMaxScaler(feature_range=feature_range)
-            data = scaler.fit_transform(data)
-    
-            cover = Cover(n_cubes=n_cubes, perc_overlap=perc_overlap)
+
+        for test_case in test_cases:
+            scaler = preprocessing.MinMaxScaler(
+                feature_range=test_case['range']
+            )
+            data = scaler.fit_transform(np.arange(20).reshape(10, 2))
+
+            cover = Cover(
+                n_cubes=test_case['cubes'], 
+                perc_overlap=test_case['overlap']
+            )
             _ = cover.define_bins(data)
-            chunks = list(cover.chunk_dist)
-    
-            assert all(i == chunk for i in chunks)
+            assert cover.chunk_dist[0] == pytest.approx(test_case['chunk'])
+
+    def test_equal_entries(self):
+        settings = {
+            "cubes": 10,
+            "overlap": 0.5
+        }
+
+        # uniform data:
+        data = np.arange(0,100)
+        data = data[:,np.newaxis]
+        lens = data
+
+        cov = Cover(settings["cubes"], settings["overlap"])
+
+        # Prefix'ing the data with an ID column
+        ids = np.array([x for x in range(lens.shape[0])])
+        lens = np.c_[ids, lens]
+
+        bins = cov.define_bins(lens)
+
+        bins = list(bins)  # extract list from generator
+
+        assert len(bins) == settings["cubes"]
+
+        cube_entries = [cov.find_entries(lens,cube) for cube in bins]
+
+        for c1, c2 in list(zip(cube_entries, cube_entries[1:]))[2:]:
+            c1, c2 = c1[:,0], c2[:,0] # indices only
+
+            calced_overlap = len(set(list(c1)).intersection(set(list(c2)))) / max(len(c1), len(c2))
+            assert calced_overlap == pytest.approx(0.5)
+
+    def test_125_replication(self):
+         # uniform data:
+        data = np.arange(0,100)
+        data = data[:,np.newaxis]
+        lens = data
+
+        cov = Cover(10, 0.5)
+
+        # Prefix'ing the data with an ID column
+        ids = np.array([x for x in range(lens.shape[0])])
+        lens = np.c_[ids, lens]
+
+        bins = cov.define_bins(lens)
+
+        bins = list(bins)  # extract list from generator
+
+        cube_entries = [cov.find_entries(lens,cube) for cube in bins]
+ 
+        cubesizes = [len(c) for c in cube_entries]
+        assert len(set(cubesizes)) == 1, "Each cube should have the same number of entries"
+
+        overlaps = [len(set(list(c1[:,0])).intersection(set(list(c2[:,0])))) for c1, c2 in zip(cube_entries, cube_entries[1:])]
+        assert len(set(overlaps)) == 1, "Each overlap should have the same number of entries. "
 
     def test_bound_is_min(self):
         data = np.arange(30).reshape(10, 3)

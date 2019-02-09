@@ -66,7 +66,6 @@ class Cover:
 
     """
 
-
     def __init__(self, n_cubes=10, perc_overlap=0.5, limits=None, verbose=0):
         self.centers_ = None
         self.radius_ = None
@@ -89,7 +88,12 @@ class Cover:
             assert self.limits.shape[1] == 2, "limits should be (n_dim,2) in shape"
 
     def __repr__(self):
-        return "Cover(n_cubes=%s, perc_overlap=%s, limits=%s, verbose=%s" % (self.n_cubes, self.perc_overlap, self.limits, self.verbose)
+        return "Cover(n_cubes=%s, perc_overlap=%s, limits=%s, verbose=%s" % (
+            self.n_cubes,
+            self.perc_overlap,
+            self.limits,
+            self.verbose,
+        )
 
     def _compute_bounds(self, data):
 
@@ -120,7 +124,7 @@ class Cover:
                 )
 
         else:  # It must be None, as we checked to see if it is array-like or None in __init__
-            bounds = (np.min(data, axis=0), np.max(data, axis=0))  
+            bounds = (np.min(data, axis=0), np.max(data, axis=0))
 
         return bounds
 
@@ -137,21 +141,28 @@ class Cover:
         ## -- is a singleton, needs repeating
         if isinstance(self.n_cubes, Iterable):
             n_cubes = np.array(self.n_cubes)
-            assert len(n_cubes) == n_dims, "Custom cubes in each dimension must match number of dimensions"
+            assert (
+                len(n_cubes) == n_dims
+            ), "Custom cubes in each dimension must match number of dimensions"
         else:
             n_cubes = np.repeat(self.n_cubes, n_dims)
-        
+
         if isinstance(self.perc_overlap, Iterable):
             perc_overlap = np.array(self.perc_overlap)
-            assert len(perc_overlap) == n_dims, "Custom cubes in each dimension must match number of dimensions"
+            assert (
+                len(perc_overlap) == n_dims
+            ), "Custom cubes in each dimension must match number of dimensions"
         else:
             perc_overlap = np.repeat(self.perc_overlap, n_dims)
 
-        assert all(0.0 <= p <= 1.0 for p in perc_overlap), "Each overlap percentage must be between 0.0 and 1.0., not %s" % perc_overlap
+        assert all(0.0 <= p <= 1.0 for p in perc_overlap), (
+            "Each overlap percentage must be between 0.0 and 1.0., not %s"
+            % perc_overlap
+        )
 
         bounds = self._compute_bounds(indexless_data)
-        ranges = (bounds[1] - bounds[0])
-    
+        ranges = bounds[1] - bounds[0]
+
         # (n-1)/n |range|
         inner_range = ((n_cubes - 1) / n_cubes) * ranges
         inset = (ranges - inner_range) / 2
@@ -160,9 +171,11 @@ class Cover:
         radius = ranges / (2 * (n_cubes) * (1 - perc_overlap))
 
         # centers are fixed w.r.t perc_overlap
-        zip_items = list(bounds) # work around 2.7,3.4 weird behavior
+        zip_items = list(bounds)  # work around 2.7,3.4 weird behavior
         zip_items.extend([n_cubes, inset])
-        centers_per_dimension = [np.linspace(b+r,c-r, num=n) for b, c, n, r in zip(*zip_items)]
+        centers_per_dimension = [
+            np.linspace(b + r, c - r, num=n) for b, c, n, r in zip(*zip_items)
+        ]
         centers = [np.array(c) for c in product(*centers_per_dimension)]
 
         self.centers_ = centers
@@ -173,18 +186,23 @@ class Cover:
         self.di_ = di
 
         if self.verbose > 0:
-            print(" - Cover - centers: %s\ninner_range: %s\nradius: %s" % (self.centers_, self.inner_range_, self.radius_))
+            print(
+                " - Cover - centers: %s\ninner_range: %s\nradius: %s"
+                % (self.centers_, self.inner_range_, self.radius_)
+            )
 
         return centers
-    
+
     def transform_single(self, data, cube, i=None):
         # import pdb; pdb.set_trace()
         lowerbounds, upperbounds = cube - self.radius_, cube + self.radius_
 
         # Slice the hypercube
-        entries = (data[:, self.di_] >= lowerbounds) & (data[:, self.di_] <= upperbounds)
+        entries = (data[:, self.di_] >= lowerbounds) & (
+            data[:, self.di_] <= upperbounds
+        )
         hypercube = data[np.invert(np.any(entries == False, axis=1))]
- 
+
         if self.verbose > 1:
             print(
                 "There are %s points in cube %s/%s"
@@ -195,10 +213,12 @@ class Cover:
 
     def transform(self, data, centers=None):
         centers = centers or self.centers_
-        hypercubes = [self.transform_single(data, cube, i) for i, cube in enumerate(centers)]
-        
+        hypercubes = [
+            self.transform_single(data, cube, i) for i, cube in enumerate(centers)
+        ]
+
         # Clean out any empty cubes (common in high dimensions)
-        hypercubes = [cube for cube in hypercubes if len(cube)] 
+        hypercubes = [cube for cube in hypercubes if len(cube)]
         return hypercubes
 
     def fit_transform(self, data):

@@ -454,7 +454,7 @@ class KeplerMapper(object):
 
                         # Append the member id's as integers
                         nodes[cluster_id].append(int(idx))
-                
+
                         # meta[cluster_id] = {
                         #     "size": hypercube.shape[0],
                         #     "coordinates": cube,

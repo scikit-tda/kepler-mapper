@@ -13,7 +13,6 @@ from kmapper import KeplerMapper, Cover
 class TestAPIMaintenance:
     """ These tests just confirm that new api changes are backwards compatible"""
 
-
     def test_warn_old_api(self):
         """ Confirm old api works but throws warning """
 
@@ -25,7 +24,7 @@ class TestAPIMaintenance:
             graph = mapper.map(lens, data, nr_cubes=10)
 
         with pytest.deprecated_call():
-            graph = mapper.map(lens, data, overlap_perc=.10)
+            graph = mapper.map(lens, data, overlap_perc=0.10)
 
         with pytest.deprecated_call():
             graph = mapper.map(lens, data, nr_cubes=10, overlap_perc=0.1)

@@ -56,30 +56,25 @@ class TestCoverBasic:
 
         for i, j in zip(range(9), range(1, 10)):
             assert set(entries[i]).union(set(entries[j]))
-            
+
     def test_perc_overlap(self, CoverClass):
-        '''
+        """
         2 cubes with 50% overlap and a range of [0,1] should lead to two cubes with intervals:
             [0, .75]
             [.25, 1]
-        '''
-        
-        data = np.array([ [0,0],
-                          [1,.25],
-                          [2,.5],
-                          [3,.75],
-                          [4,1]])
-        
+        """
+
+        data = np.array([[0, 0], [1, 0.25], [2, 0.5], [3, 0.75], [4, 1]])
+
         cover = Cover(n_cubes=2, perc_overlap=0.5)
         cubes = cover.fit(data)
         cubes = list(cubes)
         entries = [cover.transform_single(data, cube) for cube in cubes]
-        
-        for i in (0,1,2,3):
-            assert data[i] in entries[0]
-        for i in (1,2,3,4):
-            assert data[i] in entries[1]
 
+        for i in (0, 1, 2, 3):
+            assert data[i] in entries[0]
+        for i in (1, 2, 3, 4):
+            assert data[i] in entries[1]
 
     def test_complete_pipeline(self, CoverClass):
         # TODO: add a mock that asserts the cover was called appropriately.. or test number of cubes etc.
@@ -112,68 +107,28 @@ class TestCover:
     def test_radius_dist(self):
 
         test_cases = [
-            {
-                "cubes": 1,
-                "range": [0,4],
-                "overlap": 0.4,
-                "radius": 10. / 3
-            },
-            {
-                "cubes": 1,
-                "range": [0,4],
-                "overlap": 0.9,
-                "radius": 20.
-            },
-            {
-                "cubes": 2,
-                "range": [-4, 4],
-                "overlap": 0.5,
-                "radius": 4.
-            },
-            {
-                "cubes": 3,
-                "range": [-4, 4],
-                "overlap": 0.5,
-                "radius": 2.666666666
-            },
-            {
-                "cubes": 10,
-                "range": [-4, 4],
-                "overlap": 0.5,
-                "radius": 0.8
-            },
-            {
-                "cubes": 10,
-                "range": [-4, 4],
-                "overlap": 1.0,
-                "radius": np.inf
-            }
+            {"cubes": 1, "range": [0, 4], "overlap": 0.4, "radius": 10.0 / 3},
+            {"cubes": 1, "range": [0, 4], "overlap": 0.9, "radius": 20.0},
+            {"cubes": 2, "range": [-4, 4], "overlap": 0.5, "radius": 4.0},
+            {"cubes": 3, "range": [-4, 4], "overlap": 0.5, "radius": 2.666666666},
+            {"cubes": 10, "range": [-4, 4], "overlap": 0.5, "radius": 0.8},
+            {"cubes": 10, "range": [-4, 4], "overlap": 1.0, "radius": np.inf},
         ]
 
-
         for test_case in test_cases:
-            scaler = preprocessing.MinMaxScaler(
-                feature_range=test_case['range']
-            )
+            scaler = preprocessing.MinMaxScaler(feature_range=test_case["range"])
             data = scaler.fit_transform(np.arange(20).reshape(10, 2))
 
-            cover = Cover(
-                n_cubes=test_case['cubes'], 
-                perc_overlap=test_case['overlap']
-            )
+            cover = Cover(n_cubes=test_case["cubes"], perc_overlap=test_case["overlap"])
             _ = cover.fit(data)
-            assert cover.radius_[0] == pytest.approx(test_case['radius'])
-
+            assert cover.radius_[0] == pytest.approx(test_case["radius"])
 
     def test_equal_entries(self):
-        settings = {
-            "cubes": 10,
-            "overlap": 0.5
-        }
+        settings = {"cubes": 10, "overlap": 0.5}
 
         # uniform data:
-        data = np.arange(0,100)
-        data = data[:,np.newaxis]
+        data = np.arange(0, 100)
+        data = data[:, np.newaxis]
         lens = data
 
         cov = Cover(settings["cubes"], settings["overlap"])
@@ -188,18 +143,20 @@ class TestCover:
 
         assert len(bins) == settings["cubes"]
 
-        cube_entries = [cov.transform_single(lens,cube) for cube in bins]
+        cube_entries = [cov.transform_single(lens, cube) for cube in bins]
 
         for c1, c2 in list(zip(cube_entries, cube_entries[1:]))[2:]:
-            c1, c2 = c1[:,0], c2[:,0] # indices only
+            c1, c2 = c1[:, 0], c2[:, 0]  # indices only
 
-            calced_overlap = len(set(list(c1)).intersection(set(list(c2)))) / max(len(c1), len(c2))
+            calced_overlap = len(set(list(c1)).intersection(set(list(c2)))) / max(
+                len(c1), len(c2)
+            )
             assert calced_overlap == pytest.approx(0.5)
 
     def test_125_replication(self):
-         # uniform data:
-        data = np.arange(0,100)
-        data = data[:,np.newaxis]
+        # uniform data:
+        data = np.arange(0, 100)
+        data = data[:, np.newaxis]
         lens = data
 
         cov = Cover(10, 0.5)
@@ -210,12 +167,15 @@ class TestCover:
 
         bins = cov.fit(lens)
 
-        cube_entries = [cov.transform_single(lens,cube) for cube in bins]
+        cube_entries = [cov.transform_single(lens, cube) for cube in bins]
 
-
-        overlaps = [len(set(list(c1[:,0])).intersection(set(list(c2[:,0])))) for c1, c2 in zip(cube_entries, cube_entries[1:])]
-        assert len(set(overlaps)) == 1, "Each overlap should have the same number of entries. "
-
+        overlaps = [
+            len(set(list(c1[:, 0])).intersection(set(list(c2[:, 0]))))
+            for c1, c2 in zip(cube_entries, cube_entries[1:])
+        ]
+        assert (
+            len(set(overlaps)) == 1
+        ), "Each overlap should have the same number of entries. "
 
     def test_entries_in_correct_cubes(self):
         # TODO: this test is a little hacky
@@ -224,7 +184,7 @@ class TestCover:
         data = np.zeros((20, 2))
         data[:, 0] = np.arange(20, dtype=int)  # Index row
         data[:, 1] = data_vals
-    
+
         cover = Cover(n_cubes=10, perc_overlap=0.2)
         cubes = cover.fit(data)
         cubes = list(cubes)
@@ -248,7 +208,7 @@ class TestCoverBounds:
         cubes = cover.fit(data)
 
         assert np.array_equal(cover.bounds_, np.array([[0, -10], [38, 100]]))
-    
+
     def test_bound_is_min(self):
         data = np.arange(30).reshape(10, 3)
         cov = Cover(n_cubes=10)

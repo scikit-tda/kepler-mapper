@@ -10,15 +10,54 @@ import numpy as np
 class Cover:
     """Helper class that defines the default covering scheme
 
+    It calculates the cover based on the following formula for overlap.     (https://arxiv.org/pdf/1706.00204.pdf)
+
+                     |cube[i] intersection cube[i+1]|
+        overlap = --------------------------------------
+                              |cube[i]|
+    
 
     Parameters
     ------------
+
+    n_cubes: int 
+        Number of hypercubes along each dimension. Sometimes referred to as resolution.
+
+    perc_overlap: float
+        Amount of overlap between adjacent cubes calculated only along 1 dimension.
 
     limits: Numpy Array (n_dim,2)
         (lower bound, upper bound) for every dimension
         If a value is set to `np.float('inf')`, the bound will be assumed to be the min/max value of the dimension
         Also, if `limits == None`, the limits are defined by the maximum and minimum value of the lens for all dimensions.
         i.e. `[[min_1, max_1], [min_2, max_2], [min_3, max_3]]`
+    
+    Example
+    ---------
+
+    ::
+
+        >>> import numpy as np
+        >>> from kmapper.cover import Cover
+        >>> data = np.random.random((100,2))
+        >>> cov = Cover(n_cubes=15, perc_overlap=0.75)
+        >>> coordinates = cov.define_bins(data)
+        >>> cov.find_entries(data, coordinates[0])
+        array([[0.3594448 , 0.07428465],
+               [0.14490332, 0.01395559],
+               [0.94988668, 0.03983579],
+               [0.73517978, 0.09420806],
+               [0.16903735, 0.06901085],
+               [0.81578595, 0.10708731],
+               [0.26923572, 0.12216203],
+               [0.89203167, 0.0711279 ],
+               [0.80442115, 0.10220901],
+               [0.33210782, 0.04365007],
+               [0.52207707, 0.05892861],
+               [0.26589744, 0.08502856],
+               [0.02360067, 0.1263653 ],
+               [0.29855631, 0.01209373]])
+
 
     """
 
@@ -26,10 +65,10 @@ class Cover:
         self,
         n_cubes=10,
         perc_overlap=0.2,
+        limits=None,
         # Deprecated parameters:
         nr_cubes=None,
-        overlap_perc=None,
-        limits=None,
+        overlap_perc=None
     ):
 
         self.n_cubes = nr_cubes if nr_cubes else n_cubes
@@ -109,6 +148,7 @@ class Cover:
 
         # We find our starting point
         self.d = bounds[0]
+        
         # And our ending point (for testing)
         self.end = bounds[1]
 
@@ -127,7 +167,7 @@ class Cover:
             )
             cubes = self.n_cubes
 
-        coordinates = map(np.asarray, product(*(range(i) for i in cubes)))
+        coordinates = list(map(np.asarray, product(*(range(i) for i in cubes))))
         return coordinates
 
     def find_entries(self, data, cube, verbose=0):

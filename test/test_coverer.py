@@ -170,6 +170,7 @@ class TestCover:
             _ = cover.define_bins(data)
             assert cover.chunk_dist[0] == pytest.approx(test_case['chunk'])
 
+
     def test_equal_entries(self):
         settings = {
             "cubes": 10,

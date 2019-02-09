@@ -26,24 +26,24 @@ Contents
   setup
   usage
   examples
-  reference
+  reference/index
 
 .. toctree::
     :maxdepth: 1
     :caption: Tutorials
 
-    Adapters
-    Plotly Demo
-    KeplerMapper usage in Jupyter Notebook
+    notebooks/Adapters
+    notebooks/Plotly-Demo
+    notebooks/KeplerMapper-usage-in-Jupyter-Notebook
 
 .. toctree::
     :maxdepth: 1
     :caption: Advanced Tutorials
 
-    KeplerMapper Newsgroup20 Pipeline
-    TOR-XGB-TDA
-    Confidence Graphs
-    self-guessing
+    notebooks/KeplerMapper-Newsgroup20-Pipeline
+    notebooks/TOR-XGB-TDA
+    notebooks/Confidence-Graphs
+    notebooks/self-guessing
 
 
 .. |PyPI version| image:: https://badge.fury.io/py/kmapper.svg

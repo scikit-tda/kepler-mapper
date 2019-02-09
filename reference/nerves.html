@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Overview: module code &mdash; KeplerMapper 1.1.6.dev0 documentation</title>
+  <title>Nerves &mdash; KeplerMapper 1.1.6.dev0 documentation</title>
   
 
   
@@ -28,7 +28,9 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Visuals" href="visuals.html" />
+    <link rel="prev" title="Cover Schemes" href="covers.html" /> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -106,12 +108,19 @@
               
             
             
-              <ul>
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../setup.html">Setup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">API Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="kmapper.html">KeplerMapper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="covers.html">Cover Schemes</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Nerves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="visuals.html">Visuals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adapters.html">Adapters</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">Tutorials</span></p>
 <ul>
@@ -170,10 +179,16 @@
     
       <li><a href="https://scikit-tda.org">Scikit-TDA</a>&raquo;<a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>Overview: module code</li>
+          <li><a href="index.html">API Reference</a> &raquo;</li>
+        
+      <li>Nerves</li>
     
     
       <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/reference/nerves.rst.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
     
@@ -185,19 +200,104 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>All modules for which code is available</h1>
-<ul><li><a href="kmapper/adapter.html">kmapper.adapter</a></li>
-<li><a href="kmapper/cover.html">kmapper.cover</a></li>
-<li><a href="kmapper/jupyter.html">kmapper.jupyter</a></li>
-<li><a href="kmapper/kmapper.html">kmapper.kmapper</a></li>
-<li><a href="kmapper/nerve.html">kmapper.nerve</a></li>
-<li><a href="kmapper/plotlyviz.html">kmapper.plotlyviz</a></li>
-</ul>
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="module-kmapper.nerve">
+<span id="nerves"></span><h1>Nerves<a class="headerlink" href="#module-kmapper.nerve" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="kmapper.nerve.Nerve">
+<em class="property">class </em><code class="descclassname">kmapper.nerve.</code><code class="descname">Nerve</code><a class="reference internal" href="../_modules/kmapper/nerve.html#Nerve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.nerve.Nerve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for implementations of a nerve finder to build a Mapper complex.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="kmapper.nerve.GraphNerve">
+<em class="property">class </em><code class="descclassname">kmapper.nerve.</code><code class="descname">GraphNerve</code><span class="sig-paren">(</span><em>min_intersection=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kmapper/nerve.html#GraphNerve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.nerve.GraphNerve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the 1-skeleton of the Mapper complex.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>min_intersection: int, default is 1</strong></dt>
+<dd><p class="first last">Minimum intersection considered when computing the nerve. An edge will be created only when the intersection between two nodes is greater than or equal to <cite>min_intersection</cite></p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="kmapper.nerve.GraphNerve.compute">
+<code class="descname">compute</code><span class="sig-paren">(</span><em>nodes</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kmapper/nerve.html#GraphNerve.compute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.nerve.GraphNerve.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function to find edges of the overlapping clusters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>nodes:</strong></dt>
+<dd><p class="first last">A dictionary with entires <cite>{node id}:{list of ids in node}</cite></p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>edges:</strong></dt>
+<dd><p class="first last">A 1-skeleton of the nerve (intersecting  nodes)</p>
+</dd>
+<dt><strong>simplicies:</strong></dt>
+<dd><p class="first last">Complete list of simplices</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="kmapper.nerve.SimplicialNerve">
+<em class="property">class </em><code class="descclassname">kmapper.nerve.</code><code class="descname">SimplicialNerve</code><a class="reference internal" href="../_modules/kmapper/nerve.html#SimplicialNerve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.nerve.SimplicialNerve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the entire Cech complex of the covering defined by the nodes.</p>
+<p>Warning: Not implemented yet.</p>
+</dd></dl>
+
+</div>
+
 
            </div>
            
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="visuals.html" class="btn btn-neutral float-right" title="Visuals" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="covers.html" class="btn btn-neutral" title="Cover Schemes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>

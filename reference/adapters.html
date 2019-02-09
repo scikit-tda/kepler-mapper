@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Overview: module code &mdash; KeplerMapper 1.1.6.dev0 documentation</title>
+  <title>Adapters &mdash; KeplerMapper 1.1.6.dev0 documentation</title>
   
 
   
@@ -28,7 +28,9 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Adapters example" href="../notebooks/Adapters.html" />
+    <link rel="prev" title="Visuals" href="visuals.html" /> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -106,12 +108,19 @@
               
             
             
-              <ul>
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../setup.html">Setup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">API Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="kmapper.html">KeplerMapper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="covers.html">Cover Schemes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nerves.html">Nerves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="visuals.html">Visuals</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Adapters</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">Tutorials</span></p>
 <ul>
@@ -170,10 +179,16 @@
     
       <li><a href="https://scikit-tda.org">Scikit-TDA</a>&raquo;<a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>Overview: module code</li>
+          <li><a href="index.html">API Reference</a> &raquo;</li>
+        
+      <li>Adapters</li>
     
     
       <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/reference/adapters.rst.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
     
@@ -185,19 +200,95 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>All modules for which code is available</h1>
-<ul><li><a href="kmapper/adapter.html">kmapper.adapter</a></li>
-<li><a href="kmapper/cover.html">kmapper.cover</a></li>
-<li><a href="kmapper/jupyter.html">kmapper.jupyter</a></li>
-<li><a href="kmapper/kmapper.html">kmapper.kmapper</a></li>
-<li><a href="kmapper/nerve.html">kmapper.nerve</a></li>
-<li><a href="kmapper/plotlyviz.html">kmapper.plotlyviz</a></li>
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="module-kmapper.adapter">
+<span id="adapters"></span><h1>Adapters<a class="headerlink" href="#module-kmapper.adapter" title="Permalink to this headline">¶</a></h1>
+<p>Adapt Mapper format into other common formats.</p>
+<ul class="simple">
+<li>networkx</li>
 </ul>
+<dl class="function">
+<dt id="kmapper.adapter.to_networkx">
+<code class="descclassname">kmapper.adapter.</code><code class="descname">to_networkx</code><span class="sig-paren">(</span><em>graph</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kmapper/adapter.html#to_networkx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.adapter.to_networkx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a Mapper 1-complex to a networkx graph.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>graph: dictionary, graph object returned from `kmapper.map`</strong></dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>g: graph as networkx.Graph() object</strong></dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="kmapper.adapter.to_nx">
+<code class="descclassname">kmapper.adapter.</code><code class="descname">to_nx</code><span class="sig-paren">(</span><em>graph</em><span class="sig-paren">)</span><a class="headerlink" href="#kmapper.adapter.to_nx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a Mapper 1-complex to a networkx graph.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>graph: dictionary, graph object returned from `kmapper.map`</strong></dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>g: graph as networkx.Graph() object</strong></dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
 
            </div>
            
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../notebooks/Adapters.html" class="btn btn-neutral float-right" title="Adapters example" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="visuals.html" class="btn btn-neutral" title="Visuals" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>

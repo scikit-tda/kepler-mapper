@@ -44,12 +44,15 @@ default_colorscale = [
     [1.0, "rgb(253, 231, 36)"],
 ]
 
+
 def mpl_to_plotly(cmap, n_entries):
-    h = 1.0 / (n_entries-1)
+    h = 1.0 / (n_entries - 1)
     pl_colorscale = []
     for k in range(n_entries):
-        C = list(map(np.uint8, np.array(cmap(k*h)[:3]) * 255))
-        pl_colorscale.append([round(k*h, 2), 'rgb' + str((C[0], C[1], C[2]))]) # Python 2.7+
+        C = list(map(np.uint8, np.array(cmap(k * h)[:3]) * 255))
+        pl_colorscale.append(
+            [round(k * h, 2), "rgb" + str((C[0], C[1], C[2]))]
+        )  # Python 2.7+
         # pl_colorscale.append([round(k*h, 2), f'rgb({C[0]}, {C[1]}, {C[2]})']) # Python 3.6+
     return pl_colorscale
 
@@ -63,7 +66,7 @@ def plotlyviz(
     color_function_name=None,
     dashboard=False,
     graph_data=False,
-    factor_size=3, 
+    factor_size=3,
     edge_linewidth=1.5,
     node_linecolor="rgb(200,200,200)",
     width=600,
@@ -72,13 +75,13 @@ def plotlyviz(
     left=10,
     bottom=35,
     summary_height=300,
-    summary_width=600, 
+    summary_width=600,
     summary_left=20,
     summary_right=20,
     hist_left=25,
     hist_right=25,
     member_textbox_width=800,
-    filename=None
+    filename=None,
 ):
     """
         Visualizations and dashboards for kmapper graphs using Plotly. This method is suitable for use in Jupyter notebooks.
@@ -127,10 +130,11 @@ def plotlyviz(
     """
 
     kmgraph, mapper_summary, n_color_distribution = get_mapper_graph(
-        scomplex, colorscale=colorscale, color_function=color_function,
-        color_function_name=color_function_name
+        scomplex,
+        colorscale=colorscale,
+        color_function=color_function,
+        color_function_name=color_function_name,
     )
-
 
     annotation = get_kmgraph_meta(mapper_summary)
 
@@ -176,24 +180,27 @@ def plotlyviz(
     """
 
     if dashboard or graph_data:
-        fw_hist = node_hist_fig(
-            n_color_distribution, left=hist_left, right=hist_right
-        )  
+        fw_hist = node_hist_fig(n_color_distribution, left=hist_left, right=hist_right)
         fw_summary = summary_fig(
-            mapper_summary, width=summary_width, height=summary_height, left=summary_left, right=summary_right
+            mapper_summary,
+            width=summary_width,
+            height=summary_height,
+            left=summary_left,
+            right=summary_right,
         )
 
         fw_graph = result
-        result = hovering_widgets(kmgraph, fw_graph, member_textbox_width=member_textbox_width)
+        result = hovering_widgets(
+            kmgraph, fw_graph, member_textbox_width=member_textbox_width
+        )
 
         if graph_data:
             result = ipw.VBox([fw_graph, ipw.HBox([fw_summary, fw_hist])])
-        
+
     if filename:
-        pio.write_image(result, filename)#or 'mapper-cat.png'
+        pio.write_image(result, filename)  # or 'mapper-cat.png'
 
     return result
-    
 
 
 def scomplex_to_graph(

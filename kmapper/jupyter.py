@@ -10,18 +10,41 @@ IPython.core.display.display(IPython.core.display.HTML(CUSTOM_CSS))
 
 def display(path_html="mapper_visualization_output.html"):
     """ Displays a html file inside a Jupyter Notebook output cell.
+        Must run `KeplerMapper.visualize` first to generate html. This function will then render that output from a file saved to disk.
     
     Parameters
-    ----------
+    ============
+
     path_html : str
         Path to html. Use file name for file inside current working 
         directory. Use `file://` browser url-format for path to local file.
         Use `https://` urls for externally hosted resources.
 
+
+    Example
+    ========
+
+    ::
+
+        import numpy as np
+        import kmapper as km
+        from kmapper.jupyter import display
+
+        data = np.random.random((2000, 2))
+        mapper = km.KeplerMapper()
+        lens = km.project(data)
+        graph = km.map(lens, data)
+        _ = km.visualize(graph, path_html="filename.html")
+
+        display("filename.html")
+
+
     Notes
-    -----
+    ========
+
     Thanks to https://github.com/smartinsightsfromdata for the issue:
     https://github.com/MLWave/kepler-mapper/issues/10
+
 
     """
 

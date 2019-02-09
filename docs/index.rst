@@ -26,23 +26,23 @@ Contents
   setup
   usage
   examples
-  reference
+  reference/index
 
 .. toctree::
     :maxdepth: 1
     :caption: Tutorials
 
     notebooks/Adapters
-    notebooks/Plotly Demo
-    notebooks/KeplerMapper usage in Jupyter Notebook
+    notebooks/Plotly-Demo
+    notebooks/KeplerMapper-usage-in-Jupyter-Notebook
 
 .. toctree::
     :maxdepth: 1
     :caption: Advanced Tutorials
 
-    notebooks/KeplerMapper Newsgroup20 Pipeline
+    notebooks/KeplerMapper-Newsgroup20-Pipeline
     notebooks/TOR-XGB-TDA
-    notebooks/Confidence Graphs
+    notebooks/Confidence-Graphs
     notebooks/self-guessing
 
 

@@ -15,7 +15,9 @@ import numpy as np
 class Cover:
     """Helper class that defines the default covering scheme
 
-    It calculates the cover based on the following formula for overlap.     (https://arxiv.org/pdf/1706.00204.pdf)
+    It calculates the cover based on the following formula for overlap. (https://arxiv.org/pdf/1706.00204.pdf)
+
+    ::   
 
                      |cube[i] intersection cube[i+1]|
         overlap = --------------------------------------
@@ -23,7 +25,7 @@ class Cover:
     
 
     Parameters
-    ------------
+    ============
 
     n_cubes: int 
         Number of hypercubes along each dimension. Sometimes referred to as resolution.
@@ -129,6 +131,22 @@ class Cover:
         return bounds
 
     def fit(self, data):
+        """ Fit a cover on the data. This method constructs centers and radii in each dimension given the `perc_overlap` and `n_cube`.
+
+        Parameters
+        ============
+
+        data: array-like
+            Data to apply the cover to. Warning: First column must be an index column.
+
+        Returns
+        ========
+
+        centers: list of arrays
+            A list of centers for each cube
+
+        """
+
 
         # TODO: support indexing into any columns
         di = np.array(range(1, data.shape[1]))
@@ -193,9 +211,21 @@ class Cover:
 
         return centers
 
-    def transform_single(self, data, cube, i=None):
-        # import pdb; pdb.set_trace()
-        lowerbounds, upperbounds = cube - self.radius_, cube + self.radius_
+    def transform_single(self, data, center, i=0):
+        """ Compute entries of `data` in hypercube centered at `center`
+
+        Parameters
+        ===========
+
+        data: array-like
+            Data to find in entries in cube. Warning: first column must be index column.
+        center: array-like
+            Center points for the cube. Cube is found as all data in `[center-self.radius_, center+self.radius_]`
+        i: int, default 0
+            Optional counter to aid in verbose debugging.
+        """
+
+        lowerbounds, upperbounds = center - self.radius_, center + self.radius_
 
         # Slice the hypercube
         entries = (data[:, self.di_] >= lowerbounds) & (
@@ -212,6 +242,25 @@ class Cover:
         return hypercube
 
     def transform(self, data, centers=None):
+        """ Find entries of all hypercubes. If `centers=None`, then use `self.centers_` as computed in `self.fit`.
+            
+            Empty hypercubes are removed from the result
+
+        Parameters
+        ===========
+
+        data: array-like
+            Data to find in entries in cube. Warning: first column must be index column.
+        centers: list of array-like
+            Center points for all cubes as returned by `self.fit`. Default is to use `self.centers_`.
+
+        Returns
+        =========
+        hypercubes: list of array-like
+            list of entries in each hypercobe in `data`.
+
+        """
+
         centers = centers or self.centers_
         hypercubes = [
             self.transform_single(data, cube, i) for i, cube in enumerate(centers)

@@ -37,9 +37,6 @@ from kmapper import __version__
 import sys
 sys.path.append("../.")
 
-
-
-
 html_context = {'google_code': 'UA-124965309-4'}
 
 extensions = [

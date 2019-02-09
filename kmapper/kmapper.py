@@ -36,7 +36,7 @@ class KeplerMapper(object):
                 Cluster the points inside the interval
                 (Note: we cluster on the inverse image/original data to lessen projection loss).
                 If two clusters/nodes have the same members (due to the overlap), then:
-     a           connect these with an edge.
+                connect these with an edge.
     3)  	Visualize the network using HTML and D3.js.
 
     KM has a number of nice features, some which get forgotten.
@@ -44,7 +44,6 @@ class KeplerMapper(object):
         - fit_transform : Applies a sequence of projections. Currently, this API is a little confusing and will be changed in the future. 
     
 
-    
     Parameters
     ===========
 
@@ -338,11 +337,13 @@ class KeplerMapper(object):
         Examples
         ========
 
-        >>> simplicial_complex = mapper.map(lens, X=None, clusterer=cluster.DBSCAN(eps=0.5,min_samples=3), cover=km.Cover(n_cubes=[10,20], perc_overlap=0.4))
+        ::
 
-        >>>print(simplicial_complex["nodes"])
-        >>>print(simplicial_complex["links"])
-        >>>print(simplicial_complex["meta"])
+            >>> simplicial_complex = mapper.map(lens, 
+                                                X=None, 
+                                                clusterer=cluster.DBSCAN(eps=0.5,min_samples=3), 
+                                                cover=km.Cover(n_cubes=[10,20], 
+                                                perc_overlap=0.4))
 
         """
 

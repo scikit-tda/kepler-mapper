@@ -197,11 +197,9 @@ class KeplerMapper(object):
                     nn = neighbors.NearestNeighbors(n_neighbors=n_neighbors)
                     nn.fit(X)
                     X = np.sum(
-                        nn.kneighbors(
-                            X, 
-                            n_neighbors=n_neighbors, 
-                            return_distance=True
-                        )[0],
+                        nn.kneighbors(X, n_neighbors=n_neighbors, return_distance=True)[
+                            0
+                        ],
                         axis=1,
                     ).reshape((X.shape[0], 1))
 

@@ -199,12 +199,13 @@ def format_mapper_data(
         json_dict["nodes"].append(n)
     for i, (node_id, linked_node_ids) in enumerate(graph["links"].items()):
         for linked_node_id in linked_node_ids:
-            l = {
-                "source": node_id_to_num[node_id],
-                "target": node_id_to_num[linked_node_id],
-                "width": _size_link_width(graph, node_id, linked_node_id),
-            }
-            json_dict["links"].append(l)
+            json_dict["links"].append(
+                {
+                    "source": node_id_to_num[node_id],
+                    "target": node_id_to_num[linked_node_id],
+                    "width": _size_link_width(graph, node_id, linked_node_id),
+                }
+            )
     return json_dict
 
 
@@ -282,8 +283,9 @@ def _format_cluster_statistics(member_ids, X, X_names):
             )
         )
         stats = sorted(stat_zip, reverse=True)
-        above_stats = [a for a in stats if a[4] == True]
-        below_stats = [a for a in stats if a[4] == False]
+
+        above_stats = [a for a in stats if bool(a[4]) is True]
+        below_stats = [a for a in stats if bool(a[4]) is False]
 
         if len(above_stats) > 0:
             for s, f, i, c, a, v in above_stats[:5]:

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>API Reference &mdash; KeplerMapper 1.1.6 documentation</title>
+  <title>API Reference &mdash; KeplerMapper 1.1.6.dev0 documentation</title>
   
 
   
@@ -84,7 +84,7 @@
             
             
               <div class="version">
-                1.1.6
+                1.1.6.dev0
               </div>
             
           
@@ -227,8 +227,11 @@ For instance “mean_of_row(x) for x in X”</li>
 <li>Map this projection with overlapping intervals/hypercubes.
 Cluster the points inside the interval
 (Note: we cluster on the inverse image/original data to lessen projection loss).
-If two clusters/nodes have the same members (due to the overlap), then:
-connect these with an edge.</li>
+If two clusters/nodes have the same members (due to the overlap), then:</li>
+</ol>
+<blockquote>
+<div>a           connect these with an edge.</div></blockquote>
+<ol class="arabic simple" start="3">
 <li>Visualize the network using HTML and D3.js.</li>
 </ol>
 <dl class="docutils">
@@ -300,7 +303,7 @@ If False do nothing, else create a squared distance matrix with the chosen metri
 
 <dl class="method">
 <dt id="kmapper.KeplerMapper.map">
-<code class="descname">map</code><span class="sig-paren">(</span><em>lens</em>, <em>X=None</em>, <em>clusterer=DBSCAN(algorithm='auto'</em>, <em>eps=0.5</em>, <em>leaf_size=30</em>, <em>metric='euclidean'</em>, <em>metric_params=None</em>, <em>min_samples=3</em>, <em>n_jobs=None</em>, <em>p=None)</em>, <em>cover=&lt;kmapper.cover.Cover object&gt;</em>, <em>nerve=&lt;kmapper.nerve.GraphNerve object&gt;</em>, <em>precomputed=False</em>, <em>overlap_perc=None</em>, <em>nr_cubes=None</em>, <em>coverer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/kmapper.html#KeplerMapper.map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.KeplerMapper.map" title="Permalink to this definition">¶</a></dt>
+<code class="descname">map</code><span class="sig-paren">(</span><em>lens</em>, <em>X=None</em>, <em>clusterer=DBSCAN(algorithm='auto'</em>, <em>eps=0.5</em>, <em>leaf_size=30</em>, <em>metric='euclidean'</em>, <em>metric_params=None</em>, <em>min_samples=3</em>, <em>n_jobs=None</em>, <em>p=None)</em>, <em>cover=Cover(n_cubes=10</em>, <em>perc_overlap=0.1</em>, <em>limits=None</em>, <em>verbose=0</em>, <em>nerve=&lt;kmapper.nerve.GraphNerve object&gt;</em>, <em>precomputed=False</em>, <em>remove_duplicate_nodes=False</em>, <em>overlap_perc=None</em>, <em>nr_cubes=None</em>, <em>coverer=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/kmapper.html#KeplerMapper.map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.KeplerMapper.map" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply Mapper algorithm on this projection and build a simplicial complex. Returns a dictionary with nodes and links.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -317,7 +320,7 @@ If False do nothing, else create a squared distance matrix with the chosen metri
 <dd><p class="first last">Scikit-learn API compatible clustering algorithm. Must provide <cite>fit</cite> and <cite>predict</cite>.</p>
 </dd>
 <dt><strong>cover: type kmapper.Cover</strong></dt>
-<dd><p class="first last">Cover scheme for lens. Instance of kmapper.cover providing methods <cite>define_bins</cite> and <cite>find_entries</cite>.</p>
+<dd><p class="first last">Cover scheme for lens. Instance of kmapper.cover providing methods <cite>fit</cite> and <cite>transform</cite>.</p>
 </dd>
 <dt><strong>nerve: kmapper.Nerve</strong></dt>
 <dd><p class="first last">Nerve builder implementing <cite>__call__(nodes)</cite> API</p>
@@ -328,6 +331,10 @@ If False do nothing, else create a squared distance matrix with the chosen metri
 is an argument for DBSCAN among others), which 
 will then cause the clusterer to expect a square distance matrix for each hypercube. <cite>precomputed=True</cite> will give a square matrix
 to the clusterer to fit on for each hypercube.</p>
+</dd>
+<dt><strong>remove_duplicate_nodes: Boolean</strong></dt>
+<dd><p class="first last">Removes duplicate nodes before edges are determined. A node is considered to be duplicate
+if it has exactly the same set of points as another node.</p>
 </dd>
 <dt><strong>nr_cubes: Int (Deprecated)</strong></dt>
 <dd><p class="first last">The number of intervals/hypercubes to create. Default = 10. (DeprecationWarning: define Cover explicitly in future versions)</p>
@@ -458,13 +465,28 @@ to the clusterer to fit on for each hypercube.</p>
 <p>Cover schemes provide a customizable way of defining a cover for your lens.</p>
 <span class="target" id="module-kmapper.cover"></span><dl class="class">
 <dt id="kmapper.cover.Cover">
-<em class="property">class </em><code class="descclassname">kmapper.cover.</code><code class="descname">Cover</code><span class="sig-paren">(</span><em>n_cubes=10</em>, <em>perc_overlap=0.2</em>, <em>nr_cubes=None</em>, <em>overlap_perc=None</em>, <em>limits=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/cover.html#Cover"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.cover.Cover" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">kmapper.cover.</code><code class="descname">Cover</code><span class="sig-paren">(</span><em>n_cubes=10</em>, <em>perc_overlap=0.5</em>, <em>limits=None</em>, <em>verbose=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/cover.html#Cover"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.cover.Cover" title="Permalink to this definition">¶</a></dt>
 <dd><p>Helper class that defines the default covering scheme</p>
+<p>It calculates the cover based on the following formula for overlap.     (<a class="reference external" href="https://arxiv.org/pdf/1706.00204.pdf">https://arxiv.org/pdf/1706.00204.pdf</a>)</p>
+<blockquote>
+<div><blockquote>
+<div><a href="#id1"><span class="problematic" id="id2">|cube[i] intersection cube[i+1]|</span></a></div></blockquote>
+<dl class="docutils">
+<dt>overlap = ————————————–</dt>
+<dd><a href="#id3"><span class="problematic" id="id4">|cube[i]|</span></a></dd>
+</dl>
+</div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>n_cubes: int</strong></dt>
+<dd><p class="first last">Number of hypercubes along each dimension. Sometimes referred to as resolution.</p>
+</dd>
+<dt><strong>perc_overlap: float</strong></dt>
+<dd><p class="first last">Amount of overlap between adjacent cubes calculated only along 1 dimension.</p>
+</dd>
 <dt><strong>limits: Numpy Array (n_dim,2)</strong></dt>
 <dd><p class="first last">(lower bound, upper bound) for every dimension
 If a value is set to <cite>np.float(‘inf’)</cite>, the bound will be assumed to be the min/max value of the dimension
@@ -476,49 +498,11 @@ i.e. <cite>[[min_1, max_1], [min_2, max_2], [min_3, max_3]]</cite></p>
 </tr>
 </tbody>
 </table>
-<dl class="method">
-<dt id="kmapper.cover.Cover.define_bins">
-<code class="descname">define_bins</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/cover.html#Cover.define_bins"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.cover.Cover.define_bins" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns an iterable of all bins in the cover.</p>
-<p>Warning: This function must assume that the first column of data are indices.</p>
-<p class="rubric">Examples</p>
-<p>If there are 4 cubes per dimension and 3 dimensions return the bottom left (origin) coordinates of 64 hypercubes, as a sorted list of Numpy arrays</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="kmapper.cover.Cover.find_entries">
-<code class="descname">find_entries</code><span class="sig-paren">(</span><em>data</em>, <em>cube</em>, <em>verbose=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/cover.html#Cover.find_entries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.cover.Cover.find_entries" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find all entries in data that are in the given cube.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>data: Numpy array</strong></dt>
-<dd><p class="first last">Either projected data or original data.</p>
-</dd>
-<dt><strong>cube:</strong></dt>
-<dd><p class="first last">an item from the list of cubes provided by <cite>cover.define_bins</cite> iterable.</p>
-</dd>
-</dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>hypercube: Numpy Array</strong></dt>
-<dd><p class="first last">All entries in data that are in cube.</p>
-</dd>
-</dl>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
 <dt id="kmapper.cover.CubicalCover">
-<em class="property">class </em><code class="descclassname">kmapper.cover.</code><code class="descname">CubicalCover</code><span class="sig-paren">(</span><em>n_cubes=10</em>, <em>perc_overlap=0.2</em>, <em>nr_cubes=None</em>, <em>overlap_perc=None</em>, <em>limits=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/cover.html#CubicalCover"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.cover.CubicalCover" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">kmapper.cover.</code><code class="descname">CubicalCover</code><span class="sig-paren">(</span><em>n_cubes=10</em>, <em>perc_overlap=0.5</em>, <em>limits=None</em>, <em>verbose=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kmapper/cover.html#CubicalCover"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.cover.CubicalCover" title="Permalink to this definition">¶</a></dt>
 <dd><p>Explicit definition of a cubical cover as the default behavior of the cover class. This is currently identical to the default cover class.</p>
 </dd></dl>
 
@@ -781,7 +765,7 @@ Use <cite>https://</cite> urls for externally hosted resources.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.1.6',
+            VERSION:'1.1.6.dev0',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',

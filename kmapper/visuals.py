@@ -92,7 +92,7 @@ def _map_val2color(val, vmin, vmax, colorscale=None):
     colors = np.array(colorscale)[:, 1]
 
     colors_01 = (
-        np.array(list(map(literal_eval, [color[3:] for color in colors]))) / 255.
+        np.array(list(map(literal_eval, [color[3:] for color in colors]))) / 255.0
     )
 
     v = (val - vmin) / float((vmax - vmin))  # val is mapped to v in[0,1]
@@ -184,7 +184,7 @@ def format_mapper_data(
             lens_names,
             color_function,
             node_id,
-            nbins
+            nbins,
         )
 
         n = {
@@ -199,12 +199,13 @@ def format_mapper_data(
         json_dict["nodes"].append(n)
     for i, (node_id, linked_node_ids) in enumerate(graph["links"].items()):
         for linked_node_id in linked_node_ids:
-            l = {
-                "source": node_id_to_num[node_id],
-                "target": node_id_to_num[linked_node_id],
-                "width": _size_link_width(graph, node_id, linked_node_id),
-            }
-            json_dict["links"].append(l)
+            json_dict["links"].append(
+                {
+                    "source": node_id_to_num[node_id],
+                    "target": node_id_to_num[linked_node_id],
+                    "width": _size_link_width(graph, node_id, linked_node_id),
+                }
+            )
     return json_dict
 
 
@@ -227,8 +228,8 @@ def build_histogram(data, colorscale=None, nbins=10):
     sum_bucket_value = sum(hist)
     for bar, mid in zip(hist, bin_mids):
         height = np.floor(((bar / max_bucket_value) * 100) + 0.5)
-        perc = round((bar / sum_bucket_value) * 100., 1)
-        color = _map_val2color(mid, 0., 1., colorscale)
+        perc = round((bar / sum_bucket_value) * 100.0, 1)
+        color = _map_val2color(mid, 0.0, 1.0, colorscale)
 
         histogram.append({"height": height, "perc": perc, "color": color})
 
@@ -282,8 +283,9 @@ def _format_cluster_statistics(member_ids, X, X_names):
             )
         )
         stats = sorted(stat_zip, reverse=True)
-        above_stats = [a for a in stats if a[4] == True]
-        below_stats = [a for a in stats if a[4] == False]
+
+        above_stats = [a for a in stats if bool(a[4]) is True]
+        below_stats = [a for a in stats if bool(a[4]) is False]
 
         if len(above_stats) > 0:
             for s, f, i, c, a, v in above_stats[:5]:
@@ -329,12 +331,22 @@ def _format_projection_statistics(member_ids, lens, lens_names):
 
 
 def _tooltip_components(
-    member_ids, X, X_names, lens, lens_names, color_function, node_ID, colorscale, nbins=10
+    member_ids,
+    X,
+    X_names,
+    lens,
+    lens_names,
+    color_function,
+    node_ID,
+    colorscale,
+    nbins=10,
 ):
     projection_stats = _format_projection_statistics(member_ids, lens, lens_names)
     cluster_stats = _format_cluster_statistics(member_ids, X, X_names)
 
-    member_histogram = build_histogram(color_function[member_ids], colorscale=colorscale, nbins=nbins)
+    member_histogram = build_histogram(
+        color_function[member_ids], colorscale=colorscale, nbins=nbins
+    )
 
     return projection_stats, cluster_stats, member_histogram
 
@@ -349,7 +361,7 @@ def _format_tooltip(
     lens_names,
     color_function,
     node_ID,
-    nbins
+    nbins,
 ):
     # TODO: Allow customization in the form of aggregate per node and per entry in node.
     # TODO: Allow users to turn off tooltip completely.
@@ -362,9 +374,17 @@ def _format_tooltip(
     custom_tooltips = list(custom_tooltips)
 
     colorscale = colorscale_default
-    
+
     projection_stats, cluster_stats, histogram = _tooltip_components(
-        member_ids, X, X_names, lens, lens_names, color_function, node_ID, colorscale, nbins
+        member_ids,
+        X,
+        X_names,
+        lens,
+        lens_names,
+        color_function,
+        node_ID,
+        colorscale,
+        nbins,
     )
 
     tooltip = env.get_template("cluster_tooltip.html").render(

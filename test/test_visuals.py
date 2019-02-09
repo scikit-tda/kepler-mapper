@@ -124,7 +124,7 @@ class TestVisualHelpers:
         single_bar = [bar for bar in hist if bar["perc"] == 100.0]
 
         assert len(single_bar) == 1
-        assert _map_val2color(c, 0., 1.) == single_bar[0]["color"]
+        assert _map_val2color(c, 0.0, 1.0) == single_bar[0]["color"]
 
     def test_color_function_size(self):
         nodes = {"a": [1, 2, 3], "b": [4, 5, 6, 7, 8, 9]}
@@ -305,7 +305,7 @@ class TestColorhandling:
         """ This function takes a val, a min and max, and a color scale, and finds the color the val should be """
 
         for v, color in default_colorscale:
-            c = _map_val2color(v, 0., 1., default_colorscale)
+            c = _map_val2color(v, 0.0, 1.0, default_colorscale)
             assert c == color
 
     def test_mid_val2color(self, default_colorscale):
@@ -319,5 +319,5 @@ class TestColorhandling:
             + str(expected[2])
             + ")"
         )
-        c = _map_val2color(0.05, 0., 1., default_colorscale)
+        c = _map_val2color(0.05, 0.0, 1.0, default_colorscale)
         assert c == expected_str

@@ -27,42 +27,6 @@ from .visuals import (
 )
 
 
-# palette = [
-#     "#0500ff",
-#     "#0300ff",
-#     "#0100ff",
-#     "#0002ff",
-#     "#0022ff",
-#     "#0044ff",
-#     "#0064ff",
-#     "#0084ff",
-#     "#00a4ff",
-#     "#00a4ff",
-#     "#00c4ff",
-#     "#00e4ff",
-#     "#00ffd0",
-#     "#00ff83",
-#     "#00ff36",
-#     "#17ff00",
-#     "#65ff00",
-#     "#b0ff00",
-#     "#fdff00",
-#     "#FFf000",
-#     "#FFdc00",
-#     "#FFc800",
-#     "#FFb400",
-#     "#FFa000",
-#     "#FF8c00",
-#     "#FF7800",
-#     "#FF6400",
-#     "#FF5000",
-#     "#FF3c00",
-#     "#FF2800",
-#     "#FF1400",
-#     "#FF0000",
-# ]
-
-
 class KeplerMapper(object):
     """With this class you can build topological networks from (high-dimensional) data.
 
@@ -72,7 +36,7 @@ class KeplerMapper(object):
                 Cluster the points inside the interval
                 (Note: we cluster on the inverse image/original data to lessen projection loss).
                 If two clusters/nodes have the same members (due to the overlap), then:
-                connect these with an edge.
+     a           connect these with an edge.
     3)  	Visualize the network using HTML and D3.js.
 
     KM has a number of nice features, some which get forgotten.
@@ -90,7 +54,6 @@ class KeplerMapper(object):
     """
 
     def __init__(self, verbose=0):
-
 
         # TODO: move as many of the arguments from fit_transform and map into here.
         self.verbose = verbose
@@ -325,6 +288,7 @@ class KeplerMapper(object):
         cover=Cover(n_cubes=10, perc_overlap=0.1),
         nerve=GraphNerve(),
         precomputed=False,
+        remove_duplicate_nodes=False,
         # These arguments are all deprecated
         overlap_perc=None,
         nr_cubes=None,
@@ -355,6 +319,10 @@ class KeplerMapper(object):
             is an argument for DBSCAN among others), which 
             will then cause the clusterer to expect a square distance matrix for each hypercube. `precomputed=True` will give a square matrix
             to the clusterer to fit on for each hypercube.
+            
+        remove_duplicate_nodes: Boolean
+            Removes duplicate nodes before edges are determined. A node is considered to be duplicate
+            if it has exactly the same set of points as another node.
 
         nr_cubes: Int (Deprecated)
             The number of intervals/hypercubes to create. Default = 10. (DeprecationWarning: define Cover explicitly in future versions)
@@ -457,7 +425,7 @@ class KeplerMapper(object):
             if self.verbose > 1:
                 print(
                     "There are %s points in cube %s/%s"
-                    % (hypercube.shape[0], i, total_bins)
+                    % (hypercube.shape[0], i + 1, total_bins)
                 )
 
             # If at least min_cluster_samples samples inside the hypercube
@@ -503,6 +471,9 @@ class KeplerMapper(object):
                 if self.verbose > 1:
                     print("Cube_%s is empty.\n" % (i))
 
+        if remove_duplicate_nodes:
+            nodes = self._remove_duplicate_nodes(nodes)
+
         links, simplices = nerve.compute(nodes)
 
         graph["nodes"] = nodes
@@ -522,6 +493,32 @@ class KeplerMapper(object):
             self._summary(graph, str(datetime.now() - start))
 
         return graph
+
+    def _remove_duplicate_nodes(self, nodes):
+
+        # invert node list and merge duplicate nodes
+        deduped_items = defaultdict(list)
+        for node_id, items in nodes.items():
+            deduped_items[frozenset(items)].append(node_id)
+
+        deduped_nodes = {
+            "|".join(node_id_list): list(frozen_items)
+            for frozen_items, node_id_list in deduped_items.items()
+        }
+
+        if self.verbose > 0:
+            total_merged = len(nodes) - len(deduped_items)
+            if total_merged:
+                print("\Merged {} duplicate nodes.\n".format(total_merged))
+                print(
+                    "Number of nodes before merger: {}; after merger: {}\n".format(
+                        len(nodes), len(deduped_nodes)
+                    )
+                )
+            else:
+                print("No duplicate nodes found to remove.\n")
+
+        return deduped_nodes
 
     def _summary(self, graph, time):
         # TODO: this summary is dependant on the type of Nerve being built.
@@ -545,7 +542,7 @@ class KeplerMapper(object):
         lens=None,
         lens_names=[],
         show_tooltips=True,
-        nbins=10
+        nbins=10,
     ):
         """Generate a visualization of the simplicial complex mapper output. Turns the complex dictionary into a HTML/D3.js visualization
 
@@ -614,7 +611,15 @@ class KeplerMapper(object):
         color_function = init_color_function(graph, color_function)
 
         mapper_data = format_mapper_data(
-            graph, color_function, X, X_names, lens, lens_names, custom_tooltips, env, nbins
+            graph,
+            color_function,
+            X,
+            X_names,
+            lens,
+            lens_names,
+            custom_tooltips,
+            env,
+            nbins,
         )
 
         colorscale = colorscale_default

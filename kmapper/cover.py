@@ -31,6 +31,8 @@ class Cover:
             self.limits = np.array(self.limits)
             assert self.limits.shape[1] == 2, "limits should be (n_dim,2) in shape"
 
+    def __repr__(self):
+        return "Cover(n_cubes=%s, perc_overlap=%s, limits=%s, verbose=%s" % (self.n_cubes, self.perc_overlap, self.limits, self.verbose)
 
     def _compute_bounds(self, data):
 
@@ -89,24 +91,27 @@ class Cover:
             perc_overlap = np.repeat(self.perc_overlap, n_dims)
 
         bounds = self._compute_bounds(indexless_data)
-        
         ranges = (bounds[1] - bounds[0])
     
         # (n-1)/n |range|
         inner_range = ((n_cubes - 1) / n_cubes) * ranges
+        inset = (ranges - inner_range) / 2
 
         # |range| / (2n ( 1 - p))
-        radius = ranges / (2 * n_cubes * (1 - perc_overlap))
+        radius = ranges / (2 * (n_cubes) * (1 - perc_overlap))
 
-        # 
-        centers_per_dimension = [np.linspace(b,c, num=n) for b, c, n in zip(*bounds, n_cubes)]
-        centers = list(product(*centers_per_dimension))
+        # centers are fixed w.r.t perc_overlap
+        centers_per_dimension = [np.linspace(b+r,c-r, num=n) for b, c, n, r in zip(*bounds, n_cubes, inset)]
+        centers = [np.array(c) for c in product(*centers_per_dimension)]
 
         self.centers_ = centers
         self.radius_ = radius
         self.inner_range_ = inner_range
         self.bounds_ = bounds
         self.di_ = di
+
+        if self.verbose > 0:
+            print(" - Cover - centers: %s\ninner_range: %s\nradius: %s" % (self.centers_, self.inner_range_, self.radius_))
 
         return centers
     
@@ -120,8 +125,9 @@ class Cover:
  
         return hypercube
 
-    def transform(self, data):
-        hypercubes = [self.transform_single(data, cube) for cube in self.centers_]
+    def transform(self, data, centers=None):
+        centers = centers or self.centers_
+        hypercubes = [self.transform_single(data, cube) for cube in centers]
         
         # Clean out any empty cubes (common in high dimensions)
         hypercubes = [cube for cube in hypercubes if len(cube)] 

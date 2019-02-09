@@ -509,7 +509,7 @@ class KeplerMapper(object):
         if self.verbose > 0:
             total_merged = len(nodes) - len(deduped_items)
             if total_merged:
-                print("\Merged {} duplicate nodes.\n".format(total_merged))
+                print("Merged {} duplicate nodes.\n".format(total_merged))
                 print(
                     "Number of nodes before merger: {}; after merger: {}\n".format(
                         len(nodes), len(deduped_nodes)

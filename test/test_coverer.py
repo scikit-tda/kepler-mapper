@@ -126,7 +126,7 @@ class TestCover:
 
             base_dist = ( feature_range[1] - feature_range[0] ) / n_cubes
             overlap_dist = base_dist * perc_overlap
-            chunk = base_dist + overlap_dist
+            chunk = base_dist + overlap_dist*2
 
             data = np.arange(20).reshape(10, 2)
             scaler = preprocessing.MinMaxScaler(feature_range=feature_range)

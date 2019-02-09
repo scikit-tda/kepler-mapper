@@ -190,7 +190,7 @@ class TestMap:
 
         assert len(deduped_nodes) < len(nodes)
         assert len(deduped_nodes) == 4
-        assert "cube1_cluster1|cube2_cluster0" in deduped_nodes
+        assert "cube1_cluster1|cube2_cluster0" in deduped_nodes or "cube2_cluster0|cube1_cluster1" in deduped_nodes
 
     def test_precomputed_with_knn_lens(self):
         mapper = KeplerMapper()

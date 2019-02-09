@@ -1,7 +1,9 @@
 from __future__ import division
 
-from collections.abc import Iterable
-
+try:
+    from collections.abc import Iterable
+except:
+    from collections import Iterable
 
 import warnings
 from itertools import product
@@ -158,7 +160,9 @@ class Cover:
         radius = ranges / (2 * (n_cubes) * (1 - perc_overlap))
 
         # centers are fixed w.r.t perc_overlap
-        centers_per_dimension = [np.linspace(b+r,c-r, num=n) for b, c, n, r in zip(*bounds, n_cubes, inset)]
+        zip_items = list(bounds) # work around 2.7,3.4 weird behavior
+        zip_items.extend([n_cubes, inset])
+        centers_per_dimension = [np.linspace(b+r,c-r, num=n) for b, c, n, r in zip(*zip_items)]
         centers = [np.array(c) for c in product(*centers_per_dimension)]
 
         self.centers_ = centers

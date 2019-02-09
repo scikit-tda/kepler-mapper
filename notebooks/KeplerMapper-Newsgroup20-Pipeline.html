@@ -1,0 +1,1046 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>KeplerMapper &amp; NLP examples &mdash; KeplerMapper 1.1.6.dev0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Detecting Encrypted TOR Traffic with Boosting and Topological Data Analysis" href="TOR-XGB-TDA.html" />
+    <link rel="prev" title="Using Kepler Mapper in Jupyter Notebook" href="KeplerMapper-usage-in-Jupyter-Notebook.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+    ga('create', 'UA-124965309-4', 'auto');
+    ga('send', 'pageview');
+  </script>
+    <!-- End Google Analytics -->
+
+
+
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+
+          <a href="https://scikit-tda.org">
+            <big>a scikit-tda project</big>
+          </a>
+
+
+
+          
+            <a href="../index.html" class="icon icon-home"> KeplerMapper
+          
+
+          
+            
+            <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.6.dev0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">API Reference</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Adapters.html">Adapters example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plotly-Demo.html">Demo of Plotlyviz features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="KeplerMapper-usage-in-Jupyter-Notebook.html">Using Kepler Mapper in Jupyter Notebook</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Advanced Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">KeplerMapper &amp; NLP examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Newsgroups20">Newsgroups20</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Data">Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Projection">Projection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Mapping">Mapping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Interpretable-inverse-X">Interpretable inverse X</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Visualization">Visualization</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="TOR-XGB-TDA.html">Detecting Encrypted TOR Traffic with Boosting and Topological Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Confidence-Graphs.html">Confidence Graphs: Representing Model Uncertainty in Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="self-guessing.html">Self-guessing mapper</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">KeplerMapper</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="https://scikit-tda.org">Scikit-TDA</a>&raquo;<a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>KeplerMapper &amp; NLP examples</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/notebooks/KeplerMapper-Newsgroup20-Pipeline.ipynb.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 8ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="KeplerMapper-&amp;-NLP-examples">
+<h1>KeplerMapper &amp; NLP examples<a class="headerlink" href="#KeplerMapper-&-NLP-examples" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="Newsgroups20">
+<h2>Newsgroups20<a class="headerlink" href="#Newsgroups20" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># from kmapper import jupyter</span>
+<span class="kn">import</span> <span class="nn">kmapper</span> <span class="kn">as</span> <span class="nn">km</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">fetch_20newsgroups</span>
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">AgglomerativeClustering</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">TfidfVectorizer</span>
+<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">TruncatedSVD</span>
+<span class="kn">from</span> <span class="nn">sklearn.manifold</span> <span class="kn">import</span> <span class="n">Isomap</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">MinMaxScaler</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="Data">
+<h3>Data<a class="headerlink" href="#Data" title="Permalink to this headline">¶</a></h3>
+<p>We will use the Newsgroups20 dataset. This is a canonical NLP dataset
+containing 11314 labeled postings on 20 different newsgroups.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">newsgroups</span> <span class="o">=</span> <span class="n">fetch_20newsgroups</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="s1">&#39;train&#39;</span><span class="p">)</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">target_names</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">newsgroups</span><span class="o">.</span><span class="n">data</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">newsgroups</span><span class="o">.</span><span class="n">target</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">newsgroups</span><span class="o">.</span><span class="n">target_names</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;SAMPLE&quot;</span><span class="p">,</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;SHAPE&quot;</span><span class="p">,</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;TARGET&quot;</span><span class="p">,</span><span class="n">target_names</span><span class="p">[</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(&#39;SAMPLE&#39;, u&#34;From: lerxst@wam.umd.edu (where&#39;s my thing)\nSubject: WHAT car is this!?\nNntp-Posting-Host: rac3.wam.umd.edu\nOrganization: University of Maryland, College Park\nLines: 15\n\n I was wondering if anyone out there could enlighten me on this car I saw\nthe other day. It was a 2-door sports car, looked to be from the late 60s/\nearly 70s. It was called a Bricklin. The doors were really small. In addition,\nthe front bumper was separate from the rest of the body. This is \nall I know. If anyone can tellme a model name, engine specs, years\nof production, where this car is made, history, or whatever info you\nhave on this funky looking car, please e-mail.\n\nThanks,\n- IL\n   ---- brought to you by your neighborhood Lerxst ----\n\n\n\n\n&#34;)
+(&#39;SHAPE&#39;, (11314,))
+(&#39;TARGET&#39;, &#39;rec.autos&#39;)
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Projection">
+<h3>Projection<a class="headerlink" href="#Projection" title="Permalink to this headline">¶</a></h3>
+<p>To project the unstructured text dataset down to 2 fixed dimensions, we
+will set up a function pipeline. Every consecutive function will take as
+input the output from the previous function.</p>
+<p>We will try out “Latent Semantic Char-Gram Analysis followed by
+Isometric Mapping”.</p>
+<ul class="simple">
+<li>TFIDF vectorize (1-6)-chargrams and discard the top 17% and bottom 5%
+chargrams. Dimensionality = 13967.</li>
+<li>Run TruncatedSVD with 100 components on this representation. TFIDF
+followed by Singular Value Decomposition is called Latent Semantic
+Analysis. Dimensionality = 100.</li>
+<li>Run Isomap embedding on the output from previous step to project down
+to 2 dimensions. Dimensionality = 2.</li>
+<li>MinMaxScale the output from previous step. Dimensionality = 2.</li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">mapper</span> <span class="o">=</span> <span class="n">km</span><span class="o">.</span><span class="n">KeplerMapper</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">projected_X</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">,</span>
+    <span class="n">projection</span><span class="o">=</span><span class="p">[</span><span class="n">TfidfVectorizer</span><span class="p">(</span><span class="n">analyzer</span><span class="o">=</span><span class="s2">&quot;char&quot;</span><span class="p">,</span>
+                                <span class="n">ngram_range</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span>
+                                <span class="n">max_df</span><span class="o">=</span><span class="mf">0.83</span><span class="p">,</span>
+                                <span class="n">min_df</span><span class="o">=</span><span class="mf">0.05</span><span class="p">),</span>
+                <span class="n">TruncatedSVD</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                             <span class="n">random_state</span><span class="o">=</span><span class="mi">1729</span><span class="p">),</span>
+                <span class="n">Isomap</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                       <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)],</span>
+    <span class="n">scaler</span><span class="o">=</span><span class="p">[</span><span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="n">MinMaxScaler</span><span class="p">()])</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;SHAPE&quot;</span><span class="p">,</span><span class="n">projected_X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+..Composing projection pipeline length 3:
+Projections: TfidfVectorizer(analyzer=&#39;char&#39;, binary=False, decode_error=u&#39;strict&#39;,
+        dtype=&lt;type &#39;numpy.int64&#39;&gt;, encoding=u&#39;utf-8&#39;, input=u&#39;content&#39;,
+        lowercase=True, max_df=0.83, max_features=None, min_df=0.05,
+        ngram_range=(1, 6), norm=u&#39;l2&#39;, preprocessor=None, smooth_idf=True,
+        stop_words=None, strip_accents=None, sublinear_tf=False,
+        token_pattern=u&#39;(?u)\\b\\w\\w+\\b&#39;, tokenizer=None, use_idf=True,
+        vocabulary=None)
+TruncatedSVD(algorithm=&#39;randomized&#39;, n_components=100, n_iter=5,
+       random_state=1729, tol=0.0)
+Isomap(eigen_solver=&#39;auto&#39;, max_iter=None, n_components=2, n_jobs=-1,
+    n_neighbors=5, neighbors_algorithm=&#39;auto&#39;, path_method=&#39;auto&#39;, tol=0)
+
+
+Distance matrices: False
+False
+False
+
+
+Scalers: None
+None
+MinMaxScaler(copy=True, feature_range=(0, 1))
+
+
+..Projecting on data shaped (11314,)
+
+..Projecting data using:
+        TfidfVectorizer(analyzer=&#39;char&#39;, binary=False, decode_error=u&#39;strict&#39;,
+        dtype=&lt;type &#39;numpy.int64&#39;&gt;, encoding=u&#39;utf-8&#39;, input=u&#39;content&#39;,
+        lowercase=True, max_df=0.83, max_features=None, min_df=0.05,
+        ngram_range=(1, 6), norm=u&#39;l2&#39;, preprocessor=None, smooth_idf=True,
+        stop_words=None, strip_accents=None, sublinear_tf=False,
+        token_pattern=u&#39;(?u)\\b\\w\\w+\\b&#39;, tokenizer=None, use_idf=True,
+        vocabulary=None)
+
+
+..Created projection shaped (11314, 13967)
+..Projecting on data shaped (11314, 13967)
+
+..Projecting data using:
+        TruncatedSVD(algorithm=&#39;randomized&#39;, n_components=100, n_iter=5,
+       random_state=1729, tol=0.0)
+
+..Projecting on data shaped (11314, 100)
+
+..Projecting data using:
+        Isomap(eigen_solver=&#39;auto&#39;, max_iter=None, n_components=2, n_jobs=-1,
+    n_neighbors=5, neighbors_algorithm=&#39;auto&#39;, path_method=&#39;auto&#39;, tol=0)
+
+
+..Scaling with: MinMaxScaler(copy=True, feature_range=(0, 1))
+
+(&#39;SHAPE&#39;, (11314, 2))
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Mapping">
+<h3>Mapping<a class="headerlink" href="#Mapping" title="Permalink to this headline">¶</a></h3>
+<p>We cover the projection with 10 33%-overlapping intervals per dimension
+(10*10=100 cubes total).</p>
+<p>We cluster on the projection (but, note, we can also create an
+<code class="docutils literal notranslate"><span class="pre">inverse_X</span></code> to cluster on by vectorizing the original text data).</p>
+<p>For clustering we use Agglomerative Single Linkage Clustering with the
+“cosine”-distance and 3 clusters. Agglomerative Clustering is a good
+cluster algorithm for TDA, since it both creates pleasing informative
+networks, and it has strong theoretical garantuees (see
+<a class="reference external" href="https://en.wikipedia.org/wiki/Functor">functor</a> and
+<a class="reference external" href="https://jeremykun.com/2013/07/14/functoriality/">functoriality</a>).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">cluster</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">projected_X</span><span class="p">,</span>
+                   <span class="n">inverse_X</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                   <span class="n">clusterer</span><span class="o">=</span><span class="n">cluster</span><span class="o">.</span><span class="n">AgglomerativeClustering</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                                                             <span class="n">linkage</span><span class="o">=</span><span class="s2">&quot;complete&quot;</span><span class="p">,</span>
+                                                             <span class="n">affinity</span><span class="o">=</span><span class="s2">&quot;cosine&quot;</span><span class="p">),</span>
+                   <span class="n">overlap_perc</span><span class="o">=</span><span class="mf">0.33</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Mapping on data shaped (11314, 2) using lens shaped (11314, 2)
+
+Minimal points in hypercube before clustering: 3
+Creating 100 hypercubes.
+There are 0 points in cube_0 / 100
+Cube_0 is empty.
+
+There are 0 points in cube_1 / 100
+Cube_1 is empty.
+
+There are 18 points in cube_2 / 100
+Found 3 clusters in cube_2
+
+There are 42 points in cube_3 / 100
+Found 3 clusters in cube_3
+
+There are 27 points in cube_4 / 100
+Found 3 clusters in cube_4
+
+There are 5 points in cube_5 / 100
+Found 3 clusters in cube_5
+
+There are 3 points in cube_6 / 100
+Found 3 clusters in cube_6
+
+There are 0 points in cube_7 / 100
+Cube_7 is empty.
+
+There are 0 points in cube_8 / 100
+Cube_8 is empty.
+
+There are 0 points in cube_9 / 100
+Cube_9 is empty.
+
+There are 7 points in cube_10 / 100
+Found 3 clusters in cube_10
+
+There are 351 points in cube_11 / 100
+Found 3 clusters in cube_11
+
+There are 818 points in cube_12 / 100
+Found 3 clusters in cube_12
+
+There are 28 points in cube_13 / 100
+Found 3 clusters in cube_13
+
+There are 41 points in cube_14 / 100
+Found 3 clusters in cube_14
+
+There are 7 points in cube_15 / 100
+Found 3 clusters in cube_15
+
+There are 5 points in cube_16 / 100
+Found 3 clusters in cube_16
+
+There are 1 points in cube_17 / 100
+Cube_17 is empty.
+
+There are 2 points in cube_18 / 100
+Cube_18 is empty.
+
+There are 0 points in cube_19 / 100
+Cube_19 is empty.
+
+There are 30 points in cube_20 / 100
+Found 3 clusters in cube_20
+
+There are 374 points in cube_21 / 100
+Found 3 clusters in cube_21
+
+There are 201 points in cube_22 / 100
+Found 3 clusters in cube_22
+
+There are 19 points in cube_23 / 100
+Found 3 clusters in cube_23
+
+There are 100 points in cube_24 / 100
+Found 3 clusters in cube_24
+
+There are 101 points in cube_25 / 100
+Found 3 clusters in cube_25
+
+There are 30 points in cube_26 / 100
+Found 3 clusters in cube_26
+
+There are 136 points in cube_27 / 100
+Found 3 clusters in cube_27
+
+There are 11 points in cube_28 / 100
+Found 3 clusters in cube_28
+
+There are 6 points in cube_29 / 100
+Found 3 clusters in cube_29
+
+There are 42 points in cube_30 / 100
+Found 3 clusters in cube_30
+
+There are 126 points in cube_31 / 100
+Found 3 clusters in cube_31
+
+There are 19 points in cube_32 / 100
+Found 3 clusters in cube_32
+
+There are 9 points in cube_33 / 100
+Found 3 clusters in cube_33
+
+There are 183 points in cube_34 / 100
+Found 3 clusters in cube_34
+
+There are 144 points in cube_35 / 100
+Found 3 clusters in cube_35
+
+There are 34 points in cube_36 / 100
+Found 3 clusters in cube_36
+
+There are 179 points in cube_37 / 100
+Found 3 clusters in cube_37
+
+There are 161 points in cube_38 / 100
+Found 3 clusters in cube_38
+
+There are 7 points in cube_39 / 100
+Found 3 clusters in cube_39
+
+There are 31 points in cube_40 / 100
+Found 3 clusters in cube_40
+
+There are 68 points in cube_41 / 100
+Found 3 clusters in cube_41
+
+There are 31 points in cube_42 / 100
+Found 3 clusters in cube_42
+
+There are 17 points in cube_43 / 100
+Found 3 clusters in cube_43
+
+There are 54 points in cube_44 / 100
+Found 3 clusters in cube_44
+
+There are 18 points in cube_45 / 100
+Found 3 clusters in cube_45
+
+There are 52 points in cube_46 / 100
+Found 3 clusters in cube_46
+
+There are 202 points in cube_47 / 100
+Found 3 clusters in cube_47
+
+There are 175 points in cube_48 / 100
+Found 3 clusters in cube_48
+
+There are 0 points in cube_49 / 100
+Cube_49 is empty.
+
+There are 36 points in cube_50 / 100
+Found 3 clusters in cube_50
+
+There are 60 points in cube_51 / 100
+Found 3 clusters in cube_51
+
+There are 84 points in cube_52 / 100
+Found 3 clusters in cube_52
+
+There are 74 points in cube_53 / 100
+Found 3 clusters in cube_53
+
+There are 59 points in cube_54 / 100
+Found 3 clusters in cube_54
+
+There are 37 points in cube_55 / 100
+Found 3 clusters in cube_55
+
+There are 48 points in cube_56 / 100
+Found 3 clusters in cube_56
+
+There are 37 points in cube_57 / 100
+Found 3 clusters in cube_57
+
+There are 0 points in cube_58 / 100
+Cube_58 is empty.
+
+There are 0 points in cube_59 / 100
+Cube_59 is empty.
+
+There are 44 points in cube_60 / 100
+Found 3 clusters in cube_60
+
+There are 331 points in cube_61 / 100
+Found 3 clusters in cube_61
+
+There are 505 points in cube_62 / 100
+Found 3 clusters in cube_62
+
+There are 421 points in cube_63 / 100
+Found 3 clusters in cube_63
+
+There are 157 points in cube_64 / 100
+Found 3 clusters in cube_64
+
+There are 66 points in cube_65 / 100
+Found 3 clusters in cube_65
+
+There are 57 points in cube_66 / 100
+Found 3 clusters in cube_66
+
+There are 39 points in cube_67 / 100
+Found 3 clusters in cube_67
+
+There are 0 points in cube_68 / 100
+Cube_68 is empty.
+
+There are 0 points in cube_69 / 100
+Cube_69 is empty.
+
+There are 8 points in cube_70 / 100
+Found 3 clusters in cube_70
+
+There are 444 points in cube_71 / 100
+Found 3 clusters in cube_71
+
+There are 2240 points in cube_72 / 100
+Found 3 clusters in cube_72
+
+There are 4562 points in cube_73 / 100
+Found 3 clusters in cube_73
+
+There are 1436 points in cube_74 / 100
+Found 3 clusters in cube_74
+
+There are 75 points in cube_75 / 100
+Found 3 clusters in cube_75
+
+There are 36 points in cube_76 / 100
+Found 3 clusters in cube_76
+
+There are 21 points in cube_77 / 100
+Found 3 clusters in cube_77
+
+There are 0 points in cube_78 / 100
+Cube_78 is empty.
+
+There are 0 points in cube_79 / 100
+Cube_79 is empty.
+
+There are 10 points in cube_80 / 100
+Found 3 clusters in cube_80
+
+There are 91 points in cube_81 / 100
+Found 3 clusters in cube_81
+
+There are 977 points in cube_82 / 100
+Found 3 clusters in cube_82
+
+There are 3293 points in cube_83 / 100
+Found 3 clusters in cube_83
+
+There are 1164 points in cube_84 / 100
+Found 3 clusters in cube_84
+
+There are 16 points in cube_85 / 100
+Found 3 clusters in cube_85
+
+There are 1 points in cube_86 / 100
+Cube_86 is empty.
+
+There are 0 points in cube_87 / 100
+Cube_87 is empty.
+
+There are 0 points in cube_88 / 100
+Cube_88 is empty.
+
+There are 0 points in cube_89 / 100
+Cube_89 is empty.
+
+There are 0 points in cube_90 / 100
+Cube_90 is empty.
+
+There are 2 points in cube_91 / 100
+Cube_91 is empty.
+
+There are 34 points in cube_92 / 100
+Found 3 clusters in cube_92
+
+There are 126 points in cube_93 / 100
+Found 3 clusters in cube_93
+
+There are 52 points in cube_94 / 100
+Found 3 clusters in cube_94
+
+There are 0 points in cube_95 / 100
+Cube_95 is empty.
+
+There are 0 points in cube_96 / 100
+Cube_96 is empty.
+
+There are 0 points in cube_97 / 100
+Cube_97 is empty.
+
+There are 0 points in cube_98 / 100
+Cube_98 is empty.
+
+There are 0 points in cube_99 / 100
+Cube_99 is empty.
+
+
+Created 495 edges and 222 nodes in 0:00:01.829708.
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Interpretable-inverse-X">
+<h3>Interpretable inverse X<a class="headerlink" href="#Interpretable-inverse-X" title="Permalink to this headline">¶</a></h3>
+<p>Here we show the flexibility of KeplerMapper by creating an
+<code class="docutils literal notranslate"><span class="pre">interpretable_inverse_X</span></code> that is easier to interpret by humans.</p>
+<p>For text, this can be TFIDF (1-3)-wordgrams, like we do here. For
+structured data this can be regularitory/protected variables of
+interest, or using another model to select, say, the top 10% features.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">vec</span> <span class="o">=</span> <span class="n">TfidfVectorizer</span><span class="p">(</span><span class="n">analyzer</span><span class="o">=</span><span class="s2">&quot;word&quot;</span><span class="p">,</span>
+                      <span class="n">strip_accents</span><span class="o">=</span><span class="s2">&quot;unicode&quot;</span><span class="p">,</span>
+                      <span class="n">stop_words</span><span class="o">=</span><span class="s2">&quot;english&quot;</span><span class="p">,</span>
+                      <span class="n">ngram_range</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span>
+                      <span class="n">max_df</span><span class="o">=</span><span class="mf">0.97</span><span class="p">,</span>
+                      <span class="n">min_df</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+
+<span class="n">interpretable_inverse_X</span> <span class="o">=</span> <span class="n">vec</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
+<span class="n">interpretable_inverse_X_names</span> <span class="o">=</span> <span class="n">vec</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;SHAPE&quot;</span><span class="p">,</span> <span class="n">interpretable_inverse_X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;FEATURE NAMES SAMPLE&quot;</span><span class="p">,</span> <span class="n">interpretable_inverse_X_names</span><span class="p">[:</span><span class="mi">400</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(&#39;SHAPE&#39;, (11314, 947))
+(&#39;FEATURE NAMES SAMPLE&#39;, [u&#39;00&#39;, u&#39;000&#39;, u&#39;10&#39;, u&#39;100&#39;, u&#39;11&#39;, u&#39;12&#39;, u&#39;13&#39;, u&#39;14&#39;, u&#39;15&#39;, u&#39;16&#39;, u&#39;17&#39;, u&#39;18&#39;, u&#39;19&#39;, u&#39;1992&#39;, u&#39;1993&#39;, u&#39;1993apr15&#39;, u&#39;20&#39;, u&#39;200&#39;, u&#39;21&#39;, u&#39;22&#39;, u&#39;23&#39;, u&#39;24&#39;, u&#39;25&#39;, u&#39;26&#39;, u&#39;27&#39;, u&#39;28&#39;, u&#39;29&#39;, u&#39;30&#39;, u&#39;31&#39;, u&#39;32&#39;, u&#39;33&#39;, u&#39;34&#39;, u&#39;35&#39;, u&#39;36&#39;, u&#39;37&#39;, u&#39;38&#39;, u&#39;39&#39;, u&#39;40&#39;, u&#39;408&#39;, u&#39;41&#39;, u&#39;42&#39;, u&#39;43&#39;, u&#39;44&#39;, u&#39;45&#39;, u&#39;49&#39;, u&#39;50&#39;, u&#39;500&#39;, u&#39;60&#39;, u&#39;70&#39;, u&#39;80&#39;, u&#39;90&#39;, u&#39;92&#39;, u&#39;93&#39;, u&#39;able&#39;, u&#39;ac&#39;, u&#39;ac uk&#39;, u&#39;accept&#39;, u&#39;access&#39;, u&#39;according&#39;, u&#39;acs&#39;, u&#39;act&#39;, u&#39;action&#39;, u&#39;actually&#39;, u&#39;add&#39;, u&#39;address&#39;, u&#39;advance&#39;, u&#39;advice&#39;, u&#39;ago&#39;, u&#39;agree&#39;, u&#39;air&#39;, u&#39;al&#39;, u&#39;allow&#39;, u&#39;allowed&#39;, u&#39;america&#39;, u&#39;american&#39;, u&#39;andrew&#39;, u&#39;answer&#39;, u&#39;anti&#39;, u&#39;anybody&#39;, u&#39;apparently&#39;, u&#39;appears&#39;, u&#39;apple&#39;, u&#39;application&#39;, u&#39;apply&#39;, u&#39;appreciate&#39;, u&#39;appreciated&#39;, u&#39;apr&#39;, u&#39;apr 1993&#39;, u&#39;apr 93&#39;, u&#39;april&#39;, u&#39;area&#39;, u&#39;aren&#39;, u&#39;argument&#39;, u&#39;article&#39;, u&#39;article 1993apr15&#39;, u&#39;ask&#39;, u&#39;asked&#39;, u&#39;asking&#39;, u&#39;assume&#39;, u&#39;att&#39;, u&#39;att com&#39;, u&#39;au&#39;, u&#39;available&#39;, u&#39;average&#39;, u&#39;avoid&#39;, u&#39;away&#39;, u&#39;bad&#39;, u&#39;base&#39;, u&#39;baseball&#39;, u&#39;based&#39;, u&#39;basic&#39;, u&#39;basically&#39;, u&#39;basis&#39;, u&#39;bbs&#39;, u&#39;believe&#39;, u&#39;best&#39;, u&#39;better&#39;, u&#39;bible&#39;, u&#39;big&#39;, u&#39;bike&#39;, u&#39;bit&#39;, u&#39;bitnet&#39;, u&#39;black&#39;, u&#39;blue&#39;, u&#39;board&#39;, u&#39;bob&#39;, u&#39;body&#39;, u&#39;book&#39;, u&#39;books&#39;, u&#39;bought&#39;, u&#39;box&#39;, u&#39;break&#39;, u&#39;brian&#39;, u&#39;bring&#39;, u&#39;brought&#39;, u&#39;btw&#39;, u&#39;build&#39;, u&#39;building&#39;, u&#39;built&#39;, u&#39;bus&#39;, u&#39;business&#39;, u&#39;buy&#39;, u&#39;ca&#39;, u&#39;ca lines&#39;, u&#39;california&#39;, u&#39;called&#39;, u&#39;came&#39;, u&#39;canada&#39;, u&#39;car&#39;, u&#39;card&#39;, u&#39;cards&#39;, u&#39;care&#39;, u&#39;carry&#39;, u&#39;cars&#39;, u&#39;case&#39;, u&#39;cases&#39;, u&#39;cause&#39;, u&#39;cc&#39;, u&#39;center&#39;, u&#39;certain&#39;, u&#39;certainly&#39;, u&#39;chance&#39;, u&#39;change&#39;, u&#39;changed&#39;, u&#39;cheap&#39;, u&#39;check&#39;, u&#39;chicago&#39;, u&#39;children&#39;, u&#39;chip&#39;, u&#39;choice&#39;, u&#39;chris&#39;, u&#39;christ&#39;, u&#39;christian&#39;, u&#39;christians&#39;, u&#39;church&#39;, u&#39;city&#39;, u&#39;claim&#39;, u&#39;claims&#39;, u&#39;class&#39;, u&#39;clear&#39;, u&#39;clearly&#39;, u&#39;cleveland&#39;, u&#39;clinton&#39;, u&#39;clipper&#39;, u&#39;close&#39;, u&#39;cmu&#39;, u&#39;cmu edu&#39;, u&#39;code&#39;, u&#39;college&#39;, u&#39;color&#39;, u&#39;colorado&#39;, u&#39;com&#39;, u&#39;com organization&#39;, u&#39;com writes&#39;, u&#39;come&#39;, u&#39;comes&#39;, u&#39;coming&#39;, u&#39;comment&#39;, u&#39;comments&#39;, u&#39;common&#39;, u&#39;communications&#39;, u&#39;comp&#39;, u&#39;company&#39;, u&#39;complete&#39;, u&#39;completely&#39;, u&#39;computer&#39;, u&#39;computer science&#39;, u&#39;computing&#39;, u&#39;condition&#39;, u&#39;consider&#39;, u&#39;considered&#39;, u&#39;contact&#39;, u&#39;continue&#39;, u&#39;control&#39;, u&#39;copy&#39;, u&#39;corp&#39;, u&#39;corporation&#39;, u&#39;correct&#39;, u&#39;cost&#39;, u&#39;couldn&#39;, u&#39;country&#39;, u&#39;couple&#39;, u&#39;course&#39;, u&#39;court&#39;, u&#39;cover&#39;, u&#39;create&#39;, u&#39;created&#39;, u&#39;crime&#39;, u&#39;cs&#39;, u&#39;cso&#39;, u&#39;cso uiuc&#39;, u&#39;cso uiuc edu&#39;, u&#39;cup&#39;, u&#39;current&#39;, u&#39;currently&#39;, u&#39;cut&#39;, u&#39;cwru&#39;, u&#39;cwru edu&#39;, u&#39;data&#39;, u&#39;date&#39;, u&#39;dave&#39;, u&#39;david&#39;, u&#39;day&#39;, u&#39;days&#39;, u&#39;dead&#39;, u&#39;deal&#39;, u&#39;death&#39;, u&#39;decided&#39;, u&#39;defense&#39;, u&#39;deleted&#39;, u&#39;department&#39;, u&#39;dept&#39;, u&#39;design&#39;, u&#39;designed&#39;, u&#39;details&#39;, u&#39;development&#39;, u&#39;device&#39;, u&#39;did&#39;, u&#39;didn&#39;, u&#39;die&#39;, u&#39;difference&#39;, u&#39;different&#39;, u&#39;difficult&#39;, u&#39;directly&#39;, u&#39;disclaimer&#39;, u&#39;discussion&#39;, u&#39;disk&#39;, u&#39;display&#39;, u&#39;distribution&#39;, u&#39;distribution na&#39;, u&#39;distribution na lines&#39;, u&#39;distribution usa&#39;, u&#39;distribution usa lines&#39;, u&#39;distribution world&#39;, u&#39;distribution world nntp&#39;, u&#39;distribution world organization&#39;, u&#39;division&#39;, u&#39;dod&#39;, u&#39;does&#39;, u&#39;does know&#39;, u&#39;doesn&#39;, u&#39;doing&#39;, u&#39;don&#39;, u&#39;don know&#39;, u&#39;don think&#39;, u&#39;don want&#39;, u&#39;dos&#39;, u&#39;doubt&#39;, u&#39;dr&#39;, u&#39;drive&#39;, u&#39;driver&#39;, u&#39;drivers&#39;, u&#39;early&#39;, u&#39;earth&#39;, u&#39;easily&#39;, u&#39;east&#39;, u&#39;easy&#39;, u&#39;ed&#39;, u&#39;edu&#39;, u&#39;edu article&#39;, u&#39;edu au&#39;, u&#39;edu david&#39;, u&#39;edu organization&#39;, u&#39;edu organization university&#39;, u&#39;edu reply&#39;, u&#39;edu subject&#39;, u&#39;edu writes&#39;, u&#39;effect&#39;, u&#39;email&#39;, u&#39;encryption&#39;, u&#39;end&#39;, u&#39;engineering&#39;, u&#39;entire&#39;, u&#39;error&#39;, u&#39;especially&#39;, u&#39;evidence&#39;, u&#39;exactly&#39;, u&#39;example&#39;, u&#39;excellent&#39;, u&#39;exist&#39;, u&#39;exists&#39;, u&#39;expect&#39;, u&#39;experience&#39;, u&#39;explain&#39;, u&#39;expressed&#39;, u&#39;extra&#39;, u&#39;face&#39;, u&#39;fact&#39;, u&#39;faith&#39;, u&#39;family&#39;, u&#39;fan&#39;, u&#39;faq&#39;, u&#39;far&#39;, u&#39;fast&#39;, u&#39;faster&#39;, u&#39;fax&#39;, u&#39;federal&#39;, u&#39;feel&#39;, u&#39;figure&#39;, u&#39;file&#39;, u&#39;files&#39;, u&#39;final&#39;, u&#39;finally&#39;, u&#39;fine&#39;, u&#39;folks&#39;, u&#39;follow&#39;, u&#39;following&#39;, u&#39;force&#39;, u&#39;forget&#39;, u&#39;form&#39;, u&#39;frank&#39;, u&#39;free&#39;, u&#39;friend&#39;, u&#39;ftp&#39;, u&#39;future&#39;, u&#39;game&#39;, u&#39;games&#39;, u&#39;gave&#39;, u&#39;general&#39;, u&#39;generally&#39;, u&#39;germany&#39;, u&#39;gets&#39;, u&#39;getting&#39;, u&#39;given&#39;, u&#39;gives&#39;, u&#39;giving&#39;, u&#39;gmt&#39;, u&#39;god&#39;, u&#39;goes&#39;, u&#39;going&#39;, u&#39;gone&#39;, u&#39;good&#39;, u&#39;got&#39;, u&#39;gov&#39;, u&#39;government&#39;, u&#39;graphics&#39;, u&#39;great&#39;, u&#39;greatly&#39;, u&#39;ground&#39;, u&#39;group&#39;, u&#39;groups&#39;, u&#39;guess&#39;, u&#39;gun&#39;, u&#39;guns&#39;, u&#39;guy&#39;, u&#39;half&#39;, u&#39;hand&#39;, u&#39;happen&#39;, u&#39;happened&#39;, u&#39;happens&#39;, u&#39;happy&#39;, u&#39;hard&#39;, u&#39;hardware&#39;, u&#39;haven&#39;, u&#39;having&#39;, u&#39;head&#39;, u&#39;hear&#39;, u&#39;heard&#39;, u&#39;heart&#39;, u&#39;hell&#39;])
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Visualization">
+<h3>Visualization<a class="headerlink" href="#Visualization" title="Permalink to this headline">¶</a></h3>
+<p>We use <code class="docutils literal notranslate"><span class="pre">interpretable_inverse_X</span></code> as the <code class="docutils literal notranslate"><span class="pre">inverse_X</span></code> during
+visualization. This way we get cluster statistics that are more
+informative/interpretable to humans (chargrams vs.&nbsp;wordgrams).</p>
+<p>We also pass the <code class="docutils literal notranslate"><span class="pre">projected_X</span></code> to get cluster statistics for the
+projection. For <code class="docutils literal notranslate"><span class="pre">custom_tooltips</span></code> we use a textual description of the
+label.</p>
+<p>The color function is simply the multi-class ground truth represented as
+a non-negative integer.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">html</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span>
+                        <span class="n">inverse_X</span><span class="o">=</span><span class="n">interpretable_inverse_X</span><span class="p">,</span>
+                        <span class="n">inverse_X_names</span><span class="o">=</span><span class="n">interpretable_inverse_X_names</span><span class="p">,</span>
+                        <span class="n">path_html</span><span class="o">=</span><span class="s2">&quot;newsgroups20.html&quot;</span><span class="p">,</span>
+                        <span class="n">projected_X</span><span class="o">=</span><span class="n">projected_X</span><span class="p">,</span>
+                        <span class="n">projected_X_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ISOMAP1&quot;</span><span class="p">,</span> <span class="s2">&quot;ISOMAP2&quot;</span><span class="p">],</span>
+                        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Newsgroups20: Latent Semantic Char-gram Analysis with Isometric Embedding&quot;</span><span class="p">,</span>
+                        <span class="n">custom_tooltips</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">target_names</span><span class="p">[</span><span class="n">ys</span><span class="p">]</span> <span class="k">for</span> <span class="n">ys</span> <span class="ow">in</span> <span class="n">y</span><span class="p">]),</span>
+                        <span class="n">color_function</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+<span class="c1"># jupyter.display(&quot;newsgroups20.html&quot;)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+/Users/hendrikvanveen/anaconda/lib/python2.7/site-packages/sklearn/utils/validation.py:429: DataConversionWarning: Data with input dtype int64 was converted to float64 by MinMaxScaler.
+  warnings.warn(msg, _DataConversionWarning)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Wrote visualization to: newsgroups20.html
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="TOR-XGB-TDA.html" class="btn btn-neutral float-right" title="Detecting Encrypted TOR Traffic with Boosting and Topological Data Analysis" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="KeplerMapper-usage-in-Jupyter-Notebook.html" class="btn btn-neutral" title="Using Kepler Mapper in Jupyter Notebook" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Hendrik Jacob van Veen and Nathaniel Saul
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.1.6.dev0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

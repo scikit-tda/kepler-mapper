@@ -1,0 +1,1466 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Confidence Graphs: Representing Model Uncertainty in Deep Learning &mdash; KeplerMapper 1.1.6.dev0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Self-guessing mapper" href="self-guessing.html" />
+    <link rel="prev" title="Detecting Encrypted TOR Traffic with Boosting and Topological Data Analysis" href="TOR-XGB-TDA.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+    ga('create', 'UA-124965309-4', 'auto');
+    ga('send', 'pageview');
+  </script>
+    <!-- End Google Analytics -->
+
+
+
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+
+          <a href="https://scikit-tda.org">
+            <big>a scikit-tda project</big>
+          </a>
+
+
+
+          
+            <a href="../index.html" class="icon icon-home"> KeplerMapper
+          
+
+          
+            
+            <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.6.dev0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">API Reference</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Adapters.html">Adapters example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plotly-Demo.html">Demo of Plotlyviz features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="KeplerMapper-usage-in-Jupyter-Notebook.html">Using Kepler Mapper in Jupyter Notebook</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Advanced Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="KeplerMapper-Newsgroup20-Pipeline.html">KeplerMapper &amp; NLP examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TOR-XGB-TDA.html">Detecting Encrypted TOR Traffic with Boosting and Topological Data Analysis</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Confidence Graphs: Representing Model Uncertainty in Deep Learning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Motivation">Motivation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Experimental-setup">Experimental setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Preparing-Data">Preparing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Model">Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Fitting-and-evaluation">Fitting and evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Perform-1000-forward-passes-on-test-set-and-calculate-Variance-Ratio-and-Standard-Dev">Perform 1000 forward passes on test set and calculate Variance Ratio and Standard Dev</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Plot-test-set-confidence">Plot test set confidence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Apply-MAPPER">Apply <span class="math notranslate nohighlight">\(MAPPER\)</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Take-penultimate-layer-activations-from-test-set-for-the-inverse-X">Take penultimate layer activations from test set for the inverse <span class="math notranslate nohighlight">\(X\)</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Take-STD-and-error-as-the-projected-X">Take STD and error as the projected <span class="math notranslate nohighlight">\(X\)</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Create-the-confidence-graph-G">Create the confidence graph <span class="math notranslate nohighlight">\(G\)</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Create-color-function-output-(absolute-error)">Create color function output (absolute error)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Create-image-tooltips-for-samples-that-are-interpretable-for-humans">Create image tooltips for samples that are interpretable for humans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Visualize">Visualize</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#Image-of-output">Image of output</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="self-guessing.html">Self-guessing mapper</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">KeplerMapper</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="https://scikit-tda.org">Scikit-TDA</a>&raquo;<a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Confidence Graphs: Representing Model Uncertainty in Deep Learning</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/notebooks/Confidence-Graphs.ipynb.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #303F9F;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #D84315;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 8ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #cfcfcf;
+    border-radius: 2px;
+    background: #f7f7f7;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.pngmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="Confidence-Graphs:-Representing-Model-Uncertainty-in-Deep-Learning">
+<h1>Confidence Graphs: Representing Model Uncertainty in Deep Learning<a class="headerlink" href="#Confidence-Graphs:-Representing-Model-Uncertainty-in-Deep-Learning" title="Permalink to this headline">¶</a></h1>
+<p><strong>Hendrik Jacob van Veen</strong> <a class="reference external" href="mailto:hendrik&#46;vanveen&#37;&#52;&#48;nubank&#46;com&#46;br">hendrik<span>&#46;</span>vanveen<span>&#64;</span>nubank<span>&#46;</span>com<span>&#46;</span>br</a> •
+<a class="reference external" href="https://mlwave.com">https://mlwave.com</a></p>
+<p><strong>Matheus Facure</strong> <a class="reference external" href="mailto:matheus&#46;facure&#37;&#52;&#48;nubank&#46;com&#46;br">matheus<span>&#46;</span>facure<span>&#64;</span>nubank<span>&#46;</span>com<span>&#46;</span>br</a> •
+<a class="reference external" href="https://matheusfacure.github.io/">https://matheusfacure.github.io/</a></p>
+<div class="section" id="Introduction">
+<h2>Introduction<a class="headerlink" href="#Introduction" title="Permalink to this headline">¶</a></h2>
+<p>Variational inference <a class="reference external" href="http://www.inference.org.uk/mackay/itila/">(MacKay,
+2003)</a> gives a
+computationally tractible measure of uncertainty/confidence/variance for
+machine learning models, including complex black-box models, like those
+used in the fields of gradient boosting <a class="reference external" href="https://dl.acm.org/citation.cfm?id=2939785">(Chen et al,
+2016)</a> and deep learning
+<a class="reference external" href="https://arxiv.org/abs/1404.7828">(Schmidhuber, 2014)</a>.</p>
+<p>The <span class="math notranslate nohighlight">\(MAPPER\)</span> algorithm <a class="reference external" href="https://research.math.osu.edu/tgda/mapperPBG.pdf">(Singh et al,
+2007)</a> [.pdf] from
+Topological Data Analysis <a class="reference external" href="http://www.ams.org/journals/bull/2009-46-02/S0273-0979-09-01249-X/">(Carlsson,
+2009)</a>
+turns any data or function output into a graph (or simplicial complex)
+which is used for data exploration <a class="reference external" href="https://www.nature.com/articles/srep01236">(Lum et al,
+2009)</a>, error analysis
+<a class="reference external" href="https://arxiv.org/abs/1803.00384">(Carlsson et al, 2018)</a>, serving
+as input for higher-level machine learning algorithms <a class="reference external" href="https://arxiv.org/abs/1707.04041">(Hofer et al,
+2017)</a>, and more.</p>
+<p>Dropout <a class="reference external" href="http://jmlr.org/papers/v15/srivastava14a.html">(Srivastava et al,
+2014)</a> can be viewed
+as an ensemble of many different sub-networks inside a single neural
+network, which, much like bootstrap aggregation of decision trees
+<a class="reference external" href="https://dl.acm.org/citation.cfm?id=231989">(Breiman, 1996)</a>, aims to
+combat overfit. Viewed as such, dropout is applicable as a Bayesian
+approximation <a class="reference external" href="https://projecteuclid.org/euclid.aos/1176346785">(Rubin,
+1984)</a> in the
+variational inference framework <a class="reference external" href="http://www.cs.ox.ac.uk/people/yarin.gal/website/thesis/thesis.pdf">(Gal,
+2016)</a>
+(.pdf)</p>
+<p>Interpretability is useful for detecting bias in and debugging errors of
+machine learning models. Many methods exist, such as tree paths
+<a class="reference external" href="http://blog.datadive.net/interpreting-random-forests/">(Saabas,
+2014)</a>,
+saliency maps, permutation feature importance <a class="reference external" href="https://academic.oup.com/bioinformatics/article/26/10/1340/193348">(Altmann et al,
+2010)</a>,
+locally-fit white box models <a class="reference external" href="https://github.com/MLWave/Black-Boxxy">(van Veen,
+2015)</a> <a class="reference external" href="https://arxiv.org/abs/1602.04938">(Ribeiro et al,
+2016)</a>. More recent efforts aim to
+combine a variety of methods <a class="reference external" href="https://github.com/TeamHG-Memex/eli5">(Korobov et al,
+2016)</a> <a class="reference external" href="https://distill.pub/2018/building-blocks/">(Olah et al,
+2018)</a>.</p>
+</div>
+<div class="section" id="Motivation">
+<h2>Motivation<a class="headerlink" href="#Motivation" title="Permalink to this headline">¶</a></h2>
+<p>Error analysis surfaces different subsets/types of the data where a
+model makes fundamental errors. When building policies and making
+financial decisions based on the output of a model it is not only useful
+to study the errors of a model, but also the confidence: - Correct, but
+low-confidence, predictions for a cluster of data tells us where to
+focus our active learning <a class="reference external" href="http://hunch.net/~active_learning/">(Dasgupta et al,
+2009)</a> - and data collection
+efforts, so as to make the model more certain. - Incorrect, but
+high-confidence predictions, surface fundamental error types that can
+more readily be fixed by a correction layer <a class="reference external" href="http://rob.schapire.net/papers/Schapire99c.pdf">(Schapire,
+1999)</a> [.pdf], or
+redoing feature engineering <a class="reference external" href="https://dl.acm.org/citation.cfm?id=1208773">(Guyon et al,
+2006)</a>. - Every
+profit-maximizing model has a prediction threshold where a decision is
+made <a class="reference external" href="https://arxiv.org/abs/1610.02413">(Hardt et al, 2016)</a>.
+However, given two equal predictions, the more confident predictions are
+preferred. - Interpretability methods have focussed either on explaining
+the model in general, or explaining a single sample. To our knowledge,
+not much focus has gone in a holistic view of modeled data, including
+explanations for subsets of similar samples (for whatever pragmatic
+definition of “similar”, like “similar age”, “similar spend”, “similar
+transaction behavior”). The combination of interpretability and
+unsupervised exploratory analysis is attractive, because it catches
+unexpected behavior early on, as opposed to acting on faulty model
+output, and digging down to find a cause.</p>
+</div>
+<div class="section" id="Experimental-setup">
+<h2>Experimental setup<a class="headerlink" href="#Experimental-setup" title="Permalink to this headline">¶</a></h2>
+<p>We will use the MNIST dataset <a class="reference external" href="http://yann.lecun.com/exdb/mnist/">(LeCun et al,
+1999)</a>, Keras <a class="reference external" href="https://keras.io/">(Chollet et al,
+2015)</a> with TensorFlow <a class="reference external" href="https://arxiv.org/abs/1603.04467">(Abadi et al,
+2016)</a>, NumPy <a class="reference external" href="https://arxiv.org/abs/1102.1523">(van der Walt et
+al., 2011)</a>, Pandas <a class="reference external" href="http://conference.scipy.org/proceedings/scipy2010/mckinney.html">(McKinney,
+2010)</a>,
+Scikit-Learn <a class="reference external" href="http://scikit-learn.org/">(Pedregosa et al, 2011)</a>,
+Matplotlib <a class="reference external" href="https://matplotlib.org/">(Hunter, 2007)</a>, and
+KeplerMapper <a class="reference external" href="https://github.com/MLWave/kepler-mapper">(Saul et al,
+2017)</a>.</p>
+<ul class="simple">
+<li>To classify between the digits 3 and 5, we will train a Multi-Layer
+Perceptron <a class="reference external" href="http://www.worldcat.org/title/cybernetic-predicting-devices/oclc/23815433">(Ivakhnenko et al,
+1965)</a>
+with 2 hidden layers, Backprop <a class="reference external" href="http://yann.lecun.com/exdb/publis/pdf/lecun-98b.pdf">(LeCun et al,
+1998)</a> (pdf),
+RELU activation <a class="reference external" href="https://dl.acm.org/citation.cfm?id=3104425">(Nair et al,
+2010)</a>, ADAM optimizer
+<a class="reference external" href="https://arxiv.org/abs/1412.6980">(Kingma et al, 2014)</a>, dropout
+of 0.5, and softmax output, to classify between the digits 3 and 5.</li>
+<li>We perform a 1000 forward passes to get the standard deviation and
+variance ratio of our predictions as per <a class="reference external" href="http://www.cs.ox.ac.uk/people/yarin.gal/website/thesis/thesis.pdf">(Gal, 2016, page
+51)</a>
+[.pdf].</li>
+<li>Closely following the <span class="math notranslate nohighlight">\(FiFa\)</span> method from <a class="reference external" href="https://arxiv.org/abs/1803.00384">(Carlsson et al,
+2018, page 4)</a> we then apply
+<span class="math notranslate nohighlight">\(MAPPER\)</span> with the 2D filter function
+<code class="docutils literal notranslate"><span class="pre">[predicted</span> <span class="pre">probability(x),</span> <span class="pre">confidence(x)]</span></code> to project the data. We
+cover this projection with 10 10% overlapping intervals per
+dimension. We cluster with complete single-linkage agglomerative
+clustering (<code class="docutils literal notranslate"><span class="pre">n_clusters=3</span></code>) <a class="reference external" href="https://www.jstor.org/stable/2282967">(Ward,
+1963)</a> and use the
+penultimate layer as the inverse <span class="math notranslate nohighlight">\(X\)</span>. To guide exploration, we
+color the graph nodes by <code class="docutils literal notranslate"><span class="pre">mean</span> <span class="pre">absolute</span> <span class="pre">error(x)</span></code>.</li>
+<li>We also ask predictions for the digit 4 which was never seen during
+training <a class="reference external" href="https://dl.acm.org/citation.cfm?id=1620172">(Larochelle et al,
+2008)</a>, to see how
+this influences the confidence of the network, and to compare the
+graphs outputted by KeplerMapper.</li>
+<li>For every graph node we show the original images. Binary
+classification on MNIST digits is easy enough to resort to a simple
+interpretability method to show what distinguishes the cluster from
+the rest of the data: We order each feature by z-score and highlight
+the top 10% features <a class="reference external" href="https://www.ayasdi.com/blog/bigdata/5191-2/">(Singh,
+2016)</a>.</li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+
+<span class="kn">import</span> <span class="nn">keras</span>
+<span class="kn">from</span> <span class="nn">keras</span> <span class="k">import</span> <span class="n">backend</span> <span class="k">as</span> <span class="n">K</span>
+<span class="kn">from</span> <span class="nn">keras.datasets</span> <span class="k">import</span> <span class="n">mnist</span>
+<span class="kn">from</span> <span class="nn">keras.models</span> <span class="k">import</span> <span class="n">Sequential</span>
+<span class="kn">from</span> <span class="nn">keras.layers</span> <span class="k">import</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">Dropout</span>
+<span class="kn">from</span> <span class="nn">keras.optimizers</span> <span class="k">import</span> <span class="n">Adam</span>
+
+<span class="kn">import</span> <span class="nn">kmapper</span> <span class="k">as</span> <span class="nn">km</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="k">import</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">cluster</span><span class="p">,</span> <span class="n">preprocessing</span>
+<span class="kn">import</span> <span class="nn">xgboost</span> <span class="k">as</span> <span class="nn">xgb</span>
+
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;ggplot&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+Using TensorFlow backend.
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Preparing-Data">
+<h2>Preparing Data<a class="headerlink" href="#Preparing-Data" title="Permalink to this headline">¶</a></h2>
+<p>We create train and test data sets for the digits 3, 4, and 5.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># get the data, shuffled and split between train and test sets</span>
+<span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">),</span> <span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span> <span class="o">=</span> <span class="n">mnist</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
+
+<span class="n">X_strange</span> <span class="o">=</span> <span class="n">X_train</span><span class="p">[</span><span class="n">y_train</span> <span class="o">==</span> <span class="mi">4</span><span class="p">]</span>
+<span class="n">y_strange</span> <span class="o">=</span> <span class="n">y_train</span><span class="p">[</span><span class="n">y_train</span> <span class="o">==</span> <span class="mi">4</span><span class="p">]</span>
+
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">X_train</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">y_train</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">==</span> <span class="mi">5</span><span class="p">)]</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">y_train</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">y_train</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">==</span> <span class="mi">5</span><span class="p">)]</span>
+
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">X_test</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">y_test</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">==</span> <span class="mi">5</span><span class="p">)]</span>
+<span class="n">y_test</span> <span class="o">=</span> <span class="n">y_test</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">y_test</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">==</span> <span class="mi">5</span><span class="p">)]</span>
+
+<span class="n">X_strange</span> <span class="o">=</span> <span class="n">X_strange</span><span class="p">[:</span><span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+<span class="n">y_strange</span> <span class="o">=</span> <span class="n">y_strange</span><span class="p">[:</span><span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">X_train</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">784</span><span class="p">)</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">X_test</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">784</span><span class="p">)</span>
+<span class="n">X_strange</span> <span class="o">=</span> <span class="n">X_strange</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">784</span><span class="p">)</span>
+
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">X_train</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">X_test</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span>
+<span class="n">X_strange</span> <span class="o">=</span> <span class="n">X_strange</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span>
+
+<span class="n">X_train</span> <span class="o">/=</span> <span class="mi">255</span>
+<span class="n">X_test</span> <span class="o">/=</span> <span class="mi">255</span>
+<span class="n">X_strange</span> <span class="o">/=</span> <span class="mi">255</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;train samples&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;test samples&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X_strange</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;strange samples&#39;</span><span class="p">)</span>
+
+<span class="c1"># convert class vectors to binary class matrices</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_train</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">y_test</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_test</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+<span class="n">y_mean_test</span> <span class="o">=</span> <span class="n">y_test</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">y_mean_test</span><span class="p">,</span> <span class="s1">&#39;y test mean&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+11552 train samples
+1902 test samples
+1902 strange samples
+0.5310199789695058 y test mean
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Model">
+<h2>Model<a class="headerlink" href="#Model" title="Permalink to this headline">¶</a></h2>
+<p>Model is a basic 2-hidden layer MLP with RELU activation, ADAM
+optimizer, and softmax output. Dropout is applied to every layer but the
+final.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="n">num_classes</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">epochs</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">784</span><span class="p">,)))</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">784</span><span class="p">,)))</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.5</span><span class="p">))</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">))</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.5</span><span class="p">))</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;sigmoid&#39;</span><span class="p">))</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;binary_crossentropy&#39;</span><span class="p">,</span>
+              <span class="n">optimizer</span><span class="o">=</span><span class="n">Adam</span><span class="p">(),</span>
+              <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #
+=================================================================
+dropout_1 (Dropout)          (None, 784)               0
+_________________________________________________________________
+dense_1 (Dense)              (None, 512)               401920
+_________________________________________________________________
+dropout_2 (Dropout)          (None, 512)               0
+_________________________________________________________________
+dense_2 (Dense)              (None, 512)               262656
+_________________________________________________________________
+dropout_3 (Dropout)          (None, 512)               0
+_________________________________________________________________
+dense_3 (Dense)              (None, 1)                 513
+=================================================================
+Total params: 665,089
+Trainable params: 665,089
+Non-trainable params: 0
+_________________________________________________________________
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Fitting-and-evaluation">
+<h2>Fitting and evaluation<a class="headerlink" href="#Fitting-and-evaluation" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span>
+                    <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+                    <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">,</span>
+                    <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                    <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">))</span>
+<span class="n">score</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">score</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Train on 11552 samples, validate on 1902 samples
+Epoch 1/10
+11552/11552 [==============================] - 3s 217us/step - loss: 0.2627 - acc: 0.8872 - val_loss: 0.0800 - val_acc: 0.9679
+Epoch 2/10
+11552/11552 [==============================] - 2s 161us/step - loss: 0.1389 - acc: 0.9459 - val_loss: 0.0650 - val_acc: 0.9742
+Epoch 3/10
+11552/11552 [==============================] - 1s 128us/step - loss: 0.1092 - acc: 0.9592 - val_loss: 0.0417 - val_acc: 0.9879
+Epoch 4/10
+11552/11552 [==============================] - 1s 120us/step - loss: 0.0936 - acc: 0.9657 - val_loss: 0.0388 - val_acc: 0.9869
+Epoch 5/10
+11552/11552 [==============================] - 1s 117us/step - loss: 0.0800 - acc: 0.9681 - val_loss: 0.0325 - val_acc: 0.9921
+Epoch 6/10
+11552/11552 [==============================] - 1s 115us/step - loss: 0.0730 - acc: 0.9735 - val_loss: 0.0291 - val_acc: 0.9916
+Epoch 7/10
+11552/11552 [==============================] - 1s 113us/step - loss: 0.0685 - acc: 0.9760 - val_loss: 0.0284 - val_acc: 0.9926
+Epoch 8/10
+11552/11552 [==============================] - 1s 114us/step - loss: 0.0662 - acc: 0.9761 - val_loss: 0.0269 - val_acc: 0.9953
+Epoch 9/10
+11552/11552 [==============================] - 1s 116us/step - loss: 0.0643 - acc: 0.9753 - val_loss: 0.0265 - val_acc: 0.9932
+Epoch 10/10
+11552/11552 [==============================] - 1s 114us/step - loss: 0.0606 - acc: 0.9786 - val_loss: 0.0279 - val_acc: 0.9932
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[4]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>[0.027948900684616387, 0.9931650893796005]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Perform-1000-forward-passes-on-test-set-and-calculate-Variance-Ratio-and-Standard-Dev">
+<h2>Perform 1000 forward passes on test set and calculate Variance Ratio and Standard Dev<a class="headerlink" href="#Perform-1000-forward-passes-on-test-set-and-calculate-Variance-Ratio-and-Standard-Dev" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">FP</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">predict_stochastic</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="n">function</span><span class="p">([</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">K</span><span class="o">.</span><span class="n">learning_phase</span><span class="p">()],</span> <span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">output</span><span class="p">])</span>
+
+<span class="n">y_pred_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">predict_stochastic</span><span class="p">([</span><span class="n">X_test</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">FP</span><span class="p">)])</span>
+<span class="n">y_pred_stochastic_test</span> <span class="o">=</span> <span class="n">y_pred_test</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">y_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+
+<span class="n">y_pred_std_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">y_pred_stochastic_test</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y_pred_mean_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y_pred_stochastic_test</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y_pred_mode_test</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y_pred_stochastic_test</span> <span class="o">&gt;</span> <span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">.</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">y_pred_var_ratio_test</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">y_pred_stochastic_test</span> <span class="o">&gt;</span> <span class="o">.</span><span class="mi">5</span><span class="p">)</span> <span class="o">==</span> <span class="n">y_pred_mode_test</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">test_analysis</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">&quot;y_true&quot;</span><span class="p">:</span> <span class="n">y_test</span><span class="p">,</span>
+    <span class="s2">&quot;y_pred&quot;</span><span class="p">:</span> <span class="n">y_pred_mean_test</span><span class="p">,</span>
+    <span class="s2">&quot;VR&quot;</span><span class="p">:</span> <span class="n">y_pred_var_ratio_test</span><span class="p">,</span>
+    <span class="s2">&quot;STD&quot;</span><span class="p">:</span> <span class="n">y_pred_std_test</span>
+<span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">y_pred_mean_test</span> <span class="o">&gt;</span> <span class="o">.</span><span class="mi">5</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">test_analysis</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+0.9905362776025236
+            y_true       y_pred           VR          STD
+count  1902.000000  1902.000000  1902.000000  1902.000000
+mean      0.531020     0.544015     0.021121     0.053761
+std       0.499168     0.471939     0.067162     0.077280
+min       0.000000     0.000001     0.000000     0.000010
+25%       0.000000     0.006608     0.000000     0.004060
+50%       1.000000     0.911458     0.000000     0.020484
+75%       1.000000     0.998069     0.005000     0.064760
+max       1.000000     0.999999     0.500000     0.367364
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Plot-test-set-confidence">
+<h2>Plot test set confidence<a class="headerlink" href="#Plot-test-set-confidence" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">prediction_cut_off</span> <span class="o">=</span> <span class="p">(</span><span class="n">test_analysis</span><span class="o">.</span><span class="n">y_pred</span> <span class="o">&lt;</span> <span class="o">.</span><span class="mi">96</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">test_analysis</span><span class="o">.</span><span class="n">y_pred</span> <span class="o">&gt;</span> <span class="o">.</span><span class="mi">94</span><span class="p">)</span>
+<span class="n">std_diff</span> <span class="o">=</span> <span class="n">test_analysis</span><span class="o">.</span><span class="n">STD</span><span class="p">[</span><span class="n">prediction_cut_off</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">test_analysis</span><span class="o">.</span><span class="n">STD</span><span class="p">[</span><span class="n">prediction_cut_off</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+<span class="n">vr_diff</span> <span class="o">=</span> <span class="n">test_analysis</span><span class="o">.</span><span class="n">VR</span><span class="p">[</span><span class="n">prediction_cut_off</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">test_analysis</span><span class="o">.</span><span class="n">VR</span><span class="p">[</span><span class="n">prediction_cut_off</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+<span class="n">num_preds</span> <span class="o">=</span> <span class="n">test_analysis</span><span class="o">.</span><span class="n">STD</span><span class="p">[</span><span class="n">prediction_cut_off</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># STD plot</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Standard Deviation of Test Predictions&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;For the </span><span class="si">%d</span><span class="s2"> predictions between 0.94 and 0.96 the STD varies with </span><span class="si">%f</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">num_preds</span><span class="p">,</span> <span class="n">std_diff</span><span class="p">),</span>
+         <span class="n">style</span><span class="o">=</span><span class="s2">&quot;italic&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Standard Deviation&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Predicted Probability&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">test_analysis</span><span class="o">.</span><span class="n">STD</span><span class="p">,</span> <span class="n">test_analysis</span><span class="o">.</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=.</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">test_analysis</span><span class="o">.</span><span class="n">STD</span><span class="p">[</span><span class="n">prediction_cut_off</span><span class="p">],</span>
+            <span class="n">test_analysis</span><span class="o">.</span><span class="n">y_pred</span><span class="p">[</span><span class="n">prediction_cut_off</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># VR plot</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Variance Ratio of Test Predictions&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;For the </span><span class="si">%d</span><span class="s2"> predictions between 0.94 and 0.96 the Variance Ratio varies with </span><span class="si">%f</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">num_preds</span><span class="p">,</span> <span class="n">vr_diff</span><span class="p">),</span>
+         <span class="n">style</span><span class="o">=</span><span class="s2">&quot;italic&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Variance Ratio&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Predicted Probability&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">test_analysis</span><span class="o">.</span><span class="n">VR</span><span class="p">,</span> <span class="n">test_analysis</span><span class="o">.</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=.</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">test_analysis</span><span class="o">.</span><span class="n">VR</span><span class="p">[</span><span class="n">prediction_cut_off</span><span class="p">],</span>
+            <span class="n">test_analysis</span><span class="o">.</span><span class="n">y_pred</span><span class="p">[</span><span class="n">prediction_cut_off</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Confidence-Graphs_11_0.png" src="../_images/notebooks_Confidence-Graphs_11_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Confidence-Graphs_11_1.png" src="../_images/notebooks_Confidence-Graphs_11_1.png" />
+</div>
+</div>
+</div>
+<div class="section" id="Apply-MAPPER">
+<h2>Apply <span class="math notranslate nohighlight">\(MAPPER\)</span><a class="headerlink" href="#Apply-MAPPER" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="Take-penultimate-layer-activations-from-test-set-for-the-inverse-X">
+<h3>Take penultimate layer activations from test set for the inverse <span class="math notranslate nohighlight">\(X\)</span><a class="headerlink" href="#Take-penultimate-layer-activations-from-test-set-for-the-inverse-X" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">predict_penultimate_layer</span> <span class="o">=</span>  <span class="n">K</span><span class="o">.</span><span class="n">function</span><span class="p">([</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">K</span><span class="o">.</span><span class="n">learning_phase</span><span class="p">()],</span> <span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">output</span><span class="p">])</span>
+
+<span class="n">X_inverse_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">predict_penultimate_layer</span><span class="p">([</span><span class="n">X_test</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">((</span><span class="n">X_inverse_test</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s2">&quot;X_inverse_test shape&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+((1902, 512), &#39;X_inverse_test shape&#39;)
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Take-STD-and-error-as-the-projected-X">
+<h3>Take STD and error as the projected <span class="math notranslate nohighlight">\(X\)</span><a class="headerlink" href="#Take-STD-and-error-as-the-projected-X" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">X_projected_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">test_analysis</span><span class="o">.</span><span class="n">STD</span><span class="p">,</span> <span class="n">test_analysis</span><span class="o">.</span><span class="n">y_true</span> <span class="o">-</span> <span class="n">test_analysis</span><span class="o">.</span><span class="n">y_pred</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">((</span><span class="n">X_projected_test</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s2">&quot;X_projected_test shape&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+((1902, 2), &#39;X_projected_test shape&#39;)
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Create-the-confidence-graph-G">
+<h3>Create the confidence graph <span class="math notranslate nohighlight">\(G\)</span><a class="headerlink" href="#Create-the-confidence-graph-G" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">mapper</span> <span class="o">=</span> <span class="n">km</span><span class="o">.</span><span class="n">KeplerMapper</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">X_projected_test</span><span class="p">,</span>
+               <span class="n">X_inverse_test</span><span class="p">,</span>
+               <span class="n">clusterer</span><span class="o">=</span><span class="n">cluster</span><span class="o">.</span><span class="n">AgglomerativeClustering</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+               <span class="n">overlap_perc</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+               <span class="n">nr_cubes</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+KeplerMapper()
+Mapping on data shaped (1902, 512) using lens shaped (1902, 2)
+
+Minimal points in hypercube before clustering: 2
+Creating 100 hypercubes.
+There are 0 points in cube_0 / 100
+Cube_0 is empty.
+
+There are 0 points in cube_1 / 100
+Cube_1 is empty.
+
+There are 0 points in cube_2 / 100
+Cube_2 is empty.
+
+There are 0 points in cube_3 / 100
+Cube_3 is empty.
+
+There are 0 points in cube_4 / 100
+Cube_4 is empty.
+
+There are 1437 points in cube_5 / 100
+Found 2 clusters in cube_5
+
+There are 1437 points in cube_6 / 100
+Found 2 clusters in cube_6
+
+There are 0 points in cube_7 / 100
+Cube_7 is empty.
+
+There are 0 points in cube_8 / 100
+Cube_8 is empty.
+
+There are 0 points in cube_9 / 100
+Cube_9 is empty.
+
+There are 1 points in cube_10 / 100
+Cube_10 is empty.
+
+There are 0 points in cube_11 / 100
+Cube_11 is empty.
+
+There are 0 points in cube_12 / 100
+Cube_12 is empty.
+
+There are 0 points in cube_13 / 100
+Cube_13 is empty.
+
+There are 0 points in cube_14 / 100
+Cube_14 is empty.
+
+There are 382 points in cube_15 / 100
+Found 2 clusters in cube_15
+
+There are 364 points in cube_16 / 100
+Found 2 clusters in cube_16
+
+There are 0 points in cube_17 / 100
+Cube_17 is empty.
+
+There are 0 points in cube_18 / 100
+Cube_18 is empty.
+
+There are 0 points in cube_19 / 100
+Cube_19 is empty.
+
+There are 1 points in cube_20 / 100
+Cube_20 is empty.
+
+There are 0 points in cube_21 / 100
+Cube_21 is empty.
+
+There are 0 points in cube_22 / 100
+Cube_22 is empty.
+
+There are 0 points in cube_23 / 100
+Cube_23 is empty.
+
+There are 14 points in cube_24 / 100
+Found 2 clusters in cube_24
+
+There are 203 points in cube_25 / 100
+Found 2 clusters in cube_25
+
+There are 144 points in cube_26 / 100
+Found 2 clusters in cube_26
+
+There are 0 points in cube_27 / 100
+Cube_27 is empty.
+
+There are 0 points in cube_28 / 100
+Cube_28 is empty.
+
+There are 0 points in cube_29 / 100
+Cube_29 is empty.
+
+There are 0 points in cube_30 / 100
+Cube_30 is empty.
+
+There are 0 points in cube_31 / 100
+Cube_31 is empty.
+
+There are 0 points in cube_32 / 100
+Cube_32 is empty.
+
+There are 0 points in cube_33 / 100
+Cube_33 is empty.
+
+There are 42 points in cube_34 / 100
+Found 2 clusters in cube_34
+
+There are 124 points in cube_35 / 100
+Found 2 clusters in cube_35
+
+There are 65 points in cube_36 / 100
+Found 2 clusters in cube_36
+
+There are 2 points in cube_37 / 100
+Found 2 clusters in cube_37
+
+There are 0 points in cube_38 / 100
+Cube_38 is empty.
+
+There are 0 points in cube_39 / 100
+Cube_39 is empty.
+
+There are 0 points in cube_40 / 100
+Cube_40 is empty.
+
+There are 0 points in cube_41 / 100
+Cube_41 is empty.
+
+There are 0 points in cube_42 / 100
+Cube_42 is empty.
+
+There are 1 points in cube_43 / 100
+Cube_43 is empty.
+
+There are 52 points in cube_44 / 100
+Found 2 clusters in cube_44
+
+There are 69 points in cube_45 / 100
+Found 2 clusters in cube_45
+
+There are 37 points in cube_46 / 100
+Found 2 clusters in cube_46
+
+There are 8 points in cube_47 / 100
+Found 2 clusters in cube_47
+
+There are 0 points in cube_48 / 100
+Cube_48 is empty.
+
+There are 0 points in cube_49 / 100
+Cube_49 is empty.
+
+There are 0 points in cube_50 / 100
+Cube_50 is empty.
+
+There are 0 points in cube_51 / 100
+Cube_51 is empty.
+
+There are 0 points in cube_52 / 100
+Cube_52 is empty.
+
+There are 6 points in cube_53 / 100
+Found 2 clusters in cube_53
+
+There are 50 points in cube_54 / 100
+Found 2 clusters in cube_54
+
+There are 42 points in cube_55 / 100
+Found 2 clusters in cube_55
+
+There are 23 points in cube_56 / 100
+Found 2 clusters in cube_56
+
+There are 15 points in cube_57 / 100
+Found 2 clusters in cube_57
+
+There are 1 points in cube_58 / 100
+Cube_58 is empty.
+
+There are 0 points in cube_59 / 100
+Cube_59 is empty.
+
+There are 4 points in cube_60 / 100
+Found 2 clusters in cube_60
+
+There are 6 points in cube_61 / 100
+Found 2 clusters in cube_61
+
+There are 2 points in cube_62 / 100
+Found 2 clusters in cube_62
+
+There are 17 points in cube_63 / 100
+Found 2 clusters in cube_63
+
+There are 42 points in cube_64 / 100
+Found 2 clusters in cube_64
+
+There are 18 points in cube_65 / 100
+Found 2 clusters in cube_65
+
+There are 15 points in cube_66 / 100
+Found 2 clusters in cube_66
+
+There are 22 points in cube_67 / 100
+Found 2 clusters in cube_67
+
+There are 5 points in cube_68 / 100
+Found 2 clusters in cube_68
+
+There are 0 points in cube_69 / 100
+Cube_69 is empty.
+
+There are 4 points in cube_70 / 100
+Found 2 clusters in cube_70
+
+There are 7 points in cube_71 / 100
+Found 2 clusters in cube_71
+
+There are 9 points in cube_72 / 100
+Found 2 clusters in cube_72
+
+There are 28 points in cube_73 / 100
+Found 2 clusters in cube_73
+
+There are 28 points in cube_74 / 100
+Found 2 clusters in cube_74
+
+There are 3 points in cube_75 / 100
+Found 2 clusters in cube_75
+
+There are 8 points in cube_76 / 100
+Found 2 clusters in cube_76
+
+There are 20 points in cube_77 / 100
+Found 2 clusters in cube_77
+
+There are 8 points in cube_78 / 100
+Found 2 clusters in cube_78
+
+There are 0 points in cube_79 / 100
+Cube_79 is empty.
+
+There are 0 points in cube_80 / 100
+Cube_80 is empty.
+
+There are 7 points in cube_81 / 100
+Found 2 clusters in cube_81
+
+There are 23 points in cube_82 / 100
+Found 2 clusters in cube_82
+
+There are 29 points in cube_83 / 100
+Found 2 clusters in cube_83
+
+There are 14 points in cube_84 / 100
+Found 2 clusters in cube_84
+
+There are 0 points in cube_85 / 100
+Cube_85 is empty.
+
+There are 1 points in cube_86 / 100
+Cube_86 is empty.
+
+There are 8 points in cube_87 / 100
+Found 2 clusters in cube_87
+
+There are 6 points in cube_88 / 100
+Found 2 clusters in cube_88
+
+There are 1 points in cube_89 / 100
+Cube_89 is empty.
+
+There are 0 points in cube_90 / 100
+Cube_90 is empty.
+
+There are 4 points in cube_91 / 100
+Found 2 clusters in cube_91
+
+There are 14 points in cube_92 / 100
+Found 2 clusters in cube_92
+
+There are 14 points in cube_93 / 100
+Found 2 clusters in cube_93
+
+There are 4 points in cube_94 / 100
+Found 2 clusters in cube_94
+
+There are 0 points in cube_95 / 100
+Cube_95 is empty.
+
+There are 0 points in cube_96 / 100
+Cube_96 is empty.
+
+There are 1 points in cube_97 / 100
+Cube_97 is empty.
+
+There are 2 points in cube_98 / 100
+Found 2 clusters in cube_98
+
+There are 2 points in cube_99 / 100
+Found 2 clusters in cube_99
+
+
+Created 267 edges and 100 nodes in 0:00:02.503639.
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Create-color-function-output-(absolute-error)">
+<h3>Create color function output (absolute error)<a class="headerlink" href="#Create-color-function-output-(absolute-error)" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">color_function_output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">y_test</span><span class="o">-</span><span class="n">test_analysis</span><span class="o">.</span><span class="n">y_pred</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Create-image-tooltips-for-samples-that-are-interpretable-for-humans">
+<h3>Create image tooltips for samples that are interpretable for humans<a class="headerlink" href="#Create-image-tooltips-for-samples-that-are-interpretable-for-humans" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">from</span> <span class="nn">scipy.misc</span> <span class="k">import</span> <span class="n">toimage</span><span class="p">,</span> <span class="n">imsave</span><span class="p">,</span> <span class="n">imresize</span>
+
+<span class="c1"># Create z-scores</span>
+<span class="n">hard_predictions</span> <span class="o">=</span> <span class="p">(</span><span class="n">test_analysis</span><span class="o">.</span><span class="n">y_pred</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+<span class="n">o</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">X_test</span><span class="p">[</span><span class="n">hard_predictions</span> <span class="o">==</span> <span class="mi">0</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">X_test</span><span class="p">[</span><span class="n">hard_predictions</span> <span class="o">==</span> <span class="mi">1</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">z_scores</span> <span class="o">=</span> <span class="p">(</span><span class="n">u</span><span class="o">-</span><span class="n">v</span><span class="p">)</span><span class="o">/</span><span class="n">o</span>
+
+<span class="n">scores_0</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([(</span><span class="n">score</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">z_scores</span><span class="p">)</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">score</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;nan&quot;</span><span class="p">],</span>
+               <span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">scores_1</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([(</span><span class="n">score</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">z_scores</span><span class="p">)</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">score</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;nan&quot;</span><span class="p">],</span>
+               <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Fill RGBA image array with top 200 scores for positive and negative</span>
+<span class="n">img_array_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">img_array_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">e</span><span class="p">,</span> <span class="p">(</span><span class="n">score</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">scores_0</span><span class="p">[:</span><span class="mi">200</span><span class="p">]):</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">28</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">i</span> <span class="o">-</span> <span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">28</span><span class="p">))</span><span class="o">/</span><span class="mi">28</span><span class="p">)</span>
+    <span class="n">img_array_0</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">205</span><span class="o">-</span><span class="n">e</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">e</span><span class="p">,</span> <span class="p">(</span><span class="n">score</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">scores_1</span><span class="p">[:</span><span class="mi">200</span><span class="p">]):</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">28</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">i</span> <span class="o">-</span> <span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">28</span><span class="p">))</span><span class="o">/</span><span class="mi">28</span><span class="p">)</span>
+    <span class="n">img_array_1</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">205</span><span class="o">-</span><span class="n">e</span><span class="p">]</span>
+
+<span class="n">img_array</span> <span class="o">=</span> <span class="p">(</span><span class="n">img_array_0</span> <span class="o">+</span> <span class="n">img_array_1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+
+<span class="c1"># Get base64 encoded version of this</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">imresize</span><span class="p">(</span><span class="n">img_array</span><span class="p">,</span> <span class="p">(</span><span class="mi">64</span><span class="p">,</span><span class="mi">64</span><span class="p">))</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">toimage</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+
+<span class="n">img</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;PNG&quot;</span><span class="p">)</span>
+<span class="n">contents</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+<span class="n">explanation_img_encoded</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span>
+<span class="n">output</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="c1"># Create tooltips for each digit</span>
+<span class="n">tooltip_s</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">ys</span><span class="p">,</span> <span class="n">image_data</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">X_test</span><span class="p">):</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">toimage</span><span class="p">(</span><span class="n">imresize</span><span class="p">(</span><span class="n">image_data</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">)),</span> <span class="p">(</span><span class="mi">64</span><span class="p">,</span><span class="mi">64</span><span class="p">)))</span> <span class="c1"># Data was a flat row of &quot;pixels&quot;.</span>
+    <span class="n">img</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;PNG&quot;</span><span class="p">)</span>
+    <span class="n">contents</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+    <span class="n">img_encoded</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span>
+    <span class="n">img_tag</span> <span class="o">=</span>  <span class="s2">&quot;&quot;&quot;&lt;div style=&quot;width:71px;</span>
+<span class="s2">                             height:71px;</span>
+<span class="s2">                             overflow:hidden;</span>
+<span class="s2">                             float:left;</span>
+<span class="s2">                             position: relative;&quot;&gt;</span>
+<span class="s2">                 &lt;img src=&quot;data:image/png;base64,</span><span class="si">%s</span><span class="s2">&quot; style=&quot;position:absolute; top:0; right:0&quot; /&gt;</span>
+<span class="s2">                 &lt;img src=&quot;data:image/png;base64,</span><span class="si">%s</span><span class="s2">&quot; style=&quot;position:absolute; top:0; right:0;</span>
+<span class="s2">                                                            opacity:0.5; width: 64px; height: 64px;&quot; /&gt;</span>
+<span class="s2">                 &lt;div style=&quot;position: relative; top: 0; left: 1px; font-size:9px&quot;&gt;</span><span class="si">%s</span><span class="s2">&lt;/div&gt;</span>
+<span class="s2">                 &lt;/div&gt;&quot;&quot;&quot;</span><span class="o">%</span><span class="p">((</span><span class="n">img_encoded</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span>
+                             <span class="n">explanation_img_encoded</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span>
+                             <span class="n">ys</span><span class="p">))</span>
+
+    <span class="n">tooltip_s</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">img_tag</span><span class="p">)</span>
+    <span class="n">output</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">tooltip_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">tooltip_s</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="stderr output_area docutils container">
+<div class="highlight"><pre>
+/Users/sauln/libraries/kepler-mapper/venv/lib/python3.6/site-packages/ipykernel_launcher.py:11: RuntimeWarning: invalid value encountered in true_divide
+  # This is added back by InteractiveShellApp.init_path()
+/Users/sauln/libraries/kepler-mapper/venv/lib/python3.6/site-packages/ipykernel_launcher.py:36: DeprecationWarning: `imresize` is deprecated!
+`imresize` is deprecated in SciPy 1.0.0, and will be removed in 1.2.0.
+Use ``skimage.transform.resize`` instead.
+/Users/sauln/libraries/kepler-mapper/venv/lib/python3.6/site-packages/ipykernel_launcher.py:37: DeprecationWarning: `toimage` is deprecated!
+`toimage` is deprecated in SciPy 1.0.0, and will be removed in 1.2.0.
+Use Pillow&#39;s ``Image.fromarray`` directly instead.
+/Users/sauln/libraries/kepler-mapper/venv/lib/python3.6/site-packages/ipykernel_launcher.py:48: DeprecationWarning: `imresize` is deprecated!
+`imresize` is deprecated in SciPy 1.0.0, and will be removed in 1.2.0.
+Use ``skimage.transform.resize`` instead.
+/Users/sauln/libraries/kepler-mapper/venv/lib/python3.6/site-packages/ipykernel_launcher.py:48: DeprecationWarning: `toimage` is deprecated!
+`toimage` is deprecated in SciPy 1.0.0, and will be removed in 1.2.0.
+Use Pillow&#39;s ``Image.fromarray`` directly instead.
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Visualize">
+<h3>Visualize<a class="headerlink" href="#Visualize" title="Permalink to this headline">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">_</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">G</span><span class="p">,</span>
+                     <span class="n">lens</span><span class="o">=</span><span class="n">X_projected_test</span><span class="p">,</span>
+                     <span class="n">lens_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Uncertainty&quot;</span><span class="p">,</span> <span class="s2">&quot;Error&quot;</span><span class="p">],</span>
+                     <span class="n">custom_tooltips</span><span class="o">=</span><span class="n">tooltip_s</span><span class="p">,</span>
+                     <span class="n">color_function</span><span class="o">=</span><span class="n">color_function_output</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+                     <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Confidence Graph for a MLP trained on MNIST&quot;</span><span class="p">,</span>
+                     <span class="n">path_html</span><span class="o">=</span><span class="s2">&quot;confidence_graph_output.html&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Wrote visualization to: confidence_graph_output.html
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">kmapper</span> <span class="k">import</span> <span class="n">jupyter</span>
+<span class="n">jupyter</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="s2">&quot;confidence_graph_output.html&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<style>
+    .container { width:100% !important; }
+    .output_scroll {height: 800px !important;}
+    </style></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<iframe src=confidence_graph_output.html width=100%% height=800 frameBorder="0"></iframe></div>
+</div>
+</div>
+</div>
+<div class="section" id="Image-of-output">
+<h2>Image of output<a class="headerlink" href="#Image-of-output" title="Permalink to this headline">¶</a></h2>
+<p><img alt="img" src="https://i.imgur.com/EycZWRR.png" /> ## Link to output
+<a class="reference external" href="http://mlwave.github.io/tda/confidence-graphs.html">http://mlwave.github.io/tda/confidence-graphs.html</a></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="self-guessing.html" class="btn btn-neutral float-right" title="Self-guessing mapper" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="TOR-XGB-TDA.html" class="btn btn-neutral" title="Detecting Encrypted TOR Traffic with Boosting and Topological Data Analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Hendrik Jacob van Veen and Nathaniel Saul
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.1.6.dev0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

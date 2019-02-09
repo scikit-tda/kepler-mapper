@@ -1,0 +1,1646 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Self-guessing mapper &mdash; KeplerMapper 1.1.6.dev0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Confidence Graphs: Representing Model Uncertainty in Deep Learning" href="Confidence-Graphs.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+    ga('create', 'UA-124965309-4', 'auto');
+    ga('send', 'pageview');
+  </script>
+    <!-- End Google Analytics -->
+
+
+
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+
+          <a href="https://scikit-tda.org">
+            <big>a scikit-tda project</big>
+          </a>
+
+
+
+          
+            <a href="../index.html" class="icon icon-home"> KeplerMapper
+          
+
+          
+            
+            <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.6.dev0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">API Reference</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Adapters.html">Adapters example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plotly-Demo.html">Demo of Plotlyviz features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="KeplerMapper-usage-in-Jupyter-Notebook.html">Using Kepler Mapper in Jupyter Notebook</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Advanced Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="KeplerMapper-Newsgroup20-Pipeline.html">KeplerMapper &amp; NLP examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TOR-XGB-TDA.html">Detecting Encrypted TOR Traffic with Boosting and Topological Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Confidence-Graphs.html">Confidence Graphs: Representing Model Uncertainty in Deep Learning</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Self-guessing mapper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#algoritmic-information-theory">Algoritmic Information Theory</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#computation">Computation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#compression">Compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kolmogorov-complexity">Kolmogorov Complexity</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#information-distance">Information Distance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#uncomputability">Uncomputability</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#approximation-through-compression">Approximation through compression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#universal-search">Universal Search</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#coarse-graining">Coarse-Graining</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#state-space-compression-framework">State-Space Compression Framework</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#ensemble-learning">Ensemble Learning</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#bagging">Bagging</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#model-selection">Model selection</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#topological-data-analysis">Topological Data Analysis</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#mapper">Mapper</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#self-guessing">Self-Guessing</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#local-evaluation">Local Evaluation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stacking">Stacking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#extreme-generalization">Extreme Generalization</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#cognitive-neuroscience">Cognitive Neuroscience</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#brain-as-lossy-compressor">Brain as lossy compressor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#world-models">World Models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#procedural-memory">Procedural Memory</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#solution">Solution</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#space-compression">Space Compression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#library-of-filter-functions">Library of filter functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ensemble-selection">Ensemble selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#self-mapping">Self-Mapping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mapping-and-barcodes">Mapping and barcodes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#models">Models</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#experiments">Experiments</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#d">1-D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#d-1">2-D</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#identity">Identity</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gary-marcus-challenge">Gary Marcus Challenge</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fizz-buzz">Fizz-Buzz</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#circles">Circles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#extreme-generalization-1">Extreme generalization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#error-detection-and-correction">Error detection and correction</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#d-2">3-D</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#d-3">4-D</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#discussion">Discussion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#theory-vs-practice">Theory vs.&nbsp;Practice</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reference-length-and-hardware-complexity">Reference length and hardware complexity.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#drawbacks-of-our-approach">Drawbacks of our approach</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multi-scale-mapping">Multi-scale mapping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#other-solutions">Other solutions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#code">Code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#future">Future</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">KeplerMapper</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="https://scikit-tda.org">Scikit-TDA</a>&raquo;<a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Self-guessing mapper</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/notebooks/self-guessing.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+</style>
+<div class="section" id="self-guessing-mapper">
+<h1>Self-guessing mapper<a class="headerlink" href="#self-guessing-mapper" title="Permalink to this headline">¶</a></h1>
+<p><em>HJ van Veen &#64;mlwave</em></p>
+<p><strong>Self-Guessing [</strong><a class="reference external" href="#references">1</a><strong>] is requiring a generalizer
+to be able to reproduce a learning set, given only a part of it. Strong
+self-guessers, such as humans, are able to do this without any prior
+knowledge of the learning set. Humans do this by applying a set of
+mental models to the visible parts of a learning set, see if these
+patterns generalize well to other visible parts, and when this happens,
+use these patterns to fill in the obscured part.</strong></p>
+<p><strong>Combining inspirations from algorithmic information theory, ensemble
+learning, symbolic AI, deep learning, and the mapper from topological
+data analysis, we create a strong self-guesser that is capable of
+extreme generalization on multi-dimensional data: solving many different
+problems with little or no data and automatic parameter tuning.</strong></p>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<div class="figure" id="id5">
+<img alt="image of sea star with leg partly obscured" src="https://i.imgur.com/qi21iFL.jpg" />
+<p class="caption"><span class="caption-text">image of sea star with leg partly obscured</span></p>
+</div>
+<p>Consider the above image of a sea star which is partly obscured
+[<a class="reference external" href="#references">2</a>]. Humans are able to quite accurately guess what is
+beneath the obscured part. They may use a combination of different
+approaches:</p>
+<ul class="simple">
+<li>Prior knowledge. Perhaps you know that Nature is fond of symmetry and
+this seems to be an organism. Perhaps you know that a sea star has
+five arms. Perhaps you scanned the internet for popular images and
+seen this exact image before.</li>
+<li>Game theory. You could try to infer my reasoning for posting that
+image. Surely, the author won’t try to trick us by putting up the
+ultra rare sea star with four normal legs and one stump?</li>
+<li>Self-Guessing. You fit texture -, rotation -, and shape models on the
+visible parts of the image to impute the non-visible parts.</li>
+</ul>
+<p>The first approach state-of-the-art for inpainting is in
+[<a class="reference external" href="#references">3</a>] and for scene interpretation in
+[<a class="reference external" href="#references">4</a>]. The second approach is studied with incomplete
+information games [<a class="reference external" href="#references">6</a>], and inverse reinforcement
+learning (given my behavior through actions, what is the policy I am
+optimizing?), a recent overview is given in [<a class="reference external" href="#references">5</a>]. This
+article is about the third approach, self-guessing, as studied in
+classical AI
+[<a class="reference external" href="#references">7</a>][<a class="reference external" href="#references">8</a>][<a class="reference external" href="#references">9</a>].</p>
+<p>We first place our algorithm in the context of existing research. We
+then describe our solution and what is different. Experiments are shown
+for 1-D, 2-D, and 3-D point-cloud data. Finally we discuss the results
+and future possibilities.</p>
+<div class="section" id="algoritmic-information-theory">
+<h3>Algoritmic Information Theory<a class="headerlink" href="#algoritmic-information-theory" title="Permalink to this headline">¶</a></h3>
+<p><em>Algoritmic Information Theory is the result of putting Shannon’s
+information theory and Turing’s computability theory into a cocktail
+shaker and shaking vigorously. The basic idea is to measure the
+complexity of an object by the size in bits of the smallest program for
+computing it</em> — Gregory Chaitin, Centre for Discrete Mathematics and
+Theoretical Computer Science [<a class="reference external" href="#references">10</a>]</p>
+<div class="section" id="computation">
+<h4>Computation<a class="headerlink" href="#computation" title="Permalink to this headline">¶</a></h4>
+<p>Computation can be done with a Turing machine on a binary input string.
+Anything that a human can calculate, can be computed with a Turing
+machine. [<a class="reference external" href="#references">11</a>] All objects, like DNA, 3D point clouds,
+prime numbers, documents, agents, populations, and universes have a
+(possibly course-grained) binary string representation.
+[<a class="reference external" href="#references">12</a>] The counting argument tells us that the majority
+of strings can not be compressed, yet most objects that we care about
+have some ordered regularities: They can be compressed.
+[<a class="reference external" href="#references">13</a>]</p>
+</div>
+<div class="section" id="compression">
+<h4>Compression<a class="headerlink" href="#compression" title="Permalink to this headline">¶</a></h4>
+<p>Compression is related to understanding and prediction:
+[<a class="reference external" href="#references">14</a>]</p>
+<ul class="simple">
+<li>One needs to understand a sentence to perform tasks like imputing
+missing words [<a class="reference external" href="#references">15</a>], or accurately predicting the
+next character [<a class="reference external" href="#references">16</a>].</li>
+<li>Special-purpose compressors, such as DjVu [<a class="reference external" href="#references">17</a>], use
+character recognition to segment text from noise or background
+imagery, and as a result get higher compression rates on scanned
+documents and brochures.</li>
+<li>Optimal compressions of physical reality yielded short elegant
+predictive programs, such as Newton’s law of gravity or computer
+programs calculating the digits of Pi. [<a class="reference external" href="#references">18</a>]</li>
+</ul>
+<p>Compression can be measured by looking at compression ratio’s.
+[<a class="reference external" href="#references">19</a>] The more regularities (predictable patterns,
+laws) the compressor has found in the data, the higher the compression
+ratio. The absolute shortest program to produce a string gets the
+highest possible compression ratio.</p>
+</div>
+<div class="section" id="kolmogorov-complexity">
+<h4>Kolmogorov Complexity<a class="headerlink" href="#kolmogorov-complexity" title="Permalink to this headline">¶</a></h4>
+<p>The Kolmogorov Complexity of a string is the length in bits of the
+shortest program to produce that string. [<a class="reference external" href="#references">20</a>] The more
+information (unpredictable randomness) a string has, the longer this
+shortest program has to be. [<a class="reference external" href="#references">21</a>] A string is
+Kolmogorov Random if the shortest program to produce it is not smaller
+than that string itself: There is no more compression possible, there
+are no patterns or predictable regularities left to be found.
+[<a class="reference external" href="#references">22</a>] [<a class="reference external" href="#references">23</a>]</p>
+</div>
+<div class="section" id="information-distance">
+<h4>Information Distance<a class="headerlink" href="#information-distance" title="Permalink to this headline">¶</a></h4>
+<p>The Information Distance between two strings is the length (in bits) of
+the shortest program that transforms one string into another string
+[<a class="reference external" href="#references">24</a>]. This makes it a universal distance measure for
+objects of all kinds. We apply normalization to take into account the
+different lengths of the two strings under comparison:
+[<a class="reference external" href="#references">25</a>]</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>      <span class="nb">max</span><span class="p">{</span><span class="n">K</span><span class="p">(</span><span class="n">x</span><span class="o">|</span><span class="n">y</span><span class="p">),</span> <span class="n">K</span><span class="p">(</span><span class="n">y</span><span class="o">|</span><span class="n">x</span><span class="p">)}</span>
+<span class="n">NID</span> <span class="o">=</span> <span class="o">-------------------</span>
+      <span class="nb">max</span><span class="p">{</span><span class="n">K</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">K</span><span class="p">(</span><span class="n">y</span><span class="p">)}</span>
+</pre></div>
+</div>
+<p>The longer the length of the shortest program, the more different two
+strings are: many computations are needed for the transformation.
+[<a class="reference external" href="#references">26</a>]</p>
+</div>
+<div class="section" id="uncomputability">
+<h4>Uncomputability<a class="headerlink" href="#uncomputability" title="Permalink to this headline">¶</a></h4>
+<p>Kolmogorov Complexity tells us something about how complex a string is.
+Compare the following two strings:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">10101010101010101010101010101010</span>
+
+<span class="mi">00000100100100000110000100001100</span>
+</pre></div>
+</div>
+<p>The first string is easy to describe with a short program called a
+Run-Length Encoder: <code class="docutils literal notranslate"><span class="pre">&quot;10&quot;*16</span></code>. The second string is seemingly more
+complex. However, you can not calculate the shortest program for all
+strings. [<a class="reference external" href="#references">27</a>] A string could always have a shorter
+description you just haven’t found yet (for instance
+<code class="docutils literal notranslate"><span class="pre">&quot;The</span> <span class="pre">first</span> <span class="pre">1000</span> <span class="pre">digits</span> <span class="pre">after</span> <span class="pre">the</span> <span class="pre">first</span> <span class="pre">58533</span> <span class="pre">decimals</span> <span class="pre">of</span> <span class="pre">Pi&quot;</span></code>).</p>
+<p>There are fundamental proofs that deal with this uncomputability, but,
+suffice to say, practically: if it was possible to calculate this
+shortest program, one could also crack all encrypted communication,
+files, and digital money in the world by <em>calculating</em> a short
+decryption key (instead of aeons of <em>brute-forcing</em>).
+[<a class="reference external" href="#references">14</a>]</p>
+<p>Let us assume <code class="docutils literal notranslate"><span class="pre">kolmogorov_complexity(x)</span></code> does exists. We can prove
+that such a reality leads to a contradiction:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kolmogorov_complexity</span>
+
+<span class="k">def</span> <span class="nf">all_program_generator</span><span class="p">():</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+      <span class="n">program</span> <span class="o">=</span> <span class="s2">&quot;{0:08b}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+      <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="k">if</span> <span class="n">kolmogorov_complexity</span><span class="p">(</span><span class="n">program</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">900000000</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">program</span>
+</pre></div>
+</div>
+<p>The function will try every possible binary program, until it finds a
+program where the shortest description of that program is larger than
+900000000 bits. But <code class="docutils literal notranslate"><span class="pre">all_program_generator()</span></code> itself is less than
+900000000 bits of length (if not, this size can be adjusted until it
+is). And so the shortest program length we have found actually has an
+even shorter description: <code class="docutils literal notranslate"><span class="pre">all_program_generator()</span></code>, which is a
+contradiction, much like the Berry Paradox: “The1 smallest2 positive3
+integer4 not5 definable6 in7 under8 twelve9 words10”.
+[<a class="reference external" href="#references">28</a>]</p>
+</div>
+<div class="section" id="approximation-through-compression">
+<h4>Approximation through compression<a class="headerlink" href="#approximation-through-compression" title="Permalink to this headline">¶</a></h4>
+<p>We can approximate the Kolmogorov Complexity with real-life compression
+algorithms (<code class="docutils literal notranslate"><span class="pre">K'</span></code>). The better the compressor the closer it approaches
+Kolmogorov Complexity <code class="docutils literal notranslate"><span class="pre">K</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">K</span><span class="s1">&#39;(x) = len(compress(x)) = Z(x)</span>
+</pre></div>
+</div>
+<p>Since compression is computeable we can now apply the concepts of
+Kolmogorov Complexity and Information Distance. For instance, one can
+use estimated KC to rank all possible sequence continuations (the
+continuation with the lowest resulting estimated KC fits better). This
+makes it possible to generate new music [<a class="reference external" href="#references">29</a>] (and to
+control for the desired amount of “surprise” <a class="reference external" href="#references">[30]</a> by
+moving up or down the ranks:
+<a class="reference external" href="https://www.youtube.com/watch?v=HPLm8NAMz94">demo</a>).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>10101010101010101010101010101010 ???? # len(snappy.compress(x))
+
+10101010101010101010101010101010 0000 # 12
+10101010101010101010101010101010 0001 # 12
+10101010101010101010101010101010 0010 # 12
+10101010101010101010101010101010 0011 # 12
+10101010101010101010101010101010 0100 # 12
+10101010101010101010101010101010 0101 # 12
+10101010101010101010101010101010 0110 # 12
+10101010101010101010101010101010 0111 # 12
+10101010101010101010101010101010 1000 # 10
+10101010101010101010101010101010 1001 # 10
+10101010101010101010101010101010 1010 # 7
+10101010101010101010101010101010 1011 # 9
+10101010101010101010101010101010 1100 # 11
+10101010101010101010101010101010 1101 # 11
+10101010101010101010101010101010 1110 # 11
+10101010101010101010101010101010 1111 # 11
+</pre></div>
+</div>
+<p>We can also rewrite the Normalized Information Distance to create the
+Normalized Compression Distance [<a class="reference external" href="#references">31</a>]:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>      <span class="n">Z</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="nb">min</span><span class="p">{</span><span class="n">Z</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">Z</span><span class="p">(</span><span class="n">y</span><span class="p">)}</span>
+<span class="n">NCD</span> <span class="o">=</span> <span class="o">-------------------------</span>
+      <span class="nb">max</span><span class="p">{</span><span class="n">Z</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">Z</span><span class="p">(</span><span class="n">y</span><span class="p">)}</span>
+</pre></div>
+</div>
+<p>Where <code class="docutils literal notranslate"><span class="pre">Z(x,</span> <span class="pre">y)</span></code> is the length of compressing the concatenation of
+<code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> with compressor <code class="docutils literal notranslate"><span class="pre">Z</span></code>. If we use Snappy for the
+compressor <code class="docutils literal notranslate"><span class="pre">Z</span></code>, then:</p>
+<ul class="simple">
+<li>the NCD between <em>“Normalized compression distance is a way of
+measuring the similarity between two objects”</em> and <em>“the similarity
+between two objects is how difficult it is to transform them into
+each other”</em> is <code class="docutils literal notranslate"><span class="pre">0.627</span></code></li>
+<li>the NCD between <em>“Normalized compression distance is a way of
+measuring the similarity between two objects”</em> and <em>“While the NID is
+not computable, it has an abundance of applications by real-world
+compressors”</em> is <code class="docutils literal notranslate"><span class="pre">0.917</span></code>. [<a class="reference external" href="#references">32</a>]</li>
+</ul>
+</div>
+<div class="section" id="universal-search">
+<h4>Universal Search<a class="headerlink" href="#universal-search" title="Permalink to this headline">¶</a></h4>
+<p>Levin originally in the 70s [<a class="reference external" href="#references">33</a>], and then Schmidhuber
+practically in the 90s [<a class="reference external" href="#references">34</a>], used the
+all-string-generating program concept to create universal search,
+followed by Hutter’s universal problem solver with simplest solution
+guarantee for all well-defined solvable problems in existence: Simply
+generate all possible binary programs starting from <code class="docutils literal notranslate"><span class="pre">0</span></code> and pick the
+first program to solve the problem at hand (gives the desired outcome
+<code class="docutils literal notranslate"><span class="pre">y</span></code>, when given the problem as input) [<a class="reference external" href="#references">35</a>]. A hard
+run-time cap (and even multiverse parallelization
+[<a class="reference external" href="#references">36</a>]) is put forward to deal with non-halting or slow
+programs.</p>
+<p>In simplified pseudo-code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">timer</span>
+
+<span class="k">def</span> <span class="nf">all_program_generator</span><span class="p">(</span><span class="n">X_problem</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">run_time_cap</span><span class="p">):</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+      <span class="n">timer</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+      <span class="k">while</span> <span class="n">timer</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">run_time_cap</span><span class="p">:</span>
+        <span class="n">program</span> <span class="o">=</span> <span class="s2">&quot;{0:08b}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">program</span><span class="p">(</span><span class="n">X_problem</span><span class="p">)</span> <span class="o">==</span> <span class="n">y</span><span class="p">:</span>
+          <span class="k">return</span> <span class="n">program</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="k">break</span>
+</pre></div>
+</div>
+<p>Next to penalizing for space, like program - or memory size, one can
+penalize for time: The best problem solving program is both short and
+takes few computer cycles to complete. [<a class="reference external" href="#references">37</a>] Note how
+this creates an implicit Occam’s Razor [<a class="reference external" href="#references">38</a>]: From two
+programs that solve a problem, pick the one that takes the least energy
+to create and execute. We can also define a concept of the algorithmic
+<em>age</em> of string: The amount of iterations needed to generate it with the
+all-string-generating program. [<a class="reference external" href="#references">20</a>]</p>
+<p>Schmidhuber’s student at the time, Marco Wiering [<a class="reference external" href="#references">39</a>],
+came up with the idea of ordering the space of all possible programs by
+their previous successes in solving particular problems, resulting in
+Adaptive Universal Search. [<a class="reference external" href="#references">40</a>] With this
+optimization, for all problems seen before, the search algorithm will
+now find a better candidate program faster than an exhaustive
+generation.</p>
+</div>
+<div class="section" id="coarse-graining">
+<h4>Coarse-Graining<a class="headerlink" href="#coarse-graining" title="Permalink to this headline">¶</a></h4>
+<p>Coarse-graining lossy compresses a space or dataset.
+[<a class="reference external" href="#references">41</a>] Images can be thresholded, quantized, or
+segmented.</p>
+<div class="figure" id="id6">
+<img alt="A sea star thresholded, quantized, segmented from the sea bed" src="https://i.imgur.com/wP7PJ6m.png" />
+<p class="caption"><span class="caption-text">A sea star thresholded, quantized, segmented from the sea bed</span></p>
+</div>
+<p>The above image shows A) Sea star thresholded B) Sea star quantized to
+9x9 C) Sea star segmented from the sea bed below. Even though the
+segmented sea star removes most of the information/uncertainty of the
+original, it is still the most useful for self-guessing structural
+missing object parts (to impute textures you’d need another approach).</p>
+<p>Coarse-graining is not exclusive to images. Text, tabular data, and even
+Markov Chains can be compressed too: [<a class="reference external" href="#references">42</a>] uses hashing
+to obtain a fixed dimensionality on highly sparse text data,
+[<a class="reference external" href="#references">43</a>] quantizes feature columns to speed up the
+performance on a GPU, and [<a class="reference external" href="#references">44</a>] compresses nearby nodes
+in a Markov Chain.</p>
+</div>
+<div class="section" id="state-space-compression-framework">
+<h4>State-Space Compression Framework<a class="headerlink" href="#state-space-compression-framework" title="Permalink to this headline">¶</a></h4>
+<p>In the paper “Optimal high-level descriptions of dynamical systems” the
+authors introduce the State-Space Compression Framework (SSCF)
+[<a class="reference external" href="#references">45</a>]. They formalize and quantify a purpose of a
+scientist studying a system: <em>The need to predict observables of
+interest concerning the high-dimensional system with as high accuracy as
+possible, while minimizing the computational cost of doing so</em>. For
+instance if the system is the economy of a country, and the observable
+of interest is the GDP, this frameworks guides the scientist through
+finding a set of coarser features and a model that best predicts future
+GDP.</p>
+<p>In the paper, the observables of interest is never the original data
+itself. A simple implementation of the SSCF may be to minimize the
+following function, which is a linear combination of generalization
+performance and computational cost:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>K(π, φ, ρ; P) ≡ κC (π, φ, ρ; P) + αE (π, φ, ρ; P)
+</pre></div>
+</div>
+<p>Where <code class="docutils literal notranslate"><span class="pre">κ</span></code> and <code class="docutils literal notranslate"><span class="pre">α</span></code> are modifiers for trading off “cost of complexity”
+or “cost of error” respectively.</p>
+<p>Cost of complexity can be computed information-theoretically by looking
+at the program length of the model and adding the execution times. Cost
+of error can be established through a local evaluation.</p>
+<p>We can then encode the average bits needed to map a from dynamic state
+of the higher dimensional system to a variable of interest in the
+future:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>x0 → y0 → yt → ω′t
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="ensemble-learning">
+<h3>Ensemble Learning<a class="headerlink" href="#ensemble-learning" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="bagging">
+<h4>Bagging<a class="headerlink" href="#bagging" title="Permalink to this headline">¶</a></h4>
+<p>If perturbing the input data produces different predictions then bagging
+can help lower the variance. In “bagging predictors” Breiman was the
+first to show emperically and theoretically that averaging multiple
+predictors lowers variance and overfit. [<a class="reference external" href="#references">46</a>]</p>
+</div>
+<div class="section" id="model-selection">
+<h4>Model selection<a class="headerlink" href="#model-selection" title="Permalink to this headline">¶</a></h4>
+<p>Caruana et al.&nbsp;showed a method to extract every bit of predictive power
+from a library of models. [<a class="reference external" href="#references">47</a>] Models are selected in
+a feed-forward manner, picking the model that improves train evaluation
+the most. Choice of evaluation metric is free. Caruana, and later Kaggle
+competitors [<a class="reference external" href="#references">48</a>], showed the effectiveness of this
+technique for obtaining state-of-the-art, with model libraries growing
+to thousands of different models. Diversity can be enforced through
+subsampling the library at each iteration.</p>
+<p>In simplified pseudo-code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Start</span> <span class="k">with</span> <span class="n">base</span> <span class="n">ensemble</span> <span class="n">of</span> <span class="mi">3</span> <span class="n">best</span> <span class="n">models</span>
+<span class="n">For</span> <span class="nb">iter</span> <span class="ow">in</span> <span class="n">max_iters</span><span class="p">:</span>
+    <span class="n">For</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">model_library</span><span class="p">:</span>
+        <span class="n">Add</span> <span class="n">model</span> <span class="n">to</span> <span class="n">base</span> <span class="n">ensemble</span>
+        <span class="n">Take</span> <span class="n">an</span> <span class="n">average</span> <span class="ow">and</span> <span class="n">evaluate</span> <span class="n">score</span>
+    <span class="n">Update</span> <span class="n">base</span> <span class="n">ensemble</span> <span class="k">with</span> <span class="n">best</span> <span class="n">scoring</span> <span class="n">model</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="topological-data-analysis">
+<h3>Topological Data Analysis<a class="headerlink" href="#topological-data-analysis" title="Permalink to this headline">¶</a></h3>
+<p>Topological Data Analysis uses topology to find the meaning in - and the
+shape of data. [<a class="reference external" href="#references">91</a>]</p>
+<div class="section" id="mapper">
+<h4>Mapper<a class="headerlink" href="#mapper" title="Permalink to this headline">¶</a></h4>
+<p>The <span class="math notranslate nohighlight">\(MAPPER\)</span> algorithm [<a class="reference external" href="#references">49</a>] is able to transform
+any data (such as point-cloud data) or function output (such as a
+similarity measure) into a graph (or simplicial complex). This graphs
+provides a compressed, meaningful summary of the dataset.</p>
+<p>The graph is created by projecting the data with a filter function.
+These filter functions may be chosen from any domain.
+[<a class="reference external" href="#references">50</a>] The filter function is then covered by
+overlapping intervals (or bins). Points inside a bin are clustered to
+form the nodes of the graph. A vertice between two nodes is drawn when a
+single point appears in both nodes. This only happens due to the overlap
+of the bins, and so an overlap is a key element to creating graphs with
+the Mapper method. An accessible formal introduction appears in
+[<a class="reference external" href="#references">51</a>] and more advanced overviews are given in
+[<a class="reference external" href="#references">52</a>] and [<a class="reference external" href="#references">53</a>].</p>
+<p>There are a number of open source and commercial applications that
+implement Mapper: [<a class="reference external" href="#references">54</a>], [<a class="reference external" href="#references">55</a>],
+[<a class="reference external" href="#references">56</a>], [<a class="reference external" href="#references">57</a>], [<a class="reference external" href="#references">58</a>],
+[<a class="reference external" href="#references">59</a>], [<a class="reference external" href="#references">60</a>].</p>
+<p>Though not all implementations use the exact same methods, for instance
+Python Mapper [<a class="reference external" href="#references">55</a>] operates on distance matrices, and
+KeplerMapper [<a class="reference external" href="#references">59</a>] on vector data. We will use a
+modified KeplerMapper for our experiments.</p>
+<p><img alt="Illustration of Mapper" src="https://i.imgur.com/Thnztul.png" /> [<a class="reference external" href="#references">61</a>]</p>
+</div>
+</div>
+<div class="section" id="self-guessing">
+<h3>Self-Guessing<a class="headerlink" href="#self-guessing" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div>Intuitively, self-guessing is the requirement that, using the
+generalizer in question, the learning set must be self-consistent. If
+a subset of the learning set is fed to the generalizer, the
+generalizer must correctly guess the rest of the learning set.
+[<a class="reference external" href="#references">1</a>]</div></blockquote>
+<div class="section" id="local-evaluation">
+<h4>Local Evaluation<a class="headerlink" href="#local-evaluation" title="Permalink to this headline">¶</a></h4>
+<p>Local evaluation allows one to estimate the generalization power of your
+model and its parameters. [<a class="reference external" href="#references">62</a>]</p>
+<p>In cross-validation one: - holds out test data from a train set, -
+assumes that this test set is representative of unseen data, - get an
+estimate of generalization performance by evaluating the predictions on
+the test set</p>
+<p>More advanced validation techniques include stratified k-fold
+validation: The folds are created, such that the distribution of the
+target in the test set is equal to the distribution of the target in the
+train set.</p>
+</div>
+<div class="section" id="stacking">
+<h4>Stacking<a class="headerlink" href="#stacking" title="Permalink to this headline">¶</a></h4>
+<p>Stacking, or stacked generalization, [<a class="reference external" href="#references">63</a>] can be seen
+as cross-validation where you save the predictions on the test folds.
+These saved predictions are then used by second-stage models as input
+features. Stacker models can both be linear and non-linear.</p>
+<p>Stacked ensembles work best when base generalizers “span the space”. We
+should thus combine surface fitters, statistical extrapolators, Turing
+machine builders, manifold learners, etc. to extract every bit of
+information available in the learning set.</p>
+<p>Both cross-validation and stacked generalization are lesser forms of
+self-guessing: Instead of replicating and describing the entire train
+set, they fit a map from input data to a target. [<a class="reference external" href="#references">1</a>]</p>
+</div>
+<div class="section" id="extreme-generalization">
+<h4>Extreme Generalization<a class="headerlink" href="#extreme-generalization" title="Permalink to this headline">¶</a></h4>
+<p>Extreme Generalization is being able to reason about data through
+abstraction, and use data to generalize to new domains with few or zero
+labeling. [<a class="reference external" href="#references">64</a>]</p>
+<div class="figure" id="id7">
+<img alt="img" src="https://pbs.twimg.com/media/DbKn2CUVMAE8Ljn.jpg" />
+<p class="caption"><span class="caption-text">img</span></p>
+</div>
+<p>Instead of fitting a single map from input to output, apply multiple
+(higher-level) models to “milk” the dataset for all its information.</p>
+</div>
+</div>
+<div class="section" id="cognitive-neuroscience">
+<h3>Cognitive Neuroscience<a class="headerlink" href="#cognitive-neuroscience" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="brain-as-lossy-compressor">
+<h4>Brain as lossy compressor<a class="headerlink" href="#brain-as-lossy-compressor" title="Permalink to this headline">¶</a></h4>
+<p>The brain is a lossy compressor. There is not enough brain capacity to
+infer everything there is to know about the universe.
+[<a class="reference external" href="#references">65</a>] By removing noise and slight variations and
+keeping the most significant features we both save energy and we gain
+categorization: Even though two lions are not exactly the same, if we
+look at their significant features, we can group all lions together.
+[<a class="reference external" href="#references">66</a>]</p>
+</div>
+<div class="section" id="world-models">
+<h4>World Models<a class="headerlink" href="#world-models" title="Permalink to this headline">¶</a></h4>
+<p>Humans develop mental models of the world, based on what they are able
+to perceive with their limited senses. [<a class="reference external" href="#references">67</a>]</p>
+<blockquote>
+<div>The image of the world around us, which we carry in our head, is just
+a model. Nobody in his head imagines all the world, government or
+country. He has only selected concepts, and relationships between
+them, and uses those to represent the real system. – Forrester (1971)
+[<a class="reference external" href="#references">68</a>]</div></blockquote>
+<p>While humans can have perfect knowledge of mathematical objects, they
+cannot have perfect knowledge of physical objects: there is always
+measurement error, uncertainty about the veracity of our sense data, and
+better compression maps that may have not been found yet.
+[<a class="reference external" href="#references">69</a>]</p>
+</div>
+<div class="section" id="procedural-memory">
+<h4>Procedural Memory<a class="headerlink" href="#procedural-memory" title="Permalink to this headline">¶</a></h4>
+<p>In [<a class="reference external" href="#references">70</a>], the authors provide an explanation for the
+neural basis of procedural memory. Procedural memory stores information
+on how to perform certain procedures, such as walking, talking and
+riding a bike. Procedural memory is acquired by trial and error.
+Procedural memory is divided into 3 types; motor, perceptual, and
+cognitive.</p>
+<p>Humans are not even aware that the procedural task they are performing
+is learned: It comes naturally, like reading and recognizing words. Only
+when we make the task hard or add new elements, do humans need active
+attention: Reading words in a mirror usually requires enhanced focus and
+concentration (but with enough practice can be made procedural too).</p>
+</div>
+</div>
+</div>
+<div class="section" id="solution">
+<h2>Solution<a class="headerlink" href="#solution" title="Permalink to this headline">¶</a></h2>
+<p>We have an idea to employ Mapper and filter functions to act as
+generalizers in the self-guessing framework to build a model of
+perception and perceptual reasoning that is close to human cognition.</p>
+<div class="section" id="space-compression">
+<h3>Space Compression<a class="headerlink" href="#space-compression" title="Permalink to this headline">¶</a></h3>
+<p>Inspired by the State Space Compression (SSC) framework, we gather a set
+of filter functions, that, when combined, generalizes to the inverse
+image with as high accuracy as possible, while minimizing the
+computational cost of doing so.</p>
+<p>Unlike SSC framework’s main purpose of predicting variables of interest,
+our variables of interest are the original data points. We also ignore
+any temporal dynamics that makes the SSC framework so powerful.</p>
+<p>We try to estimate to number of bits needed to self-map an object:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>X → {f(X)n} → y -&gt; X&#39;
+</pre></div>
+</div>
+<p>Where <code class="docutils literal notranslate"><span class="pre">{f(X)n}</span></code> is a set of filter functions that is optimized by
+minimizing the cost function <code class="docutils literal notranslate"><span class="pre">K</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">K</span> <span class="o">=</span> <span class="n">cC</span> <span class="o">+</span> <span class="n">aA</span>
+</pre></div>
+</div>
+<p>Where <code class="docutils literal notranslate"><span class="pre">c</span></code>, <code class="docutils literal notranslate"><span class="pre">a</span></code> are modifiers to weigh Complexity and Accuracy and
+Complexity is calculated by:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">C</span> <span class="o">=</span> <span class="n">pP</span> <span class="o">+</span> <span class="n">rR</span> <span class="o">+</span> <span class="n">dD</span>
+</pre></div>
+</div>
+<p>Where <code class="docutils literal notranslate"><span class="pre">p</span></code>, <code class="docutils literal notranslate"><span class="pre">r</span></code>, and <code class="docutils literal notranslate"><span class="pre">d</span></code> are modifiers to weight Program Length,
+Runtime, and Dimensionality (the number of filter functions in the set).
+The <code class="docutils literal notranslate"><span class="pre">d</span></code> modifier is set to small, to act as a tie-breaker and prefer a
+lower dimensionality when all other factors are equal.</p>
+</div>
+<div class="section" id="library-of-filter-functions">
+<h3>Library of filter functions<a class="headerlink" href="#library-of-filter-functions" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>We manually construct a small library of filter functions with a
+focus on geometrics and simple vector mathematics.</li>
+<li>We also use KeplerMapper’s build-in functionality to project data
+which gives us access to:<ul>
+<li>Subselected columns of the data (z-axis, age)</li>
+<li>Statistical functions (mean, max, min, std).</li>
+<li>A wide range of distance metrics and the possibility to turn the
+data into a distance matrix.</li>
+<li>All unsupervised dimensionality reduction algorithms supporting
+the Scikit-learn [<a class="reference external" href="#references">71</a>] API, such as neural gas
+[<a class="reference external" href="#references">72</a>], UMAP [<a class="reference external" href="#references">73</a>], or t-SNE
+[<a class="reference external" href="#references">74</a>].</li>
+<li>All supervised algorithms supporting the Scikit-learn
+[<a class="reference external" href="#references">71</a>] API, such as XGBoost
+[<a class="reference external" href="#references">75</a>], Keras [<a class="reference external" href="#references">76</a>], or KNN
+[<a class="reference external" href="#references">77</a>].</li>
+</ul>
+</li>
+</ul>
+<p>Our library of filter functions is what we tongue-in-cheek call
+“Kaggle-complete”: Using this library alone allows one to compete and
+win in any competition on Kaggle [<a class="reference external" href="#references">78</a>], since any
+modern algorithm can easily be ported to (or has already been ported to)
+use the Scikit-Learn API [<a class="reference external" href="#references">79</a>].</p>
+</div>
+<div class="section" id="ensemble-selection">
+<h3>Ensemble selection<a class="headerlink" href="#ensemble-selection" title="Permalink to this headline">¶</a></h3>
+<p>All filter functions are exhaustively ranked by a function of their
+accuracy and complexity, much like [<a class="reference external" href="#references">47</a>]. These are
+then forward combined into a stacked ensemble, for as long as this
+improves local AUC evaluation. The best combination of filter functions
+for particular data are those sets that generalize well to this data and
+are simple (either of lower dimensionality or cheap to compute). Ranks
+are saved and, like Adaptive Universal Search [<a class="reference external" href="#references">40</a>],
+used to order the filters (in an attempt to speed up the finding of good
+filter sets for future problems).</p>
+<p>In pseudo-code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">For</span> <span class="nb">filter</span> <span class="n">function</span> <span class="ow">in</span> <span class="n">sorted_by_previous_success</span><span class="p">(</span><span class="n">function_library</span><span class="p">):</span>
+    <span class="n">Project</span> <span class="n">inverse</span> <span class="n">image</span> <span class="k">with</span> <span class="n">the</span> <span class="nb">filter</span> <span class="n">function</span>
+    <span class="n">Use</span> <span class="n">this</span> <span class="nb">filter</span> <span class="n">function</span> <span class="n">output</span> <span class="k">as</span> <span class="n">features</span> <span class="k">for</span> <span class="n">a</span> <span class="n">stacker</span> <span class="n">model</span>
+    <span class="n">Evaluate</span> <span class="n">generalization</span> <span class="n">performance</span> <span class="k">with</span> <span class="n">stratified</span> <span class="n">cross</span><span class="o">-</span><span class="n">validation</span>
+    <span class="n">Add</span> <span class="n">best</span> <span class="n">scoring</span> <span class="nb">filter</span> <span class="n">function</span> <span class="n">to</span> <span class="nb">filter</span> <span class="n">function</span> <span class="nb">set</span>
+    <span class="n">If</span> <span class="n">evaluation</span> <span class="n">AUC</span> <span class="o">==</span> <span class="mi">100</span><span class="o">%</span> <span class="ow">or</span> <span class="nb">max</span> <span class="nb">filter</span> <span class="n">function</span> <span class="nb">set</span> <span class="n">size</span> <span class="n">reached</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">filter</span> <span class="n">function</span> <span class="nb">set</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="self-mapping">
+<h3>Self-Mapping<a class="headerlink" href="#self-mapping" title="Permalink to this headline">¶</a></h3>
+<p>For every filter function, we project the data with it. We then cover
+the projection with (possibly overlapping) intervals. We use the
+projection outside the interval as features and try to predict the
+inverse image/original data inside the interval with a self-supervised
+classifier (using real points (or <code class="docutils literal notranslate"><span class="pre">1</span></code>) as the positive class, and
+random points (or <code class="docutils literal notranslate"><span class="pre">0</span></code>) as the negative class).</p>
+<p>As the dimensionality and resolution gets higher we switch to sampling
+data points, instead of obtaining predictions for each datum, to relief
+computational strain.</p>
+<p>A very basic example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   x</span>
+<span class="sd">y [ 0 0 0 0 ]</span>
+<span class="sd">  [ 0 0 0 0 ]</span>
+<span class="sd">  [ 1 1 1 ? ]</span>
+<span class="sd">  [ 0 0 0 ? ]</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">lenses_set</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;distance_x_axis&quot;</span><span class="p">,</span> <span class="s2">&quot;distance_y_axis&quot;</span><span class="p">]</span>
+<span class="n">nr_cubes</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">overlap_perc</span> <span class="o">=</span> <span class="mf">0.</span>
+
+<span class="n">y_train</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">X_train</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span>
+           <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span>
+           <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
+           <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>        <span class="p">]</span>
+
+<span class="n">X_test</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">]]</span>
+<span class="n">y_test</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">tree</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                    <span class="n">max_depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                    <span class="n">criterion</span><span class="o">=</span><span class="s2">&quot;entropy&quot;</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="n">p</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">   x</span>
+<span class="sd">y [ 0 0 0 0 ]</span>
+<span class="sd">  [ 0 0 0 0 ]</span>
+<span class="sd">  [ 1 1 1 1 ]</span>
+<span class="sd">  [ 0 0 0 0 ]</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="k">print</span> <span class="n">model</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">def tree(distance_x_axis, distance_y_axis):</span>
+<span class="sd">  if distance_x_axis &lt;= 2.5:</span>
+<span class="sd">    return [[ 8.  0.]]</span>
+<span class="sd">  else:  # if distance_x_axis &gt; 2.5</span>
+<span class="sd">    if distance_x_axis &lt;= 3.5:</span>
+<span class="sd">      return [[ 0.  3.]]</span>
+<span class="sd">    else:  # if distance_x_axis &gt; 3.5</span>
+<span class="sd">      return [[ 3.  0.]]</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="mapping-and-barcodes">
+<h3>Mapping and barcodes<a class="headerlink" href="#mapping-and-barcodes" title="Permalink to this headline">¶</a></h3>
+<p>We reconstruct the generalization/ self-guessed predictions with Mapper
+to generate a simplicial complex. This compressed representation of the
+data will impute any missing data using the predictions from the set of
+filter functions.</p>
+<p>We can also reconstruct the original Betti numbers
+[<a class="reference external" href="#references">80</a>] of the data.</p>
+</div>
+<div class="section" id="models">
+<h3>Models<a class="headerlink" href="#models" title="Permalink to this headline">¶</a></h3>
+<p>To evaluate filter function sets we use a simple decision tree
+[<a class="reference external" href="#references">81</a>] with entropy-splitting criteria. This non-linear
+decision tree allows for fast evaluation, while keeping the results very
+interpretable.</p>
+<p>For our final generalizer we switch to a 5-layer MLP
+[<a class="reference external" href="#references">82</a>] for its extrapolation prowess (tree-based
+algorithms deal poorly with unseen data outside of the ranges of the
+train set). Despite best practice, we do not normalize the input data
+[<a class="reference external" href="#references">83</a>]. 5 layers are used, because using less layers
+does not always give accurate solutions (depending on the chosen random
+seed), while using 5 layers shows no such variance, no matter initial
+conditions. Optionally, our solution allows for incrementing the number
+of layers one-by-one, and see/study if there is enough generalization
+power in the neural net to describe the object (given the coarser filter
+function outputs as features).</p>
+</div>
+</div>
+<div class="section" id="experiments">
+<h2>Experiments<a class="headerlink" href="#experiments" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="d">
+<h3>1-D<a class="headerlink" href="#d" title="Permalink to this headline">¶</a></h3>
+<p>As a sanity check we reproduce the results obtained for the binary
+sequence continuation:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">strong_self_guesser</span><span class="p">(</span><span class="s2">&quot;10101010101010101010101010101010????&quot;</span><span class="p">)</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="mi">101010101010101010101010101010101010</span>
+</pre></div>
+</div>
+<p>Our self-supervised model is a single decision tree, showing that even
+very simple models can be used to reconstruct the original data.</p>
+</div>
+<div class="section" id="d-1">
+<span id="id1"></span><h3>2-D<a class="headerlink" href="#d-1" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="identity">
+<h4>Identity<a class="headerlink" href="#identity" title="Permalink to this headline">¶</a></h4>
+<p>We want to self-guess a simple identity/copy function:</p>
+<p>f(“1100”) -&gt; “1100”</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>1 1 0 0 1 1 0 ?
+1 0 1 ? 1 0 1 0
+0 0 1 1 0 0 1 1 # Only complete sample
+? 1 0 1 0 1 0 ?
+</pre></div>
+</div>
+<p>Which is solved like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span>
+<span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span>
+<span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span>
+<span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>And:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>1 1 0 0 1 1 0 0
+1 1 1 0 1 1 1 0
+0 0 0 1 0 0 0 1
+? 0 1 0 0 0 ? ? # copying with input data containing an unknown bit
+</pre></div>
+</div>
+<p>Is solved with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span>
+<span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">0</span>
+<span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span>
+<span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="gary-marcus-challenge">
+<h4>Gary Marcus Challenge<a class="headerlink" href="#gary-marcus-challenge" title="Permalink to this headline">¶</a></h4>
+<p>Here the problem was designed to show the shortcomings of neural
+networks [<a class="reference external" href="#references">84</a>], despite of their well-known, but
+sometimes misleading, capability to be universal function approximators
+(sharing that status with decision trees [<a class="reference external" href="#references">85</a>]). Gary
+Marcus shows us a seemingly very simple problem that can not be solved
+with deep learning under few-shot constraints.</p>
+<blockquote>
+<div>Here’s a function, expressed over binary digits.</div></blockquote>
+<blockquote>
+<div><p>f(110) = 011;</p>
+<p>f(100) = 001;</p>
+</div></blockquote>
+<blockquote>
+<div><p>f(010) = 010.</p>
+<p>What’s f(111)?</p>
+</div></blockquote>
+<blockquote>
+<div>If you are an ordinary human, you are probably going to guess 111. If
+you are neural network of the sort I discussed, you probably won’t.</div></blockquote>
+<p>The function we are self-guessing here is a reversal function.</p>
+<p>We can represent this problem as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>1 1 0 0 1 1
+1 0 0 0 0 1
+0 1 0 0 1 0
+1 1 1 ? ? ?
+</pre></div>
+</div>
+<p>With strong self guesser giving the following correct prediction:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span>
+<span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span>
+<span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span>
+<span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>Self-Guessing is also able to solve this vertically:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>1 1 0 0 1 ?
+1 0 0 0 0 ?
+0 1 0 0 1 ?
+1 1 1 1 1 ?
+</pre></div>
+</div>
+<p>Self-guesses to:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span>
+<span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span>
+<span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span>
+<span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>thus effectively mapping function outputs (f(11001)? = 1) with zero
+training data. Both problems are simple enough to be solved with a
+single decision tree, but we used a 5-layer MLP, since:</p>
+<ul class="simple">
+<li>such a model also generalizes to more complex self-guessing problems
+we will showcase later on.</li>
+<li>it shows that the feature engineering through self-guessing and
+topological modeling makes the choice of model less relevant (the
+problem is mostly solved before gradient descent or entropy-based
+splitting sets in).</li>
+<li>we could make self-guessing a compositional part of a (randomly
+searched or differentiated) deep net architecture, improving the
+generalization and extrapolation power of these models even more.</li>
+</ul>
+</div>
+<div class="section" id="fizz-buzz">
+<h4>Fizz-Buzz<a class="headerlink" href="#fizz-buzz" title="Permalink to this headline">¶</a></h4>
+<p>Like in [<a class="reference external" href="#references">86</a>], inspired by Joel Grus’s parody
+[<a class="reference external" href="#references">87</a>], we try to construct a neural network capable of
+solving FizzBuzz Lite. Posing the problem as a multi-class problem:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> 0 0
+ 1 0
+ 2 0
+ 3 1
+ 4 0
+ 5 2
+ 6 1
+ 7 0
+ 8 0
+ 9 1
+10 2
+11 0
+12 1
+13 0
+14 0
+15 2
+16 ?
+17 ?
+18 ?
+19 ?
+20 ?
+21 ?
+22 ?
+23 ?
+24 ?
+25 ?
+26 ?
+27 ?
+28 ?
+29 ?
+30 ?
+</pre></div>
+</div>
+<p>The self-guesser is able to learn FizzBuzz Lite from 15 samples (the
+first sample is arguably mislabelled).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="mi">0</span> <span class="mi">0</span>
+ <span class="mi">1</span> <span class="mi">0</span>
+ <span class="mi">2</span> <span class="mi">0</span>
+ <span class="mi">3</span> <span class="mi">1</span>
+ <span class="mi">4</span> <span class="mi">0</span>
+ <span class="mi">5</span> <span class="mi">2</span>
+ <span class="mi">6</span> <span class="mi">1</span>
+ <span class="mi">7</span> <span class="mi">0</span>
+ <span class="mi">8</span> <span class="mi">0</span>
+ <span class="mi">9</span> <span class="mi">1</span>
+<span class="mi">10</span> <span class="mi">2</span>
+<span class="mi">11</span> <span class="mi">0</span>
+<span class="mi">12</span> <span class="mi">1</span>
+<span class="mi">13</span> <span class="mi">0</span>
+<span class="mi">14</span> <span class="mi">0</span>
+<span class="mi">15</span> <span class="mi">2</span>
+<span class="mi">16</span> <span class="mi">0</span>
+<span class="mi">17</span> <span class="mi">0</span>
+<span class="mi">18</span> <span class="mi">1</span>
+<span class="mi">19</span> <span class="mi">0</span>
+<span class="mi">20</span> <span class="mi">2</span>
+<span class="mi">21</span> <span class="mi">1</span>
+<span class="mi">22</span> <span class="mi">0</span>
+<span class="mi">23</span> <span class="mi">0</span>
+<span class="mi">24</span> <span class="mi">1</span>
+<span class="mi">25</span> <span class="mi">2</span>
+<span class="mi">26</span> <span class="mi">0</span>
+<span class="mi">27</span> <span class="mi">1</span>
+<span class="mi">28</span> <span class="mi">0</span>
+<span class="mi">29</span> <span class="mi">0</span>
+<span class="mi">30</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<p>If we pose the original problem as pure 2-D binary, let’s call it
+Fizz-Buzz Byte:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">00000100</span> <span class="c1"># 1</span>
+<span class="mi">00001000</span> <span class="c1"># 2</span>
+<span class="mi">00001101</span> <span class="c1"># 3 fizz</span>
+<span class="mi">00010000</span> <span class="c1"># 4</span>
+<span class="mi">00010110</span> <span class="c1"># 5 buzz</span>
+<span class="mi">00011001</span> <span class="c1"># 6 fizz</span>
+<span class="mi">00011100</span> <span class="c1"># 7</span>
+<span class="mi">00100000</span> <span class="c1"># 8</span>
+<span class="mi">00100101</span> <span class="c1"># 9 fizz</span>
+<span class="mi">00101010</span> <span class="c1"># 10 buzz</span>
+<span class="mi">00101100</span> <span class="c1"># 11</span>
+<span class="mi">00110001</span> <span class="c1"># 12 fizz</span>
+<span class="mi">00110100</span> <span class="c1"># 13</span>
+<span class="mi">00111000</span> <span class="c1"># 14</span>
+<span class="mi">00111111</span> <span class="c1"># 15 fizz buzz</span>
+</pre></div>
+</div>
+<p>The problem becomes much harder to solve with our proof-of-concept
+self-guesser. By manually setting up the problem the first time we have
+also helpfully “pre-mapped” the data with meaningful multi-scale
+intervals and functions:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">00110001</span> <span class="o">-&gt;</span> <span class="mi">001100</span> <span class="mi">01</span> <span class="o">-&gt;</span> <span class="n">bin_to_dec</span><span class="p">(</span><span class="mi">001100</span><span class="p">)</span> <span class="n">label_encoder</span><span class="p">(</span><span class="mi">01</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="mi">12</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>Without knowing this helpful cover a priori, the self-mapper tries to
+get accurate at (and fails at) describing “binary counting” (since this
+accounts for the majority of the data) only finding the programs to
+describe the “fizz” and “buzz” bits when provided with significantly
+more data (or removing the binary counts completely so the self-guesser
+can focus):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>0 0
+0 0
+0 1
+0 0
+1 0
+0 1
+0 0
+0 0
+0 1
+1 0
+0 0
+0 1
+0 0
+0 0
+? ?
+? ?
+? ?
+? ?
+? ?
+? ?
+? ?
+? ?
+? ?
+? ?
+? ?
+? ?
+? ?
+? ?
+? ?
+? ?
+? ?
+? ?
+? ?
+</pre></div>
+</div>
+<p>This is very easy to solve with the strong self-guesser, because the
+self-guesser does not have to worry about possibly imputing missing
+binary counts. It finds <code class="docutils literal notranslate"><span class="pre">y%3</span></code> first (more accurate on this data), then
+<code class="docutils literal notranslate"><span class="pre">y%5</span></code>.</p>
+<p>In fact, the self-guesser is able to predict “fizz buzz” (<code class="docutils literal notranslate"><span class="pre">11</span></code>) with
+just the first “” (<code class="docutils literal notranslate"><span class="pre">00</span></code>), “fizz” (<code class="docutils literal notranslate"><span class="pre">01</span></code>), and “buzz” (<code class="docutils literal notranslate"><span class="pre">10</span></code>)
+training samples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span> <span class="mi">0</span>
+<span class="mi">0</span> <span class="mi">0</span>
+<span class="mi">0</span> <span class="mi">1</span>
+<span class="mi">0</span> <span class="mi">0</span>
+<span class="mi">1</span> <span class="mi">0</span>
+<span class="mi">0</span> <span class="mi">1</span>
+<span class="mi">0</span> <span class="mi">0</span>
+<span class="mi">0</span> <span class="mi">0</span>
+<span class="mi">0</span> <span class="mi">1</span>
+<span class="mi">1</span> <span class="mi">0</span>
+<span class="mi">0</span> <span class="mi">0</span>
+<span class="mi">0</span> <span class="mi">1</span>
+<span class="mi">0</span> <span class="mi">0</span>
+<span class="mi">0</span> <span class="mi">0</span>
+<span class="mi">1</span> <span class="mi">1</span>
+<span class="mi">0</span> <span class="mi">0</span>
+<span class="mi">0</span> <span class="mi">0</span>
+<span class="mi">0</span> <span class="mi">1</span>
+<span class="mi">0</span> <span class="mi">0</span>
+<span class="mi">1</span> <span class="mi">0</span>
+<span class="mi">0</span> <span class="mi">1</span>
+<span class="mi">0</span> <span class="mi">0</span>
+<span class="mi">0</span> <span class="mi">0</span>
+<span class="mi">0</span> <span class="mi">1</span>
+<span class="mi">1</span> <span class="mi">0</span>
+<span class="mi">0</span> <span class="mi">0</span>
+<span class="mi">0</span> <span class="mi">1</span>
+<span class="mi">0</span> <span class="mi">0</span>
+<span class="mi">0</span> <span class="mi">0</span>
+<span class="mi">1</span> <span class="mi">1</span>
+<span class="mi">0</span> <span class="mi">0</span>
+<span class="mi">0</span> <span class="mi">0</span>
+<span class="mi">0</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>If we however unravel this problem into 1-D:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>0000010010010000011000010000?????????????
+
+00000100100100000110000100000100000100000
+</pre></div>
+</div>
+<p>The self-guesser starts to fail again. We lost the meaningful y-axis for
+solving this problem. Just like filter function set is important, so is
+the parametrization of the (multi-scale) mapping of the data important.
+It would be nice if we could automatically find good covers/posing of
+data too, but like the all program generator, this suffers from a
+combinatorial explosion (and there are infinitely many ways to
+multi-scale map real-valued data, so there really is no free lunch here
+[<a class="reference external" href="#references">88</a>]).</p>
+<p>Only when we add the fizz buzz bits <code class="docutils literal notranslate"><span class="pre">11</span></code> the self-guesser accurately
+finds the pattern again:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>000001001001000001100001000011????????????
+
+000001001001000001100001000011000001001001
+
+=
+
+0 0
+0 0
+0 1
+0 0
+1 0
+0 1
+0 0
+0 0
+0 1
+1 0
+0 0
+0 1
+0 0
+0 0
+1 1
+0 0
+0 0
+0 1
+0 0
+1 0
+0 1
+</pre></div>
+</div>
+<p>But at the cost of increased complexity (higher dimensionality of the
+filter function set, longer filter function program length, and longer
+run-times).</p>
+</div>
+<div class="section" id="circles">
+<h4>Circles<a class="headerlink" href="#circles" title="Permalink to this headline">¶</a></h4>
+<p>For the circles dataset we use sampling for the negative class. We
+removed the bottom 25% of the data. We then generate random points and
+have a classifier predict them as <code class="docutils literal notranslate"><span class="pre">0</span></code> (random) or <code class="docutils literal notranslate"><span class="pre">1</span></code> (reality/fits
+on manifold).</p>
+<p>Depending on the complexity of the classifier and filter function we can
+fully reconstruct the original image:</p>
+<div class="figure" id="id8">
+<img alt="Image of completed circles" src="https://i.imgur.com/JnQgGGJ.png" />
+<p class="caption"><span class="caption-text">Image of completed circles</span></p>
+</div>
+<p>If the classifier is linear or not properly tuned:</p>
+<p>And if the filter function set is not a best fit: <img alt="Image of poorly selected filter function" src="https://i.imgur.com/eQcABLO.png" /></p>
+<p>We can reconstruct the original Betti numbers and connectivity of the
+data by mapping the predictions:</p>
+</div>
+<div class="section" id="extreme-generalization-1">
+<span id="id2"></span><h4>Extreme generalization<a class="headerlink" href="#extreme-generalization-1" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>? ? 1 0 1 1 ? ?
+1 1 0 1 0 0 0 1
+0 0 1 0 1 1 1 0
+? ? ? ? ? ? ? ?
+
+0 0 1 0 1 1 1 0
+1 1 0 1 0 0 0 1
+0 0 1 0 1 1 1 0
+1 1 0 1 0 0 0 1
+</pre></div>
+</div>
+<p>We self-guess on data where more data is obstructed than is visible:</p>
+<p>Showing the potential for data generation.</p>
+</div>
+<div class="section" id="error-detection-and-correction">
+<h4>Error detection and correction<a class="headerlink" href="#error-detection-and-correction" title="Permalink to this headline">¶</a></h4>
+<p>We flip 3 pixels from this intricately patterned 200x200 black and white
+image.</p>
+<p>With self-guessing locating (and thus correcting) the anomalous
+features.</p>
+</div>
+</div>
+<div class="section" id="d-2">
+<span id="id3"></span><h3>3-D<a class="headerlink" href="#d-2" title="Permalink to this headline">¶</a></h3>
+<p>We remove the foot of a horse-point cloud (Example data via Python
+Mapper [<a class="reference external" href="#references">55</a>]). We find the cheapest most accurate set
+of filter functions to predict what is “inside the box” (“inside the
+hypercube”). The orange points fall in the box and are removed, the blue
+points remain: <img alt="img" src="https://i.imgur.com/duMXBgY.png" /></p>
+<p>We then generate random points and label these as ‘0’ (orange) and the
+original points are labeled as ‘1’ (blue):</p>
+<div class="figure" id="id9">
+<img alt="img" src="https://i.imgur.com/HrBkVmy.png" />
+<p class="caption"><span class="caption-text">img</span></p>
+</div>
+<p>Our goal is to find a set of filter functions / data projections that is
+performant in classifying between random noise and real order.</p>
+<p>We end up with a set of filter functions of size 6. Now we generate a
+new random point-cloud which included the obscured part. Then the MLP
+predicts:</p>
+<div class="figure" id="id10">
+<img alt="img" src="https://i.imgur.com/efHMeby.png" />
+<p class="caption"><span class="caption-text">img</span></p>
+</div>
+<p>To describe the entire object (including the missing foot) the
+self-guesser was not able to use 3 or less dimensions. But the
+compression is achieved in other ways: Given a single row of filter
+functions, a fitted model, and a random noise generator, a decompressor
+can now reconstruct the original with high accuracy (while the lossless
+original point-cloud consisted of 1000+ rows with 3-D points).</p>
+<p>If a particular horse really was missing a foot, the bad generalization
+performance would describe this as an anomalous and complex part: The
+self-guesser would use symmetry and order of the object to predict there
+was a foot inside of the box, so when it is not there, something is
+anomalous/not right/surprising.</p>
+<p>If we test the set of filters found for the horse point-cloud we see
+that this set is able to describe lion and cat point-clouds:</p>
+<p>This means our self-guessing program can be used “pre-trained” for
+similar objects, so we know adaptive search could also yield faster
+solutions.</p>
+<p>But how do humans know they are looking at a similar object (4 legs, 1
+tail, 1 body, 1 head) so they can apply similar function sets? Do they
+first project the data with a small library of commonly accurate
+function sets? Or do they perform a similarity calculation first to see
+if the data is close to previously seen data? Barring an answer we can
+do both:</p>
+<ul class="simple">
+<li>Keep a small “Procedural Memory” library of diverse filter function
+sets that are accurate and cheap to compute for a wide variety of
+data. Try these first, and mutate the most performant ones.</li>
+<li>Random sample n points from two objects and sum the distances from
+every point to the nearest point in the other object.</li>
+</ul>
+<p>As a first step we attempt to approximate the amount of computations
+needed to transform one object into another. Instead of sampling random
+noise for the negative class (1-class learning), we now search for a set
+of filter functions that is accurate and compute-friendly in separating
+1 point cloud from another:</p>
+<p>We find a compression map that uses similar (but ultimately different)
+set of filter functions: The space and time of computation needed by the
+approximated shortest program, to output one object given another object
+as input.</p>
+</div>
+<div class="section" id="d-3">
+<span id="id4"></span><h3>4-D<a class="headerlink" href="#d-3" title="Permalink to this headline">¶</a></h3>
+<p>We turn the Iris dataset [<a class="reference external" href="#references">89</a>] into a single-class
+dataset. We then evaluate it on the entire dataset. We achieve similar
+cross-validation scores as a regular classifier trained one vs.&nbsp;all.</p>
+<p>When we feed the entire raw dataset, we see an interesting result with
+the strong self-guesser, showing that self-guessing transcends machine
+learning into artificial intelligence: The self-guesser finds and then
+exploits the fact that this canonical dataset is not randomized and that
+all target variables appear the same time, resulting in a short, but
+highly accurate generalization program. Only when presented with the
+data unordered will the self-guesser expend more energy for creating
+real predictions.</p>
+</div>
+</div>
+<div class="section" id="discussion">
+<h2>Discussion<a class="headerlink" href="#discussion" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="theory-vs-practice">
+<h3>Theory vs.&nbsp;Practice<a class="headerlink" href="#theory-vs-practice" title="Permalink to this headline">¶</a></h3>
+<p>Though the framework was inspired by AIT theory, and is shown to work in
+practice, this article itself has not convincingly build a theoretical
+framework for a universal self-guesser. For instance, the step from
+lossless to lossy compression models is not really justified.</p>
+</div>
+<div class="section" id="reference-length-and-hardware-complexity">
+<h3>Reference length and hardware complexity.<a class="headerlink" href="#reference-length-and-hardware-complexity" title="Permalink to this headline">¶</a></h3>
+<p>An interesting result occurs when we replaced Program Length with
+Reference Length: Optimizing for reference length allows for easy
+communication of filter functions. Nearly all data scientists already
+have access to scikit-learn, so we can substitute communicating the
+entire program with a simple short reference:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">umap</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">umap</span><span class="o">.</span><span class="n">UMAP</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Instead of program complexity, we are then minimizing the complexity of
+portability, re-use, and open source collaboration: A handcoded
+perceptron is now more complex than using a pre-written implementation
+of an MLP in Scikit-learn or Keras. Reference Length and Program Length
+could also be combined to rank a 5-layer MLP as higher complexity as a
+2-layer MLP.</p>
+<p>In the same vain one could estimate complexity by looking at hardware
+requirements (or perhaps better, direct energy usage). Communicating a
+filter function set that requires expensive GPU’s or TPU’s to run is not
+very portable. Program running times become less relevant with the
+advent of parallel computing: The 4 hours required by AlphaZero to play
+chess should be seen relative to the energy-hungry TPU farm that ran it.</p>
+</div>
+<div class="section" id="drawbacks-of-our-approach">
+<h3>Drawbacks of our approach<a class="headerlink" href="#drawbacks-of-our-approach" title="Permalink to this headline">¶</a></h3>
+<p>Some datasets cheat, in that the data is pre-centered or pre-normalized.
+For instance, taking the l2-norm as a filter function to describe a
+circle only works when centering a circle on the origin of a graph. For
+human perception, some processes must be responsible for segmenting and
+centering an object inside a “bounding box” of focus, such that more
+filter functions become available. To use the self-guessing mapper as a
+plausible model for human perceptual reasoning this segment-and-center
+problem would need to be solved.</p>
+</div>
+<div class="section" id="multi-scale-mapping">
+<h3>Multi-scale mapping<a class="headerlink" href="#multi-scale-mapping" title="Permalink to this headline">¶</a></h3>
+<p>By mapping an object with multiple differently sized
+intervals/resolution it now becomes possible to find short programs that
+describe the complexity of the entire object, but also of its large
+subparts, down to the level of detail. Consider a sphere with a rough
+noisy surface: The global complexity is low (it can easily and
+accurately be described by lower-dimensional filter functions), but the
+fine-grained complexity is high.</p>
+</div>
+<div class="section" id="other-solutions">
+<h3>Other solutions<a class="headerlink" href="#other-solutions" title="Permalink to this headline">¶</a></h3>
+<p>It may have been possible to put this framework into another existing
+field other than that of self-guessing. There seem to be some
+similarities with MDL, neural embeddings, and (random) kernel learning.
+As far as we know, this particular combination of AIT, topological
+mapping, and self-guessing/extrapolation is unique and may provide other
+insights and practical tools to complement related fields.</p>
+</div>
+<div class="section" id="code">
+<h3>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h3>
+<p>Python code [<a class="reference external" href="#references">90</a>] for replicating all the graphs is
+available upon request by opening an issue (Note: highly experimental
+research-level code with likely bugs and inefficiencies). Cleaned up
+code and notebooks will be made available in the future.</p>
+</div>
+<div class="section" id="future">
+<h3>Future<a class="headerlink" href="#future" title="Permalink to this headline">¶</a></h3>
+<p>Barring the possibility of exhaustively generating every possible filter
+function, to more closely approximate an optimal universal self-guesser,
+we will look at:</p>
+<ul class="simple">
+<li>Manually expanding the filter function library with manual GOFAI or
+symbolic functions (nature).</li>
+<li>Genetic generation of filter functions using generalization
+performance, diversity, and simplicity as a fitness function
+(nature/nurture).</li>
+<li>Differential programming where the filter functions are optimized
+with gradient descent to minimize error, with a fixed simplicity
+budget (nurture).</li>
+<li>Adding complete (Bayesian, Compression, Neural Network,
+Unsupervised/Auto-encoder) models as filter functions to allow for
+mapping on data more complex than binary/point-cloud.</li>
+<li>Appreciating that a filter function itself can also be composed of
+other, more simpler, (possibly stacked) filter functions which could
+be found through meta-learning: pop-push should not be generated for
+lists of a particular size, but generalize to lists of any size.</li>
+<li>Mapping temporal data.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>[1] David Wolpert: <a class="reference external" href="http://www.complex-systems.com/abstracts/v04_i02_a04/">The Mathematics Of Generalization (Santa Fe Institute Series)</a> (1990)</li>
+<li>[2] Vincent Kruger: Blue Sea Star, CC0, Edited from original <a class="reference external" href="https://commons.wikimedia.org/">WikiMedia Commons</a> (2015)</li>
+<li>[3] Guilin Liu, Fitsum A. Reda, Kevin J. Shih, Ting-Chun Wang, Andrew Tao, Bryan Catanzaro: <a class="reference external" href="https://arxiv.org/abs/1804.07723">Image Inpainting for Irregular Holes Using Partial Convolutions</a> (2018)</li>
+<li>[4] S. M. Ali Eslami, Danilo J. Rezende, Frederic Besse, Fabio Viola, Ari S. Morcos, Marta Garnelo, Avraham Ruderman, Andrei A. Rusu, Ivo Danihelka, Karol Gregor, David P. Reichert, Lars Buesing, Theophane Weber, Oriol Vinyals, Dan Rosenbaum, Neil Rabinowitz, Helen King, Chloe Hillier, Matt Botvinick, Daan Wierstra, Koray Kavukcuoglu, Demis Hassabis: <a class="reference external" href="https://deepmind.com/blog/neural-scene-representation-and-rendering/">Neural scene representation and rendering</a> (2018)</li>
+<li>[5] Pieter Abbeel: CS 287: Advanced Robotics, Fall 2012 <a class="reference external" href="https://people.eecs.berkeley.edu/~pabbeel/cs287-fa12/slides/inverseRL.pdf">Inverse Reinforcement Learning</a> (2012)</li>
+<li>[6] Noam Brown, Tuomas Sandholm: <a class="reference external" href="https://arxiv.org/abs/1705.02955">Safe and Nested Subgame Solving for Imperfect-Information Games</a> (2017)</li>
+<li>[7] John McCarthy: <a class="reference external" href="http://www-formal.stanford.edu/jmc/mcc59/mcc59.html">Programs with Common Sense</a> (1959)</li>
+<li>[8] Marvin Minksy: <a class="reference external" href="https://ieeexplore.ieee.org/document/4066245/">Steps towards Artificial Intelligence</a> (1961)</li>
+<li>[9] Patrick Winston: <a class="reference external" href="https://dspace.mit.edu/handle/1721.1/13800">Learning structural descriptions from examples</a> (1970)</li>
+<li>[10] <a class="reference external" href="https://www.cs.auckland.ac.nz/research/groups/CDMTCS/">Centre for Discrete Mathematics and Theoretical Computer Science of the University of Auckland, New Zealand</a> (Retrieved: 2018)</li>
+<li>[11] Turing A., <a class="reference external" href="https://webspace.princeton.edu/users/jedwards/Turing%20Centennial%202012/Mudd%20Archive%20files/12285_AC100_Turing_1938.pdf">Systems of Logic Based on Ordinals</a> (1938)</li>
+<li>[12] Wheeler J. A.: <a class="reference external" href="http://cqi.inf.usi.ch/qic/wheeler.pdf">Information, Physics, Quantum: The Search for Links</a> (1989)</li>
+<li>[13] Cilibrasi R., <a class="reference external" href="https://www.illc.uva.nl/Research/Publications/Dissertations/DS-2007-01.text.pdf">Statistical Inference Through Data Compression</a> (2007)</li>
+<li>[14] Mahoney M., <a class="reference external" href="http://mattmahoney.net/dc/dce.html">Data Compression Explained</a> (2010)</li>
+<li>[15] Ciprian Chelba, Tomas Mikolov, Mike Schuster, Qi Ge, Thorsten Brants, Phillipp Koehn, Tony Robinson: <a class="reference external" href="https://arxiv.org/abs/1312.3005">One Billion Word Benchmark for Measuring Progress in Statistical Language Modeling</a> (2013)</li>
+<li>[16] Gábor Melis, Chris Dyer, Phil Blunsom: <a class="reference external" href="https://arxiv.org/abs/1707.05589">On the State of the Art of Evaluation in Neural Language Models</a> (2017)</li>
+<li>[17] Yann LeCun, Léon Bottou, Patrick Haffner, Paul G. Howard: <a class="reference external" href="http://yann.lecun.com/ex/djvu/">DjVu</a> (1996)</li>
+<li>[18] Schmidhuber J.: <a class="reference external" href="https://arxiv.org/abs/1511.09249">On Learning to Think: Algorithmic Information Theory for Novel Combinations of Reinforcement Learning Controllers and Recurrent Neural World Models</a> (2015)</li>
+<li>[19] Bowery J. Mahoney M. Hutter M.: <a class="reference external" href="http://prize.hutter1.net/">50’000€ Prize for Compressing Human Knowledge</a> (2006)</li>
+<li>[20] Li M. Vitanyi P.: <a class="reference external" href="http://www-2.dc.uba.ar/materias/azar/bibliografia/LiVitanyi1997AnIntroductiontoKolmogorov.pdf">An introduction to Kolmogorov Complexity and its applications</a> (1992)</li>
+<li>[21] Shannon C.: <a class="reference external" href="http://math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf">A Mathematical Theory of Communication</a> (1948)</li>
+<li>[22] Fortnow L. by Gale, A.: <a class="reference external" href="https://people.cs.uchicago.edu/~fortnow/papers/kaikoura.pdf">Kolmogorov Complexity</a> (2000)</li>
+<li>[23] A. N. Kolmogorov and V. A. Uspenskii: <a class="reference external" href="https://epubs.siam.org/doi/10.1137/1132060">Algorithms and Randomness</a> (1987)</li>
+<li>[24] Bennett C., Gacs P., Li M., Vitanyi P., Zurek W.: <a class="reference external" href="https://arxiv.org/abs/1006.3520">Information Distance</a> (1993)</li>
+<li>[25] Vitanyi P., Balbach F., Cilibrasi R., Li M.: <a class="reference external" href="http://homepages.cwi.nl/~paulv/papers/chapter08.pdf">Normalized Information Distance</a> (2008)</li>
+<li>[26] Levenshtein V.: <a class="reference external" href="https://nymity.ch/sybilhunting/pdf/Levenshtein1966a.pdf">Binary codes capable of correcting deletions, insertions, and reversals</a> (1963)</li>
+<li>[27] Chaitin G., Arslanov A., Calude C.: <a class="reference external" href="https://researchspace.auckland.ac.nz/bitstream/handle/2292/3517/008HHP.pdf">Program-size Complexity Computes the Halting Problem</a> (1995)</li>
+<li>[28] Chaitin G.: <a class="reference external" href="https://www.cs.auckland.ac.nz/~chaitin/unm2.html">The Berry Paradox</a> (1995)</li>
+<li>[29] Manuel Alfonseca, Manuel Cebrian, Alfonso Ortega: <a class="reference external" href="https://ieeexplore.ieee.org/abstract/document/4424858/">A simple genetic algorithm for music generation by means of algorithmic information theory</a> (2007)</li>
+<li>[30] Jürgen Schmidhuber: <a class="reference external" href="ftp://ftp.idsia.ch/pub/juergen/chunker.pdf">Learning Complex, Extended Sequences using the Principle of History Compression</a> (1992)</li>
+<li>[31] Cilibrasi R., Vitanyi P.: <a class="reference external" href="https://arxiv.org/abs/cs/0312044">Clustering by compression</a> (2003)</li>
+<li>[32] Wikipedia Contributors: <a class="reference external" href="https://en.wikipedia.org/wiki/Normalized_compression_distance">Normalized Compression Distance</a> (Retrieved: 2018)</li>
+<li>[33] Levin: <a class="reference external" href="http://www.mathnet.ru/php/archive.phtml?wshow=paper&amp;jrnid=ppi&amp;paperid=914&amp;option_lang=eng">Universal sequential search problems</a> (1973)</li>
+<li>[34] Schmidhuber: <a class="reference external" href="ftp://ftp.idsia.ch/pub/juergen/icmlkolmogorov.pdf">Discovering solutions with low Kolmogorov complexity and high generalization capability</a> (1995)</li>
+<li>[35] Marcus Hutter: <a class="reference external" href="http://www.hutter1.net/ai/pfastprg.pdf">The Fastest and Shortest Algorithm for All Well-Defined Problems</a> (2002)</li>
+<li>[36] Jürgen Schmidhuber: <a class="reference external" href="https://arxiv.org/abs/quant-ph/0011122">Algorithmic Theories of Everything</a> (2000)</li>
+<li>[37] Matteo Gagliolo: <a class="reference external" href="http://www.scholarpedia.org/article/Universal_search">Universal Search on Scholarpedia</a> (Retrieved 2018)</li>
+<li>[38] Marcus Hutter: <a class="reference external" href="http://www.hutter1.net/ai/aixigentle.htm">Universal Algorithmic Intelligence: A mathematical top-&gt;down approach</a> (2000)</li>
+<li>[39] <a class="reference external" href="http://www.ai.rug.nl/~mwiering/">Marco Wiering</a> (Retrieved: 2018)</li>
+<li>[40] Jürgen Schmidhuber, Jieyu Zhao, Marco Wiering: <a class="reference external" href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.723.2345&amp;rep=rep1&amp;type=pdf">Shifting Inductive Bias with Success-Story Algorithm, Adaptive Levin Search, and Incremental Self-Improvement</a> (1997)</li>
+<li>[41] Simon DeDeo: <a class="reference external" href="https://www.complexityexplorer.org/tutorials/67-introduction-to-renormalization">Introduction to Renormalization on Complexity Explorer</a> (Retrieved: 2018)</li>
+<li>[42] Kilian Weinberger, Anirban Dasgupta, Josh Attenberg, John Langford, Alex Smola: <a class="reference external" href="https://arxiv.org/abs/0902.2206">Feature Hashing for Large Scale Multitask Learning</a> (2009)</li>
+<li>[43] Rory Mitchell, Andrey Adinets, Thejaswi Rao, Eibe Frank: <a class="reference external" href="https://arxiv.org/abs/1806.11248/">XGBoost: Scalable GPU Accelerated Learning</a> (2018)</li>
+<li>[44] Pierre André Chiappori, Ivar Ekeland: <a class="reference external" href="https://www.annualreviews.org/doi/10.1146/annurev-economics-072610-104803">New developments in aggregation economics</a> (2011)</li>
+<li>[45] David H. Wolpert, Joshua A. Grochow, Eric Libby, Simon DeDeo: <a class="reference external" href="https://arxiv.org/abs/1409.7403">Optimal high-level descriptions of dynamical systems</a> (2014)</li>
+<li>[46] Leo Breiman: <a class="reference external" href="https://www.stat.berkeley.edu/~breiman/bagging.pdf">Bagging Predictors</a> (1994)</li>
+<li>[47] Rich Caruana, Alexandru Niculescu-Mizil, Geoff Crew, Alex Ksikes: <a class="reference external" href="https://www.cs.cornell.edu/~caruana/ctp/ct.papers/caruana.icml04.icdm06long.pdf">Ensemble Selection from Libraries of Models</a> (2004)</li>
+<li>[48] Marios Michailidis, Mathias Müller, HJ van Veen: <a class="reference external" href="http://blog.kaggle.com/2015/12/03/dato-winners-interview-1st-place-mad-professors/">Dato Winners’ Interview: 1st place, Mad Professors</a> (2015)</li>
+<li>[49] Gurjeet Singh, Facundo Mémoli, Gunnar Carlsson: <a class="reference external" href="https://research.math.osu.edu/tgda/mapperPBG.pdf">Topological Methods for the Analysis of High Dimensional Data Sets and 3D Object Recognition</a> (2007)</li>
+<li>[50] Anthony Bak: <a class="reference external" href="https://www.youtube.com/watch?v=x3Hl85OBuc0">Stanford Seminar - Topological Data Analysis: How Ayasdi used TDA to Solve Complex Problems</a> (2013)</li>
+<li>[51] Leo Carlsson, Gunnar Carlsson, Mikael Vejdemo-Johansson: <a class="reference external" href="https://arxiv.org/abs/1803.00384">Fibres of Failure: Classifying errors in predictive processes</a> (2018)</li>
+<li>[52] Gunnar Carlsson <a class="reference external" href="https://www.ams.org/journals/bull/2009-46-02/S0273-0979-09-01249-X/">Topology and data</a> (2009)</li>
+<li>[53] R. Ghrist: <a class="reference external" href="https://www.math.upenn.edu/~ghrist/notes.html">Elementary Applied Topology</a>, ed. 1.0, Createspace, (2014)</li>
+<li>[54] Paul Pearson, Daniel Muellner, Gurjeet Singh: <a class="reference external" href="https://github.com/paultpearson/TDAmapper">TDAmapper</a> (2015)</li>
+<li>[55] Daniel Müllner, Aravindakshan Babu: <a class="reference external" href="http://danifold.net/mapper/introduction.html">Python Mapper</a> (2011)</li>
+<li>[56] Paul English: <a class="reference external" href="https://github.com/log0ymxm/spark-mapper">Spark Mapper</a> (2017)</li>
+<li>[57] Sakellarios Zairis <a class="reference external" href="https://github.com/szairis/sakmapper">SakMapper</a> (2016)</li>
+<li>[58] Shingo Okawa: <a class="reference external" href="https://github.com/ognis1205/spark-tda">TDAspark</a> (2018)</li>
+<li>[59] HJ van Veen, Nathaniel Saul <a class="reference external" href="https://github.com/MLWave/kepler-mapper">KeplerMapper</a> (2015)</li>
+<li>[60] <a class="reference external" href="https://www.ayasdi.com/">Ayasdi</a> (Retrieved: 2018)</li>
+<li>[61] Rami Kraft: <a class="reference external" href="http://www.diva-portal.org/smash/get/diva2:900997/FULLTEXT01.pdf">Illustrations of Data Analysis Using the Mapper Algorithm and Persistent Homology</a> (2016) [62] Jerome H. Friedman, Robert Tibshirani, Trevor Hastie: <a class="reference external" href="https://web.stanford.edu/~hastie/Papers/ESLII.pdf">The Elements of Statistical Learning</a> (2001)</li>
+<li>[63] David H. Wolpert: <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0893608005800231">Stacked Generalization</a> (1992)</li>
+<li>[64] François Chollet: <a class="reference external" href="https://www.manning.com/books/deep-learning-with-python?a_aid=keras&amp;a_bid=76564dff">Deep Learning with Python</a> (2017)</li>
+<li>[65] David H. Wolpert: <a class="reference external" href="https://arxiv.org/abs/0708.1362">Statistical Limits of Inference</a> (2007)</li>
+<li>[66] Anderson J. A.: <a class="reference external" href="https://books.google.com/books?id=KwJLDgAAQBAJ&amp;printsec=frontcover&amp;dq=After+Digital:+Computation+as+Done+by+Brains+and+Machines">After Digital: Computation as Done by Brains and Machines</a> (2017)</li>
+<li>[67] David Ha, Jürgen Schmidhuber: <a class="reference external" href="https://arxiv.org/abs/1803.10122">World Models</a> (2018)</li>
+<li>[68] Jay Forrester: <a class="reference external" href="https://ocw.mit.edu/courses/sloan-school-of-management/15-988-system-dynamics-self-study-fall-1998-spring-1999/readings/behavior.pdf">Counterintuitive Behavior of Social Systems</a> (1971)</li>
+<li>[69] Clark Glymour, Luke Serafin: <a class="reference external" href="http://shelf1.library.cmu.edu/HSS/2015/a1626190.pdf">Mathematical Metaphysics</a> (2015)</li>
+<li>[70] Hiroko Mochizuki-Kawai: <a class="reference external" href="https://europepmc.org/abstract/med/18646622">Neural basis of procedural memory</a> (2008)</li>
+<li>[71] Pedregosa, F. and Varoquaux, G. and Gramfort, A. and Michel, V. and Thirion, B. and Grisel, O. and Blondel, M. and Prettenhofer, P. and Weiss, R. and Dubourg, V. and Vanderplas, J. and Passos, A. and Cournapeau, D. and Brucher, M. and Perrot, M. and Duchesnay, E.: <a class="reference external" href="http://jmlr.csail.mit.edu/papers/v12/pedregosa11a.html">Scikit-learn: Machine Learning in Python</a> (2011)</li>
+<li>[72] Bernd Fritzke: <a class="reference external" href="https://papers.nips.cc/paper/893-a-growing-neural-gas-network-learns-topologies.pdf">A Growing Neural Gas Network Learns Topologies</a> (1995)</li>
+<li>[73] Leland McInnes, John Healy: <a class="reference external" href="https://arxiv.org/abs/1802.03426">UMAP: Uniform Manifold Approximation and Projection for Dimension Reduction</a> (2018)</li>
+<li>[74] Laurens van der Maaten, Geoffrey Hinton: <a class="reference external" href="http://www.jmlr.org/papers/v9/vandermaaten08a.html">Visualizing Data using t-SNE</a> (2008)</li>
+<li>[75] Tianqi Chen, Carlos Guestrin: <a class="reference external" href="https://dl.acm.org/citation.cfm?doid=2939672.2939785">XGBoost: A Scalable Tree Boosting System</a> (2016)</li>
+<li>[76] François Chollet and others: <a class="reference external" href="https://github.com/keras-team/keras">Keras</a> (Retrieved: 2018)</li>
+<li>[77] T. Cover, P. Hart: <a class="reference external" href="https://dl.acm.org/citation.cfm?id=2267456">Nearest neighbor pattern classification</a> (1967)</li>
+<li>[78] <a class="reference external" href="https://kaggle.com">Kaggle</a> (Retrieved: 2018) [79] Lars Buitinck, Gilles Louppe, Mathieu Blondel, Fabian Pedregosa, Andreas Mueller, Olivier Grisel, Vlad Niculae, Peter Prettenhofer, Alexandre Gramfort, Jaques Grobler, Robert Layton, Jake Vanderplas, Arnaud Joly, Brian Holt, Gaël Varoquaux: <a class="reference external" href="https://arxiv.org/abs/1309.0238">API design for machine learning software: experiences from the scikit-learn project</a> (2013)</li>
+<li>[80] Benno Eckmann: <a class="reference external" href="https://pdfs.semanticscholar.org/94b7/c6482a143160a76370e3dfacd124603a810a.pdf">Coverings and Betti Numbers</a> (1948)</li>
+<li>[81] J.R. Quinlan: <a class="reference external" href="https://dl.acm.org/citation.cfm?id=637969">Induction of Decision Trees</a> (1984)</li>
+<li>[82] Alekseĭ Grigorʹevich Ivakhnenko, Valentin Grigorévich Lapa: <a class="reference external" href="http://www.worldcat.org/title/cybernetic-predicting-devices/oclc/23815433">Cybernetic Predicting Devices</a> (1965)</li>
+<li>[83] J. Sola, J. Sevilla: <a class="reference external" href="https://www.researchgate.net/publication/3135573_Importance_of_input_data_normalization_for_the_application_of_neural_networks_to_complex_industrial_problems">Importance of input data normalization for the application of neural networks to complex industrial problems</a> (1997)</li>
+<li>[84] Gary Marcus: <a class="reference external" href="https://medium.com/&#64;GaryMarcus/in-defense-of-skepticism-about-deep-learning-6e8bfd5ae0f1">In defense of skepticism about deep learning</a> (2018)</li>
+<li>[85] John Langford, Yoshua Bengio: <a class="reference external" href="http://hunch.net/?p=1467">Boosted Decision Trees for Deep Learning</a> (2010)</li>
+<li>[86] Richard Evans, Edward Grefenstette: <a class="reference external" href="https://arxiv.org/abs/1711.04574">Learning Explanatory Rules from Noisy Data</a> (2017)</li>
+<li>[87] Joel Grus: <a class="reference external" href="http://joelgrus.com/2016/05/23/fizz-buzz-in-tensorflow/">Fizz Buzz in TensorFlow</a> (2016)</li>
+<li>[88] David H. Wolpert, William G. Macready: <a class="reference external" href="http://www.no-free-lunch.org/WoMa96a.pdf">No Free Lunch Theorems for Optimization</a> (1996)</li>
+<li>[89] R.A. Fisher: <a class="reference external" href="https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1469-1809.1936.tb02137.x">The use of multiple measurements in taxonomic problems</a> (1936)</li>
+<li>[90] Guido van Rossum: <a class="reference external" href="https://ir.cwi.nl/pub/5007/05007D.pdf">Python Tutorial, Technical Report CS-R9526</a> (1995)</li>
+<li>[91] P. Y. Lum, G. Singh, A. Lehman, T. Ishkanov, M. Vejdemo-Johansson, M. Alagappan, J. Carlsson &amp; G. Carlsson: <a class="reference external" href="https://www.nature.com/articles/srep01236">Extracting insights from the shape of complex data using topology</a> (2013)</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="Confidence-Graphs.html" class="btn btn-neutral" title="Confidence Graphs: Representing Model Uncertainty in Deep Learning" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Hendrik Jacob van Veen and Nathaniel Saul
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.1.6.dev0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

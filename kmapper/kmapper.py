@@ -55,7 +55,6 @@ class KeplerMapper(object):
 
     def __init__(self, verbose=0):
 
-
         # TODO: move as many of the arguments from fit_transform and map into here.
         self.verbose = verbose
         self.projection = None
@@ -198,9 +197,11 @@ class KeplerMapper(object):
                     nn = neighbors.NearestNeighbors(n_neighbors=n_neighbors)
                     nn.fit(X)
                     X = np.sum(
-                        nn.kneighbors(X, n_neighbors=n_neighbors, return_distance=True)[
-                            0
-                        ],
+                        nn.kneighbors(
+                            X, 
+                            n_neighbors=n_neighbors, 
+                            return_distance=True
+                        )[0],
                         axis=1,
                     ).reshape((X.shape[0], 1))
 
@@ -426,7 +427,7 @@ class KeplerMapper(object):
             if self.verbose > 1:
                 print(
                     "There are %s points in cube %s/%s"
-                    % (hypercube.shape[0], i+1, total_bins)
+                    % (hypercube.shape[0], i + 1, total_bins)
                 )
 
             # If at least min_cluster_samples samples inside the hypercube
@@ -471,10 +472,10 @@ class KeplerMapper(object):
             else:
                 if self.verbose > 1:
                     print("Cube_%s is empty.\n" % (i))
-        
+
         if remove_duplicate_nodes:
             nodes = self._remove_duplicate_nodes(nodes)
-        
+
         links, simplices = nerve.compute(nodes)
 
         graph["nodes"] = nodes
@@ -494,24 +495,31 @@ class KeplerMapper(object):
             self._summary(graph, str(datetime.now() - start))
 
         return graph
-    
-    def _remove_duplicate_nodes(self, nodes):    
-        
+
+    def _remove_duplicate_nodes(self, nodes):
+
         # invert node list and merge duplicate nodes
         deduped_items = defaultdict(list)
         for node_id, items in nodes.items():
             deduped_items[frozenset(items)].append(node_id)
-        
-        deduped_nodes = {'|'.join(node_id_list): list(frozen_items) for frozen_items, node_id_list in deduped_items.items()   }
-                    
+
+        deduped_nodes = {
+            "|".join(node_id_list): list(frozen_items)
+            for frozen_items, node_id_list in deduped_items.items()
+        }
+
         if self.verbose > 0:
             total_merged = len(nodes) - len(deduped_items)
             if total_merged:
                 print("\Merged {} duplicate nodes.\n".format(total_merged))
-                print("Number of nodes before merger: {}; after merger: {}\n".format( len(nodes), len(deduped_nodes) ))
-            else: 
+                print(
+                    "Number of nodes before merger: {}; after merger: {}\n".format(
+                        len(nodes), len(deduped_nodes)
+                    )
+                )
+            else:
                 print("No duplicate nodes found to remove.\n")
-            
+
         return deduped_nodes
 
     def _summary(self, graph, time):
@@ -536,7 +544,7 @@ class KeplerMapper(object):
         lens=None,
         lens_names=[],
         show_tooltips=True,
-        nbins=10
+        nbins=10,
     ):
         """Generate a visualization of the simplicial complex mapper output. Turns the complex dictionary into a HTML/D3.js visualization
 
@@ -605,7 +613,15 @@ class KeplerMapper(object):
         color_function = init_color_function(graph, color_function)
 
         mapper_data = format_mapper_data(
-            graph, color_function, X, X_names, lens, lens_names, custom_tooltips, env, nbins
+            graph,
+            color_function,
+            X,
+            X_names,
+            lens,
+            lens_names,
+            custom_tooltips,
+            env,
+            nbins,
         )
 
         colorscale = colorscale_default

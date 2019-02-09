@@ -120,31 +120,31 @@ class TestMap:
         assert graph["links"] == graph2["links"]
         assert graph["nodes"] == graph2["nodes"]
         assert graph["simplices"] == graph2["simplices"]
-        
+
     def test_remove_duplicates_argument(self, capsys):
         mapper = KeplerMapper(verbose=1)
         X = np.random.rand(100, 5)
-        
+
         lens = mapper.project(X)
         graph = mapper.map(
             lens,
             X=X,
             cover=Cover(n_cubes=2, perc_overlap=1),
             clusterer=cluster.DBSCAN(metric="euclidean", min_samples=3),
-            remove_duplicate_nodes=True
+            remove_duplicate_nodes=True,
         )
-        
+
         captured = capsys.readouterr()
         assert "duplicate nodes" in captured[0]
-        
+
     def test_lots_of_repeats(self, capsys):
         nodes = defaultdict(list)
         for i in range(4):
-            nodes['cube{}_cluster0'.format(i)] = [0,1]
+            nodes["cube{}_cluster0".format(i)] = [0, 1]
         for i in range(3):
-            nodes['cube{}_cluster1'.format(i)] = [1,2]
-        nodes['cube1_cluster2'] = [1,2,3]
-        nodes['cube2_cluster3'] = [2,3,4]
+            nodes["cube{}_cluster1".format(i)] = [1, 2]
+        nodes["cube1_cluster2"] = [1, 2, 3]
+        nodes["cube2_cluster3"] = [2, 3, 4]
 
         deduped_nodes = KeplerMapper(verbose=1)._remove_duplicate_nodes(nodes)
         assert len(deduped_nodes) == 4
@@ -154,45 +154,43 @@ class TestMap:
 
     def test_no_duplicates(self):
         nodes = defaultdict(list)
-        nodes['cube1_cluster0'] = [0]
-        nodes['cube1_cluster1'] = [1,2]
-        nodes['cube1_cluster2'] = [1,2,3]
-        nodes['cube2_cluster1'] = [2,3,4]
-        
+        nodes["cube1_cluster0"] = [0]
+        nodes["cube1_cluster1"] = [1, 2]
+        nodes["cube1_cluster2"] = [1, 2, 3]
+        nodes["cube2_cluster1"] = [2, 3, 4]
+
         size = len(nodes)
         deduped_nodes = KeplerMapper()._remove_duplicate_nodes(nodes)
         assert len(deduped_nodes) == len(nodes)
-        assert len(deduped_nodes) == size   
+        assert len(deduped_nodes) == size
 
     def test_duplicates_purity(self):
         nodes = defaultdict(list)
-        nodes['cube1_cluster0'] = [0]
-        nodes['cube1_cluster1'] = [1,2]
-        nodes['cube1_cluster2'] = [1,2,3]
-        nodes['cube2_cluster1'] = [2,3,4]
+        nodes["cube1_cluster0"] = [0]
+        nodes["cube1_cluster1"] = [1, 2]
+        nodes["cube1_cluster2"] = [1, 2, 3]
+        nodes["cube2_cluster1"] = [2, 3, 4]
 
         deduped_nodes = KeplerMapper()._remove_duplicate_nodes(nodes)
-        assert deduped_nodes['cube2_cluster1'] == [2,3,4]
+        assert deduped_nodes["cube2_cluster1"] == [2, 3, 4]
 
-        nodes['cube2_cluster1'].append(5)
-        assert deduped_nodes['cube2_cluster1'] == [2,3,4]
-
+        nodes["cube2_cluster1"].append(5)
+        assert deduped_nodes["cube2_cluster1"] == [2, 3, 4]
 
     def test_remove_duplicates_direct(self):
         nodes = defaultdict(list)
-        nodes['cube1_cluster0'] = [0]
-        nodes['cube1_cluster1'] = [1,2]
-        nodes['cube1_cluster2'] = [1,2,3]
-        nodes['cube2_cluster0'] = [1,2]
-        nodes['cube2_cluster1'] = [2,3,4]
-        
+        nodes["cube1_cluster0"] = [0]
+        nodes["cube1_cluster1"] = [1, 2]
+        nodes["cube1_cluster2"] = [1, 2, 3]
+        nodes["cube2_cluster0"] = [1, 2]
+        nodes["cube2_cluster1"] = [2, 3, 4]
+
         mapper = KeplerMapper()
         deduped_nodes = mapper._remove_duplicate_nodes(nodes)
-        
+
         assert len(deduped_nodes) < len(nodes)
         assert len(deduped_nodes) == 4
-        assert 'cube1_cluster1|cube2_cluster0' in deduped_nodes
-
+        assert "cube1_cluster1|cube2_cluster0" in deduped_nodes
 
     def test_precomputed_with_knn_lens(self):
         mapper = KeplerMapper()
@@ -346,7 +344,7 @@ class TestLens:
         expected_output_1 = np.array([[3], [7], [11], [15]])
 
         lens_2 = mapper.fit_transform(input_data, projection=[[0, 1], "sum"])
-        expected_output_2 = np.array([[0], [0.33], [0.66], [1.]])
+        expected_output_2 = np.array([[0], [0.33], [0.66], [1.0]])
 
         lens_3 = mapper.fit_transform(
             input_data, projection=[[0, 1], "mean"], scaler=None
@@ -362,7 +360,7 @@ class TestLens:
             scaler=None,
             distance_matrix=[False, "pearson"],
         )
-        expected_output_5 = np.array([[2.236], [5.], [7.81], [10.630]])
+        expected_output_5 = np.array([[2.236], [5.0], [7.81], [10.630]])
 
         lens_6 = mapper.fit_transform(
             input_data,
@@ -371,7 +369,7 @@ class TestLens:
             distance_matrix=[False, "cosine"],
         )
         expected_output_6 = np.array(
-            [[0., 0.016], [0.016, 0.], [0.026, 0.0013], [0.032, 0.0028]]
+            [[0.0, 0.016], [0.016, 0.0], [0.026, 0.0013], [0.032, 0.0028]]
         )
 
         lens_7 = mapper.fit_transform(

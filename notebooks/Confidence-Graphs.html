@@ -1,61 +1,215 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Confidence Graphs: Representing Model Uncertainty in Deep Learning &#8212; KeplerMapper 1.2.0 documentation</title>
-    <link rel="stylesheet" href="../_static/better.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Confidence Graphs: Representing Model Uncertainty in Deep Learning &mdash; KeplerMapper 1.2.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Self-guessing mapper" href="self-guessing.html" />
-    <link rel="prev" title="Detecting Encrypted TOR Traffic with Boosting and Topological Data Analysis" href="TOR-XGB-TDA.html" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-      <link rel="stylesheet" href="../_static/custom_style.css" type="text/css" />
-  </head><body>
-    <header id="pageheader">
-      <h1>
-        <a href="../index.html ">
-          KeplerMapper 1.2.0 documentation
-        </a>
-        <a id="headermeta" href="https://scikit-tda.org">
-            a scikit-tda project 
-        </a>
-      </h1> 
-  </header>
-  <div class="related top">
-  <nav id="rellinks">
-    <ul>
-        <li>
-          &larr;
-          <a href="TOR-XGB-TDA.html" title="Previous document">Detecting Encrypted TOR Traffic with Boosting and Topological Data Analysis</a>
-        </li>
-        <li>
-          <a href="self-guessing.html" title="Next document">Self-guessing mapper</a>
-          &rarr;
-        </li>
-    </ul>
-  </nav>
-  <nav id="breadcrumbs">
-    <ul>
-      <li><a href="../index.html">KeplerMapper</a></li> 
-    </ul>
-  </nav>
-  </div>  
+    <link rel="prev" title="Detecting Encrypted TOR Traffic with Boosting and Topological Data Analysis" href="TOR-XGB-TDA.html" /> 
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+    ga('create', 'UA-124965309-4', 'auto');
+    ga('send', 'pageview');
+  </script>
+    <!-- End Google Analytics -->
+
+
+
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+
+          <a href="https://scikit-tda.org">
+            <big>a scikit-tda project</big>
+          </a>
+
+
+
+          
+            <a href="../index.html" class="icon icon-home"> KeplerMapper
+          
+
+          
+            
+            <img src="../_static/logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.2.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">API Reference</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Adapters.html">Adapters example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plotly-Demo.html">Demo of Plotlyviz features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="KeplerMapper-usage-in-Jupyter-Notebook.html">Using Kepler Mapper in Jupyter Notebook</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Advanced Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="KeplerMapper-Newsgroup20-Pipeline.html">KeplerMapper &amp; NLP examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TOR-XGB-TDA.html">Detecting Encrypted TOR Traffic with Boosting and Topological Data Analysis</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Confidence Graphs: Representing Model Uncertainty in Deep Learning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Motivation">Motivation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Experimental-setup">Experimental setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Preparing-Data">Preparing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Model">Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Fitting-and-evaluation">Fitting and evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Perform-1000-forward-passes-on-test-set-and-calculate-Variance-Ratio-and-Standard-Dev">Perform 1000 forward passes on test set and calculate Variance Ratio and Standard Dev</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Plot-test-set-confidence">Plot test set confidence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Apply-MAPPER">Apply <span class="math notranslate nohighlight">\(MAPPER\)</span></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Take-penultimate-layer-activations-from-test-set-for-the-inverse-X">Take penultimate layer activations from test set for the inverse <span class="math notranslate nohighlight">\(X\)</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Take-STD-and-error-as-the-projected-X">Take STD and error as the projected <span class="math notranslate nohighlight">\(X\)</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Create-the-confidence-graph-G">Create the confidence graph <span class="math notranslate nohighlight">\(G\)</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Create-color-function-output-(absolute-error)">Create color function output (absolute error)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Create-image-tooltips-for-samples-that-are-interpretable-for-humans">Create image tooltips for samples that are interpretable for humans</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Visualize">Visualize</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#Image-of-output">Image of output</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="self-guessing.html">Self-guessing mapper</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">KeplerMapper</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="https://scikit-tda.org">Scikit-TDA</a>&raquo;<a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Confidence Graphs: Representing Model Uncertainty in Deep Learning</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/notebooks/Confidence-Graphs.ipynb.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   
 <style>
@@ -222,6 +376,23 @@ div.nboutput div.output_area.stderr {
 
 .ansi-bold { font-weight: bold; }
 .ansi-underline { text-decoration: underline; }
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
 </style>
 <div class="section" id="Confidence-Graphs:-Representing-Model-Uncertainty-in-Deep-Learning">
 <h1>Confidence Graphs: Representing Model Uncertainty in Deep Learning<a class="headerlink" href="#Confidence-Graphs:-Representing-Model-Uncertainty-in-Deep-Learning" title="Permalink to this headline">¶</a></h1>
@@ -357,19 +528,19 @@ the top 10% features <a class="reference external" href="https://www.ayasdi.com/
 <span></span><span class="o">%</span><span class="k">matplotlib</span> inline
 
 <span class="kn">import</span> <span class="nn">keras</span>
-<span class="kn">from</span> <span class="nn">keras</span> <span class="kn">import</span> <span class="n">backend</span> <span class="k">as</span> <span class="n">K</span>
-<span class="kn">from</span> <span class="nn">keras.datasets</span> <span class="kn">import</span> <span class="n">mnist</span>
-<span class="kn">from</span> <span class="nn">keras.models</span> <span class="kn">import</span> <span class="n">Sequential</span>
-<span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">Dropout</span>
-<span class="kn">from</span> <span class="nn">keras.optimizers</span> <span class="kn">import</span> <span class="n">Adam</span>
+<span class="kn">from</span> <span class="nn">keras</span> <span class="k">import</span> <span class="n">backend</span> <span class="k">as</span> <span class="n">K</span>
+<span class="kn">from</span> <span class="nn">keras.datasets</span> <span class="k">import</span> <span class="n">mnist</span>
+<span class="kn">from</span> <span class="nn">keras.models</span> <span class="k">import</span> <span class="n">Sequential</span>
+<span class="kn">from</span> <span class="nn">keras.layers</span> <span class="k">import</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">Dropout</span>
+<span class="kn">from</span> <span class="nn">keras.optimizers</span> <span class="k">import</span> <span class="n">Adam</span>
 
-<span class="kn">import</span> <span class="nn">kmapper</span> <span class="kn">as</span> <span class="nn">km</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">cluster</span><span class="p">,</span> <span class="n">preprocessing</span>
-<span class="kn">import</span> <span class="nn">xgboost</span> <span class="kn">as</span> <span class="nn">xgb</span>
+<span class="kn">import</span> <span class="nn">kmapper</span> <span class="k">as</span> <span class="nn">km</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="k">import</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">cluster</span><span class="p">,</span> <span class="n">preprocessing</span>
+<span class="kn">import</span> <span class="nn">xgboost</span> <span class="k">as</span> <span class="nn">xgb</span>
 
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;ggplot&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -419,16 +590,16 @@ Using TensorFlow backend.
 <span class="n">X_test</span> <span class="o">/=</span> <span class="mi">255</span>
 <span class="n">X_strange</span> <span class="o">/=</span> <span class="mi">255</span>
 
-<span class="k">print</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;train samples&#39;</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;test samples&#39;</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">X_strange</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;strange samples&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;train samples&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;test samples&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X_strange</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;strange samples&#39;</span><span class="p">)</span>
 
 <span class="c1"># convert class vectors to binary class matrices</span>
 <span class="n">y_train</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_train</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 <span class="n">y_test</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_test</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
 <span class="n">y_mean_test</span> <span class="o">=</span> <span class="n">y_test</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-<span class="k">print</span><span class="p">(</span><span class="n">y_mean_test</span><span class="p">,</span> <span class="s1">&#39;y test mean&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">y_mean_test</span><span class="p">,</span> <span class="s1">&#39;y test mean&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -585,8 +756,8 @@ Epoch 10/10
     <span class="s2">&quot;STD&quot;</span><span class="p">:</span> <span class="n">y_pred_std_test</span>
 <span class="p">})</span>
 
-<span class="k">print</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">y_pred_mean_test</span> <span class="o">&gt;</span> <span class="o">.</span><span class="mi">5</span><span class="p">))</span>
-<span class="k">print</span><span class="p">(</span><span class="n">test_analysis</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">y_pred_mean_test</span> <span class="o">&gt;</span> <span class="o">.</span><span class="mi">5</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">test_analysis</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
@@ -675,7 +846,7 @@ max       1.000000     0.999999     0.500000     0.367364
 <span></span><span class="n">predict_penultimate_layer</span> <span class="o">=</span>  <span class="n">K</span><span class="o">.</span><span class="n">function</span><span class="p">([</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">K</span><span class="o">.</span><span class="n">learning_phase</span><span class="p">()],</span> <span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">output</span><span class="p">])</span>
 
 <span class="n">X_inverse_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">predict_penultimate_layer</span><span class="p">([</span><span class="n">X_test</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))[</span><span class="mi">0</span><span class="p">]</span>
-<span class="k">print</span><span class="p">((</span><span class="n">X_inverse_test</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s2">&quot;X_inverse_test shape&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">((</span><span class="n">X_inverse_test</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s2">&quot;X_inverse_test shape&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -697,7 +868,7 @@ max       1.000000     0.999999     0.500000     0.367364
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">X_projected_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">test_analysis</span><span class="o">.</span><span class="n">STD</span><span class="p">,</span> <span class="n">test_analysis</span><span class="o">.</span><span class="n">y_true</span> <span class="o">-</span> <span class="n">test_analysis</span><span class="o">.</span><span class="n">y_pred</span><span class="p">]</span>
-<span class="k">print</span><span class="p">((</span><span class="n">X_projected_test</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s2">&quot;X_projected_test shape&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">((</span><span class="n">X_projected_test</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s2">&quot;X_projected_test shape&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -1065,7 +1236,7 @@ Created 267 edges and 100 nodes in 0:00:02.503639.
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">io</span>
 <span class="kn">import</span> <span class="nn">base64</span>
-<span class="kn">from</span> <span class="nn">scipy.misc</span> <span class="kn">import</span> <span class="n">toimage</span><span class="p">,</span> <span class="n">imsave</span><span class="p">,</span> <span class="n">imresize</span>
+<span class="kn">from</span> <span class="nn">scipy.misc</span> <span class="k">import</span> <span class="n">toimage</span><span class="p">,</span> <span class="n">imsave</span><span class="p">,</span> <span class="n">imresize</span>
 
 <span class="c1"># Create z-scores</span>
 <span class="n">hard_predictions</span> <span class="o">=</span> <span class="p">(</span><span class="n">test_analysis</span><span class="o">.</span><span class="n">y_pred</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
@@ -1076,9 +1247,9 @@ Created 267 edges and 100 nodes in 0:00:02.503639.
 <span class="n">z_scores</span> <span class="o">=</span> <span class="p">(</span><span class="n">u</span><span class="o">-</span><span class="n">v</span><span class="p">)</span><span class="o">/</span><span class="n">o</span>
 
 <span class="n">scores_0</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([(</span><span class="n">score</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">z_scores</span><span class="p">)</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">score</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;nan&quot;</span><span class="p">],</span>
-               <span class="n">reverse</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+               <span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">scores_1</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([(</span><span class="n">score</span><span class="p">,</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">z_scores</span><span class="p">)</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">score</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;nan&quot;</span><span class="p">],</span>
-               <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+               <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># Fill RGBA image array with top 200 scores for positive and negative</span>
 <span class="n">img_array_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
@@ -1101,7 +1272,7 @@ Created 267 edges and 100 nodes in 0:00:02.503639.
 <span class="n">img</span> <span class="o">=</span> <span class="n">imresize</span><span class="p">(</span><span class="n">img_array</span><span class="p">,</span> <span class="p">(</span><span class="mi">64</span><span class="p">,</span><span class="mi">64</span><span class="p">))</span>
 <span class="n">img</span> <span class="o">=</span> <span class="n">toimage</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
 
-<span class="n">img</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s2">&quot;PNG&quot;</span><span class="p">)</span>
+<span class="n">img</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;PNG&quot;</span><span class="p">)</span>
 <span class="n">contents</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
 <span class="n">explanation_img_encoded</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span>
 <span class="n">output</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -1111,7 +1282,7 @@ Created 267 edges and 100 nodes in 0:00:02.503639.
 <span class="k">for</span> <span class="n">ys</span><span class="p">,</span> <span class="n">image_data</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">X_test</span><span class="p">):</span>
     <span class="n">output</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
     <span class="n">img</span> <span class="o">=</span> <span class="n">toimage</span><span class="p">(</span><span class="n">imresize</span><span class="p">(</span><span class="n">image_data</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">)),</span> <span class="p">(</span><span class="mi">64</span><span class="p">,</span><span class="mi">64</span><span class="p">)))</span> <span class="c1"># Data was a flat row of &quot;pixels&quot;.</span>
-    <span class="n">img</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s2">&quot;PNG&quot;</span><span class="p">)</span>
+    <span class="n">img</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;PNG&quot;</span><span class="p">)</span>
     <span class="n">contents</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
     <span class="n">img_encoded</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span>
     <span class="n">img_tag</span> <span class="o">=</span>  <span class="s2">&quot;&quot;&quot;&lt;div style=&quot;width:71px;</span>
@@ -1187,7 +1358,7 @@ Wrote visualization to: confidence_graph_output.html
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">kmapper</span> <span class="kn">import</span> <span class="n">jupyter</span>
+<span></span><span class="kn">from</span> <span class="nn">kmapper</span> <span class="k">import</span> <span class="n">jupyter</span>
 <span class="n">jupyter</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="s2">&quot;confidence_graph_output.html&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1227,111 +1398,69 @@ Wrote visualization to: confidence_graph_output.html
 </div>
 
 
+           </div>
+           
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-            <p class="logo"><a href="../index.html">
-              <img class="logo" src="../_static/logo.png" alt="Logo"/>
-            </a></p>
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
-<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../setup.html">Setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">API Reference</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Tutorials</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="Adapters.html">Adapters example</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Plotly-Demo.html">Demo of Plotlyviz features</a></li>
-<li class="toctree-l1"><a class="reference internal" href="KeplerMapper-usage-in-Jupyter-Notebook.html">Using Kepler Mapper in Jupyter Notebook</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Advanced Tutorials</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="KeplerMapper-Newsgroup20-Pipeline.html">KeplerMapper &amp; NLP examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="TOR-XGB-TDA.html">Detecting Encrypted TOR Traffic with Boosting and Topological Data Analysis</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Confidence Graphs: Representing Model Uncertainty in Deep Learning</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#Introduction">Introduction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Motivation">Motivation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Experimental-setup">Experimental setup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Preparing-Data">Preparing Data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Model">Model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Fitting-and-evaluation">Fitting and evaluation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Perform-1000-forward-passes-on-test-set-and-calculate-Variance-Ratio-and-Standard-Dev">Perform 1000 forward passes on test set and calculate Variance Ratio and Standard Dev</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Plot-test-set-confidence">Plot test set confidence</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Apply-MAPPER">Apply <span class="math notranslate nohighlight">\(MAPPER\)</span></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#Take-penultimate-layer-activations-from-test-set-for-the-inverse-X">Take penultimate layer activations from test set for the inverse <span class="math notranslate nohighlight">\(X\)</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Take-STD-and-error-as-the-projected-X">Take STD and error as the projected <span class="math notranslate nohighlight">\(X\)</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Create-the-confidence-graph-G">Create the confidence graph <span class="math notranslate nohighlight">\(G\)</span></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Create-color-function-output-(absolute-error)">Create color function output (absolute error)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Create-image-tooltips-for-samples-that-are-interpretable-for-humans">Create image tooltips for samples that are interpretable for humans</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Visualize">Visualize</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#Image-of-output">Image of output</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="self-guessing.html">Self-guessing mapper</a></li>
-</ul>
-
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/notebooks/Confidence-Graphs.ipynb.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<form class="search" action="../search.html" method="get">
-  <input type="text" name="q"
-   placeholder="type to search" />
-  <input type="hidden" name="check_keywords" value="yes" />
-  <input type="hidden" name="area" value="default" />
-</form>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="self-guessing.html" class="btn btn-neutral float-right" title="Self-guessing mapper" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="TOR-XGB-TDA.html" class="btn btn-neutral" title="Detecting Encrypted TOR Traffic with Boosting and Topological Data Analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
     </div>
-  <div class="related bottom">
-  <nav id="rellinks">
-    <ul>
-        <li>
-          &larr;
-          <a href="TOR-XGB-TDA.html" title="Previous document">Detecting Encrypted TOR Traffic with Boosting and Topological Data Analysis</a>
-        </li>
-        <li>
-          <a href="self-guessing.html" title="Next document">Self-guessing mapper</a>
-          &rarr;
-        </li>
-    </ul>
-  </nav>
-  <nav id="breadcrumbs">
-    <ul>
-      <li><a href="../index.html">KeplerMapper</a></li> 
-    </ul>
-  </nav>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Hendrik Jacob van Veen and Nathaniel Saul
+
+    </p>
   </div>
-  <footer id="pagefooter">&copy; 2019, Hendrik Jacob van Veen and Nathaniel Saul.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-      1.8.1
-        with the <a href="http://github.com/irskep/sphinx-better-theme">
-          better</a> theme.
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
-  </footer>
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
 
   
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-      ga('create', 'UA-124965309-4', '');
-      ga('send', 'pageview');
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.2.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
     </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
   
-  </body>
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
 </html>

@@ -30,13 +30,19 @@ setup(name='kmapper',
       packages=['kmapper'],
       include_package_data=True,
       extras_require={
-        'testing': [
+        'testing': [ # `pip install -e ".[testing]"``
           'pytest',
           'networkx',
           'matplotlib',
           'python-igraph',
           'plotly',
           'ipywidgets'   
+        ],
+        'docs': [ # `pip install -e ".[docs]"``
+          'sphinx',
+          'nbsphinx',
+          'sphinx-better-theme',
+          'sphinxcontrib-fulltoc'
         ]
       },
       install_requires=[

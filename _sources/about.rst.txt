@@ -76,6 +76,8 @@ Uses & Mentions
    topological data analysis for accurate prediction of manufacturing
    system
    outputs <https://www.researchgate.net/publication/314185934_Identification_of_Key_Features_Using_Topological_Data_Analysis_for_Accurate_Prediction_of_Manufacturing_System_Outputs>`__
+-  **Christian Parsons** uses KeplerMapper in `Mapamundi <https://christian-parsons.com/mapamundi-wdvp/>`__: a world map based on a geometric interpretation of data, it takes socio-economic metrics for all countries and uses T-SNE as lens and DBSCAN as clusterer to make an alternative world map. Awarded on the `World Data Visualization Prize 2019 <https://informationisbeautiful.net/2019/winners-of-the-world-data-visualization-prize/>`__ 
+
 
 References
 ----------

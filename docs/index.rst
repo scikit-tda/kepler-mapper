@@ -23,6 +23,7 @@ Contents
   :maxdepth: 1
 
   about
+  theory
   setup
   usage
   examples

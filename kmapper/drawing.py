@@ -6,8 +6,28 @@
 import numpy as np
 
 
+__all__ = ["draw_matplotlib"]
+
 def draw_matplotlib(g, ax=None, fig=None):
-    """ Draw the graph as a networkx graph
+    """Draw the graph using NetworkX drawing functionality.
+
+    Parameters
+    ------------
+
+    g: graph object returned by ``map``
+        The Mapper graph as constructed by ``KeplerMapper.map``
+
+    ax: matplotlib Axes object
+        A matplotlib axes object to plot graph on. If none, then use ``plt.gca()``
+    
+    fig: matplotlib Figure object
+        A matplotlib Figure object to plot graph on. If none, then use ``plt.figure()``
+
+    Returns
+    --------
+    nodes: nx node set object list
+        List of nodes constructed with Networkx ``draw_networkx_nodes``. This can be used to further customize node attributes.
+
     """
     import networkx as nx
     import matplotlib.pyplot as plt

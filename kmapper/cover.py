@@ -12,6 +12,8 @@ import numpy as np
 # TODO: Incorporate @pablodecm's cover API.
 
 
+__all__ = ["Cover", "CubicalCover"]
+
 class Cover:
     """Helper class that defines the default covering scheme
 
@@ -90,7 +92,7 @@ class Cover:
             assert self.limits.shape[1] == 2, "limits should be (n_dim,2) in shape"
 
     def __repr__(self):
-        return "Cover(n_cubes=%s, perc_overlap=%s, limits=%s, verbose=%s" % (
+        return "Cover(n_cubes=%s, perc_overlap=%s, limits=%s, verbose=%s)" % (
             self.n_cubes,
             self.perc_overlap,
             self.limits,

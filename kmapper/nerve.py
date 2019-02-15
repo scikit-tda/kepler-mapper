@@ -1,6 +1,8 @@
 import itertools
 from collections import defaultdict
 
+__all__ = ["GraphNerve", "SimplicialNerve"]
+
 
 class Nerve:
     """Base class for implementations of a nerve finder to build a Mapper complex.
@@ -26,6 +28,9 @@ class GraphNerve(Nerve):
 
     def __init__(self, min_intersection=1):
         self.min_intersection = min_intersection
+
+    def __repr__(self):
+        return "GraphNerve(min_intersection={})".format(self.min_intersection)
 
     def compute(self, nodes):
         """Helper function to find edges of the overlapping clusters.

@@ -10,19 +10,28 @@ IPython.core.display.display(IPython.core.display.HTML(CUSTOM_CSS))
 
 def display(path_html="mapper_visualization_output.html"):
     """ Displays a html file inside a Jupyter Notebook output cell.
-        Must run `KeplerMapper.visualize` first to generate html. This function will then render that output from a file saved to disk.
+        
+        .. note::
+        
+            Must run ``KeplerMapper.visualize`` first to generate html. This function will then render that output from a file saved to disk.
     
+        .. note::
+
+            Thanks to `smartinsightsfromdata <https://github.com/smartinsightsfromdata>`_ for the `github issue 10 <https://github.com/MLWave/kepler-mapper/issues/10>`_ that suggested this method. 
+
     Parameters
     ============
 
     path_html : str
         Path to html. Use file name for file inside current working 
-        directory. Use `file://` browser url-format for path to local file.
-        Use `https://` urls for externally hosted resources.
+        directory. Use ``file://`` browser url-format for path to local file.
+        Use ``https://`` urls for externally hosted resources.
+
+        
 
 
-    Example
-    ========
+    Examples
+    =========
 
     ::
 
@@ -39,12 +48,10 @@ def display(path_html="mapper_visualization_output.html"):
         display("filename.html")
 
 
-    Notes
-    ========
+    The default filename is the same default as the ``.visualize`` method, so using both without arguments will show the last constructed graph:
 
-    Thanks to https://github.com/smartinsightsfromdata for the issue:
-    https://github.com/MLWave/kepler-mapper/issues/10
-
+    >>> _ = km.visualize(graph)
+    >>> display()
 
     """
 

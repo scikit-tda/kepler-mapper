@@ -23,9 +23,9 @@ Contents
   :maxdepth: 1
 
   about
+  started
   theory
-  setup
-  usage
+  applications
   examples
   reference/index
 

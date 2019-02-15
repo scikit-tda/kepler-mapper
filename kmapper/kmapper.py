@@ -26,6 +26,11 @@ from .visuals import (
     colorscale_default,
 )
 
+__all__ = [
+    "KeplerMapper", 
+    "cluster" #expose this to make examples and usage tidier
+]
+
 
 class KeplerMapper(object):
     """With this class you can build topological networks from (high-dimensional) data.
@@ -40,19 +45,23 @@ class KeplerMapper(object):
     3)  	Visualize the network using HTML and D3.js.
 
     KM has a number of nice features, some which get forgotten.
-        - project : Some projections it makes sense to use a distance matrix, such as knn_distance_#. Using `distance_matrix = <metric>` for a custom metric.
-        - fit_transform : Applies a sequence of projections. Currently, this API is a little confusing and will be changed in the future. 
+        - ``project``: Some projections it makes sense to use a distance matrix, such as knn_distance_#. Using ``distance_matrix = <metric>`` for a custom metric.
+        - ``fit_transform``: Applies a sequence of projections. Currently, this API is a little confusing and might be changed in the future. 
     
 
-    Parameters
-    ===========
 
-    verbose: int, default is 0
-        Logging level. Currently 3 levels (0,1,2) are supported. For no logging, set `verbose=0`. For some logging, set `verbose=1`. For complete logging, set `verbose=2`.
-        
     """
 
     def __init__(self, verbose=0):
+        """Constructor for KeplerMapper class.
+
+        Parameters
+        ===========
+
+        verbose: int, default is 0
+            Logging level. Currently 3 levels (0,1,2) are supported. For no logging, set `verbose=0`. For some logging, set `verbose=1`. For complete logging, set `verbose=2`.
+            
+        """
 
         # TODO: move as many of the arguments from fit_transform and map into here.
         self.verbose = verbose
@@ -95,7 +104,75 @@ class KeplerMapper(object):
 
         Examples
         --------
-        >>> projected_data = mapper.project(data, projection="sum", scaler=km.preprocessing.MinMaxScaler() )
+        >>> # Project by taking the first dimension and third dimension
+        >>> X_projected = mapper.project(
+        >>>     X_inverse,
+        >>>     projection=[0,2]
+        >>> )
+
+        >>> # Project by taking the sum of row values
+        >>> X_projected = mapper.project(
+        >>>     X_inverse,
+        >>>     projection="sum"
+        >>> )
+
+        >>> # Do not scale the projection (default is minmax-scaling)
+        >>> X_projected = mapper.project(
+        >>>     X_inverse,
+        >>>     scaler=None
+        >>> )
+
+        >>> # Project by standard-scaled summed distance to 5 nearest neighbors
+        >>> X_projected = mapper.project(
+        >>>     X_inverse,
+        >>>     projection="knn_distance_5",
+        >>>     scaler=sklearn.preprocessing.StandardScaler()
+        >>> )
+
+        >>> # Project by first two PCA components
+        >>> X_projected = mapper.project(
+        >>>     X_inverse,
+        >>>     projection=sklearn.decomposition.PCA()
+        >>> )
+
+        >>> # Project by first three UMAP components
+        >>> X_projected = mapper.project(
+        >>>     X_inverse,
+        >>>     projection=umap.UMAP(n_components=3)
+        >>> )
+
+        >>> # Project by L2-norm on squared Pearson distance matrix
+        >>> X_projected = mapper.project(
+        >>>     X_inverse,
+        >>>     projection="l2norm",
+        >>>     distance_matrix="pearson"
+        >>> )
+
+        >>> # Mix and match different projections
+        >>> X_projected = np.c_[
+        >>>     mapper.project(X_inverse, projection=sklearn.decomposition.PCA()),
+        >>>     mapper.project(X_inverse, projection="knn_distance_5")
+        >>> ]
+
+        >>> # Stack / chain projections. You could do this manually, 
+        >>> # or pipeline with `.fit_transform()`. Works the same as `.project()`,
+        >>> # but accepts lists. f(raw text) -> f(tfidf) -> f(isomap 100d) -> f(umap 2d)
+        >>> projected_X = mapper.fit_transform(
+        >>>     X,
+        >>>     projections=[TfidfVectorizer(analyzer="char",
+        >>>                                  ngram_range=(1,6),
+        >>>                                  max_df=0.93,
+        >>>                                  min_df=0.03),
+        >>>                  manifold.Isomap(n_components=100,
+        >>>                                  n_jobs=-1),
+        >>>                  umap.UMAP(n_components=2,
+        >>>                            random_state=1)],
+        >>>     scalers=[None,
+        >>>              None,
+        >>>              preprocessing.MinMaxScaler()],
+        >>>     distance_matrices=[False,
+        >>>                        False,
+        >>>                        False])
         """
 
         # Sae original values off so they can be referenced by later functions in the pipeline
@@ -229,7 +306,7 @@ class KeplerMapper(object):
         scaler=preprocessing.MinMaxScaler(),
         distance_matrix=False,
     ):
-        """ Same as .project() but accepts lists for arguments so you can chain.
+        """Same as .project() but accepts lists for arguments so you can chain.
 
         """
 
@@ -290,8 +367,7 @@ class KeplerMapper(object):
         remove_duplicate_nodes=False,
         # These arguments are all deprecated
         overlap_perc=None,
-        nr_cubes=None,
-        coverer=None,
+        nr_cubes=None
     ):
         """Apply Mapper algorithm on this projection and build a simplicial complex. Returns a dictionary with nodes and links.
 
@@ -306,7 +382,7 @@ class KeplerMapper(object):
         clusterer: Default: DBSCAN
             Scikit-learn API compatible clustering algorithm. Must provide `fit` and `predict`.
 
-        cover: type kmapper.Cover
+        cover: kmapper.Cover
             Cover scheme for lens. Instance of kmapper.cover providing methods `fit` and `transform`.
 
         nerve: kmapper.Nerve
@@ -323,11 +399,22 @@ class KeplerMapper(object):
             Removes duplicate nodes before edges are determined. A node is considered to be duplicate
             if it has exactly the same set of points as another node.
 
-        nr_cubes: Int (Deprecated)
-            The number of intervals/hypercubes to create. Default = 10. (DeprecationWarning: define Cover explicitly in future versions)
+        nr_cubes: Int
+            
+            .. deprecated:: 1.1.6
 
-        overlap_perc: Float (Deprecated)
-            The percentage of overlap "between" the intervals/hypercubes. Default = 0.1. (DeprecationWarning: define Cover explicitly in future versions)
+                define Cover explicitly in future versions
+
+            The number of intervals/hypercubes to create. Default = 10.
+            
+        overlap_perc: Float
+            .. deprecated:: 1.1.6
+
+                define Cover explicitly in future versions    
+
+            The percentage of overlap "between" the intervals/hypercubes. Default = 0.1. 
+            
+
 
         Returns
         =======
@@ -337,13 +424,38 @@ class KeplerMapper(object):
         Examples
         ========
 
-        ::
+        >>> # Default mapping.
+        >>> graph = mapper.map(X_projected, X_inverse)
 
-            >>> simplicial_complex = mapper.map(lens, 
-                                                X=None, 
-                                                clusterer=cluster.DBSCAN(eps=0.5,min_samples=3), 
-                                                cover=km.Cover(n_cubes=[10,20], 
-                                                perc_overlap=0.4))
+        >>> # Apply clustering on the projection instead of on inverse X
+        >>> graph = mapper.map(X_projected)
+
+        >>> # Use 20 cubes/intervals per projection dimension, with a 50% overlap
+        >>> graph = mapper.map(X_projected, X_inverse, 
+        >>>                    cover=kmapper.Cover(n_cubes=20, perc_overlap=0.5))
+
+        >>> # Use multiple different cubes/intervals per projection dimension, 
+        >>> # And vary the overlap
+        >>> graph = mapper.map(X_projected, X_inverse,
+        >>>                    cover=km.Cover(n_cubes=[10,20,5],
+        >>>                                         perc_overlap=[0.1,0.2,0.5]))
+
+        >>> # Use KMeans with 2 clusters
+        >>> graph = mapper.map(X_projected, X_inverse,
+        >>>     clusterer=sklearn.cluster.KMeans(2))
+
+        >>> # Use DBSCAN with "cosine"-distance
+        >>> graph = mapper.map(X_projected, X_inverse,
+        >>>     clusterer=sklearn.cluster.DBSCAN(metric="cosine"))
+
+        >>> # Use HDBSCAN as the clusterer
+        >>> graph = mapper.map(X_projected, X_inverse,
+        >>>     clusterer=hdbscan.HDBSCAN())
+
+        >>> # Parametrize the nerve of the covering
+        >>> graph = mapper.map(X_projected, X_inverse,
+        >>>     nerve=km.GraphNerve(min_intersection=3))
+
 
         """
 
@@ -582,10 +694,42 @@ class KeplerMapper(object):
         Examples
         ---------
 
-        >>> mapper.visualize(simplicial_complex, path_html="mapper_visualization_output.html",
-                            custom_meta={'Data': 'MNIST handwritten digits', 
-                                         'Created by': 'Franklin Roosevelt'
-                            }, )
+        >>> # Basic creation of a `.html` file at `kepler-mapper-output.html`
+        >>> html = mapper.visualize(graph, path_html="kepler-mapper-output.html")
+
+        >>> # Jupyter Notebook support
+        >>> from kmapper import jupyter
+        >>> html = mapper.visualize(graph, path_html="kepler-mapper-output.html")
+        >>> jupyter.display(path_html="kepler-mapper-output.html")
+
+        >>> # Customizing the output text
+        >>> html = mapper.visualize(
+        >>>     graph, 
+        >>>     path_html="kepler-mapper-output.html",
+        >>>     title="Fashion MNIST with UMAP",
+        >>>     custom_meta=[("Description", "A short description."),
+        >>>                  ("Cluster", "HBSCAN()")]
+        >>> )
+
+        >>> # Customizing the tooltips with binary target variables
+        >>> X, y = split_data(df)
+        >>> html = mapper.visualize(
+        >>>     graph, 
+        >>>     path_html="kepler-mapper-output.html",
+        >>>     title="Fashion MNIST with UMAP",
+        >>>     custom_tooltips=y
+        >>> )
+
+        >>> # Customizing the tooltips with html-strings: locally stored images of an image dataset
+        >>> html = mapper.visualize(
+        >>>     graph, 
+        >>>     path_html="kepler-mapper-output.html",
+        >>>     title="Fashion MNIST with UMAP",
+        >>>     custom_tooltips=np.array(
+        >>>             ["<img src='img/%s.jpg'>"%i for i in range(inverse_X.shape[0])]
+        >>>     )
+        >>> )
+
         """
 
         # TODO:

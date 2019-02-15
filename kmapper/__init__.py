@@ -1,12 +1,7 @@
-from .kmapper import KeplerMapper
-from .kmapper import cluster
-from .cover import Cover
-from .nerve import GraphNerve
+from .kmapper import *
+from .cover import *
+from .nerve import *
 from .adapter import *
 from .drawing import *
 
-
-# Enable access to version number
-import pkg_resources
-
-__version__ = pkg_resources.get_distribution("kmapper").version
+from ._version import __version__

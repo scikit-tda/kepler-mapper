@@ -82,7 +82,7 @@ class TestCoverBasic:
 
         data = data.astype(np.float64)
         mapper = KeplerMapper()
-        graph = mapper.map(data, coverer=CoverClass())
+        graph = mapper.map(data, cover=CoverClass())
         mapper.visualize(graph)
 
 

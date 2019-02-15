@@ -475,17 +475,11 @@ class KeplerMapper(object):
                 "Deprecation Warning: Please supply km.Cover object. Explicitly passing in n_cubes/nr_cubes and overlap_perc will be deprecated in future releases. ",
                 DeprecationWarning,
             )
-        if coverer is not None:
-            warnings.warn(
-                "Deprecation Warning: coverer has been renamed to `cover`. Please use `cover` from now on.",
-                DeprecationWarning,
-            )
+
 
         # If user supplied nr_cubes, overlap_perc, or coverer, opt for those
         # TODO: remove this conditional after release in 1.2
-        if coverer is not None:
-            self.cover = coverer
-        elif nr_cubes is not None or overlap_perc is not None:
+        if nr_cubes is not None or overlap_perc is not None:
             n_cubes = nr_cubes if nr_cubes else 10
             overlap_perc = overlap_perc if overlap_perc else 0.1
             self.cover = Cover(n_cubes=n_cubes, perc_overlap=overlap_perc)

@@ -1,0 +1,310 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>kmapper.Cover &#8212; KeplerMapper 1.2.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/better.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="kmapper.GraphNerve" href="kmapper.GraphNerve.html" />
+    <link rel="prev" title="kmapper.KeplerMapper" href="kmapper.KeplerMapper.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+      <link rel="stylesheet" href="../../_static/custom_style.css" type="text/css" />
+  </head><body>
+    <header id="pageheader">
+      <h1>
+        <a href="../../index.html ">
+          KeplerMapper 1.2.0 documentation
+        </a>
+        <a id="headermeta" href="https://scikit-tda.org">
+            a scikit-tda project 
+        </a>
+      </h1> 
+  </header>
+  <div class="related top">
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="kmapper.KeplerMapper.html" title="Previous document">kmapper.KeplerMapper</a>
+        </li>
+        <li>
+          <a href="kmapper.GraphNerve.html" title="Next document">kmapper.GraphNerve</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+  <nav id="breadcrumbs">
+    <ul>
+      <li><a href="../../index.html">KeplerMapper</a></li>
+      <li>
+        <a href="../index.html">API Reference</a>
+      </li> 
+    </ul>
+  </nav>
+  </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="kmapper-cover">
+<h1>kmapper.Cover<a class="headerlink" href="#kmapper-cover" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="kmapper.Cover">
+<em class="property">class </em><code class="descclassname">kmapper.</code><code class="descname">Cover</code><span class="sig-paren">(</span><em>n_cubes=10</em>, <em>perc_overlap=0.5</em>, <em>limits=None</em>, <em>verbose=0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kmapper/cover.html#Cover"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.Cover" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper class that defines the default covering scheme</p>
+<p>It calculates the cover based on the following formula for overlap. (<a class="reference external" href="https://arxiv.org/pdf/1706.00204.pdf">https://arxiv.org/pdf/1706.00204.pdf</a>)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>             <span class="o">|</span><span class="n">cube</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="n">intersection</span> <span class="n">cube</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">|</span>
+<span class="n">overlap</span> <span class="o">=</span> <span class="o">--------------------------------------</span>
+                      <span class="o">|</span><span class="n">cube</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">|</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>n_cubes</strong> (<em>int</em>) – Number of hypercubes along each dimension. Sometimes referred to as resolution.</li>
+<li><strong>perc_overlap</strong> (<em>float</em>) – Amount of overlap between adjacent cubes calculated only along 1 dimension.</li>
+<li><strong>limits</strong> (<em>Numpy Array</em><em> (</em><em>n_dim</em><em>,</em><em>2</em><em>)</em>) – (lower bound, upper bound) for every dimension
+If a value is set to <cite>np.float(‘inf’)</cite>, the bound will be assumed to be the min/max value of the dimension
+Also, if <cite>limits == None</cite>, the limits are defined by the maximum and minimum value of the lens for all dimensions.
+i.e. <cite>[[min_1, max_1], [min_2, max_2], [min_3, max_3]]</cite></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">kmapper.cover</span> <span class="k">import</span> <span class="n">Cover</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cov</span> <span class="o">=</span> <span class="n">Cover</span><span class="p">(</span><span class="n">n_cubes</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">perc_overlap</span><span class="o">=</span><span class="mf">0.75</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cube_centers</span> <span class="o">=</span> <span class="n">cov</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cov</span><span class="o">.</span><span class="n">transform_single</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">cube_centers</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="go">array([[0.3594448 , 0.07428465],</span>
+<span class="go">       [0.14490332, 0.01395559],</span>
+<span class="go">       [0.94988668, 0.03983579],</span>
+<span class="go">       [0.73517978, 0.09420806],</span>
+<span class="go">       [0.16903735, 0.06901085],</span>
+<span class="go">       [0.81578595, 0.10708731],</span>
+<span class="go">       [0.26923572, 0.12216203],</span>
+<span class="go">       [0.89203167, 0.0711279 ],</span>
+<span class="go">       [0.80442115, 0.10220901],</span>
+<span class="go">       [0.33210782, 0.04365007],</span>
+<span class="go">       [0.52207707, 0.05892861],</span>
+<span class="go">       [0.26589744, 0.08502856],</span>
+<span class="go">       [0.02360067, 0.1263653 ],</span>
+<span class="go">       [0.29855631, 0.01209373]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hyper_cubes</span> <span class="o">=</span> <span class="n">cov</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">cube_centers</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="kmapper.Cover.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>n_cubes=10</em>, <em>perc_overlap=0.5</em>, <em>limits=None</em>, <em>verbose=0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kmapper/cover.html#Cover.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.Cover.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#kmapper.Cover.__init__" title="kmapper.Cover.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([n_cubes,&nbsp;perc_overlap,&nbsp;limits,&nbsp;…])</td>
+<td>Initialize self.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#kmapper.Cover.fit" title="kmapper.Cover.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(data)</td>
+<td>Fit a cover on the data.</td>
+</tr>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_transform</span></code>(data)</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#kmapper.Cover.transform" title="kmapper.Cover.transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transform</span></code></a>(data[,&nbsp;centers])</td>
+<td>Find entries of all hypercubes.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#kmapper.Cover.transform_single" title="kmapper.Cover.transform_single"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transform_single</span></code></a>(data,&nbsp;center[,&nbsp;i])</td>
+<td>Compute entries of <cite>data</cite> in hypercube centered at <cite>center</cite></td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="kmapper.Cover.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kmapper/cover.html#Cover.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.Cover.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit a cover on the data. This method constructs centers and radii in each dimension given the <cite>perc_overlap</cite> and <cite>n_cube</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>array-like</em>) – Data to apply the cover to. Warning: First column must be an index column.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>centers</strong> (<em>list of arrays</em>) – A list of centers for each cube</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="kmapper.Cover.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>data</em>, <em>centers=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kmapper/cover.html#Cover.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.Cover.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find entries of all hypercubes. If <cite>centers=None</cite>, then use <cite>self.centers_</cite> as computed in <cite>self.fit</cite>.</p>
+<blockquote>
+<div>Empty hypercubes are removed from the result</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> (<em>array-like</em>) – Data to find in entries in cube. Warning: first column must be index column.</li>
+<li><strong>centers</strong> (<em>list of array-like</em>) – Center points for all cubes as returned by <cite>self.fit</cite>. Default is to use <cite>self.centers_</cite>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>hypercubes</strong> (<em>list of array-like</em>) – list of entries in each hypercobe in <cite>data</cite>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="kmapper.Cover.transform_single">
+<code class="descname">transform_single</code><span class="sig-paren">(</span><em>data</em>, <em>center</em>, <em>i=0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kmapper/cover.html#Cover.transform_single"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.Cover.transform_single" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute entries of <cite>data</cite> in hypercube centered at <cite>center</cite></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>data</strong> (<em>array-like</em>) – Data to find in entries in cube. Warning: first column must be index column.</li>
+<li><strong>center</strong> (<em>array-like</em>) – Center points for the cube. Cube is found as all data in <cite>[center-self.radius_, center+self.radius_]</cite></li>
+<li><strong>i</strong> (<em>int</em><em>, </em><em>default 0</em>) – Optional counter to aid in verbose debugging.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory.html">Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../applications.html">Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#kepler-mapper">Kepler Mapper</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="kmapper.KeplerMapper.html">kmapper.KeplerMapper</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">kmapper.Cover</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kmapper.GraphNerve.html">kmapper.GraphNerve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kmapper.SimplicialNerve.html">kmapper.SimplicialNerve</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#visuals">Visuals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#adapters">Adapters</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/Adapters.html">Adapters example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/Plotly-Demo.html">Demo of Plotlyviz features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/KeplerMapper-usage-in-Jupyter-Notebook.html">Using Kepler Mapper in Jupyter Notebook</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Advanced Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/KeplerMapper-Newsgroup20-Pipeline.html">KeplerMapper &amp; NLP examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/TOR-XGB-TDA.html">Detecting Encrypted TOR Traffic with Boosting and Topological Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/Confidence-Graphs.html">Confidence Graphs: Representing Model Uncertainty in Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/self-guessing.html">Self-guessing mapper</a></li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/reference/stubs/kmapper.Cover.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<form class="search" action="../../search.html" method="get">
+  <input type="text" name="q"
+   placeholder="type to search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  <div class="related bottom">
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="kmapper.KeplerMapper.html" title="Previous document">kmapper.KeplerMapper</a>
+        </li>
+        <li>
+          <a href="kmapper.GraphNerve.html" title="Next document">kmapper.GraphNerve</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+  <nav id="breadcrumbs">
+    <ul>
+      <li><a href="../../index.html">KeplerMapper</a></li>
+      <li>
+        <a href="../index.html">API Reference</a>
+      </li> 
+    </ul>
+  </nav>
+  </div>
+  <footer id="pagefooter">&copy; 2019, Hendrik Jacob van Veen and Nathaniel Saul.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a>
+      1.8.1
+        with the <a href="http://github.com/irskep/sphinx-better-theme">
+          better</a> theme.
+
+  </footer>
+
+  
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-124965309-4', '');
+      ga('send', 'pageview');
+    </script>
+  
+  </body>
+</html>

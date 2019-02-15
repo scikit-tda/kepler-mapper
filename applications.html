@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Python Module Index &#8212; KeplerMapper 1.2.0 documentation</title>
+    <title>Applications &#8212; KeplerMapper 1.2.0 documentation</title>
     <link rel="stylesheet" href="_static/better.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -17,11 +17,10 @@
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-
+    <link rel="next" title="Examples" href="examples.html" />
+    <link rel="prev" title="Theory" href="theory.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
       <link rel="stylesheet" href="_static/custom_style.css" type="text/css" />
-
-
   </head><body>
     <header id="pageheader">
       <h1>
@@ -36,6 +35,14 @@
   <div class="related top">
   <nav id="rellinks">
     <ul>
+        <li>
+          &larr;
+          <a href="theory.html" title="Previous document">Theory</a>
+        </li>
+        <li>
+          <a href="examples.html" title="Next document">Examples</a>
+          &rarr;
+        </li>
     </ul>
   </nav>
   <nav id="breadcrumbs">
@@ -50,34 +57,32 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-
-   <h1>Python Module Index</h1>
-
-   <div class="modindex-jumpbox">
-   <a href="#cap-k"><strong>k</strong></a>
-   </div>
-
-   <table class="indextable modindextable">
-     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
-     <tr class="cap" id="cap-k"><td></td><td>
-       <strong>k</strong></td><td></td></tr>
-     <tr>
-       <td><img src="_static/minus.png" class="toggler"
-              id="toggle-1" style="display: none" alt="-" /></td>
-       <td>
-       <code class="xref">kmapper</code></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="reference/stubs/kmapper.adapter.html#module-kmapper.adapter"><code class="xref">kmapper.adapter</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="reference/stubs/kmapper.jupyter.html#module-kmapper.jupyter"><code class="xref">kmapper.jupyter</code></a></td><td>
-       <em></em></td></tr>
-   </table>
+  <div class="section" id="applications">
+<h1>Applications<a class="headerlink" href="#applications" title="Permalink to this headline">¶</a></h1>
+<p>One of the beauties of Mapper is that it can be used on wide variety of data and problems. Here we highlight a few cases.</p>
+<a class="reference internal image-reference" href="http://i.imgur.com/N4YdyHS.png"><img alt="Mapper of Wisconsin Breast Cancer Data" class="align-right" src="http://i.imgur.com/N4YdyHS.png" style="width: 300px;" /></a>
+<div class="section" id="anomaly-detection">
+<h2>Anomaly Detection<a class="headerlink" href="#anomaly-detection" title="Permalink to this headline">¶</a></h2>
+<p>KeplerMapper can be used for anomaly detection. Anomaly detection is useful for fighting fraud and finding errors. Projecting with <code class="docutils literal notranslate"><span class="pre">knn_distance_5</span></code> can surface outliers. There are also specialized outlier detection algorithms, like the Isolation Forest and GLOSH, that make good projections for anomaly detection.</p>
+<blockquote>
+<div><ul class="simple">
+<li>Notebooks: TDA Wisconsin Breast Cancer</li>
+<li>Demos: TDA Wisconsin Breast Cancer</li>
+</ul>
+</div></blockquote>
+<a class="reference internal image-reference" href="https://i.imgur.com/CjUd2Of.png"><img alt="Mapper of Word2Vec" class="align-right" src="https://i.imgur.com/CjUd2Of.png" style="width: 300px;" /></a>
+</div>
+<div class="section" id="natural-language-processing">
+<h2>Natural Language Processing<a class="headerlink" href="#natural-language-processing" title="Permalink to this headline">¶</a></h2>
+<p>Mapper can be used to explore bias in Word2Vec models.</p>
+<blockquote>
+<div><ul class="simple">
+<li>Notebooks: Word Vector Gender Bias.</li>
+<li>Demos: Word Vector Gender Bias</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
 
 
           </div>
@@ -89,11 +94,15 @@
               <img class="logo" src="_static/logo.png" alt="Logo"/>
             </a></p>
   <h3><a href="index.html">Table of Contents</a></h3>
-  <ul>
+  <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
 <li class="toctree-l1"><a class="reference internal" href="started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="theory.html">Theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="applications.html">Applications</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Applications</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#anomaly-detection">Anomaly Detection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#natural-language-processing">Natural Language Processing</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference/index.html">API Reference</a></li>
 </ul>
@@ -111,6 +120,13 @@
 <li class="toctree-l1"><a class="reference internal" href="notebooks/self-guessing.html">Self-guessing mapper</a></li>
 </ul>
 
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/applications.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
 <form class="search" action="search.html" method="get">
   <input type="text" name="q"
    placeholder="type to search" />
@@ -125,6 +141,14 @@
   <div class="related bottom">
   <nav id="rellinks">
     <ul>
+        <li>
+          &larr;
+          <a href="theory.html" title="Previous document">Theory</a>
+        </li>
+        <li>
+          <a href="examples.html" title="Next document">Examples</a>
+          &rarr;
+        </li>
     </ul>
   </nav>
   <nav id="breadcrumbs">

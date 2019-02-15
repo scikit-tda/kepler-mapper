@@ -17,7 +17,7 @@
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="KeplerMapper" href="kmapper.html" />
+    <link rel="next" title="kmapper.KeplerMapper" href="stubs/kmapper.KeplerMapper.html" />
     <link rel="prev" title="Examples" href="../examples.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
       <link rel="stylesheet" href="../_static/custom_style.css" type="text/css" />
@@ -40,7 +40,7 @@
           <a href="../examples.html" title="Previous document">Examples</a>
         </li>
         <li>
-          <a href="kmapper.html" title="Next document">KeplerMapper</a>
+          <a href="stubs/kmapper.KeplerMapper.html" title="Next document">kmapper.KeplerMapper</a>
           &rarr;
         </li>
     </ul>
@@ -59,14 +59,75 @@
             
   <div class="section" id="api-reference">
 <h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="kmapper.html">KeplerMapper</a></li>
-<li class="toctree-l1"><a class="reference internal" href="covers.html">Cover Schemes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="nerves.html">Nerves</a></li>
-<li class="toctree-l1"><a class="reference internal" href="visuals.html">Visuals</a></li>
-<li class="toctree-l1"><a class="reference internal" href="adapters.html">Adapters</a></li>
-</ul>
+<div class="section" id="kepler-mapper">
+<h2>Kepler Mapper<a class="headerlink" href="#kepler-mapper" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">KeplerMapper</span></code> class provides three main functions: <code class="docutils literal notranslate"><span class="pre">fit_transform,</span> <span class="pre">map,</span> <span class="pre">and</span> <span class="pre">visualize</span></code>.
+These provide the bulk of the functionality for constructing a Mapper graph.
+Cover schemes provide a customizable way of defining a cover for your lens.
+Nerves determine the method that constructs the nodes and edges (or higher order connections).</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="stubs/kmapper.KeplerMapper.html#kmapper.KeplerMapper" title="kmapper.KeplerMapper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">KeplerMapper</span></code></a></td>
+<td>With this class you can build topological networks from (high-dimensional) data.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="stubs/kmapper.Cover.html#kmapper.Cover" title="kmapper.Cover"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Cover</span></code></a></td>
+<td>Helper class that defines the default covering scheme</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="stubs/kmapper.GraphNerve.html#kmapper.GraphNerve" title="kmapper.GraphNerve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GraphNerve</span></code></a></td>
+<td>Creates the 1-skeleton of the Mapper complex.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="stubs/kmapper.SimplicialNerve.html#kmapper.SimplicialNerve" title="kmapper.SimplicialNerve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SimplicialNerve</span></code></a></td>
+<td>Creates the entire Cech complex of the covering defined by the nodes.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="visuals">
+<h2>Visuals<a class="headerlink" href="#visuals" title="Permalink to this headline">¶</a></h2>
+<p>There are many ways to visualize your constructed Mapper. The original and most popular method is to use the <code class="docutils literal notranslate"><span class="pre">KeplerMapper.visualize</span></code> function to construct an <code class="docutils literal notranslate"><span class="pre">.html</span></code> file. You can then open this file in your browser and explore the result. If you use Jupyter Notebooks, you can visualize the <code class="docutils literal notranslate"><span class="pre">.html</span></code> file directly in a notebook using the <code class="docutils literal notranslate"><span class="pre">kmapper.jupyter.display</span></code> function. We also provide extensive functionality for constructing Plotly graphs and dashboards using the <code class="docutils literal notranslate"><span class="pre">kmapper.plotlyviz</span></code> module.  To learn more about the Plotlyviz functionality, see the <a class="reference internal" href="../notebooks/KeplerMapper-usage-in-Jupyter-Notebook.html"><span class="doc">Jupyter demo</span></a> or <a class="reference internal" href="../notebooks/Plotly-Demo.html"><span class="doc">Plotly demo</span></a>.</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="stubs/kmapper.jupyter.html#module-kmapper.jupyter" title="kmapper.jupyter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jupyter</span></code></a></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="stubs/kmapper.plotlyviz.plotlyviz.html#kmapper.plotlyviz.plotlyviz" title="kmapper.plotlyviz.plotlyviz"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotlyviz.plotlyviz</span></code></a></td>
+<td>Visualizations and dashboards for kmapper graphs using Plotly.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="stubs/kmapper.plotlyviz.mpl_to_plotly.html#kmapper.plotlyviz.mpl_to_plotly" title="kmapper.plotlyviz.mpl_to_plotly"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotlyviz.mpl_to_plotly</span></code></a></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="stubs/kmapper.draw_matplotlib.html#kmapper.draw_matplotlib" title="kmapper.draw_matplotlib"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_matplotlib</span></code></a></td>
+<td>Draw the graph using NetworkX drawing functionality.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="adapters">
+<h2>Adapters<a class="headerlink" href="#adapters" title="Permalink to this headline">¶</a></h2>
+<p>We provide a basic adapter to convert a KeplerMapper graph to <cite>networkx.Graph</cite> format.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you would like adapters to other popular formats, please let us know.</p>
+</div>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="stubs/kmapper.adapter.html#module-kmapper.adapter" title="kmapper.adapter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kmapper.adapter</span></code></a></td>
+<td>Adapt Mapper format into other common formats.</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 
@@ -82,15 +143,29 @@
   <h3><a href="../index.html">Table of Contents</a></h3>
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../setup.html">Setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../applications.html">Applications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="kmapper.html">KeplerMapper</a></li>
-<li class="toctree-l2"><a class="reference internal" href="covers.html">Cover Schemes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="nerves.html">Nerves</a></li>
-<li class="toctree-l2"><a class="reference internal" href="visuals.html">Visuals</a></li>
-<li class="toctree-l2"><a class="reference internal" href="adapters.html">Adapters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kepler-mapper">Kepler Mapper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="stubs/kmapper.KeplerMapper.html">kmapper.KeplerMapper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stubs/kmapper.Cover.html">kmapper.Cover</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stubs/kmapper.GraphNerve.html">kmapper.GraphNerve</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stubs/kmapper.SimplicialNerve.html">kmapper.SimplicialNerve</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#visuals">Visuals</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="stubs/kmapper.jupyter.html">kmapper.jupyter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stubs/kmapper.plotlyviz.plotlyviz.html">kmapper.plotlyviz.plotlyviz</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stubs/kmapper.plotlyviz.mpl_to_plotly.html">kmapper.plotlyviz.mpl_to_plotly</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stubs/kmapper.draw_matplotlib.html">kmapper.draw_matplotlib</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#adapters">Adapters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="stubs/kmapper.adapter.html">kmapper.adapter</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -134,7 +209,7 @@
           <a href="../examples.html" title="Previous document">Examples</a>
         </li>
         <li>
-          <a href="kmapper.html" title="Next document">KeplerMapper</a>
+          <a href="stubs/kmapper.KeplerMapper.html" title="Next document">kmapper.KeplerMapper</a>
           &rarr;
         </li>
     </ul>

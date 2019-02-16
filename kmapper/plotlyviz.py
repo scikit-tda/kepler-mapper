@@ -86,6 +86,20 @@ def plotlyviz(
     """
         Visualizations and dashboards for kmapper graphs using Plotly. This method is suitable for use in Jupyter notebooks.
 
+
+        The generated FigureWidget can be updated (by performing a restyle or relayout). For example, let us add a title 
+        to the colorbar (the name of the color function, if any),
+        and set the title font size. To perform these updates faster, Plotly 3.+ provides a context manager that batches up all data and layout updates:
+
+        To display more info on the generated kmapper-graph, define two more FigureWidget(s):  
+        the global node distribution figure, and a dummy figure
+        that displays info on the  algorithms involved in getting the graph from data, as well as  sklearn  class instances.
+
+        A FigureWidget has event listeners for hovering, clicking or selecting. Using the first one for `fw_graph`
+        we   define, via the function `hovering_widgets()`, widgets that display the node distribution, when the node is hovered over, and two textboxes for the cluster size and the member ids/labels of the hovered node members.
+
+
+
         Parameters
         -----------
 
@@ -100,7 +114,6 @@ def plotlyviz(
         
         colorscale: 
              Plotly colorscale(colormap) to color graph nodes
-
 
         dashboard: bool, default is False
             If true, display complete dashboard of node information
@@ -127,6 +140,13 @@ def plotlyviz(
         member_textbox_width: int, default is 800, 
         filename: str, default is None
             if filename is given, the graphic will be saved to that file.
+
+
+        Returns
+        ---------
+        result: plotly.FigureWidget
+            A FigureWidget that can be shown or editted. See the Plotly Demo notebook for examples of use.
+
     """
 
     kmgraph, mapper_summary, n_color_distribution = get_mapper_graph(
@@ -158,26 +178,10 @@ def plotlyviz(
     )
     result = go.FigureWidget(data=plgraph_data, layout=layout)
 
-    """
-        The generated FigureWidget can be updated (by performing a restyle or relayout). For example, let us add a title 
-        to the colorbar (the name of the color function, if any),
-        and set the title font size. To perform these updates faster, Plotly 3.+ provides a context manager that batches up all data and layout updates:
-
-    """
-
     if color_function_name:
         with result.batch_update():
             result.data[1].marker.colorbar.title = color_function_name
             result.data[1].marker.colorbar.titlefont.size = 10
-
-    """
-        To display more info on the generated kmapper-graph, define two more FigureWidget(s):  
-        the global node distribution figure, and a dummy figure
-        that displays info on the  algorithms involved in getting the graph from data, as well as  sklearn  class instances.
-
-        A FigureWidget has event listeners for hovering, clicking or selecting. Using the first one for `fw_graph`
-        we   define, via the function `hovering_widgets()`, widgets that display the node distribution, when the node is hovered over, and two textboxes for the cluster size and the member ids/labels of the hovered node members:
-    """
 
     if dashboard or graph_data:
         fw_hist = node_hist_fig(n_color_distribution, left=hist_left, right=hist_right)
@@ -198,7 +202,7 @@ def plotlyviz(
             result = ipw.VBox([fw_graph, ipw.HBox([fw_summary, fw_hist])])
 
     if filename:
-        pio.write_image(result, filename)  # or 'mapper-cat.png'
+        pio.write_image(result, filename)
 
     return result
 

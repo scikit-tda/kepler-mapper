@@ -23,7 +23,7 @@ autodoc_default_flags = [
     "members",
     "inherited-members"
 ]
-autosummary_generate = False
+autosummary_generate = True
 napoleon_numpy_docstring = True
 napoleon_use_param = True
 napoleon_use_rtype = False

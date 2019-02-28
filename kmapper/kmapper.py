@@ -650,6 +650,9 @@ class KeplerMapper(object):
         graph : dict
             Simplicial complex output from the `map` method.
 
+        color_function : list or 1d array
+            A 1d vector with length equal to number of data points used to build Mapper. Each value should correspond to a value for each data point and color of node is computed as the average value for members in a node.
+
         path_html : String
             file name for outputing the resulting html.
 

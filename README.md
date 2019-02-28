@@ -28,7 +28,7 @@ KeplerMapper requires:
 Using the plotly visualizations requires a few extra libraries:
 
   - Python-Igraph
-  - Plotly 
+  - Plotly
   - Ipywidgets
 
 Additionally, running some of the examples requires:
@@ -72,7 +72,7 @@ mapper = km.KeplerMapper(verbose=1)
 projected_data = mapper.fit_transform(data, projection=[0,1]) # X-Y axis
 
 # Create dictionary called 'graph' with nodes, edges and meta-information
-graph = mapper.map(projected_data, data, nr_cubes=10)
+graph = mapper.map(projected_data, data, cover=km.Cover(n_cubes=10))
 
 # Visualize it
 mapper.visualize(graph, path_html="make_circles_keplermapper_output.html",
@@ -86,4 +86,3 @@ Standard MIT disclaimer applies, see `DISCLAIMER.md` for full text. Development 
 ## Cite
 
 Nathaniel Saul, & Hendrik Jacob van Veen. (2017, November 17). MLWave/kepler-mapper: 186f (Version 1.0.1). Zenodo. http://doi.org/10.5281/zenodo.1054444
-

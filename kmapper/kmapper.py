@@ -70,7 +70,10 @@ class KeplerMapper(object):
         self.cover = None
 
         if verbose > 0:
-            print("KeplerMapper()")
+            print(self)
+
+    def __repr__(self):
+        return "KeplerMapper(verbose={})".format(self.verbose)
 
     def project(
         self,
@@ -541,22 +544,22 @@ class KeplerMapper(object):
 
                 if self.verbose > 1:
                     print(
-                        "   > Found %s clusters.\n"
+                        "   > Found %s clusters in hypercube %s."
                         % (
                             np.unique(
                                 cluster_predictions[cluster_predictions > -1]
-                            ).shape[0]
+                            ).shape[0], i
                         )
                     )
         
                 for pred in np.unique(cluster_predictions):
-                    if pred != -1 and not np.isnan(pred):  # if not predicted as noise                       
+                    # if not predicted as noise                       
+                    if pred != -1 and not np.isnan(pred):  
                         cluster_id = "cube{}_cluster{}".format(i, int(pred))
                         
                         nodes[cluster_id] = hypercube[:, 0][cluster_predictions == pred].astype(int).tolist()
-            else:
-                if self.verbose > 1:
-                    print("Cube_%s is empty.\n" % (i))
+            elif self.verbose > 1:
+                print("Cube_%s is empty.\n" % (i))
 
         if remove_duplicate_nodes:
             nodes = self._remove_duplicate_nodes(nodes)
@@ -575,7 +578,6 @@ class KeplerMapper(object):
         }
         graph["meta_nodes"] = meta
 
-        # Reporting
         if self.verbose > 0:
             self._summary(graph, str(datetime.now() - start))
 

@@ -1,6 +1,6 @@
 [![PyPI version](https://badge.fury.io/py/kmapper.svg)](https://badge.fury.io/py/kmapper)
-[![Build Status](https://travis-ci.org/MLWave/kepler-mapper.svg?branch=master)](https://travis-ci.org/MLWave/kepler-mapper)
-[![Codecov](https://codecov.io/gh/mlwave/kepler-mapper/branch/master/graph/badge.svg)](https://codecov.io/gh/mlwave/kepler-mapper)
+[![Build Status](https://travis-ci.org/scikit-tda/kepler-mapper.svg?branch=master)](https://travis-ci.org/scikit-tda/kepler-mapper)
+[![Codecov](https://codecov.io/gh/scikit-tda/kepler-mapper/branch/master/graph/badge.svg)](https://codecov.io/gh/scikit-tda/kepler-mapper)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1054444.svg)](https://doi.org/10.5281/zenodo.1054444)
 
 

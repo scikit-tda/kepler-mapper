@@ -349,6 +349,7 @@ If False do nothing, else create a squared distance matrix with the chosen metri
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>graph</strong> (<em>dict</em>) – Simplicial complex output from the <cite>map</cite> method.</li>
+<li><strong>color_function</strong> (<em>list</em><em> or </em><em>1d array</em>) – A 1d vector with length equal to number of data points used to build Mapper. Each value should correspond to a value for each data point and color of node is computed as the average value for members in a node.</li>
 <li><strong>path_html</strong> (<em>String</em>) – file name for outputing the resulting html.</li>
 <li><strong>custom_meta</strong> (<em>dict</em>) – Render (key, value) in the Mapper Summary pane.</li>
 <li><strong>custom_tooltip</strong> (<em>list</em><em> or </em><em>array like</em>) – Value to display for each entry in the node. The cluster data pane will display entry for all values in the node. Default is index of data.</li>
@@ -383,8 +384,23 @@ If False do nothing, else create a squared distance matrix with the chosen metri
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">graph</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">path_html</span><span class="o">=</span><span class="s2">&quot;kepler-mapper-output.html&quot;</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Fashion MNIST with UMAP&quot;</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">custom_meta</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;Description&quot;</span><span class="p">,</span> <span class="s2">&quot;A short description.&quot;</span><span class="p">),</span>
-<span class="gp">&gt;&gt;&gt; </span>                 <span class="p">(</span><span class="s2">&quot;Cluster&quot;</span><span class="p">,</span> <span class="s2">&quot;HBSCAN()&quot;</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">custom_meta</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Description&quot;</span><span class="p">:</span><span class="s2">&quot;A short description.&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>                 <span class="s2">&quot;Cluster&quot;</span><span class="p">:</span> <span class="s2">&quot;HBSCAN()&quot;</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Custom coloring function based on your 1d lens</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">graph</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">color_function</span><span class="o">=</span><span class="n">lens</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Custom coloring function based on the first variable</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cf</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">html</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">graph</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">color_function</span><span class="o">=</span><span class="n">cf</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
 </pre></div>
 </div>

@@ -72,7 +72,7 @@ mapper = km.KeplerMapper(verbose=1)
 projected_data = mapper.fit_transform(data, projection=[0,1]) # X-Y axis
 
 # Create dictionary called 'graph' with nodes, edges and meta-information
-graph = mapper.map(projected_data, data, n_cubes=10)
+graph = mapper.map(projected_data, data, nr_cubes=10)
 
 # Visualize it
 mapper.visualize(graph, path_html="make_circles_keplermapper_output.html",

@@ -548,24 +548,12 @@ class KeplerMapper(object):
                             ).shape[0]
                         )
                     )
-
-                # TODO: I think this loop could be improved by turning inside out:
-                #           - partition points according to each cluster
-                # Now for every (sample id in cube, predicted cluster label)
-                for idx, pred in np.c_[hypercube[:, 0], cluster_predictions]:
-                    if pred != -1 and not np.isnan(pred):  # if not predicted as noise
-
-                        # TODO: allow user supplied label
-                        #   - where all those extra values necessary?
+        
+                for pred in np.unique(cluster_predictions):
+                    if pred != -1 and not np.isnan(pred):  # if not predicted as noise                       
                         cluster_id = "cube{}_cluster{}".format(i, int(pred))
-
-                        # Append the member id's as integers
-                        nodes[cluster_id].append(int(idx))
-
-                        # meta[cluster_id] = {
-                        #     "size": hypercube.shape[0],
-                        #     "coordinates": cube,
-                        # }
+                        
+                        nodes[cluster_id] = hypercube[:, 0][cluster_predictions == pred].astype(int).tolist()
             else:
                 if self.verbose > 1:
                     print("Cube_%s is empty.\n" % (i))

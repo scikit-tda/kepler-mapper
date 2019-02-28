@@ -694,8 +694,21 @@ class KeplerMapper(object):
         >>>     graph, 
         >>>     path_html="kepler-mapper-output.html",
         >>>     title="Fashion MNIST with UMAP",
-        >>>     custom_meta=[("Description", "A short description."),
-        >>>                  ("Cluster", "HBSCAN()")]
+        >>>     custom_meta={"Description":"A short description.",
+        >>>                  "Cluster": "HBSCAN()"}
+        >>> )
+
+        >>> # Custom coloring function based on your 1d lens
+        >>> html = mapper.visualize(
+        >>>     graph,
+        >>>     color_function=lens
+        >>> )
+
+        >>> # Custom coloring function based on the first variable
+        >>> cf = mapper.project(X, projection=[0])
+        >>> html = mapper.visualize(
+        >>>     graph,
+        >>>     color_function=cf
         >>> )
 
         >>> # Customizing the tooltips with binary target variables

@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-|PyPI version| |Build Status| |Codecov| |DOI|
+|PyPI version| |Downloads| |Build Status| |Codecov| |DOI|
 
 KeplerMapper
 ===================
@@ -47,6 +47,8 @@ Contents
     notebooks/self-guessing
 
 
+.. |Downloads| image:: https://pypip.in/download/kmapper/badge.svg
+    :target: https://pypi.python.org/pypi/kmapper/
 .. |PyPI version| image:: https://badge.fury.io/py/kmapper.svg
    :target: https://badge.fury.io/py/kmapper
 .. |Build Status| image:: https://travis-ci.org/scikit-tda/kepler-mapper.svg?branch=master

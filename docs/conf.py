@@ -9,6 +9,8 @@ project = u'KeplerMapper'
 copyright = u'2019, Hendrik Jacob van Veen and Nathaniel Saul'
 author = u'Hendrik Jacob van Veen and Nathaniel Saul'
 
+# source_url = 'https://github.com/scikit-tda/kepler-mapper'
+
 version = __version__
 release = __version__
 

@@ -70,7 +70,10 @@ class KeplerMapper(object):
         self.cover = None
 
         if verbose > 0:
-            print("KeplerMapper()")
+            print(self)
+
+    def __repr__(self):
+        return "KeplerMapper(verbose={})".format(self.verbose)
 
     def project(
         self,
@@ -541,34 +544,22 @@ class KeplerMapper(object):
 
                 if self.verbose > 1:
                     print(
-                        "   > Found %s clusters.\n"
+                        "   > Found %s clusters in hypercube %s."
                         % (
                             np.unique(
                                 cluster_predictions[cluster_predictions > -1]
-                            ).shape[0]
+                            ).shape[0], i
                         )
                     )
-
-                # TODO: I think this loop could be improved by turning inside out:
-                #           - partition points according to each cluster
-                # Now for every (sample id in cube, predicted cluster label)
-                for idx, pred in np.c_[hypercube[:, 0], cluster_predictions]:
-                    if pred != -1 and not np.isnan(pred):  # if not predicted as noise
-
-                        # TODO: allow user supplied label
-                        #   - where all those extra values necessary?
+        
+                for pred in np.unique(cluster_predictions):
+                    # if not predicted as noise                       
+                    if pred != -1 and not np.isnan(pred):  
                         cluster_id = "cube{}_cluster{}".format(i, int(pred))
-
-                        # Append the member id's as integers
-                        nodes[cluster_id].append(int(idx))
-
-                        # meta[cluster_id] = {
-                        #     "size": hypercube.shape[0],
-                        #     "coordinates": cube,
-                        # }
-            else:
-                if self.verbose > 1:
-                    print("Cube_%s is empty.\n" % (i))
+                        
+                        nodes[cluster_id] = hypercube[:, 0][cluster_predictions == pred].astype(int).tolist()
+            elif self.verbose > 1:
+                print("Cube_%s is empty.\n" % (i))
 
         if remove_duplicate_nodes:
             nodes = self._remove_duplicate_nodes(nodes)
@@ -587,7 +578,6 @@ class KeplerMapper(object):
         }
         graph["meta_nodes"] = meta
 
-        # Reporting
         if self.verbose > 0:
             self._summary(graph, str(datetime.now() - start))
 
@@ -650,6 +640,9 @@ class KeplerMapper(object):
         graph : dict
             Simplicial complex output from the `map` method.
 
+        color_function : list or 1d array
+            A 1d vector with length equal to number of data points used to build Mapper. Each value should correspond to a value for each data point and color of node is computed as the average value for members in a node.
+
         path_html : String
             file name for outputing the resulting html.
 
@@ -701,8 +694,21 @@ class KeplerMapper(object):
         >>>     graph, 
         >>>     path_html="kepler-mapper-output.html",
         >>>     title="Fashion MNIST with UMAP",
-        >>>     custom_meta=[("Description", "A short description."),
-        >>>                  ("Cluster", "HBSCAN()")]
+        >>>     custom_meta={"Description":"A short description.",
+        >>>                  "Cluster": "HBSCAN()"}
+        >>> )
+
+        >>> # Custom coloring function based on your 1d lens
+        >>> html = mapper.visualize(
+        >>>     graph,
+        >>>     color_function=lens
+        >>> )
+
+        >>> # Custom coloring function based on the first variable
+        >>> cf = mapper.project(X, projection=[0])
+        >>> html = mapper.visualize(
+        >>>     graph,
+        >>>     color_function=cf
         >>> )
 
         >>> # Customizing the tooltips with binary target variables

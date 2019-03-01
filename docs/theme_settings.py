@@ -15,7 +15,6 @@ extensions = [
 
 master_doc = 'index'
 
-
 autodoc_default_options = {
     'autoclass_content': "both"
 }
@@ -31,30 +30,20 @@ napoleon_use_rtype = False
 html_logo = "logo.png"
 source_suffix = '.rst'
 
-
-
 html_theme_path = [better_theme_path]
 html_theme = 'better'
 html_sidebars = {
     '**': [
-        'localtoc.html', 
-        'sourcelink.html', 
-        'searchbox.html'
+        'searchbox.html',
+        'localtoc.html',
     ],
 }
 
 html_static_path = ['_static']
 templates_path = ['_templates']
 html_theme_options = {
-#   'cssfiles': 'custom_style.css',
- 
-  
   # show sidebar on the right instead of on the left
   'rightsidebar': False,
-
-  # inline CSS to insert into the page if you're too lazy to make a
-  # separate file
-#   'inlinecss': '',
 
   # CSS files to include after all other CSS files
   # (refer to by relative path from conf.py directory, or link to a
@@ -67,10 +56,9 @@ html_theme_options = {
   # show the breadcrumbs and index|next|previous links at the top of
   # the page
   'showrelbartop': True,
+
   # same for bottom of the page
   'showrelbarbottom': True,
-
-
 
   # show the self-serving link in the footer
   'linktotheme': True,
@@ -90,8 +78,6 @@ html_theme_options = {
   # color of text in the footer, including links; defaults to the
   # value of textcolor
   'footertextcolor': '',
-
-
 }
 
 nbsphinx_allow_errors = True

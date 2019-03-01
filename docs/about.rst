@@ -132,5 +132,4 @@ References
    Temperature Color Gradient for use with
    RRDTool <http://web-tech.ga-usa.com/2012/05/creating-a-custom-hot-to-cold-temperature-color-gradient-for-use-with-rrdtool/>`__
 -  **Google** Design `Material Design <https://design.google.com/>`__
--  **Ayasdi** Design `Ayasdi Core
-   Demonstration <http://www.ayasdi.com/product/core/>`__
+-  **Ayasdi** Design `Ayasdi Core Demonstration <http://www.ayasdi.com/product/core/>`__

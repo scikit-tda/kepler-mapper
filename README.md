@@ -1,6 +1,7 @@
 [![PyPI version](https://badge.fury.io/py/kmapper.svg)](https://badge.fury.io/py/kmapper)
-[![Build Status](https://travis-ci.org/MLWave/kepler-mapper.svg?branch=master)](https://travis-ci.org/MLWave/kepler-mapper)
-[![Codecov](https://codecov.io/gh/mlwave/kepler-mapper/branch/master/graph/badge.svg)](https://codecov.io/gh/mlwave/kepler-mapper)
+[![Downloads](https://pypip.in/download/kmapper/badge.svg)](https://pypi.python.org/pypi/kmapper/)
+[![Build Status](https://travis-ci.org/scikit-tda/kepler-mapper.svg?branch=master)](https://travis-ci.org/scikit-tda/kepler-mapper)
+[![Codecov](https://codecov.io/gh/scikit-tda/kepler-mapper/branch/master/graph/badge.svg)](https://codecov.io/gh/scikit-tda/kepler-mapper)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1054444.svg)](https://doi.org/10.5281/zenodo.1054444)
 
 
@@ -28,7 +29,7 @@ KeplerMapper requires:
 Using the plotly visualizations requires a few extra libraries:
 
   - Python-Igraph
-  - Plotly 
+  - Plotly
   - Ipywidgets
 
 Additionally, running some of the examples requires:
@@ -72,7 +73,7 @@ mapper = km.KeplerMapper(verbose=1)
 projected_data = mapper.fit_transform(data, projection=[0,1]) # X-Y axis
 
 # Create dictionary called 'graph' with nodes, edges and meta-information
-graph = mapper.map(projected_data, data, n_cubes=10)
+graph = mapper.map(projected_data, data, cover=km.Cover(n_cubes=10))
 
 # Visualize it
 mapper.visualize(graph, path_html="make_circles_keplermapper_output.html",
@@ -86,4 +87,3 @@ Standard MIT disclaimer applies, see `DISCLAIMER.md` for full text. Development 
 ## Cite
 
 Nathaniel Saul, & Hendrik Jacob van Veen. (2017, November 17). MLWave/kepler-mapper: 186f (Version 1.0.1). Zenodo. http://doi.org/10.5281/zenodo.1054444
-

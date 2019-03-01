@@ -4,3 +4,10 @@ examples/
 kmapper/
 kmapper.egg-info
 venv/
+.ipynb_checkpoints
+.pytest_cache
+.vscode
+.DS_Store
+backup_docs
+dist/
+test/

@@ -12,9 +12,6 @@ if mo:
 else:
     raise RuntimeError("Unable to find version string in %s." % (VERSIONFILE,))
 
-
-
-
 with open('README.md') as f:
     long_description = f.read()
 
@@ -39,7 +36,14 @@ setup(name='kmapper',
           'ipywidgets'   
         ],
         'docs': [ # `pip install -e ".[docs]"``
-          'sktda_docs_config'
+          'sktda_docs_config',
+
+          # for building docs for plotlyviz stuff
+          'networkx',
+          'matplotlib',
+          'python-igraph',
+          'plotly',
+          'ipywidgets'   
         ]
       },
       install_requires=[

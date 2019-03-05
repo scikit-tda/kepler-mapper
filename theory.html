@@ -6,21 +6,21 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Theory &#8212; KeplerMapper 1.2.0 documentation</title>
+    <title>Background &#8212; KeplerMapper 1.2.0 documentation</title>
     <link rel="stylesheet" href="_static/better.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="author" title="About these documents" href="about.html" />
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Applications" href="applications.html" />
-    <link rel="prev" title="Getting Started" href="started.html" />
+    <link rel="next" title="Getting Started" href="started.html" />
+    <link rel="prev" title="Setup" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-      <link rel="stylesheet" href="_static/custom_style.css" type="text/css" />
   </head><body>
     <header id="pageheader">
       <h1>
@@ -37,10 +37,10 @@
     <ul>
         <li>
           &larr;
-          <a href="started.html" title="Previous document">Getting Started</a>
+          <a href="index.html" title="Previous document">Setup</a>
         </li>
         <li>
-          <a href="applications.html" title="Next document">Applications</a>
+          <a href="started.html" title="Next document">Getting Started</a>
           &rarr;
         </li>
     </ul>
@@ -57,8 +57,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="theory">
-<h1>Theory<a class="headerlink" href="#theory" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="background">
+<h1>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h1>
 <p>Topology started with Leonhard Euler and the famous problem of the Seven Bridges of Königsberg: Can one construct a path that crosses each bridge exactly once and reaches all islands?</p>
 <p>The fundamental assumption in topology is that connectivity is more important than distance. This lack of distinction is important to why topology is useful for analyzing data. Instead of getting wrapped up in myopic details of how far apart two points are, topology is concerned with qualitative questions, like: how many holes does the object have?, or: how many pieces is it constructed out of? Essentially, topology is a way to explore the shape of data without concern for things like which metric to use.</p>
 <p>Fundamental shapes of data that can be studied with topology:</p>
@@ -119,15 +119,29 @@
             <p class="logo"><a href="index.html">
               <img class="logo" src="_static/logo.png" alt="Logo"/>
             </a></p>
-  <h3><a href="index.html">Table of Contents</a></h3>
-  <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
-<li class="toctree-l1"><a class="reference internal" href="started.html">Getting Started</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Theory</a><ul>
+<form class="search" action="search.html" method="get">
+  <input type="text" name="q"
+   placeholder="type to search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<a href=https://github.com/scikit-tda/kepler-mapper>
+    <p class="caption"><span class="caption-text">
+        <img src="_static/gh_logo.png" height="18px" width="18px" alt="Github icon">  
+        scikit-tda/kepler-mapper
+    </span></p>
+</a> 
+
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Background</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#topological-data-analysis">Topological Data Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#mapper">Mapper</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="applications.html">Applications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference/index.html">API Reference</a></li>
@@ -146,13 +160,6 @@
 <li class="toctree-l1"><a class="reference internal" href="notebooks/self-guessing.html">Self-guessing mapper</a></li>
 </ul>
 
-<form class="search" action="search.html" method="get">
-  <input type="text" name="q"
-   placeholder="type to search" />
-  <input type="hidden" name="check_keywords" value="yes" />
-  <input type="hidden" name="area" value="default" />
-</form>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -162,10 +169,10 @@
     <ul>
         <li>
           &larr;
-          <a href="started.html" title="Previous document">Getting Started</a>
+          <a href="index.html" title="Previous document">Setup</a>
         </li>
         <li>
-          <a href="applications.html" title="Next document">Applications</a>
+          <a href="started.html" title="Next document">Getting Started</a>
           &rarr;
         </li>
     </ul>
@@ -178,9 +185,7 @@
   </div>
   <footer id="pagefooter">&copy; 2019, Hendrik Jacob van Veen and Nathaniel Saul.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-      1.8.1
-        with the <a href="http://github.com/irskep/sphinx-better-theme">
-          better</a> theme.
+      1.8.4.
 
   </footer>
 

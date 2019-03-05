@@ -13,14 +13,14 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="author" title="About these documents" href="../about.html" />
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Self-guessing mapper" href="self-guessing.html" />
     <link rel="prev" title="Detecting Encrypted TOR Traffic with Boosting and Topological Data Analysis" href="TOR-XGB-TDA.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-      <link rel="stylesheet" href="../_static/custom_style.css" type="text/css" />
   </head><body>
     <header id="pageheader">
       <h1>
@@ -112,18 +112,18 @@ div.nblast {
 
 /* input prompt */
 div.nbinput div.prompt pre {
-    color: #303F9F;
+    color: #307FC1;
 }
 
 /* output prompt */
 div.nboutput div.prompt pre {
-    color: #D84315;
+    color: #BF5B3D;
 }
 
 /* all prompts */
 div.nbinput div.prompt,
 div.nboutput div.prompt {
-    min-width: 8ex;
+    min-width: 5ex;
     padding-top: 0.4em;
     padding-right: 0.4em;
     text-align: right;
@@ -163,9 +163,9 @@ div.nboutput div.output_area {
 
 /* input area */
 div.nbinput div.input_area {
-    border: 1px solid #cfcfcf;
+    border: 1px solid #e0e0e0;
     border-radius: 2px;
-    background: #f7f7f7;
+    background: #f5f5f5;
 }
 
 /* override MathJax center alignment in output cells */
@@ -173,7 +173,7 @@ div.nboutput div[class*=MathJax] {
     text-align: left !important;
 }
 
-/* override sphinx.ext.pngmath center alignment in output cells */
+/* override sphinx.ext.imgmath center alignment in output cells */
 div.nboutput div.math p {
     text-align: left;
 }
@@ -222,135 +222,77 @@ div.nboutput div.output_area.stderr {
 
 .ansi-bold { font-weight: bold; }
 .ansi-underline { text-decoration: underline; }
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
 </style>
 <div class="section" id="Confidence-Graphs:-Representing-Model-Uncertainty-in-Deep-Learning">
 <h1>Confidence Graphs: Representing Model Uncertainty in Deep Learning<a class="headerlink" href="#Confidence-Graphs:-Representing-Model-Uncertainty-in-Deep-Learning" title="Permalink to this headline">¶</a></h1>
-<p><strong>Hendrik Jacob van Veen</strong> <a class="reference external" href="mailto:hendrik&#46;vanveen&#37;&#52;&#48;nubank&#46;com&#46;br">hendrik<span>&#46;</span>vanveen<span>&#64;</span>nubank<span>&#46;</span>com<span>&#46;</span>br</a> •
-<a class="reference external" href="https://mlwave.com">https://mlwave.com</a></p>
-<p><strong>Matheus Facure</strong> <a class="reference external" href="mailto:matheus&#46;facure&#37;&#52;&#48;nubank&#46;com&#46;br">matheus<span>&#46;</span>facure<span>&#64;</span>nubank<span>&#46;</span>com<span>&#46;</span>br</a> •
-<a class="reference external" href="https://matheusfacure.github.io/">https://matheusfacure.github.io/</a></p>
+<p><strong>Hendrik Jacob van Veen</strong> <a class="reference external" href="mailto:hendrik&#46;vanveen&#37;&#52;&#48;nubank&#46;com&#46;br">hendrik<span>&#46;</span>vanveen<span>&#64;</span>nubank<span>&#46;</span>com<span>&#46;</span>br</a> • <a class="reference external" href="https://mlwave.com">https://mlwave.com</a></p>
+<p><strong>Matheus Facure</strong> <a class="reference external" href="mailto:matheus&#46;facure&#37;&#52;&#48;nubank&#46;com&#46;br">matheus<span>&#46;</span>facure<span>&#64;</span>nubank<span>&#46;</span>com<span>&#46;</span>br</a> • <a class="reference external" href="https://matheusfacure.github.io/">https://matheusfacure.github.io/</a></p>
 <div class="section" id="Introduction">
 <h2>Introduction<a class="headerlink" href="#Introduction" title="Permalink to this headline">¶</a></h2>
-<p>Variational inference <a class="reference external" href="http://www.inference.org.uk/mackay/itila/">(MacKay,
-2003)</a> gives a
-computationally tractible measure of uncertainty/confidence/variance for
-machine learning models, including complex black-box models, like those
-used in the fields of gradient boosting <a class="reference external" href="https://dl.acm.org/citation.cfm?id=2939785">(Chen et al,
-2016)</a> and deep learning
-<a class="reference external" href="https://arxiv.org/abs/1404.7828">(Schmidhuber, 2014)</a>.</p>
-<p>The <span class="math notranslate nohighlight">\(MAPPER\)</span> algorithm <a class="reference external" href="https://research.math.osu.edu/tgda/mapperPBG.pdf">(Singh et al,
-2007)</a> [.pdf] from
-Topological Data Analysis <a class="reference external" href="http://www.ams.org/journals/bull/2009-46-02/S0273-0979-09-01249-X/">(Carlsson,
-2009)</a>
-turns any data or function output into a graph (or simplicial complex)
-which is used for data exploration <a class="reference external" href="https://www.nature.com/articles/srep01236">(Lum et al,
-2009)</a>, error analysis
-<a class="reference external" href="https://arxiv.org/abs/1803.00384">(Carlsson et al, 2018)</a>, serving
-as input for higher-level machine learning algorithms <a class="reference external" href="https://arxiv.org/abs/1707.04041">(Hofer et al,
-2017)</a>, and more.</p>
-<p>Dropout <a class="reference external" href="http://jmlr.org/papers/v15/srivastava14a.html">(Srivastava et al,
-2014)</a> can be viewed
-as an ensemble of many different sub-networks inside a single neural
-network, which, much like bootstrap aggregation of decision trees
-<a class="reference external" href="https://dl.acm.org/citation.cfm?id=231989">(Breiman, 1996)</a>, aims to
-combat overfit. Viewed as such, dropout is applicable as a Bayesian
-approximation <a class="reference external" href="https://projecteuclid.org/euclid.aos/1176346785">(Rubin,
-1984)</a> in the
-variational inference framework <a class="reference external" href="http://www.cs.ox.ac.uk/people/yarin.gal/website/thesis/thesis.pdf">(Gal,
-2016)</a>
-(.pdf)</p>
-<p>Interpretability is useful for detecting bias in and debugging errors of
-machine learning models. Many methods exist, such as tree paths
-<a class="reference external" href="http://blog.datadive.net/interpreting-random-forests/">(Saabas,
-2014)</a>,
-saliency maps, permutation feature importance <a class="reference external" href="https://academic.oup.com/bioinformatics/article/26/10/1340/193348">(Altmann et al,
-2010)</a>,
-locally-fit white box models <a class="reference external" href="https://github.com/MLWave/Black-Boxxy">(van Veen,
-2015)</a> <a class="reference external" href="https://arxiv.org/abs/1602.04938">(Ribeiro et al,
-2016)</a>. More recent efforts aim to
-combine a variety of methods <a class="reference external" href="https://github.com/TeamHG-Memex/eli5">(Korobov et al,
-2016)</a> <a class="reference external" href="https://distill.pub/2018/building-blocks/">(Olah et al,
-2018)</a>.</p>
+<p>Variational inference <a class="reference external" href="http://www.inference.org.uk/mackay/itila/">(MacKay, 2003)</a> gives a computationally tractible measure of uncertainty/confidence/variance for machine learning models, including complex black-box models, like those used in the fields of gradient boosting <a class="reference external" href="https://dl.acm.org/citation.cfm?id=2939785">(Chen et al, 2016)</a> and deep learning <a class="reference external" href="https://arxiv.org/abs/1404.7828">(Schmidhuber, 2014)</a>.</p>
+<p>The <span class="math notranslate nohighlight">\(MAPPER\)</span> algorithm <a class="reference external" href="https://research.math.osu.edu/tgda/mapperPBG.pdf">(Singh et al, 2007)</a> [.pdf] from Topological Data Analysis <a class="reference external" href="http://www.ams.org/journals/bull/2009-46-02/S0273-0979-09-01249-X/">(Carlsson, 2009)</a> turns any data or function output into a graph (or simplicial complex) which is used for data exploration <a class="reference external" href="https://www.nature.com/articles/srep01236">(Lum et al, 2009)</a>, error analysis <a class="reference external" href="https://arxiv.org/abs/1803.00384">(Carlsson et al, 2018)</a>, serving as input
+for higher-level machine learning algorithms <a class="reference external" href="https://arxiv.org/abs/1707.04041">(Hofer et al, 2017)</a>, and more.</p>
+<p>Dropout <a class="reference external" href="http://jmlr.org/papers/v15/srivastava14a.html">(Srivastava et al, 2014)</a> can be viewed as an ensemble of many different sub-networks inside a single neural network, which, much like bootstrap aggregation of decision trees <a class="reference external" href="https://dl.acm.org/citation.cfm?id=231989">(Breiman, 1996)</a>, aims to combat overfit. Viewed as such, dropout is applicable as a Bayesian approximation <a class="reference external" href="https://projecteuclid.org/euclid.aos/1176346785">(Rubin, 1984)</a> in the variational inference framework
+<a class="reference external" href="http://www.cs.ox.ac.uk/people/yarin.gal/website/thesis/thesis.pdf">(Gal, 2016)</a> (.pdf)</p>
+<p>Interpretability is useful for detecting bias in and debugging errors of machine learning models. Many methods exist, such as tree paths <a class="reference external" href="http://blog.datadive.net/interpreting-random-forests/">(Saabas, 2014)</a>, saliency maps, permutation feature importance <a class="reference external" href="https://academic.oup.com/bioinformatics/article/26/10/1340/193348">(Altmann et al, 2010)</a>, locally-fit white box models <a class="reference external" href="https://github.com/MLWave/Black-Boxxy">(van Veen, 2015)</a> <a class="reference external" href="https://arxiv.org/abs/1602.04938">(Ribeiro et al,
+2016)</a>. More recent efforts aim to combine a variety of methods <a class="reference external" href="https://github.com/TeamHG-Memex/eli5">(Korobov et al, 2016)</a> <a class="reference external" href="https://distill.pub/2018/building-blocks/">(Olah et al, 2018)</a>.</p>
 </div>
 <div class="section" id="Motivation">
 <h2>Motivation<a class="headerlink" href="#Motivation" title="Permalink to this headline">¶</a></h2>
-<p>Error analysis surfaces different subsets/types of the data where a
-model makes fundamental errors. When building policies and making
-financial decisions based on the output of a model it is not only useful
-to study the errors of a model, but also the confidence: - Correct, but
-low-confidence, predictions for a cluster of data tells us where to
-focus our active learning <a class="reference external" href="http://hunch.net/~active_learning/">(Dasgupta et al,
-2009)</a> - and data collection
-efforts, so as to make the model more certain. - Incorrect, but
-high-confidence predictions, surface fundamental error types that can
-more readily be fixed by a correction layer <a class="reference external" href="http://rob.schapire.net/papers/Schapire99c.pdf">(Schapire,
-1999)</a> [.pdf], or
-redoing feature engineering <a class="reference external" href="https://dl.acm.org/citation.cfm?id=1208773">(Guyon et al,
-2006)</a>. - Every
-profit-maximizing model has a prediction threshold where a decision is
-made <a class="reference external" href="https://arxiv.org/abs/1610.02413">(Hardt et al, 2016)</a>.
-However, given two equal predictions, the more confident predictions are
-preferred. - Interpretability methods have focussed either on explaining
-the model in general, or explaining a single sample. To our knowledge,
-not much focus has gone in a holistic view of modeled data, including
-explanations for subsets of similar samples (for whatever pragmatic
-definition of “similar”, like “similar age”, “similar spend”, “similar
-transaction behavior”). The combination of interpretability and
-unsupervised exploratory analysis is attractive, because it catches
-unexpected behavior early on, as opposed to acting on faulty model
-output, and digging down to find a cause.</p>
+<p>Error analysis surfaces different subsets/types of the data where a model makes fundamental errors. When building policies and making financial decisions based on the output of a model it is not only useful to study the errors of a model, but also the confidence: - Correct, but low-confidence, predictions for a cluster of data tells us where to focus our active learning <a class="reference external" href="http://hunch.net/~active_learning/">(Dasgupta et al, 2009)</a> - and data collection efforts, so as to make the model more
+certain. - Incorrect, but high-confidence predictions, surface fundamental error types that can more readily be fixed by a correction layer <a class="reference external" href="http://rob.schapire.net/papers/Schapire99c.pdf">(Schapire, 1999)</a> [.pdf], or redoing feature engineering <a class="reference external" href="https://dl.acm.org/citation.cfm?id=1208773">(Guyon et al, 2006)</a>. - Every profit-maximizing model has a prediction threshold where a decision is made <a class="reference external" href="https://arxiv.org/abs/1610.02413">(Hardt et al, 2016)</a>. However, given two equal predictions,
+the more confident predictions are preferred. - Interpretability methods have focussed either on explaining the model in general, or explaining a single sample. To our knowledge, not much focus has gone in a holistic view of modeled data, including explanations for subsets of similar samples (for whatever pragmatic definition of “similar”, like “similar age”, “similar spend”, “similar transaction behavior”). The combination of interpretability and unsupervised exploratory analysis is attractive,
+because it catches unexpected behavior early on, as opposed to acting on faulty model output, and digging down to find a cause.</p>
 </div>
 <div class="section" id="Experimental-setup">
 <h2>Experimental setup<a class="headerlink" href="#Experimental-setup" title="Permalink to this headline">¶</a></h2>
-<p>We will use the MNIST dataset <a class="reference external" href="http://yann.lecun.com/exdb/mnist/">(LeCun et al,
-1999)</a>, Keras <a class="reference external" href="https://keras.io/">(Chollet et al,
-2015)</a> with TensorFlow <a class="reference external" href="https://arxiv.org/abs/1603.04467">(Abadi et al,
-2016)</a>, NumPy <a class="reference external" href="https://arxiv.org/abs/1102.1523">(van der Walt et
-al., 2011)</a>, Pandas <a class="reference external" href="http://conference.scipy.org/proceedings/scipy2010/mckinney.html">(McKinney,
-2010)</a>,
-Scikit-Learn <a class="reference external" href="http://scikit-learn.org/">(Pedregosa et al, 2011)</a>,
-Matplotlib <a class="reference external" href="https://matplotlib.org/">(Hunter, 2007)</a>, and
-KeplerMapper <a class="reference external" href="https://github.com/MLWave/kepler-mapper">(Saul et al,
-2017)</a>.</p>
+<p>We will use the MNIST dataset <a class="reference external" href="http://yann.lecun.com/exdb/mnist/">(LeCun et al, 1999)</a>, Keras <a class="reference external" href="https://keras.io/">(Chollet et al, 2015)</a> with TensorFlow <a class="reference external" href="https://arxiv.org/abs/1603.04467">(Abadi et al, 2016)</a>, NumPy <a class="reference external" href="https://arxiv.org/abs/1102.1523">(van der Walt et al., 2011)</a>, Pandas <a class="reference external" href="http://conference.scipy.org/proceedings/scipy2010/mckinney.html">(McKinney, 2010)</a>, Scikit-Learn <a class="reference external" href="http://scikit-learn.org/">(Pedregosa et al, 2011)</a>, Matplotlib <a class="reference external" href="https://matplotlib.org/">(Hunter,
+2007)</a>, and KeplerMapper <a class="reference external" href="https://github.com/MLWave/kepler-mapper">(Saul et al, 2017)</a>.</p>
 <ul class="simple">
-<li>To classify between the digits 3 and 5, we will train a Multi-Layer
-Perceptron <a class="reference external" href="http://www.worldcat.org/title/cybernetic-predicting-devices/oclc/23815433">(Ivakhnenko et al,
-1965)</a>
-with 2 hidden layers, Backprop <a class="reference external" href="http://yann.lecun.com/exdb/publis/pdf/lecun-98b.pdf">(LeCun et al,
-1998)</a> (pdf),
-RELU activation <a class="reference external" href="https://dl.acm.org/citation.cfm?id=3104425">(Nair et al,
-2010)</a>, ADAM optimizer
-<a class="reference external" href="https://arxiv.org/abs/1412.6980">(Kingma et al, 2014)</a>, dropout
-of 0.5, and softmax output, to classify between the digits 3 and 5.</li>
-<li>We perform a 1000 forward passes to get the standard deviation and
-variance ratio of our predictions as per <a class="reference external" href="http://www.cs.ox.ac.uk/people/yarin.gal/website/thesis/thesis.pdf">(Gal, 2016, page
-51)</a>
-[.pdf].</li>
-<li>Closely following the <span class="math notranslate nohighlight">\(FiFa\)</span> method from <a class="reference external" href="https://arxiv.org/abs/1803.00384">(Carlsson et al,
-2018, page 4)</a> we then apply
-<span class="math notranslate nohighlight">\(MAPPER\)</span> with the 2D filter function
-<code class="docutils literal notranslate"><span class="pre">[predicted</span> <span class="pre">probability(x),</span> <span class="pre">confidence(x)]</span></code> to project the data. We
-cover this projection with 10 10% overlapping intervals per
-dimension. We cluster with complete single-linkage agglomerative
-clustering (<code class="docutils literal notranslate"><span class="pre">n_clusters=3</span></code>) <a class="reference external" href="https://www.jstor.org/stable/2282967">(Ward,
-1963)</a> and use the
-penultimate layer as the inverse <span class="math notranslate nohighlight">\(X\)</span>. To guide exploration, we
-color the graph nodes by <code class="docutils literal notranslate"><span class="pre">mean</span> <span class="pre">absolute</span> <span class="pre">error(x)</span></code>.</li>
-<li>We also ask predictions for the digit 4 which was never seen during
-training <a class="reference external" href="https://dl.acm.org/citation.cfm?id=1620172">(Larochelle et al,
-2008)</a>, to see how
-this influences the confidence of the network, and to compare the
-graphs outputted by KeplerMapper.</li>
-<li>For every graph node we show the original images. Binary
-classification on MNIST digits is easy enough to resort to a simple
-interpretability method to show what distinguishes the cluster from
-the rest of the data: We order each feature by z-score and highlight
-the top 10% features <a class="reference external" href="https://www.ayasdi.com/blog/bigdata/5191-2/">(Singh,
-2016)</a>.</li>
+<li>To classify between the digits 3 and 5, we will train a Multi-Layer Perceptron <a class="reference external" href="http://www.worldcat.org/title/cybernetic-predicting-devices/oclc/23815433">(Ivakhnenko et al, 1965)</a> with 2 hidden layers, Backprop <a class="reference external" href="http://yann.lecun.com/exdb/publis/pdf/lecun-98b.pdf">(LeCun et al, 1998)</a> (pdf), RELU activation <a class="reference external" href="https://dl.acm.org/citation.cfm?id=3104425">(Nair et al, 2010)</a>, ADAM optimizer <a class="reference external" href="https://arxiv.org/abs/1412.6980">(Kingma et al, 2014)</a>, dropout of 0.5, and softmax output,
+to classify between the digits 3 and 5.</li>
+<li>We perform a 1000 forward passes to get the standard deviation and variance ratio of our predictions as per <a class="reference external" href="http://www.cs.ox.ac.uk/people/yarin.gal/website/thesis/thesis.pdf">(Gal, 2016, page 51)</a> [.pdf].</li>
+<li>Closely following the <span class="math notranslate nohighlight">\(FiFa\)</span> method from <a class="reference external" href="https://arxiv.org/abs/1803.00384">(Carlsson et al, 2018, page 4)</a> we then apply <span class="math notranslate nohighlight">\(MAPPER\)</span> with the 2D filter function <code class="docutils literal notranslate"><span class="pre">[predicted</span> <span class="pre">probability(x),</span> <span class="pre">confidence(x)]</span></code> to project the data. We cover this projection with 10 10% overlapping intervals per dimension. We cluster with complete single-linkage agglomerative clustering (<code class="docutils literal notranslate"><span class="pre">n_clusters=3</span></code>) <a class="reference external" href="https://www.jstor.org/stable/2282967">(Ward, 1963)</a> and use the penultimate layer as the
+inverse <span class="math notranslate nohighlight">\(X\)</span>. To guide exploration, we color the graph nodes by <code class="docutils literal notranslate"><span class="pre">mean</span> <span class="pre">absolute</span> <span class="pre">error(x)</span></code>.</li>
+<li>We also ask predictions for the digit 4 which was never seen during training <a class="reference external" href="https://dl.acm.org/citation.cfm?id=1620172">(Larochelle et al, 2008)</a>, to see how this influences the confidence of the network, and to compare the graphs outputted by KeplerMapper.</li>
+<li>For every graph node we show the original images. Binary classification on MNIST digits is easy enough to resort to a simple interpretability method to show what distinguishes the cluster from the rest of the data: We order each feature by z-score and highlight the top 10% features <a class="reference external" href="https://www.ayasdi.com/blog/bigdata/5191-2/">(Singh, 2016)</a>.</li>
 </ul>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -377,7 +319,7 @@ the top 10% features <a class="reference external" href="https://www.ayasdi.com/
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
-<div class="stderr output_area docutils container">
+<div class="output_area stderr docutils container">
 <div class="highlight"><pre>
 Using TensorFlow backend.
 </pre></div></div>
@@ -387,8 +329,7 @@ Using TensorFlow backend.
 <h2>Preparing Data<a class="headerlink" href="#Preparing-Data" title="Permalink to this headline">¶</a></h2>
 <p>We create train and test data sets for the digits 3, 4, and 5.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -446,12 +387,9 @@ Using TensorFlow backend.
 </div>
 <div class="section" id="Model">
 <h2>Model<a class="headerlink" href="#Model" title="Permalink to this headline">¶</a></h2>
-<p>Model is a basic 2-hidden layer MLP with RELU activation, ADAM
-optimizer, and softmax output. Dropout is applied to every layer but the
-final.</p>
+<p>Model is a basic 2-hidden layer MLP with RELU activation, ADAM optimizer, and softmax output. Dropout is applied to every layer but the final.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -504,8 +442,7 @@ _________________________________________________________________
 <div class="section" id="Fitting-and-evaluation">
 <h2>Fitting and evaluation<a class="headerlink" href="#Fitting-and-evaluation" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -548,8 +485,7 @@ Epoch 10/10
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>Out[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
@@ -561,8 +497,7 @@ Epoch 10/10
 <div class="section" id="Perform-1000-forward-passes-on-test-set-and-calculate-Variance-Ratio-and-Standard-Dev">
 <h2>Perform 1000 forward passes on test set and calculate Variance Ratio and Standard Dev<a class="headerlink" href="#Perform-1000-forward-passes-on-test-set-and-calculate-Variance-Ratio-and-Standard-Dev" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -611,8 +546,7 @@ max       1.000000     0.999999     0.500000     0.367364
 <div class="section" id="Plot-test-set-confidence">
 <h2>Plot test set confidence<a class="headerlink" href="#Plot-test-set-confidence" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -667,8 +601,7 @@ max       1.000000     0.999999     0.500000     0.367364
 <div class="section" id="Take-penultimate-layer-activations-from-test-set-for-the-inverse-X">
 <h3>Take penultimate layer activations from test set for the inverse <span class="math notranslate nohighlight">\(X\)</span><a class="headerlink" href="#Take-penultimate-layer-activations-from-test-set-for-the-inverse-X" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -691,8 +624,7 @@ max       1.000000     0.999999     0.500000     0.367364
 <div class="section" id="Take-STD-and-error-as-the-projected-X">
 <h3>Take STD and error as the projected <span class="math notranslate nohighlight">\(X\)</span><a class="headerlink" href="#Take-STD-and-error-as-the-projected-X" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -713,8 +645,7 @@ max       1.000000     0.999999     0.500000     0.367364
 <div class="section" id="Create-the-confidence-graph-G">
 <h3>Create the confidence graph <span class="math notranslate nohighlight">\(G\)</span><a class="headerlink" href="#Create-the-confidence-graph-G" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1045,8 +976,7 @@ Created 267 edges and 100 nodes in 0:00:02.503639.
 <div class="section" id="Create-color-function-output-(absolute-error)">
 <h3>Create color function output (absolute error)<a class="headerlink" href="#Create-color-function-output-(absolute-error)" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1058,8 +988,7 @@ Created 267 edges and 100 nodes in 0:00:02.503639.
 <div class="section" id="Create-image-tooltips-for-samples-that-are-interpretable-for-humans">
 <h3>Create image tooltips for samples that are interpretable for humans<a class="headerlink" href="#Create-image-tooltips-for-samples-that-are-interpretable-for-humans" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1136,7 +1065,7 @@ Created 267 edges and 100 nodes in 0:00:02.503639.
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
-<div class="stderr output_area docutils container">
+<div class="output_area stderr docutils container">
 <div class="highlight"><pre>
 /Users/sauln/libraries/kepler-mapper/venv/lib/python3.6/site-packages/ipykernel_launcher.py:11: RuntimeWarning: invalid value encountered in true_divide
   # This is added back by InteractiveShellApp.init_path()
@@ -1158,8 +1087,7 @@ Use Pillow&#39;s ``Image.fromarray`` directly instead.
 <div class="section" id="Visualize">
 <h3>Visualize<a class="headerlink" href="#Visualize" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1182,8 +1110,7 @@ Wrote visualization to: confidence_graph_output.html
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1195,7 +1122,7 @@ Wrote visualization to: confidence_graph_output.html
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
-<div class="output_area docutils container">
+<div class="output_area rendered_html docutils container">
 <style>
     .container { width:100% !important; }
     .output_scroll {height: 800px !important;}
@@ -1204,18 +1131,16 @@ Wrote visualization to: confidence_graph_output.html
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
-<div class="output_area docutils container">
+<div class="output_area rendered_html docutils container">
 <iframe src=confidence_graph_output.html width=100%% height=800 frameBorder="0"></iframe></div>
 </div>
 </div>
 </div>
 <div class="section" id="Image-of-output">
 <h2>Image of output<a class="headerlink" href="#Image-of-output" title="Permalink to this headline">¶</a></h2>
-<p><img alt="img" src="https://i.imgur.com/EycZWRR.png" /> ## Link to output
-<a class="reference external" href="http://mlwave.github.io/tda/confidence-graphs.html">http://mlwave.github.io/tda/confidence-graphs.html</a></p>
+<p><img alt="img" src="https://i.imgur.com/EycZWRR.png" /> ## Link to output <a class="reference external" href="http://mlwave.github.io/tda/confidence-graphs.html">http://mlwave.github.io/tda/confidence-graphs.html</a></p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1235,11 +1160,25 @@ Wrote visualization to: confidence_graph_output.html
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/logo.png" alt="Logo"/>
             </a></p>
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
-<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+<form class="search" action="../search.html" method="get">
+  <input type="text" name="q"
+   placeholder="type to search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<a href=https://github.com/scikit-tda/kepler-mapper>
+    <p class="caption"><span class="caption-text">
+        <img src="_static/gh_logo.png" height="18px" width="18px" alt="Github icon">  
+        scikit-tda/kepler-mapper
+    </span></p>
+</a> 
+
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">Background</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../theory.html">Theory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../applications.html">Applications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/index.html">API Reference</a></li>
@@ -1278,13 +1217,6 @@ Wrote visualization to: confidence_graph_output.html
 <li class="toctree-l1"><a class="reference internal" href="self-guessing.html">Self-guessing mapper</a></li>
 </ul>
 
-<form class="search" action="../search.html" method="get">
-  <input type="text" name="q"
-   placeholder="type to search" />
-  <input type="hidden" name="check_keywords" value="yes" />
-  <input type="hidden" name="area" value="default" />
-</form>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -1310,9 +1242,7 @@ Wrote visualization to: confidence_graph_output.html
   </div>
   <footer id="pagefooter">&copy; 2019, Hendrik Jacob van Veen and Nathaniel Saul.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-      1.8.1
-        with the <a href="http://github.com/irskep/sphinx-better-theme">
-          better</a> theme.
+      1.8.4.
 
   </footer>
 

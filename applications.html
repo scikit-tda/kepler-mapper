@@ -13,14 +13,14 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="author" title="About these documents" href="about.html" />
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Examples" href="examples.html" />
-    <link rel="prev" title="Theory" href="theory.html" />
+    <link rel="prev" title="Getting Started" href="started.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-      <link rel="stylesheet" href="_static/custom_style.css" type="text/css" />
   </head><body>
     <header id="pageheader">
       <h1>
@@ -37,7 +37,7 @@
     <ul>
         <li>
           &larr;
-          <a href="theory.html" title="Previous document">Theory</a>
+          <a href="started.html" title="Previous document">Getting Started</a>
         </li>
         <li>
           <a href="examples.html" title="Next document">Examples</a>
@@ -82,6 +82,52 @@
 </ul>
 </div></blockquote>
 </div>
+<div class="section" id="uses-mentions">
+<h2>Uses &amp; Mentions<a class="headerlink" href="#uses-mentions" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>Jeffrey Seely</strong> maps the monkey motor cortex during reaching
+movements <a class="reference external" href="https://jsseely.github.io/notes/TDA/">Notes on Topological Data
+Analysis</a> and <a class="reference external" href="http://www.columbia.edu/~jss2219/tda/m1_na_tt.html">Live
+Demo</a></li>
+<li><strong>Svetlana Lockwood</strong> presented Kepler-Mapper at an ACM Workshop
+<a class="reference external" href="http://www.sci.utah.edu/~beiwang/acmbcbworkshop2016/slides/SvetlanaLockwood.pdf">Open Source Software for
+TDA</a></li>
+<li><strong>Abbas H Rizvi et al.</strong> mention Kepler-Mapper in the Nature paper
+<a class="reference external" href="http://www.nature.com/nbt/journal/v35/n6/full/nbt.3854.html">Single-cell topological RNA-seq analysis reveals insights into
+cellular differentiation and
+development</a></li>
+<li><strong>Jin-Ku Lee et al.</strong> mention Kepler-Mapper in the Nature paper
+<a class="reference external" href="http://palgrave.nature.com/ng/journal/v49/n4/full/ng.3806.html">Spatiotemporal genomic architecture informs precision oncology in
+glioblastoma</a></li>
+<li><strong>Natalino Busa</strong> maps credit risk <a class="reference external" href="https://www.linkedin.com/pulse/predicting-defaulting-credit-cards-natalino-busa">Predicting Defaulting on Credit
+Cards</a></li>
+<li><strong>Mark Coudriau et al.</strong> maps the Darknet <a class="reference external" href="https://hal.inria.fr/hal-01403950/document">Topological analysis and
+visualisation of network monitoring data: Darknet case
+study</a></li>
+<li><strong>Steve Oudot et al.</strong> from École Polytechnique give a course on TDA
+using Kepler-Mapper: <a class="reference external" href="https://moodle.polytechnique.fr/enrol/index.php?id=5053">INF556 — Topological Data
+Analysis</a></li>
+<li><strong>George Lake et al.</strong> from Universität Zürich use it for teaching
+data science: <a class="reference external" href="https://s3itwiki.uzh.ch/display/esc403fs2016/ESC403+Introduction+to+Data+Science+-+Spring+2016">ESC403 Introduction to Data
+Science</a></li>
+<li><strong>Mikael Vejdemo-Johansson</strong> maps process control systems <a class="reference external" href="http://cv.mikael.johanssons.org/talks/2016-05-epfl.pdf">TDA as a
+diagnostics tool for process control
+systems.</a></li>
+<li><strong>Lertwittayatrai et al.</strong> mention KeplerMapper in the paper
+<a class="reference external" href="https://arxiv.org/abs/1710.00446">Extracting Insights from the Topology of the JavaScript Package
+Ecosystem</a></li>
+<li><strong>Jeffrey Ray et al.</strong> review KeplerMapper in Advances in Intelligent
+Networking and Collaborative Systems: <a class="reference external" href="https://www.springerprofessional.de/en/a-survey-of-topological-data-analysis-tda-methods-implemented-in/14221146">A Survey of Topological Data
+Analysis (TDA) Methods Implemented in
+Python</a></li>
+<li><strong>Wei Guo et al.</strong> succesfully use KeplerMapper in prediction of
+manufacturing systems: <a class="reference external" href="https://www.researchgate.net/publication/314185934_Identification_of_Key_Features_Using_Topological_Data_Analysis_for_Accurate_Prediction_of_Manufacturing_System_Outputs">Identification of key features using
+topological data analysis for accurate prediction of manufacturing
+system
+outputs</a></li>
+<li><strong>Christian Parsons</strong> uses KeplerMapper in <a class="reference external" href="https://christian-parsons.com/mapamundi-wdvp/">Mapamundi</a>: a world map based on a geometric interpretation of data, it takes socio-economic metrics for all countries and uses T-SNE as lens and DBSCAN as clusterer to make an alternative world map. Awarded on the <a class="reference external" href="https://informationisbeautiful.net/2019/winners-of-the-world-data-visualization-prize/">World Data Visualization Prize 2019</a></li>
+</ul>
+</div>
 </div>
 
 
@@ -93,14 +139,29 @@
             <p class="logo"><a href="index.html">
               <img class="logo" src="_static/logo.png" alt="Logo"/>
             </a></p>
-  <h3><a href="index.html">Table of Contents</a></h3>
-  <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+<form class="search" action="search.html" method="get">
+  <input type="text" name="q"
+   placeholder="type to search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<a href=https://github.com/scikit-tda/kepler-mapper>
+    <p class="caption"><span class="caption-text">
+        <img src="_static/gh_logo.png" height="18px" width="18px" alt="Github icon">  
+        scikit-tda/kepler-mapper
+    </span></p>
+</a> 
+
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Background</a></li>
 <li class="toctree-l1"><a class="reference internal" href="started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="theory.html">Theory</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Applications</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#anomaly-detection">Anomaly Detection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#natural-language-processing">Natural Language Processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uses-mentions">Uses &amp; Mentions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
@@ -120,13 +181,6 @@
 <li class="toctree-l1"><a class="reference internal" href="notebooks/self-guessing.html">Self-guessing mapper</a></li>
 </ul>
 
-<form class="search" action="search.html" method="get">
-  <input type="text" name="q"
-   placeholder="type to search" />
-  <input type="hidden" name="check_keywords" value="yes" />
-  <input type="hidden" name="area" value="default" />
-</form>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -136,7 +190,7 @@
     <ul>
         <li>
           &larr;
-          <a href="theory.html" title="Previous document">Theory</a>
+          <a href="started.html" title="Previous document">Getting Started</a>
         </li>
         <li>
           <a href="examples.html" title="Next document">Examples</a>
@@ -152,9 +206,7 @@
   </div>
   <footer id="pagefooter">&copy; 2019, Hendrik Jacob van Veen and Nathaniel Saul.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-      1.8.1
-        with the <a href="http://github.com/irskep/sphinx-better-theme">
-          better</a> theme.
+      1.8.4.
 
   </footer>
 

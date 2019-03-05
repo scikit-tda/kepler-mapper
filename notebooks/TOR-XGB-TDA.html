@@ -13,14 +13,14 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="author" title="About these documents" href="../about.html" />
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Confidence Graphs: Representing Model Uncertainty in Deep Learning" href="Confidence-Graphs.html" />
     <link rel="prev" title="KeplerMapper &amp; NLP examples" href="KeplerMapper-Newsgroup20-Pipeline.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-      <link rel="stylesheet" href="../_static/custom_style.css" type="text/css" />
   </head><body>
     <header id="pageheader">
       <h1>
@@ -112,18 +112,18 @@ div.nblast {
 
 /* input prompt */
 div.nbinput div.prompt pre {
-    color: #303F9F;
+    color: #307FC1;
 }
 
 /* output prompt */
 div.nboutput div.prompt pre {
-    color: #D84315;
+    color: #BF5B3D;
 }
 
 /* all prompts */
 div.nbinput div.prompt,
 div.nboutput div.prompt {
-    min-width: 8ex;
+    min-width: 5ex;
     padding-top: 0.4em;
     padding-right: 0.4em;
     text-align: right;
@@ -163,9 +163,9 @@ div.nboutput div.output_area {
 
 /* input area */
 div.nbinput div.input_area {
-    border: 1px solid #cfcfcf;
+    border: 1px solid #e0e0e0;
     border-radius: 2px;
-    background: #f7f7f7;
+    background: #f5f5f5;
 }
 
 /* override MathJax center alignment in output cells */
@@ -173,7 +173,7 @@ div.nboutput div[class*=MathJax] {
     text-align: left !important;
 }
 
-/* override sphinx.ext.pngmath center alignment in output cells */
+/* override sphinx.ext.imgmath center alignment in output cells */
 div.nboutput div.math p {
     text-align: left;
 }
@@ -222,104 +222,71 @@ div.nboutput div.output_area.stderr {
 
 .ansi-bold { font-weight: bold; }
 .ansi-underline { text-decoration: underline; }
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
 </style>
 <div class="section" id="Detecting-Encrypted-TOR-Traffic-with-Boosting-and-Topological-Data-Analysis">
 <h1>Detecting Encrypted TOR Traffic with Boosting and Topological Data Analysis<a class="headerlink" href="#Detecting-Encrypted-TOR-Traffic-with-Boosting-and-Topological-Data-Analysis" title="Permalink to this headline">¶</a></h1>
 <p><em>HJ van Veen</em> - <a class="reference external" href="https://mlwave.com">MLWave</a></p>
-<p><strong>We establish strong baselines for both supervised and unsupervised
-detection of encrypted TOR traffic.</strong></p>
-<p>**Note: This article uses the 5-second lag dataset. For better
-comparison we will use the 15-second lag dataset in the near future.</p>
+<p><strong>We establish strong baselines for both supervised and unsupervised detection of encrypted TOR traffic.</strong></p>
+<p>**Note: This article uses the 5-second lag dataset. For better comparison we will use the 15-second lag dataset in the near future.</p>
 <div class="section" id="Introduction">
 <h2>Introduction<a class="headerlink" href="#Introduction" title="Permalink to this headline">¶</a></h2>
-<p>Gradient Boosted Decision Trees (GBDT) is a very powerful learning
-algorithm for supervised learning on tabular data [1]. Modern
-implementations include XGBoost [2], Catboost [3], LightGBM [4] and
-scikit-learn’s GradientBoostingClassifier [5]. Of these, especially
-XGBoost has seen tremendous successes in machine learning competitions
-[6], starting with its introduction during the Higgs Boson Detection
-challenge in 2014 [7]. The success of XGBoost can be explained on
-multiple dimensions: It is a robust implementation of the original
-algorithms, it is very fast – allowing data scientists to quickly find
-better parameters [8], it does not suffer much from overfit, is
-scale-invariant, and it has an active community providing constant
-improvements, such as early stopping [9] and GPU support [10].</p>
-<p>Anomaly detection algorithms automatically find samples that are
-different from regular samples. Many methods exist. We use the Isolation
-Forest in combination with nearest neighbor distances. The Isolation
-Forest works by randomly splitting up the data [11]. Outliers, on
-average, are easier to isolate through splitting. Nearest neighbor
-distance looks at the summed distances for a sample and its five nearest
-neighbors. Outliers, on average, have a larger distance between their
-nearest neighbors than regular samples [12].</p>
-<p>Topological Data Analysis (TDA) is concerned with the meaning, shape,
-and connectedness of data [13]. Benefits of TDA include: Unsupervised
-data exploration / automatic hypothesis generation, ability to deal with
-noise and missing values, invariance, and the generation of meaningful
-compressed summaries. TDA has shown efficient applications in a number
-of diverse fields: healthcare [14], computational biology [15], control
-theory [16], community detection [17], machine learning [18], sports
-analysis [19], and information security [20]. One tool from TDA is the
-<span class="math notranslate nohighlight">\(MAPPER\)</span> algorithm. <span class="math notranslate nohighlight">\(MAPPER\)</span> turns data and data projections
-into a graph by covering it with overlapping intervals and clustering
-[21]. To guide exploration, the nodes of the graph may be colored with a
-function of interest [22]. There are an increasing number of
-implementations of <span class="math notranslate nohighlight">\(MAPPER\)</span>. We use the open source implementation
-KeplerMapper from scikit-TDA [23].</p>
-<p>The TOR network allows users to communicate and host content while
-preserving privacy and anonimity [24]. As such, it can be used by
-dissidents and other people who prefer not to be tracked by commercial
-companies or governments. But these strong privacy and anonimity
-features are also attractive to criminals. A 2016 study in ‘Survival -
-Global Politics and Strategy’ found at least 57% of TOR websites are
-involved in illicit behavior, ranging from the trade in illegal arms,
-counterfeit ID documents, pornography, and drugs, money laundering &amp;
-credit card fraud, and the sharing of violent material, such as bomb
-making tutorials and terrorist propaganda [25].</p>
-<p>Network Intrusion Detection Systems are a first line of defense for
-governments and companies [26]. An undetected hacker will try to elevate
-their priviledges, moving from the weakest link to more hardened
-system-critical network nodes [27]. If the hacker’s goal is to get
-access to sensitive data (for instance: for resale -, industrial
-espionage -, or extortion purposes) then any stolen data needs to be
-exfiltrated. Similarly, cryptolockers often need to communicate with a
-command &amp; control server outside the network. Depending on the level of
-sophistication of the malware or hackers, exfiltration may be open and
-visible, run encrypted through the TOR network in an effort to hide the
-destination, or use advanced DNS tunneling techniques.</p>
+<p>Gradient Boosted Decision Trees (GBDT) is a very powerful learning algorithm for supervised learning on tabular data [1]. Modern implementations include XGBoost [2], Catboost [3], LightGBM [4] and scikit-learn’s GradientBoostingClassifier [5]. Of these, especially XGBoost has seen tremendous successes in machine learning competitions [6], starting with its introduction during the Higgs Boson Detection challenge in 2014 [7]. The success of XGBoost can be explained on multiple dimensions: It is a
+robust implementation of the original algorithms, it is very fast – allowing data scientists to quickly find better parameters [8], it does not suffer much from overfit, is scale-invariant, and it has an active community providing constant improvements, such as early stopping [9] and GPU support [10].</p>
+<p>Anomaly detection algorithms automatically find samples that are different from regular samples. Many methods exist. We use the Isolation Forest in combination with nearest neighbor distances. The Isolation Forest works by randomly splitting up the data [11]. Outliers, on average, are easier to isolate through splitting. Nearest neighbor distance looks at the summed distances for a sample and its five nearest neighbors. Outliers, on average, have a larger distance between their nearest neighbors
+than regular samples [12].</p>
+<p>Topological Data Analysis (TDA) is concerned with the meaning, shape, and connectedness of data [13]. Benefits of TDA include: Unsupervised data exploration / automatic hypothesis generation, ability to deal with noise and missing values, invariance, and the generation of meaningful compressed summaries. TDA has shown efficient applications in a number of diverse fields: healthcare [14], computational biology [15], control theory [16], community detection [17], machine learning [18], sports
+analysis [19], and information security [20]. One tool from TDA is the <span class="math notranslate nohighlight">\(MAPPER\)</span> algorithm. <span class="math notranslate nohighlight">\(MAPPER\)</span> turns data and data projections into a graph by covering it with overlapping intervals and clustering [21]. To guide exploration, the nodes of the graph may be colored with a function of interest [22]. There are an increasing number of implementations of <span class="math notranslate nohighlight">\(MAPPER\)</span>. We use the open source implementation KeplerMapper from scikit-TDA [23].</p>
+<p>The TOR network allows users to communicate and host content while preserving privacy and anonimity [24]. As such, it can be used by dissidents and other people who prefer not to be tracked by commercial companies or governments. But these strong privacy and anonimity features are also attractive to criminals. A 2016 study in ‘Survival - Global Politics and Strategy’ found at least 57% of TOR websites are involved in illicit behavior, ranging from the trade in illegal arms, counterfeit ID
+documents, pornography, and drugs, money laundering &amp; credit card fraud, and the sharing of violent material, such as bomb making tutorials and terrorist propaganda [25].</p>
+<p>Network Intrusion Detection Systems are a first line of defense for governments and companies [26]. An undetected hacker will try to elevate their priviledges, moving from the weakest link to more hardened system-critical network nodes [27]. If the hacker’s goal is to get access to sensitive data (for instance: for resale -, industrial espionage -, or extortion purposes) then any stolen data needs to be exfiltrated. Similarly, cryptolockers often need to communicate with a command &amp; control
+server outside the network. Depending on the level of sophistication of the malware or hackers, exfiltration may be open and visible, run encrypted through the TOR network in an effort to hide the destination, or use advanced DNS tunneling techniques.</p>
 </div>
 <div class="section" id="Motivation">
 <h2>Motivation<a class="headerlink" href="#Motivation" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Current Network Intrusion Detection Systems, much like the old spam
-detectors, rely mostly on rules, signatures, and anomaly detection.
-Labeled data is scarce. Writing rules is a very costly task requiring
-domain expertise. Signatures may fail to catch new types of attacks
-until they are updated. Anomalous/unusual behavior is not necessarily
-suspicous/adversarial behavior.</li>
-<li>Machine Learning for Information Security suffers a lot from poor
-false positive rates. False positives lead to alarm fatigue and can
-swamp an intelligence analyst with irrelevant work.</li>
-<li>Despite the possibility of false positives, it is often better to be
-safe than sorry. Suspicious network behavior, such as outgoing
-connections to the TOR network, require immediate attention. A
-network node can be shut down remotely, after which a security
-engineer can investigate the machine. The best practice of a
-multi-layered security makes this possible [28]: Instead of a single
-firewall to rule them all, hackers can be detected in various stages
-of their network intrusion, up to the final step of data
-exfilitration.</li>
+<li>Current Network Intrusion Detection Systems, much like the old spam detectors, rely mostly on rules, signatures, and anomaly detection. Labeled data is scarce. Writing rules is a very costly task requiring domain expertise. Signatures may fail to catch new types of attacks until they are updated. Anomalous/unusual behavior is not necessarily suspicous/adversarial behavior.</li>
+<li>Machine Learning for Information Security suffers a lot from poor false positive rates. False positives lead to alarm fatigue and can swamp an intelligence analyst with irrelevant work.</li>
+<li>Despite the possibility of false positives, it is often better to be safe than sorry. Suspicious network behavior, such as outgoing connections to the TOR network, require immediate attention. A network node can be shut down remotely, after which a security engineer can investigate the machine. The best practice of a multi-layered security makes this possible [28]: Instead of a single firewall to rule them all, hackers can be detected in various stages of their network intrusion, up to the
+final step of data exfilitration.</li>
 </ul>
 </div>
 <div class="section" id="Data">
 <h2>Data<a class="headerlink" href="#Data" title="Permalink to this headline">¶</a></h2>
-<p>We use a dataset written for the paper “Characterization of Tor Traffic
-Using Time Based Features” (Lashkari et al.) [29], graciously provided
-by the Canadian Institute for Cybersecurity [30]. This dataset combines
-older research on nonTOR network traffic with more recently captured TOR
-traffic (both were created on the same network) [31]. The data includes
-features that are more specific to the network used, such as the source
-and destination IP/Port, and a range of time-based features with a 5
+<p>We use a dataset written for the paper “Characterization of Tor Traffic Using Time Based Features” (Lashkari et al.) [29], graciously provided by the Canadian Institute for Cybersecurity [30]. This dataset combines older research on nonTOR network traffic with more recently captured TOR traffic (both were created on the same network) [31]. The data includes features that are more specific to the network used, such as the source and destination IP/Port, and a range of time-based features with a 5
 second lag.</p>
 <table border="1" class="docutils">
 <colgroup>
@@ -336,51 +303,39 @@ second lag.</p>
 <tbody valign="top">
 <tr class="row-even"><td>‘Source IP’</td>
 <td>Object</td>
-<td>Source IP4 Address.
-String with dots.</td>
+<td>Source IP4 Address. String with dots.</td>
 </tr>
 <tr class="row-odd"><td>’ Source Port’</td>
 <td>Float</td>
-<td>Source Port sending
-packets.</td>
+<td>Source Port sending packets.</td>
 </tr>
 <tr class="row-even"><td>’ Destination IP’</td>
 <td>Object</td>
-<td>Destination IP4
-Address.</td>
+<td>Destination IP4 Address.</td>
 </tr>
 <tr class="row-odd"><td>’ Destination Port’</td>
 <td>Float</td>
-<td>Destination Port
-receiving packets.</td>
+<td>Destination Port receiving packets.</td>
 </tr>
 <tr class="row-even"><td>’ Protocol’</td>
 <td>Float</td>
-<td>Integer [5-17]
-denoting protocol
-used.</td>
+<td>Integer [5-17] denoting protocol used.</td>
 </tr>
 <tr class="row-odd"><td>’ Flow Duration’</td>
 <td>Float</td>
-<td>Length of connection
-in seconds</td>
+<td>Length of connection in seconds</td>
 </tr>
 <tr class="row-even"><td>’ Flow Bytes/s’</td>
 <td>Float</td>
-<td>Bytes per seconds
-send</td>
+<td>Bytes per seconds send</td>
 </tr>
 <tr class="row-odd"><td>’ Flow Packets/s’</td>
 <td>Object</td>
-<td>Packets per second
-send. Contains
-<code class="docutils literal notranslate"><span class="pre">&quot;infinity&quot;</span></code>
-strings.</td>
+<td>Packets per second send. Contains <code class="docutils literal notranslate"><span class="pre">&quot;infinity&quot;</span></code> strings.</td>
 </tr>
 <tr class="row-even"><td>’ Flow IAT Mean’</td>
 <td>Float</td>
-<td>Flow Inter Arrival
-Time.</td>
+<td>Flow Inter Arrival Time.</td>
 </tr>
 <tr class="row-odd"><td>’ Flow IAT Std’</td>
 <td>Float</td>
@@ -396,8 +351,7 @@ Time.</td>
 </tr>
 <tr class="row-even"><td>‘Fwd IAT Mean’</td>
 <td>Float</td>
-<td>Forward Inter Arrival
-Time.</td>
+<td>Forward Inter Arrival Time.</td>
 </tr>
 <tr class="row-odd"><td>’ Fwd IAT Std’</td>
 <td>Float</td>
@@ -413,8 +367,7 @@ Time.</td>
 </tr>
 <tr class="row-even"><td>‘Bwd IAT Mean’</td>
 <td>Float</td>
-<td>Backwards Inter
-Arrival Time.</td>
+<td>Backwards Inter Arrival Time.</td>
 </tr>
 <tr class="row-odd"><td>’ Bwd IAT Std’</td>
 <td>Float</td>
@@ -430,10 +383,7 @@ Arrival Time.</td>
 </tr>
 <tr class="row-even"><td>‘Active Mean’</td>
 <td>Float</td>
-<td>Average amount of
-time in seconds
-before connection
-went idle.</td>
+<td>Average amount of time in seconds before connection went idle.</td>
 </tr>
 <tr class="row-odd"><td>’ Active Std’</td>
 <td>Float</td>
@@ -449,15 +399,11 @@ went idle.</td>
 </tr>
 <tr class="row-even"><td>‘Idle Mean’</td>
 <td>Float</td>
-<td>Average amount of
-time in seconds
-before connection
-became active.</td>
+<td>Average amount of time in seconds before connection became active.</td>
 </tr>
 <tr class="row-odd"><td>’ Idle Std’</td>
 <td>Float</td>
-<td>Zero variance
-feature.</td>
+<td>Zero variance feature.</td>
 </tr>
 <tr class="row-even"><td>’ Idle Max’</td>
 <td>Float</td>
@@ -469,9 +415,7 @@ feature.</td>
 </tr>
 <tr class="row-even"><td>‘label’</td>
 <td>Object</td>
-<td>Either <code class="docutils literal notranslate"><span class="pre">&quot;nonTOR&quot;</span></code>
-or <code class="docutils literal notranslate"><span class="pre">&quot;TOR&quot;</span></code>. ~17%
-TOR signal.</td>
+<td>Either <code class="docutils literal notranslate"><span class="pre">&quot;nonTOR&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;TOR&quot;</span></code>. ~17% TOR signal.</td>
 </tr>
 </tbody>
 </table>
@@ -479,28 +423,12 @@ TOR signal.</td>
 <div class="section" id="Experimental-setup">
 <h2>Experimental setup<a class="headerlink" href="#Experimental-setup" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>Supervised ML. We establish a strong baseline with XGBoost on the
-full data and on a subset (only time-based features, which generalize
-better to new domains). We follow the dataset standard of creating a
-20% holdout validation set, and use 5-fold stratified
-cross-validation for parameter tuning [32]. For tuning we use random
-search on sane parameter ranges, as random search is easy to
-implement and given enough time, will equal or beat more
-sophisticated methods [33]. We do not use feature selection, but opt
-to let our learning algorithm deal with those. Missing values are
-also handled by XGBoost and not manually imputed or hardcoded.</li>
-<li>Unsupervised ML. We use <span class="math notranslate nohighlight">\(MAPPER\)</span> in combination with the
-Isolation Forest and the summed distances to the five nearest
-neighbors. We use an overlap percentage of 150% and 40 intervals per
-dimension for a total of 1600 hypercubes. Clustering is done with
-agglomerative clustering using the euclidean distance metric and 3
-clusters per interval. For these experiments we use only the
-time-based features. We don’t scale the data, despite only Isolation
-Forest being scale-invariant.</li>
+<li>Supervised ML. We establish a strong baseline with XGBoost on the full data and on a subset (only time-based features, which generalize better to new domains). We follow the dataset standard of creating a 20% holdout validation set, and use 5-fold stratified cross-validation for parameter tuning [32]. For tuning we use random search on sane parameter ranges, as random search is easy to implement and given enough time, will equal or beat more sophisticated methods [33]. We do not use feature
+selection, but opt to let our learning algorithm deal with those. Missing values are also handled by XGBoost and not manually imputed or hardcoded.</li>
+<li>Unsupervised ML. We use <span class="math notranslate nohighlight">\(MAPPER\)</span> in combination with the Isolation Forest and the summed distances to the five nearest neighbors. We use an overlap percentage of 150% and 40 intervals per dimension for a total of 1600 hypercubes. Clustering is done with agglomerative clustering using the euclidean distance metric and 3 clusters per interval. For these experiments we use only the time-based features. We don’t scale the data, despite only Isolation Forest being scale-invariant.</li>
 </ul>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [27]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
@@ -514,17 +442,10 @@ Forest being scale-invariant.</li>
 </div>
 <div class="section" id="Data-Prep">
 <h2>Data Prep<a class="headerlink" href="#Data-Prep" title="Permalink to this headline">¶</a></h2>
-<p>There are string values <code class="docutils literal notranslate"><span class="pre">&quot;Infinity&quot;</span></code> inside the data, causing mixed
-types. We need to label-encode the target column. We turn the IP
-addresses into floats by removing the dots.</p>
-<p>We also create a subset of features by removing <code class="docutils literal notranslate"><span class="pre">Source</span> <span class="pre">Port</span></code>,
-<code class="docutils literal notranslate"><span class="pre">Source</span> <span class="pre">IP</span></code>, <code class="docutils literal notranslate"><span class="pre">Destination</span> <span class="pre">Port</span></code>, <code class="docutils literal notranslate"><span class="pre">Destination</span> <span class="pre">IP</span></code>, and
-<code class="docutils literal notranslate"><span class="pre">Protocol</span></code>. This to avoid overfitting/improve future generalization
-and focus only on the time-based features, like most other researchers
-have done.</p>
+<p>There are string values <code class="docutils literal notranslate"><span class="pre">&quot;Infinity&quot;</span></code> inside the data, causing mixed types. We need to label-encode the target column. We turn the IP addresses into floats by removing the dots.</p>
+<p>We also create a subset of features by removing <code class="docutils literal notranslate"><span class="pre">Source</span> <span class="pre">Port</span></code>, <code class="docutils literal notranslate"><span class="pre">Source</span> <span class="pre">IP</span></code>, <code class="docutils literal notranslate"><span class="pre">Destination</span> <span class="pre">Port</span></code>, <code class="docutils literal notranslate"><span class="pre">Destination</span> <span class="pre">IP</span></code>, and <code class="docutils literal notranslate"><span class="pre">Protocol</span></code>. This to avoid overfitting/improve future generalization and focus only on the time-based features, like most other researchers have done.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
@@ -533,8 +454,7 @@ have done.</p>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
@@ -546,8 +466,7 @@ have done.</p>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
@@ -566,8 +485,7 @@ have done.</p>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>Out[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
@@ -598,8 +516,7 @@ have done.</p>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
@@ -621,12 +538,9 @@ have done.</p>
 </div>
 <div class="section" id="Local-evaluation-setup">
 <h2>Local evaluation setup<a class="headerlink" href="#Local-evaluation-setup" title="Permalink to this headline">¶</a></h2>
-<p>We create a stratified holdout set of 20%. Any modeling choices (such as
-parameter tuning) are guided by 5-fold stratified cross-validation on
-the remaining dataset.</p>
+<p>We create a stratified holdout set of 20%. Any modeling choices (such as parameter tuning) are guided by 5-fold stratified cross-validation on the remaining dataset.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
@@ -655,8 +569,7 @@ the remaining dataset.</p>
 <div class="section" id="5-fold-non-tuned-XGBoost">
 <h3>5-fold non-tuned XGBoost<a class="headerlink" href="#5-fold-non-tuned-XGBoost" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
@@ -798,10 +711,7 @@ F1-score : 0.927480
 </div>
 <div class="section" id="Hyper-parameter-tuning">
 <h3>Hyper parameter tuning<a class="headerlink" href="#Hyper-parameter-tuning" title="Permalink to this headline">¶</a></h3>
-<p>We found the below parameters by running a random gridsearch on the
-first fold in ~50 iterations (minimizing log loss). We use an AWS
-distributed closed-source auto-tuning library called “Cher” with the
-following parameter ranges:</p>
+<p>We found the below parameters by running a random gridsearch on the first fold in ~50 iterations (minimizing log loss). We use an AWS distributed closed-source auto-tuning library called “Cher” with the following parameter ranges:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;XGBClassifier&quot;</span><span class="p">:</span> <span class="p">{</span>
     <span class="s2">&quot;max_depth&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">12</span><span class="p">),</span>
     <span class="s2">&quot;n_estimators&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">2500</span><span class="p">),</span>
@@ -824,8 +734,7 @@ following parameter ranges:</p>
 </pre></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
@@ -841,8 +750,7 @@ following parameter ranges:</p>
 <div class="section" id="5-fold-tuned-XGBoost">
 <h3>5-fold tuned XGBoost<a class="headerlink" href="#5-fold-tuned-XGBoost" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
@@ -978,8 +886,7 @@ F1-score : 0.976463
 <div class="section" id="Holdout-set-evaluation">
 <h3>Holdout set evaluation<a class="headerlink" href="#Holdout-set-evaluation" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
@@ -1040,32 +947,22 @@ F1-score : 0.976096
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td>Logistic
-Regression
-(Singh et al.,
-2018) [34]</td>
+<tr class="row-even"><td>Logistic Regression (Singh et al., 2018) [34]</td>
 <td>0.87</td>
 <td>0.87</td>
 <td>0.87</td>
 </tr>
-<tr class="row-odd"><td>SVM (Singh et
-al., 2018)</td>
+<tr class="row-odd"><td>SVM (Singh et al., 2018)</td>
 <td>0.9</td>
 <td>0.9</td>
 <td>0.9</td>
 </tr>
-<tr class="row-even"><td>Naïve Bayes
-(Singh et al.,
-2018)</td>
+<tr class="row-even"><td>Naïve Bayes (Singh et al., 2018)</td>
 <td>0.91</td>
 <td>0.6</td>
 <td>0.7</td>
 </tr>
-<tr class="row-odd"><td>C4.5 Decision
-Tree + Feature
-Selection
-(Lashkari et
-al., 2017) [29]</td>
+<tr class="row-odd"><td>C4.5 Decision Tree + Feature Selection (Lashkari et al., 2017) [29]</td>
 <td>0.948</td>
 <td>0.934</td>
 <td><ul class="first last simple">
@@ -1073,22 +970,17 @@ al., 2017) [29]</td>
 </ul>
 </td>
 </tr>
-<tr class="row-even"><td>Deep Learning
-(Singh et al.,
-2018)</td>
+<tr class="row-even"><td>Deep Learning (Singh et al., 2018)</td>
 <td>0.95</td>
 <td>0.95</td>
 <td>0.95</td>
 </tr>
-<tr class="row-odd"><td>Random Forest
-(Singh et al.,
-2018)</td>
+<tr class="row-odd"><td>Random Forest (Singh et al., 2018)</td>
 <td>0.96</td>
 <td>0.96</td>
 <td>0.96</td>
 </tr>
-<tr class="row-even"><td><strong>XGBoost +
-Tuning</strong></td>
+<tr class="row-even"><td><strong>XGBoost + Tuning</strong></td>
 <td><strong>0.974</strong></td>
 <td><strong>0.977</strong></td>
 <td><strong>0.976</strong></td>
@@ -1098,14 +990,9 @@ Tuning</strong></td>
 </div>
 <div class="section" id="Holdout-evaluation-with-all-the-available-features">
 <h3>Holdout evaluation with all the available features<a class="headerlink" href="#Holdout-evaluation-with-all-the-available-features" title="Permalink to this headline">¶</a></h3>
-<p>Using all the features results in near perfect performance, suggesting
-“leaky” features (These features are not to be used for predictive
-modeling, but are there for completeness). Nevertheless we show how
-using all features also results in a strong baseline over previous
-research.</p>
+<p>Using all the features results in near perfect performance, suggesting “leaky” features (These features are not to be used for predictive modeling, but are there for completeness). Nevertheless we show how using all features also results in a strong baseline over previous research.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
@@ -1196,8 +1083,7 @@ Recall   : 1.000000
 <div class="section" id="Topological-Data-Analysis">
 <h2>Topological Data Analysis<a class="headerlink" href="#Topological-Data-Analysis" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython2 notranslate"><div class="highlight"><pre>
@@ -1258,10 +1144,7 @@ Recall   : 1.000000
 </div>
 <div class="section" id="Image-of-output">
 <h3>Image of output<a class="headerlink" href="#Image-of-output" title="Permalink to this headline">¶</a></h3>
-<div class="figure" id="id2">
-<img alt="TDA image" src="https://i.imgur.com/1puM29w.jpg" />
-<p class="caption"><span class="caption-text">TDA image</span></p>
-</div>
+<p><img alt="TDA image" src="https://i.imgur.com/1puM29w.jpg" /></p>
 </div>
 <div class="section" id="Link-to-output">
 <h3>Link to output<a class="headerlink" href="#Link-to-output" title="Permalink to this headline">¶</a></h3>
@@ -1270,152 +1153,33 @@ Recall   : 1.000000
 </div>
 <div class="section" id="Discussion">
 <h2>Discussion<a class="headerlink" href="#Discussion" title="Permalink to this headline">¶</a></h2>
-<p>Both deep learning and unsupervised TDA may benefit from more data and
-rawer features. One strength of deep learning is its ability to
-automaticly generate useful features. A properly tuned and architected
-RNN/LSTM or ConvNet on more data will likely beat or equal gradient
-boosting [36]. Likewise for TDA: TDA is very good at extracting
-structure from raw time-series data. Using the preprocessed 5 second
-lag-features turns the problem more into a classification problem, than
-a temporal /forecasting problem.</p>
-<p>The XGBoost baseline can be further improved: Other authors showed
-feature selection to be effective at discarding noise. Stacked
-generalization can improve many pure classification problems, at the
-cost of an increased complexity and latency. Likewise with feature
-expansion through feature interactions, the score can be improved a
-small bit [37].</p>
-<p>The graph created with <span class="math notranslate nohighlight">\(MAPPER\)</span> shows a concentration of anomalous
-samples that are predominantly nonTor traffic. This confirms our earlier
-note that anomalous behavior is not necessarily suspicious behavior. The
-separation could be better, but it is already possible to identify
-different types of Tor traffic, and see how they differ (an above
-average or below average <code class="docutils literal notranslate"><span class="pre">Flow</span> <span class="pre">Duration</span></code> can both signal Tor traffic.)</p>
-<p>The large <code class="docutils literal notranslate"><span class="pre">max_depth=11</span></code> found by XGBoost on this relatively small
-dataset signals that either the problem is very complex (and needs large
-complexity to be solved well), or that memorization of patterns is
-important for good performance on this dataset (larger <code class="docutils literal notranslate"><span class="pre">max_depth</span></code>’s
-find more feature interactions and are better at memorization).</p>
+<p>Both deep learning and unsupervised TDA may benefit from more data and rawer features. One strength of deep learning is its ability to automaticly generate useful features. A properly tuned and architected RNN/LSTM or ConvNet on more data will likely beat or equal gradient boosting [36]. Likewise for TDA: TDA is very good at extracting structure from raw time-series data. Using the preprocessed 5 second lag-features turns the problem more into a classification problem, than a temporal
+/forecasting problem.</p>
+<p>The XGBoost baseline can be further improved: Other authors showed feature selection to be effective at discarding noise. Stacked generalization can improve many pure classification problems, at the cost of an increased complexity and latency. Likewise with feature expansion through feature interactions, the score can be improved a small bit [37].</p>
+<p>The graph created with <span class="math notranslate nohighlight">\(MAPPER\)</span> shows a concentration of anomalous samples that are predominantly nonTor traffic. This confirms our earlier note that anomalous behavior is not necessarily suspicious behavior. The separation could be better, but it is already possible to identify different types of Tor traffic, and see how they differ (an above average or below average <code class="docutils literal notranslate"><span class="pre">Flow</span> <span class="pre">Duration</span></code> can both signal Tor traffic.)</p>
+<p>The large <code class="docutils literal notranslate"><span class="pre">max_depth=11</span></code> found by XGBoost on this relatively small dataset signals that either the problem is very complex (and needs large complexity to be solved well), or that memorization of patterns is important for good performance on this dataset (larger <code class="docutils literal notranslate"><span class="pre">max_depth</span></code>’s find more feature interactions and are better at memorization).</p>
 </div>
 <div class="section" id="Thanks">
 <h2>Thanks<a class="headerlink" href="#Thanks" title="Permalink to this headline">¶</a></h2>
-<p>Thanks to dr. Satnam Singh and Balamurali A R for the inspiring
-<a class="reference external" href="https://www.analyticsvidhya.com/blog/2018/07/using-power-deep-learning-cyber-security/">article</a>.
-Thanks to my colleagues at Nubank InfoSec, especially Jonas Abreu, for
-helpful discussions and consulting on domain expertise. Thanks to the
-Canadian Institute for Cybersecurity (dr. Lashkari et al.) for creating
-and providing the data used [38], and writing the original paper with
-great clarity.</p>
+<p>Thanks to dr. Satnam Singh and Balamurali A R for the inspiring <a class="reference external" href="https://www.analyticsvidhya.com/blog/2018/07/using-power-deep-learning-cyber-security/">article</a>. Thanks to my colleagues at Nubank InfoSec, especially Jonas Abreu, for helpful discussions and consulting on domain expertise. Thanks to the Canadian Institute for Cybersecurity (dr. Lashkari et al.) for creating and providing the data used [38], and writing the original paper with great clarity.</p>
 </div>
 <div class="section" id="References">
 <h2>References<a class="headerlink" href="#References" title="Permalink to this headline">¶</a></h2>
-<p><strong>[1]</strong> Freund, Schapire (1999). <a class="reference external" href="https://cseweb.ucsd.edu/~yfreund/papers/IntroToBoosting.pdf">A short introduction to
-boosting</a>
-<strong>[2]</strong> Chen, Tianqi and Guestrin, Carlos (2016) <a class="reference external" href="http://www.kdd.org/kdd2016/papers/files/rfp0697-chenAemb.pdf">XGBoost: A Scalable
-Tree Boosting
-System</a>
-<strong>[3]</strong> Liudmila Prokhorenkova, Gleb Gusev, Aleksandr Vorobev, Anna
-Veronika Dorogush, Andrey Gulin (2017) <a class="reference external" href="https://arxiv.org/abs/1706.09516">CatBoost: unbiased boosting
-with categorical features</a> <strong>[4]</strong>
-Guolin Ke, Qi Meng, Thomas Finley, Taifeng Wang, Wei Chen, Weidong Ma,
-Qiwei Ye, and Tie-Yan Liu. (2017) <a class="reference external" href="https://papers.nips.cc/paper/6907-lightgbm-a-highly-efficient-gradient-boosting-decision-tree.pdf">LightGBM: A Highly Efficient
-Gradient Boosting Decision
-Tree.</a>
-<strong>[5]</strong> Pedregosa, F. and Varoquaux, G. and Gramfort, A. and Michel, V.
-and Thirion, B. and Grisel, O. and Blondel, M. and Prettenhofer, P. and
-Weiss, R. and Dubourg, V. and Vanderplas, J. and Passos, A. and
-Cournapeau, D. and Brucher, M. and Perrot, M. and Duchesnay, E. (2011)
-<a class="reference external" href="http://www.jmlr.org/papers/volume12/pedregosa11a/pedregosa11a.pdf">Scikit-learn: Machine Learning in
-Python</a>
-<strong>[6]</strong> Community (2014-). <a class="reference external" href="https://github.com/dmlc/xgboost/tree/master/demo">Awesome
-XGBoost</a> <strong>[7]</strong>
-CERN and Kaggle (2014) <a class="reference external" href="https://www.kaggle.com/c/higgs-boson">Higgs Boson Machine Learning
-Challenge</a> <strong>[8]</strong> Tianqi Chen
-on Quora (2015) <a class="reference external" href="https://www.quora.com/What-makes-xgboost-run-much-faster-than-many-other-implementations-of-gradient-boosting">What makes xgboost run much faster than many other
-implementations of gradient
-boosting?</a>
-<strong>[9]</strong> Zygmunt Zając (2015) <a class="reference external" href="https://github.com/drivendata/countable-care-3rd-place/blob/master/src/xgboost_colsub.py">Early
-stopping</a>
-<strong>[10]</strong> Rory Mitchell, Andrey Adinets, Thejaswi Rao, Eibe Frank (2018)
-<a class="reference external" href="https://arxiv.org/abs/1806.11248">XGBoost: Scalable GPU Accelerated
-Learning</a> <strong>[11]</strong> Fei Tony Liu,
-Kai Ming Ting, Zhi-Hua Zhou (2008) <a class="reference external" href="https://cs.nju.edu.cn/zhouzh/zhouzh.files/publication/icdm08b.pdf">Isolation
-Forest</a>
-<strong>[12]</strong> Sridhar Ramaswamy, Rajeev Rastogi, and Kyuseok Shim. (2000)
-<a class="reference external" href="https://dl.acm.org/citation.cfm?id=335437">Efficient algorithms for mining outliers from large data
-sets</a> <strong>[13]</strong> Gunnar
-Carlsson (2008) <a class="reference external" href="https://web.stanford.edu/group/mmds/slides2008/carlsson.pdf">Topology and
-Data</a>
-<strong>[14]</strong> Devi Ramanan (2015) <a class="reference external" href="https://www.ayasdi.com/blog/healthcare/identification-of-type-2-diabetes-subgroups-through-topological-data-analysis-of-patient-similarity/">Identification of Type 2 Diabetes
-Subgroups through Topological Data Analysis of Patient
-Similarity</a>
-<strong>[15]</strong> Pablo G. Cámara (2017) <a class="reference external" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5624534/">Topological methods for genomics:
-present and future
-directions</a>
-<strong>[16]</strong> Wei Guo, Ashis Gopal Banerjee (2017) <a class="reference external" href="https://www.researchgate.net/publication/314185934_Identification_of_Key_Features_Using_Topological_Data_Analysis_for_Accurate_Prediction_of_Manufacturing_System_Outputs">Identification of Key
-Features Using Topological Data Analysis for Accurate Prediction of
-Manufacturing System
-Outputs</a>
-<strong>[17]</strong> Mustafa Hajij, Bei Wang, Paul Rosen (2018) <a class="reference external" href="https://arxiv.org/pdf/1804.11242.pdf">MOG: Mapper on
-Graphs for Relationship Preserving
-Clustering</a> <strong>[18]</strong> Anthony
-Bak (2015) <a class="reference external" href="http://topology.cs.wisc.edu/Bak.pdf">Topology and Machine
-Learning</a> <strong>[19]</strong> Muthu
-Alagappan (2012) <a class="reference external" href="http://www.sloansportsconference.com/?p=5431">From 5 to 13: Redefining the Positions in
-Basketball</a> <strong>[20]</strong>
-Marc Coudriau, Abdelkader Lahmadi, Jérôme François (2016) <a class="reference external" href="https://ieeexplore.ieee.org/document/7823920/">Topological
-analysis and visualisation of network monitoring data: Darknet case
-study</a> <strong>[21]</strong>
-Gurjeet Singh, Facundo Mémoli, and Gunnar Carlsson (2007) <a class="reference external" href="https://research.math.osu.edu/tgda/mapperPBG.pdf">Topological
-Methods for the Analysis of High Dimensional Data Sets and 3D Object
-Recognition</a>
-<strong>[22]</strong> P. Y. Lum, G. Singh, A. Lehman, T. Ishkanov, M.
-Vejdemo-Johansson, M. Alagappan, J. Carlsson &amp; G. Carlsson (2009)
-<a class="reference external" href="https://www.nature.com/articles/srep01236">Extracting insights from the shape of complex data using
-topology</a> <strong>[23]</strong> Hendrik
-Jacob van Veen, and Nathaniel Saul (2017)
-<a class="reference external" href="https://github.com/mlwave/kepler-mapper">KeplerMapper</a> <strong>[24]</strong>
-Karsten Loesing and Steven J. Murdoch and Roger Dingledine (2010) <a class="reference external" href="https://torproject.org/">A
-Case Study on Measuring Statistical Data in the Tor Anonymity
-Network</a> <strong>[25]</strong> Daniel Moore, Thomas Rid
-(2016) <a class="reference external" href="https://www.tandfonline.com/doi/full/10.1080/00396338.2016.1142085">Cryptopolitik and the
-Darknet</a>
-<strong>[26]</strong> Stephen Northcutt, Judy Novak (2002) Network Intrusion
-Detection, Third Edition <strong>[27]</strong> Justin Grana, David Wolpert, Joshua
-Neil, Dongping Xie, Tanmoy Bhattacharya, Russell Bent (2016) <a class="reference external" href="https://arxiv.org/abs/1609.00104">A
-Likelihood Ratio Detector for Identifying Within-Perimeter Computer
-Network Attacks.</a> <strong>[28]</strong> Simon
-Denman (2012) <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S1353485812700430">Why multi-layered security is still the best
-defence</a>
-<strong>[29]</strong> Arash Habibi Lashkari, Gerard Draper Gil, Mohammad Saiful Islam
-Mamun, Ali A. Ghorbani (2017) <a class="reference external" href="https://www.researchgate.net/publication/314521450_Characterization_of_Tor_Traffic_using_Time_based_Features">Characterization of Tor Traffic using
-Time based
-Features</a>
-<strong>[30]</strong> Canadian Institute for Cybersecurity (Retrieved: 2018)
-<a class="reference external" href="https://www.unb.ca/cic/">Canadian Institute for Cybersecurity</a>
-<strong>[31]</strong> Draper-Gil, G., Lashkari, A. H., Mamun, M. S. I., and Ghorbani,
-A. A. (2016). <a class="reference external" href="https://pdfs.semanticscholar.org/2886/2175a0426761c4f41fdbbec5b244026c4010.pdf">Characterization of encrypted and vpn traffic using
-time-related
-features</a>
-<strong>[32]</strong> Trevor Hastie, Robert Tibshirani, Jerome H. Friedman (2001)
-<a class="reference external" href="https://web.stanford.edu/~hastie/Papers/ESLII.pdf">The Elements of Statistical
-Learning</a> <strong>[33]</strong>
-James Bergstra, Yoshua Bengio (2012) <a class="reference external" href="http://www.jmlr.org/papers/volume13/bergstra12a/bergstra12a.pdf">Random Search for
-Hyper-Parameter
-Optimization</a>
-<strong>[34]</strong> Satnam Singh, Balamurali A R (2018) <a class="reference external" href="https://www.acalvio.com/wp-content/uploads/2018/07/Detecting-Anonymised-Network-Traffic-using-Deep-Learning.pdf">Using Deep Learning for
-Information
-Security</a>
-<strong>[35]</strong> Elike Hodo, Xavier Bellekens, Ephraim Iorkyase, Andrew
-Hamilton, Christos Tachtatzis, Robert Atkinson (2017) <a class="reference external" href="https://arxiv.org/abs/1708.08725">Machine
-Learning Approach for Detection of nonTor
-Traffic</a> <strong>[36]</strong> Gábor Melis,
-Chris Dyer, Phil Blunsom (2017) <a class="reference external" href="https://arxiv.org/abs/1707.05589">On the State of the Art of Evaluation
-in Neural Language Models</a> <strong>[37]</strong>
-Marios Michailidis (2017) <a class="reference external" href="http://discovery.ucl.ac.uk/10031000/1/Full_copy.pdf">Investigating machine learning methods in
-recommender
-systems</a>
-<strong>[38]</strong> Canadian Institute for Cybersecurity (2016) <a class="reference external" href="https://www.unb.ca/cic/datasets/tor.html">Tor-nonTor
-dataset (ISCXTor2016)</a></p>
+<p><strong>[1]</strong> Freund, Schapire (1999). <a class="reference external" href="https://cseweb.ucsd.edu/~yfreund/papers/IntroToBoosting.pdf">A short introduction to boosting</a> <strong>[2]</strong> Chen, Tianqi and Guestrin, Carlos (2016) <a class="reference external" href="http://www.kdd.org/kdd2016/papers/files/rfp0697-chenAemb.pdf">XGBoost: A Scalable Tree Boosting System</a> <strong>[3]</strong> Liudmila Prokhorenkova, Gleb Gusev, Aleksandr Vorobev, Anna Veronika Dorogush, Andrey Gulin (2017) <a class="reference external" href="https://arxiv.org/abs/1706.09516">CatBoost: unbiased boosting with categorical features</a>
+<strong>[4]</strong> Guolin Ke, Qi Meng, Thomas Finley, Taifeng Wang, Wei Chen, Weidong Ma, Qiwei Ye, and Tie-Yan Liu. (2017) <a class="reference external" href="https://papers.nips.cc/paper/6907-lightgbm-a-highly-efficient-gradient-boosting-decision-tree.pdf">LightGBM: A Highly Efficient Gradient Boosting Decision Tree.</a> <strong>[5]</strong> Pedregosa, F. and Varoquaux, G. and Gramfort, A. and Michel, V. and Thirion, B. and Grisel, O. and Blondel, M. and Prettenhofer, P. and Weiss, R. and Dubourg, V. and Vanderplas, J. and Passos, A. and Cournapeau,
+D. and Brucher, M. and Perrot, M. and Duchesnay, E. (2011) <a class="reference external" href="http://www.jmlr.org/papers/volume12/pedregosa11a/pedregosa11a.pdf">Scikit-learn: Machine Learning in Python</a> <strong>[6]</strong> Community (2014-). <a class="reference external" href="https://github.com/dmlc/xgboost/tree/master/demo">Awesome XGBoost</a> <strong>[7]</strong> CERN and Kaggle (2014) <a class="reference external" href="https://www.kaggle.com/c/higgs-boson">Higgs Boson Machine Learning Challenge</a> <strong>[8]</strong> Tianqi Chen on Quora (2015) <a class="reference external" href="https://www.quora.com/What-makes-xgboost-run-much-faster-than-many-other-implementations-of-gradient-boosting">What makes xgboost run much faster than many other implementations of
+gradient boosting?</a> <strong>[9]</strong> Zygmunt Zając (2015) <a class="reference external" href="https://github.com/drivendata/countable-care-3rd-place/blob/master/src/xgboost_colsub.py">Early stopping</a> <strong>[10]</strong> Rory Mitchell, Andrey Adinets, Thejaswi Rao, Eibe Frank (2018) <a class="reference external" href="https://arxiv.org/abs/1806.11248">XGBoost: Scalable GPU Accelerated Learning</a> <strong>[11]</strong> Fei Tony Liu, Kai Ming Ting, Zhi-Hua Zhou (2008)
+<a class="reference external" href="https://cs.nju.edu.cn/zhouzh/zhouzh.files/publication/icdm08b.pdf">Isolation Forest</a> <strong>[12]</strong> Sridhar Ramaswamy, Rajeev Rastogi, and Kyuseok Shim. (2000) <a class="reference external" href="https://dl.acm.org/citation.cfm?id=335437">Efficient algorithms for mining outliers from large data sets</a> <strong>[13]</strong> Gunnar Carlsson (2008) <a class="reference external" href="https://web.stanford.edu/group/mmds/slides2008/carlsson.pdf">Topology and Data</a> <strong>[14]</strong> Devi Ramanan (2015) <a class="reference external" href="https://www.ayasdi.com/blog/healthcare/identification-of-type-2-diabetes-subgroups-through-topological-data-analysis-of-patient-similarity/">Identification of Type 2 Diabetes Subgroups through Topological Data Analysis
+of Patient Similarity</a> <strong>[15]</strong> Pablo G. Cámara (2017) <a class="reference external" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5624534/">Topological methods for genomics: present and future directions</a> <strong>[16]</strong> Wei Guo, Ashis Gopal Banerjee (2017) <a class="reference external" href="https://www.researchgate.net/publication/314185934_Identification_of_Key_Features_Using_Topological_Data_Analysis_for_Accurate_Prediction_of_Manufacturing_System_Outputs">Identification of Key Features Using Topological Data Analysis for Accurate Prediction of Manufacturing System
+Outputs</a> <strong>[17]</strong> Mustafa Hajij, Bei Wang, Paul Rosen (2018) <a class="reference external" href="https://arxiv.org/pdf/1804.11242.pdf">MOG: Mapper on Graphs for Relationship Preserving Clustering</a> <strong>[18]</strong> Anthony Bak (2015) <a class="reference external" href="http://topology.cs.wisc.edu/Bak.pdf">Topology and Machine Learning</a> <strong>[19]</strong> Muthu Alagappan (2012) <a class="reference external" href="http://www.sloansportsconference.com/?p=5431">From 5 to 13:
+Redefining the Positions in Basketball</a> <strong>[20]</strong> Marc Coudriau, Abdelkader Lahmadi, Jérôme François (2016) <a class="reference external" href="https://ieeexplore.ieee.org/document/7823920/">Topological analysis and visualisation of network monitoring data: Darknet case study</a> <strong>[21]</strong> Gurjeet Singh, Facundo Mémoli, and Gunnar Carlsson (2007) <a class="reference external" href="https://research.math.osu.edu/tgda/mapperPBG.pdf">Topological Methods for the Analysis of High Dimensional Data Sets and 3D Object
+Recognition</a> <strong>[22]</strong> P. Y. Lum, G. Singh, A. Lehman, T. Ishkanov, M. Vejdemo-Johansson, M. Alagappan, J. Carlsson &amp; G. Carlsson (2009) <a class="reference external" href="https://www.nature.com/articles/srep01236">Extracting insights from the shape of complex data using topology</a> <strong>[23]</strong> Hendrik Jacob van Veen, and Nathaniel Saul (2017) <a class="reference external" href="https://github.com/mlwave/kepler-mapper">KeplerMapper</a> <strong>[24]</strong> Karsten Loesing and Steven J. Murdoch and Roger Dingledine (2010)
+<a class="reference external" href="https://torproject.org/">A Case Study on Measuring Statistical Data in the Tor Anonymity Network</a> <strong>[25]</strong> Daniel Moore, Thomas Rid (2016) <a class="reference external" href="https://www.tandfonline.com/doi/full/10.1080/00396338.2016.1142085">Cryptopolitik and the Darknet</a> <strong>[26]</strong> Stephen Northcutt, Judy Novak (2002) Network Intrusion Detection, Third Edition <strong>[27]</strong> Justin Grana, David Wolpert, Joshua Neil, Dongping Xie, Tanmoy Bhattacharya, Russell Bent (2016) <a class="reference external" href="https://arxiv.org/abs/1609.00104">A Likelihood Ratio Detector for Identifying
+Within-Perimeter Computer Network Attacks.</a> <strong>[28]</strong> Simon Denman (2012) <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S1353485812700430">Why multi-layered security is still the best defence</a> <strong>[29]</strong> Arash Habibi Lashkari, Gerard Draper Gil, Mohammad Saiful Islam Mamun, Ali A. Ghorbani (2017) <a class="reference external" href="https://www.researchgate.net/publication/314521450_Characterization_of_Tor_Traffic_using_Time_based_Features">Characterization of Tor Traffic using Time based
+Features</a> <strong>[30]</strong> Canadian Institute for Cybersecurity (Retrieved: 2018) <a class="reference external" href="https://www.unb.ca/cic/">Canadian Institute for Cybersecurity</a> <strong>[31]</strong> Draper-Gil, G., Lashkari, A. H., Mamun, M. S. I., and Ghorbani, A. A. (2016). <a class="reference external" href="https://pdfs.semanticscholar.org/2886/2175a0426761c4f41fdbbec5b244026c4010.pdf">Characterization of encrypted and vpn traffic using time-related
+features</a> <strong>[32]</strong> Trevor Hastie, Robert Tibshirani, Jerome H. Friedman (2001) <a class="reference external" href="https://web.stanford.edu/~hastie/Papers/ESLII.pdf">The Elements of Statistical Learning</a> <strong>[33]</strong> James Bergstra, Yoshua Bengio (2012) <a class="reference external" href="http://www.jmlr.org/papers/volume13/bergstra12a/bergstra12a.pdf">Random Search for Hyper-Parameter Optimization</a> <strong>[34]</strong> Satnam Singh, Balamurali A R (2018) <a class="reference external" href="https://www.acalvio.com/wp-content/uploads/2018/07/Detecting-Anonymised-Network-Traffic-using-Deep-Learning.pdf">Using Deep Learning for
+Information Security</a> <strong>[35]</strong> Elike Hodo, Xavier Bellekens, Ephraim Iorkyase, Andrew Hamilton, Christos Tachtatzis, Robert Atkinson (2017) <a class="reference external" href="https://arxiv.org/abs/1708.08725">Machine Learning Approach for Detection of nonTor Traffic</a> <strong>[36]</strong> Gábor Melis, Chris Dyer, Phil Blunsom (2017) <a class="reference external" href="https://arxiv.org/abs/1707.05589">On the State of the Art of Evaluation in Neural Language
+Models</a> <strong>[37]</strong> Marios Michailidis (2017) <a class="reference external" href="http://discovery.ucl.ac.uk/10031000/1/Full_copy.pdf">Investigating machine learning methods in recommender systems</a> <strong>[38]</strong> Canadian Institute for Cybersecurity (2016) <a class="reference external" href="https://www.unb.ca/cic/datasets/tor.html">Tor-nonTor dataset (ISCXTor2016)</a></p>
 </div>
 </div>
 
@@ -1428,11 +1192,25 @@ dataset (ISCXTor2016)</a></p>
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/logo.png" alt="Logo"/>
             </a></p>
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
-<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+<form class="search" action="../search.html" method="get">
+  <input type="text" name="q"
+   placeholder="type to search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<a href=https://github.com/scikit-tda/kepler-mapper>
+    <p class="caption"><span class="caption-text">
+        <img src="_static/gh_logo.png" height="18px" width="18px" alt="Github icon">  
+        scikit-tda/kepler-mapper
+    </span></p>
+</a> 
+
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">Background</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../theory.html">Theory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../applications.html">Applications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/index.html">API Reference</a></li>
@@ -1476,13 +1254,6 @@ dataset (ISCXTor2016)</a></p>
 <li class="toctree-l1"><a class="reference internal" href="self-guessing.html">Self-guessing mapper</a></li>
 </ul>
 
-<form class="search" action="../search.html" method="get">
-  <input type="text" name="q"
-   placeholder="type to search" />
-  <input type="hidden" name="check_keywords" value="yes" />
-  <input type="hidden" name="area" value="default" />
-</form>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -1508,9 +1279,7 @@ dataset (ISCXTor2016)</a></p>
   </div>
   <footer id="pagefooter">&copy; 2019, Hendrik Jacob van Veen and Nathaniel Saul.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-      1.8.1
-        with the <a href="http://github.com/irskep/sphinx-better-theme">
-          better</a> theme.
+      1.8.4.
 
   </footer>
 

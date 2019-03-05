@@ -6,20 +6,20 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>KeplerMapper &#8212; KeplerMapper 1.2.0 documentation</title>
+    <title>Setup &#8212; KeplerMapper 1.2.0 documentation</title>
     <link rel="stylesheet" href="_static/better.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="author" title="About these documents" href="about.html" />
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="About" href="about.html" />
+    <link rel="next" title="Background" href="theory.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-      <link rel="stylesheet" href="_static/custom_style.css" type="text/css" />
   </head><body>
     <header id="pageheader">
       <h1>
@@ -35,7 +35,7 @@
   <nav id="rellinks">
     <ul>
         <li>
-          <a href="about.html" title="Next document">About</a>
+          <a href="theory.html" title="Next document">Background</a>
           &rarr;
         </li>
     </ul>
@@ -52,43 +52,45 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <p><a class="reference external" href="https://badge.fury.io/py/kmapper"><img alt="PyPI version" src="https://badge.fury.io/py/kmapper.svg" /></a> <a class="reference external" href="https://pypi.python.org/pypi/kmapper/"><img alt="Downloads" src="https://pypip.in/download/kmapper/badge.svg" /></a> <a class="reference external" href="https://travis-ci.org/scikit-tda/kepler-mapper"><img alt="Build Status" src="https://travis-ci.org/scikit-tda/kepler-mapper.svg?branch=master" /></a> <a class="reference external" href="https://codecov.io/gh/scikit-tda/kepler-mapper"><img alt="Codecov" src="https://codecov.io/gh/scikit-tda/kepler-mapper/branch/master/graph/badge.svg" /></a> <a class="reference external" href="https://doi.org/10.5281/zenodo.1054444"><img alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.1054444.svg" /></a></p>
-<div class="section" id="keplermapper">
-<h1>KeplerMapper<a class="headerlink" href="#keplermapper" title="Permalink to this headline">¶</a></h1>
+  <p><a class="reference external" href="https://doi.org/10.5281/zenodo.1054444"><img alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.1054444.svg" /></a> <a class="reference external" href="https://badge.fury.io/py/kmapper"><img alt="PyPI version" src="https://badge.fury.io/py/kmapper.svg" /></a> <a class="reference external" href="https://pypi.python.org/pypi/kmapper/"><img alt="Downloads" src="https://pypip.in/download/kmapper/badge.svg" /></a>
+<a class="reference external" href="https://travis-ci.org/scikit-tda/kepler-mapper"><img alt="Build Status" src="https://travis-ci.org/scikit-tda/kepler-mapper.svg?branch=master" /></a> <a class="reference external" href="https://codecov.io/gh/scikit-tda/kepler-mapper"><img alt="Codecov" src="https://codecov.io/gh/scikit-tda/kepler-mapper/branch/master/graph/badge.svg" /></a></p>
 <blockquote>
 <div>Nature uses as little as possible of anything. - Johannes Kepler</div></blockquote>
 <p>This is a library implementing the Mapper algorithm in Python. KeplerMapper can be used for visualization of high-dimensional data and 3D point cloud data. KeplerMapper can make use of Scikit-Learn API compatible cluster and scaling algorithms. You can find the source code on github at
 <a class="reference external" href="https://github.com/scikit-tda/kepler-mapper">scikit-tda/kepler-mapper</a>.</p>
 <p>KeplerMapper employs approaches based on the MAPPER algorithm (Singh et al.) as first described in the paper “Topological Methods for the Analysis of High Dimensional Data Sets and 3D Object Recognition”.</p>
-<div class="section" id="contents">
-<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="setup">
+<h1>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h1>
+<p>Install KeplerMapper with pip:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">kmapper</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="citations">
+<h1>Citations<a class="headerlink" href="#citations" title="Permalink to this headline">¶</a></h1>
+<p>Hendrik Jacob van Veen, and Nathaniel Saul. (2017, November 17).
+MLWave/kepler-mapper: 186f (Version 1.0.1). Zenodo.
+<a class="reference external" href="http://doi.org/10.5281/zenodo.1054444">http://doi.org/10.5281/zenodo.1054444</a></p>
+<p>Bibtex entry:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@MISC</span> <span class="p">{</span><span class="n">KeplerMapper2019</span><span class="p">,</span>
+    <span class="n">author</span>       <span class="o">=</span> <span class="s2">&quot;Hendrik Jacob van Veen and Nathaniel Saul&quot;</span><span class="p">,</span>
+    <span class="n">title</span>        <span class="o">=</span> <span class="s2">&quot;KeplerMapper&quot;</span><span class="p">,</span>
+    <span class="n">howpublished</span> <span class="o">=</span> <span class="s2">&quot;http://doi.org/10.5281/zenodo.1054444&quot;</span><span class="p">,</span>
+    <span class="n">month</span>        <span class="o">=</span> <span class="s2">&quot;Jan&quot;</span><span class="p">,</span>
+    <span class="n">year</span>         <span class="o">=</span> <span class="s2">&quot;2019&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="contributions">
+<h1>Contributions<a class="headerlink" href="#contributions" title="Permalink to this headline">¶</a></h1>
+<p>We welcome contributions of all shapes and sizes. There are lots of opportunities for potential projects, so please get in touch if you would like to help out. Everything from an implementation of your favorite distance, notebooks, examples, and documentation are all equally valuable so please don’t feel you can’t contribute.</p>
+<p>To contribute please fork the project make your changes and submit a pull request. We will do our best to work through any issues with you and get your code merged into the main branch.</p>
 <div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
-<li class="toctree-l1"><a class="reference internal" href="started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="theory.html">Theory</a></li>
-<li class="toctree-l1"><a class="reference internal" href="applications.html">Applications</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference/index.html">API Reference</a></li>
-</ul>
 </div>
 <div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Tutorials</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/Adapters.html">Adapters example</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/Plotly-Demo.html">Demo of Plotlyviz features</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/KeplerMapper-usage-in-Jupyter-Notebook.html">Using Kepler Mapper in Jupyter Notebook</a></li>
-</ul>
 </div>
 <div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Advanced Tutorials</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/KeplerMapper-Newsgroup20-Pipeline.html">KeplerMapper &amp; NLP examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/TOR-XGB-TDA.html">Detecting Encrypted TOR Traffic with Boosting and Topological Data Analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/Confidence-Graphs.html">Confidence Graphs: Representing Model Uncertainty in Deep Learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/self-guessing.html">Self-guessing mapper</a></li>
-</ul>
-</div>
 </div>
 </div>
 
@@ -101,11 +103,25 @@
             <p class="logo"><a href="#">
               <img class="logo" src="_static/logo.png" alt="Logo"/>
             </a></p>
-  <h3><a href="#">Table of Contents</a></h3>
-  <ul>
-<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+<form class="search" action="search.html" method="get">
+  <input type="text" name="q"
+   placeholder="type to search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<a href=https://github.com/scikit-tda/kepler-mapper>
+    <p class="caption"><span class="caption-text">
+        <img src="_static/gh_logo.png" height="18px" width="18px" alt="Github icon">  
+        scikit-tda/kepler-mapper
+    </span></p>
+</a> 
+
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Background</a></li>
 <li class="toctree-l1"><a class="reference internal" href="started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="theory.html">Theory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="applications.html">Applications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference/index.html">API Reference</a></li>
@@ -124,13 +140,6 @@
 <li class="toctree-l1"><a class="reference internal" href="notebooks/self-guessing.html">Self-guessing mapper</a></li>
 </ul>
 
-<form class="search" action="search.html" method="get">
-  <input type="text" name="q"
-   placeholder="type to search" />
-  <input type="hidden" name="check_keywords" value="yes" />
-  <input type="hidden" name="area" value="default" />
-</form>
-<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -139,7 +148,7 @@
   <nav id="rellinks">
     <ul>
         <li>
-          <a href="about.html" title="Next document">About</a>
+          <a href="theory.html" title="Next document">Background</a>
           &rarr;
         </li>
     </ul>
@@ -152,9 +161,7 @@
   </div>
   <footer id="pagefooter">&copy; 2019, Hendrik Jacob van Veen and Nathaniel Saul.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a>
-      1.8.1
-        with the <a href="http://github.com/irskep/sphinx-better-theme">
-          better</a> theme.
+      1.8.4.
 
   </footer>
 

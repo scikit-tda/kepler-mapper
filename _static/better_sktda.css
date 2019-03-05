@@ -2,6 +2,21 @@
     width:100%; 
 }
 
+img {
+    max-width: 100%
+}
+
+p.caption {
+    font-size: 1.2rem;
+    margin-bottom: 0.1em;
+    color: #000000;
+}
+
+.current.reference.internal {
+    text-decoration: underline;
+    font-weight: bold;
+}
+
 #headermeta {
     float:right;
 }

@@ -39,10 +39,7 @@ setup(name='kmapper',
           'ipywidgets'   
         ],
         'docs': [ # `pip install -e ".[docs]"``
-          'sphinx',
-          'nbsphinx',
-          'sphinx-better-theme',
-          'sphinxcontrib-fulltoc'
+          'sktda_docs_config'
         ]
       },
       install_requires=[

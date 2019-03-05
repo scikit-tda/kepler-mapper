@@ -3,11 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-|PyPI version| |Downloads| |Build Status| |Codecov| |DOI|
-
-KeplerMapper
-===================
-
+|DOI| |PyPI version| |Downloads| 
+|Build Status| |Codecov| 
 
     Nature uses as little as possible of anything. - Johannes Kepler
 
@@ -16,20 +13,61 @@ This is a library implementing the Mapper algorithm in Python. KeplerMapper can 
 
 KeplerMapper employs approaches based on the MAPPER algorithm (Singh et al.) as first described in the paper "Topological Methods for the Analysis of High Dimensional Data Sets and 3D Object Recognition".
 
-Contents
---------
+Setup
+---------------
+
+Install KeplerMapper with pip:
+
+::
+
+    pip install kmapper
+
+
+
+Citations
+---------
+
+Hendrik Jacob van Veen, and Nathaniel Saul. (2017, November 17).
+MLWave/kepler-mapper: 186f (Version 1.0.1). Zenodo.
+http://doi.org/10.5281/zenodo.1054444
+
+
+
+Bibtex entry:
+
+
+::
+
+    @MISC {KeplerMapper2019,
+        author       = "Hendrik Jacob van Veen and Nathaniel Saul",
+        title        = "KeplerMapper",
+        howpublished = "http://doi.org/10.5281/zenodo.1054444",
+        month        = "Jan",
+        year         = "2019"
+    }
+
+
+
+Contributions
+----------------
+We welcome contributions of all shapes and sizes. There are lots of opportunities for potential projects, so please get in touch if you would like to help out. Everything from an implementation of your favorite distance, notebooks, examples, and documentation are all equally valuable so please don’t feel you can’t contribute.
+
+To contribute please fork the project make your changes and submit a pull request. We will do our best to work through any issues with you and get your code merged into the main branch.
+
 
 .. toctree::
-  :maxdepth: 1
+    :hidden:
+    :maxdepth: 1
+    :caption: User Guide
 
-  about
-  started
-  theory
-  applications
-  examples
-  reference/index
+    theory
+    started
+    applications
+    examples
+    reference/index
 
 .. toctree::
+    :hidden:
     :maxdepth: 1
     :caption: Tutorials
 
@@ -38,6 +76,7 @@ Contents
     notebooks/KeplerMapper-usage-in-Jupyter-Notebook
 
 .. toctree::
+    :hidden:
     :maxdepth: 1
     :caption: Advanced Tutorials
 

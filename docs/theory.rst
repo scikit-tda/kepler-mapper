@@ -1,5 +1,5 @@
-Theory
--------
+Background
+-------------
 
 Topology started with Leonhard Euler and the famous problem of the Seven Bridges of Königsberg: Can one construct a path that crosses each bridge exactly once and reaches all islands?
 

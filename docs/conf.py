@@ -3,13 +3,11 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('.'))
 from kmapper import __version__
-from theme_settings import *
+from sktda_docs_config import *
 
 project = u'KeplerMapper'
 copyright = u'2019, Hendrik Jacob van Veen and Nathaniel Saul'
 author = u'Hendrik Jacob van Veen and Nathaniel Saul'
-
-# source_url = 'https://github.com/scikit-tda/kepler-mapper'
 
 version = __version__
 release = __version__
@@ -18,6 +16,7 @@ html_theme_options.update({
   # Google Analytics info
   'ga_ua': 'UA-124965309-4',
   'ga_domain': '',
+  'gh_url': 'scikit-tda/kepler-mapper'
 })
 
 html_short_title = project

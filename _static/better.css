@@ -1,4 +1,5 @@
 @import url("better_basic.css");
+@import url("better_sktda.css");
 
 
 
@@ -102,11 +103,6 @@ a.headerlink {
 }
 
 /* code styles */
-
-pre, tt {
-    background-color: #eee;
-    color: #333;
-}
 
 pre {
     font-family: Monaco, Consolas, "Lucida Console", monospace;

@@ -12,8 +12,6 @@ authors:
    affiliation: 2
  - name: Emilie (empet)
  - name: David Eargle
-   orcid: 
-   affiliation: 
  - name: smangham
  - name: emerson-escolar
 affiliations:

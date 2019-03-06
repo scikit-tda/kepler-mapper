@@ -1,5 +1,5 @@
 ---
-title: 'Kepler Mapper: A Lean Persistent Homology Library for Python'
+title: 'Kepler Mapper: A flexible Python implementation of the Mapper algorithm.'
 tags:
  - Python
  - Mapper

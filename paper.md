@@ -6,7 +6,6 @@ tags:
  - Topological Data Analysis
 authors:
  - name: Hendrik Jacob van Veen
-   orcid: XXXX-XXXX-XXXX-XXX
    affiliation: 1
  - name: Nathaniel Saul
    orcid: 0000-0002-8549-9810

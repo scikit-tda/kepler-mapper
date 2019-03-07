@@ -12,6 +12,8 @@ authors:
    affiliation: 2
  - name: Emilie (empet)
  - name: David Eargle
+   orcid: 0000-0002-4056-8114
+   affiliation: 3
  - name: smangham
  - name: emerson-escolar
 affiliations:
@@ -19,6 +21,8 @@ affiliations:
    index: 1
  - name: Department of Mathematics and Statistics, Washington State University
    index: 2
+ - name: Leeds School of Business, University of Colorado Boulder
+   index: 3
 date: 12 February 2018
 bibliography: paper.bib
 ---

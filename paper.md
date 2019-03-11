@@ -10,12 +10,12 @@ authors:
  - name: Nathaniel Saul
    orcid: 0000-0002-8549-9810
    affiliation: 2
- - name: Emilie (empet)
  - name: David Eargle
    orcid: 0000-0002-4056-8114
    affiliation: 3
- - name: smangham
- - name: emerson-escolar
+ - name: Sam Mangham
+   orcid: 0000-0001-7511-5652
+   affiliation: 4
 affiliations:
  - name: Nubank
    index: 1

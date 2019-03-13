@@ -749,15 +749,6 @@ class KeplerMapper(object):
 
         mapper_summary = format_meta(graph, custom_meta)
 
-        # Find the absolute module path and the static files
-        js_path = os.path.join(os.path.dirname(__file__), "static", "kmapper.js")
-        with open(js_path, "r") as f:
-            js_text = f.read()
-
-        css_path = os.path.join(os.path.dirname(__file__), "static", "style.css")
-        with open(css_path, "r") as f:
-            css_text = f.read()
-
         # Render the Jinja template, filling fields as appropriate
         template = env.get_template("base.html").render(
             title=title,
@@ -766,8 +757,6 @@ class KeplerMapper(object):
             dist_label="Node",
             mapper_data=mapper_data,
             colorscale=colorscale,
-            js_text=js_text,
-            css_text=css_text,
             show_tooltips=True,
         )
 

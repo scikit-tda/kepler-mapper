@@ -18,12 +18,12 @@ from scipy.sparse import issparse
 from .cover import Cover
 from .nerve import GraphNerve
 from .visuals import (
-    init_color_function,
+    init_color_data,
     format_meta,
     format_mapper_data,
     build_histogram,
-    graph_data_distribution,
     colorscale_default,
+    render_template,
 )
 
 __all__ = [
@@ -620,7 +620,9 @@ class KeplerMapper(object):
     def visualize(
         self,
         graph,
-        color_function=None,
+        color_data=None,
+        row_color_function=lambda color_data, member_ids: np.mean(color_data[member_ids], axis=1),
+        node_color_function=np.mean,
         custom_tooltips=None,
         custom_meta=None,
         path_html="mapper_visualization_output.html",
@@ -640,17 +642,35 @@ class KeplerMapper(object):
         graph : dict
             Simplicial complex output from the `map` method.
 
-        color_function : list or 1d array
-            A 1d vector with length equal to number of data points used to build Mapper. Each value should correspond to a value for each data point and color of node is computed as the average value for members in a node.
-
-        path_html : String
-            file name for outputing the resulting html.
-
-        custom_meta: dict
-            Render (key, value) in the Mapper Summary pane. 
+        color_data : numpy arraylike
+            Data on which to execute `color_function`. Defaults to the row order in the dataset.
+            
+            `color_data` is scaled to be between 0 and 1.
+            
+        row_color_function : function
+            Will be passed two arguments: `color_data` and `member_ids`, in that order.
+            Should return a single value _per row_ between 0 and 1.
+            
+            Defaults to the average of entries passed to it from `color_data`, If `color_data` was `None`, then
+            this would be the average of the row id, which is... meaningless.
+            
+        node_color_function : function
+            Will be passed the colors for each row. Should return a single
+            aggregate metric per node, value between 0 and 1.
+            
+            Defaults to `np.mean(row_colors)`
 
         custom_tooltip: list or array like
             Value to display for each entry in the node. The cluster data pane will display entry for all values in the node. Default is index of data.
+        
+        custom_meta: dict
+            Render (key, value) in the Mapper Summary pane. 
+        
+        path_html : String
+            file name for outputing the resulting html.
+
+        title : String
+            Title for the visualization.
 
         save_file: bool, default is True
             Save file to `path_html`.
@@ -733,7 +753,6 @@ class KeplerMapper(object):
         """
 
         # TODO:
-        #   - Make color functions more intuitive. How do they even work?
         #   - Allow multiple color functions that can be toggled on and off.
 
         if not len(graph["nodes"]) > 0:
@@ -744,12 +763,14 @@ class KeplerMapper(object):
         # Find the module absolute path and locate templates
         module_root = os.path.join(os.path.dirname(__file__), "templates")
         env = Environment(loader=FileSystemLoader(module_root))
-        # Color function is a vector of colors?
-        color_function = init_color_function(graph, color_function)
 
+        color_data = init_color_data(graph, color_data)
+        
         mapper_data = format_mapper_data(
             graph,
-            color_function,
+            color_data,
+            row_color_function,
+            node_color_function,
             X,
             X_names,
             lens,
@@ -761,8 +782,10 @@ class KeplerMapper(object):
 
         colorscale = colorscale_default
 
-        histogram = graph_data_distribution(graph, color_function, colorscale)
+        node_colors = [n['color'] for n in mapper_data['nodes']]
 
+        histogram = build_histogram(node_colors, colorscale=colorscale, nbins=nbins)
+        
         mapper_summary = format_meta(graph, custom_meta)
 
         # Find the absolute module path and the static files
@@ -794,6 +817,7 @@ class KeplerMapper(object):
                 outfile.write(template.encode("utf-8"))
 
         return template
+
 
     def data_from_cluster_id(self, cluster_id, graph, data):
         """Returns the original data of each cluster member for a given cluster ID

@@ -114,24 +114,32 @@ def _map_val2color(val, vmin, vmax, colorscale=None):
     return "rgb" + str(tuple(val_color_0255))
 
 
-def init_color_function(graph, color_function=None):
-    # If no color_function provided we color by row order in data set
+def init_color_data(graph, color_data=None):
+    # If no color_data provided we color by row order in data set
+    
+    if color_data is None:
+        n_samples = np.max([i for s in graph["nodes"].values() for i in s]) + 1
+        color_data = np.arange(n_samples)
+    
     # Reshaping to 2-D array is required for sklearn 0.19
-    n_samples = np.max([i for s in graph["nodes"].values() for i in s]) + 1
-    if color_function is None:
-        color_function = np.arange(n_samples).reshape(-1, 1)
-    else:
-        color_function = color_function.reshape(-1, 1)
+    is_one_dim = was_one_dim = ( color_data.ndim == 1 )
+    if is_one_dim:
+        color_data = color_data.reshape(-1, 1)
 
-    color_function = color_function.astype(np.float64)
+    color_data = color_data.astype(np.float64)
     # MinMax Scaling to be friendly to non-scaled input.
     scaler = preprocessing.MinMaxScaler()
-    color_function = scaler.fit_transform(color_function).ravel()
-
+    color_data = scaler.fit_transform(color_data)
+    
+    # Put back into vector if that's what it was to start with
+    if was_one_dim:
+        color_data = color_data.ravel()
+    
     # "Scaler might have floating point issues, 1.0000...0002". Force max and min
-    color_function[color_function > 1] = 1
-    color_function[color_function < 0] = 0
-    return color_function
+    color_data[color_data > 1] = 1
+    color_data[color_data < 0] = 0
+    
+    return color_data
 
 
 def format_meta(graph, custom_meta=None, color_function_name=None):
@@ -164,14 +172,15 @@ def format_meta(graph, custom_meta=None, color_function_name=None):
 
 
 def format_mapper_data(
-    graph, color_function, X, X_names, lens, lens_names, custom_tooltips, env, nbins=10
+
+    graph, color_data, row_color_function, node_color_function, X, X_names, lens, lens_names, custom_tooltips, env, nbins=10
 ):
-    # import pdb; pdb.set_trace()
     json_dict = {"nodes": [], "links": []}
     node_id_to_num = {}
     for i, (node_id, member_ids) in enumerate(graph["nodes"].items()):
         node_id_to_num[node_id] = i
-        c = _color_function(member_ids, color_function)
+        member_colors = row_color_function(color_data, member_ids)
+        c = node_color_function(member_colors)
         t = _type_node()
         s = _size_node(member_ids)
         tt = _format_tooltip(
@@ -182,7 +191,7 @@ def format_mapper_data(
             X_names,
             lens,
             lens_names,
-            color_function,
+            member_colors,
             node_id,
             nbins,
         )
@@ -210,7 +219,7 @@ def format_mapper_data(
 
 
 def build_histogram(data, colorscale=None, nbins=10):
-    """ Build histogram of data based on values of color_function
+    """ Build histogram of data based on values of color_function and color_data
     """
 
     if colorscale is None:
@@ -236,12 +245,12 @@ def build_histogram(data, colorscale=None, nbins=10):
     return histogram
 
 
-def graph_data_distribution(graph, color_function, colorscale, nbins=10):
+def graph_data_distribution(graph, color_data, row_color_function, node_color_function, colorscale, nbins=10):
 
     node_averages = []
     for node_id, member_ids in graph["nodes"].items():
-        member_colors = color_function[member_ids]
-        node_averages.append(np.mean(member_colors))
+        member_colors = row_color_function(color_data, member_ids)
+        node_averages.append(node_color_function(member_colors))
 
     histogram = build_histogram(node_averages, colorscale=colorscale, nbins=nbins)
 
@@ -336,7 +345,7 @@ def _tooltip_components(
     X_names,
     lens,
     lens_names,
-    color_function,
+    member_colors,
     node_ID,
     colorscale,
     nbins=10,
@@ -345,7 +354,7 @@ def _tooltip_components(
     cluster_stats = _format_cluster_statistics(member_ids, X, X_names)
 
     member_histogram = build_histogram(
-        color_function[member_ids], colorscale=colorscale, nbins=nbins
+        member_colors, colorscale=colorscale, nbins=nbins
     )
 
     return projection_stats, cluster_stats, member_histogram
@@ -359,7 +368,7 @@ def _format_tooltip(
     X_names,
     lens,
     lens_names,
-    color_function,
+    member_colors,
     node_ID,
     nbins,
 ):
@@ -381,7 +390,7 @@ def _format_tooltip(
         X_names,
         lens,
         lens_names,
-        color_function,
+        member_colors,
         node_ID,
         colorscale,
         nbins,
@@ -397,10 +406,6 @@ def _format_tooltip(
     )
 
     return tooltip
-
-
-def _color_function(member_ids, color_function):
-    return np.mean(color_function[member_ids])
 
 
 def _size_node(member_ids):

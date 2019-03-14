@@ -182,7 +182,6 @@ class TestVisualHelpers:
             projected_X,
             projected_X_names,
             custom_tooltips,
-            jinja_env,
         )
         # print(graph_data)
         # Dump to json so we can easily tell what's in it.

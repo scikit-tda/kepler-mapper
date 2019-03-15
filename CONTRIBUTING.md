@@ -12,8 +12,8 @@ Please note we have a code of conduct, please follow it in all your interactions
 ## Pull Request Process
 
 1. Ensure all tests are passing. If you are fixing a bug, you must include a passing test that 
-   fails before yoru fix.
-2. Update the README.md and relevant docstrings if you made any API changes.
+   fails before your fix.
+2. Update the `README.md` and relevant docstrings if you made any API changes.
 3. If you want, add your name and e-mail to `CONTRIBUTORS.md`
 
 ## Code of Conduct

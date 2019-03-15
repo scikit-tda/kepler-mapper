@@ -9,12 +9,13 @@ from kmapper import KeplerMapper
 
 from kmapper import visuals
 from kmapper.visuals import (
-    init_color_function,
+    init_color_data,
+    _default_row_color_function,
+    _default_node_color_function,
     format_meta,
     format_mapper_data,
     _map_val2color,
     build_histogram,
-    _color_function,
 )
 
 
@@ -87,52 +88,53 @@ def default_colorscale():
 
 
 class TestVisualHelpers:
-    def test_color_function_type(self):
+    def test_color_data_type(self):
         nodes = {"a": [1, 2, 3], "b": [4, 5, 6]}
         graph = {"nodes": nodes}
 
-        color_function = init_color_function(graph)
+        color_data = init_color_data(graph)
 
-        assert type(color_function) == np.ndarray
-        assert min(color_function) == 0
-        assert max(color_function) == 1
+        assert type(color_data) == np.ndarray
+        assert min(color_data) == 0
+        assert max(color_data) == 1
 
-    def test_color_function_scaled(self):
+    def test_color_data_scaled(self):
         nodes = {"a": [1, 2, 3], "b": [4, 5, 6]}
         graph = {"nodes": nodes}
 
         cf = np.array([6, 5, 4, 3, 2, 1])
-        color_function = init_color_function(graph, cf)
+        color_data = init_color_data(graph, cf)
 
-        # np.testing.assert_almost_equal(min(color_function), 0)
+        # np.testing.assert_almost_equal(min(color_data), 0)
         # np.testing.assert_almost_equal(
-        #     max(color_function), 1
+        #     max(color_data), 1
         # ), "Scaler might have floating point issues, 1.0000...0002"
 
         # build_histogram in visuals.py assumes/needs this
-        assert min(color_function) == 0
-        assert max(color_function) == 1
+        assert min(color_data) == 0
+        assert max(color_data) == 1
 
     def test_color_hist_matches_nodes(self):
         """ The histogram colors dont seem to match the node colors, this should confirm the colors will match and we need to look at the javascript instead.
         """
 
-        color_function = np.array([0.55] * 10 + [0.0] * 10)
+        color_data = np.array([0.55] * 10 + [0.0] * 10)
         member_ids = [1, 2, 3, 4, 5, 6]
-        hist = build_histogram(color_function[member_ids])
-        c = round(_color_function(member_ids, color_function), 2)
+        hist = build_histogram(color_data[member_ids])
+        member_colors = _default_row_color_function(color_data, member_ids)
+        c = round(_default_node_color_function(member_colors), 2)
         single_bar = [bar for bar in hist if bar["perc"] == 100.0]
 
         assert len(single_bar) == 1
         assert _map_val2color(c, 0.0, 1.0) == single_bar[0]["color"]
 
-    def test_color_function_size(self):
+    def test_color_data_size(self):
         nodes = {"a": [1, 2, 3], "b": [4, 5, 6, 7, 8, 9]}
         graph = {"nodes": nodes}
 
-        color_function = init_color_function(graph)
+        color_data = init_color_data(graph)
 
-        assert len(color_function) == len(nodes["a"]) + len(nodes["b"]) + 1
+        assert len(color_data) == len(nodes["a"]) + len(nodes["b"]) + 1
 
     def test_format_meta(self):
         mapper = KeplerMapper()
@@ -167,7 +169,7 @@ class TestVisualHelpers:
         lens = mapper.fit_transform(data, projection=[0])
         graph = mapper.map(lens, data)
 
-        color_function = lens[:, 0]
+        color_data = lens[:, 0]
         inverse_X = data
         projected_X = lens
         projected_X_names = ["projected_%s" % (i) for i in range(projected_X.shape[1])]
@@ -176,7 +178,9 @@ class TestVisualHelpers:
 
         graph_data = format_mapper_data(
             graph,
-            color_function,
+            color_data,
+            _default_row_color_function,
+            _default_node_color_function,
             inverse_X,
             inverse_X_names,
             projected_X,

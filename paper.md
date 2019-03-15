@@ -13,7 +13,7 @@ authors:
  - name: David Eargle
    orcid: 0000-0002-4056-8114
    affiliation: 3
- - name: Sam Mangham
+ - name: Sam W. Mangham
    orcid: 0000-0001-7511-5652
    affiliation: 4
 affiliations:
@@ -23,6 +23,8 @@ affiliations:
    index: 2
  - name: Leeds School of Business, University of Colorado Boulder
    index: 3
+ - name: Department of Electronics & Computer Science, University of Southampton, Southampton, SO17 1BJ, UK
+   index: 4
 date: 12 February 2018
 bibliography: paper.bib
 ---

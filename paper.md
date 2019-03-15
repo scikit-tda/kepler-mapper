@@ -37,9 +37,7 @@ This library, Kepler Mapper, is a Python implementation of the Mapper algorithm 
 We leverage Scikit-Learn API-compatible cluster and scaling algorithms to construct network graphs in a flexible and user-friendly way.
 We also an provide extensive suite of tutorials detailing the use of Kepler Mapper for simple and complex use cases.
 
-![breast-cancer](http://i.imgur.com/ewjRodK.png)
-
-_Figure -- Example Kepler Mapper graph visualization using the [Wisconsin Breast Cancer Dataset](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic))_
+![Example Kepler Mapper graph visualization using the [Wisconsin Breast Cancer Dataset](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic))](http://i.imgur.com/ewjRodK.png)
 
 
 # Library Details

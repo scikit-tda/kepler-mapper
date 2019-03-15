@@ -142,7 +142,7 @@ def init_color_data(graph, color_data=None):
     return color_data
 
 
-def format_meta(graph, custom_meta=None, color_function_name=None):
+def format_meta(graph, custom_meta=None, color_data_name=None):
     n = [l for l in graph["nodes"].values()]
     n_unique = len(set([i for s in n for i in s]))
 
@@ -157,8 +157,8 @@ def format_meta(graph, custom_meta=None, color_function_name=None):
             projection = custom_meta["projection"]
             custom_meta["projection"] = _to_html_format(projection)
 
-        if color_function_name is not None:
-            custom_meta["color_function"] = color_function_name
+        if color_data_name is not None:
+            custom_meta["color_data"] = color_data_name
 
     mapper_summary = {
         "custom_meta": custom_meta,
@@ -172,8 +172,17 @@ def format_meta(graph, custom_meta=None, color_function_name=None):
 
 
 def format_mapper_data(
-
-    graph, color_data, row_color_function, node_color_function, X, X_names, lens, lens_names, custom_tooltips, env, nbins=10
+    graph,
+    color_data,
+    row_color_function,
+    node_color_function,
+    X,
+    X_names,
+    lens,
+    lens_names,
+    custom_tooltips,
+    env,
+    nbins=10,
 ):
     json_dict = {"nodes": [], "links": []}
     node_id_to_num = {}
@@ -418,3 +427,12 @@ def _type_node():
 
 def _size_link_width(graph, node_id, linked_node_id):
     return 1
+
+def _default_row_color_function(color_data, member_ids):
+    if color_data.ndim == 1:
+        return color_data[member_ids]
+    else:
+        return np.mean(color_data[member_ids], axis=1)
+
+def _default_node_color_function(member_colors):
+    return np.mean(member_colors)

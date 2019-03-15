@@ -23,7 +23,8 @@ from .visuals import (
     format_mapper_data,
     build_histogram,
     colorscale_default,
-    render_template,
+    _default_row_color_function,
+    _default_node_color_function,
 )
 
 __all__ = [
@@ -621,8 +622,8 @@ class KeplerMapper(object):
         self,
         graph,
         color_data=None,
-        row_color_function=lambda color_data, member_ids: np.mean(color_data[member_ids], axis=1),
-        node_color_function=np.mean,
+        row_color_function=_default_row_color_function,
+        node_color_function=_default_node_color_function,
         custom_tooltips=None,
         custom_meta=None,
         path_html="mapper_visualization_output.html",

@@ -3,11 +3,12 @@ from __future__ import division
 import numpy as np
 
 from .visuals import (
-    init_color_function,
+    init_color_data,
     _size_node,
     _format_projection_statistics,
     _format_cluster_statistics,
-    _color_function,
+    _default_row_color_function,
+    _default_node_color_function,
     format_meta,
     _to_html_format,
     _map_val2color,
@@ -62,8 +63,10 @@ def plotlyviz(
     colorscale=default_colorscale,
     title="Kepler Mapper",
     graph_layout="kk",
-    color_function=None,
-    color_function_name=None,
+    color_data=None,
+    color_data_name=None,
+    row_color_function=_default_row_color_function,
+    node_color_function=_default_node_color_function,
     dashboard=False,
     graph_data=False,
     factor_size=3,
@@ -152,8 +155,10 @@ def plotlyviz(
     kmgraph, mapper_summary, n_color_distribution = get_mapper_graph(
         scomplex,
         colorscale=colorscale,
-        color_function=color_function,
-        color_function_name=color_function_name,
+        color_data=color_data,
+        color_data_name=color_data_name,
+        row_color_function=row_color_function,
+        node_color_function=node_color_function,
     )
 
     annotation = get_kmgraph_meta(mapper_summary)
@@ -178,9 +183,9 @@ def plotlyviz(
     )
     result = go.FigureWidget(data=plgraph_data, layout=layout)
 
-    if color_function_name:
+    if color_data_name:
         with result.batch_update():
-            result.data[1].marker.colorbar.title = color_function_name
+            result.data[1].marker.colorbar.title = color_data_name
             result.data[1].marker.colorbar.titlefont.size = 10
 
     if dashboard or graph_data:
@@ -209,7 +214,9 @@ def plotlyviz(
 
 def scomplex_to_graph(
     simplicial_complex,
-    color_function,
+    color_data,
+    row_color_function,
+    node_color_function,
     X,
     X_names,
     lens,
@@ -223,13 +230,14 @@ def scomplex_to_graph(
     for i, (node_id, member_ids) in enumerate(simplicial_complex["nodes"].items()):
         node_id_to_num[node_id] = i
         projection_stats, cluster_stats, member_histogram = _tooltip_components(
-            member_ids, X, X_names, lens, lens_names, color_function, i, colorscale
+            member_ids, X, X_names, lens, lens_names, color_data, i, colorscale
         )
+        member_colors = row_color_function(color_data, member_ids)
         n = {
             "id": i,
             "name": node_id,
             "member_ids": member_ids,
-            "color": _color_function(member_ids, color_function),
+            "color": node_color_function(member_colors),
             "size": _size_node(member_ids),
             "cluster": cluster_stats,
             "distribution": member_histogram,
@@ -252,8 +260,10 @@ def scomplex_to_graph(
 
 def get_mapper_graph(
     simplicial_complex,
-    color_function=None,
-    color_function_name=None,
+    color_data=None,
+    color_data_name=None,
+    row_color_function=_default_row_color_function,
+    node_color_function=_default_node_color_function,
     colorscale=default_colorscale,
     custom_tooltips=None,
     custom_meta=None,
@@ -285,11 +295,13 @@ def get_mapper_graph(
             "A mapper graph should have more than 0 nodes. This might be because your clustering algorithm might be too sensitive and be classifying all points as noise."
         )
 
-    color_function = init_color_function(simplicial_complex, color_function)
+    color_data = init_color_data(simplicial_complex, color_data)
 
     json_graph = scomplex_to_graph(
         simplicial_complex,
-        color_function,
+        color_data,
+        row_color_function,
+        node_color_function,
         X,
         X_names,
         lens,
@@ -297,12 +309,14 @@ def get_mapper_graph(
         custom_tooltips,
         colorscale=colorscale,
     )
-    colorf_distribution = graph_data_distribution(
-        simplicial_complex, color_function, colorscale
-    )
+    
+    node_colors = [n['color'] for n in json_graph['nodes']]
+
+    colorf_distribution = build_histogram(node_colors, colorscale=colorscale)
+    
     mapper_summary = format_meta(
         simplicial_complex,
-        color_function_name=color_function_name,
+        color_data_name=color_data_name,
         custom_meta=custom_meta,
     )
 
@@ -677,8 +691,8 @@ def _text_mapper_summary(mapper_summary):
     text += (
         "<br><b>Clusterer: </b>" + d["clusterer"] + "<br><b>Scaler: </b>" + d["scaler"]
     )
-    if "color_function" in d.keys():
-        text += "<br><b>Color function: </b>" + d["color_function"]
+    if "color_data" in d.keys():
+        text += "<br><b>Color function: </b>" + d["color_data"]
 
     return text
 

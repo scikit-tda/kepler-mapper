@@ -19,7 +19,7 @@ authors:
 affiliations:
  - name: Nubank
    index: 1
- - name: Department of Mathematics and Statistics, Washington State University
+ - name: Department of Mathematics and Statistics, Washington State University Vancouver
    index: 2
  - name: Leeds School of Business, University of Colorado Boulder
    index: 3
@@ -37,7 +37,7 @@ This library, Kepler Mapper, is a Python implementation of the Mapper algorithm 
 We leverage Scikit-Learn API-compatible cluster and scaling algorithms to construct network graphs in a flexible and user-friendly way.
 We also an provide extensive suite of tutorials detailing the use of Kepler Mapper for simple and complex use cases.
 
-![Example Kepler Mapper graph visualization using the [Wisconsin Breast Cancer Dataset](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic))](http://i.imgur.com/ewjRodK.png)
+![Example Kepler Mapper graph visualization using the Wisconsin Breast Cancer Dataset [@Dua:2019]](http://i.imgur.com/ewjRodK.png)
 
 
 # Library Details
@@ -49,7 +49,7 @@ Visual exploration is a critical aspect of Mapper analysis. For this, we provide
 
 # Source Code
 
-The source code for Kepler Mapper is available on Github through the Scikit-TDA organization [https://github.com/scikit-tda/kepler-mapper](https://github.com/scikit-tda/kepler-mapper). Complete documentation can be found at [kepler-mapper.scikit-tda.org](https://kepler-mapper.scikit-tda.org). 
+The source code for Kepler Mapper is available on Github through the Scikit-TDA organization [github.com/scikit-tda/kepler-mapper](https://github.com/scikit-tda/kepler-mapper). Complete documentation can be found at [kepler-mapper.scikit-tda.org](https://kepler-mapper.scikit-tda.org). 
 
 # Acknowledgements
 

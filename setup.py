@@ -50,7 +50,8 @@ setup(name='kmapper',
         'scikit-learn',
         'numpy',
         'scipy',
-        'Jinja2'
+        'Jinja2',
+        'css-html-js-minify'
       ],
       python_requires='>=2.7,!=3.1,!=3.2,!=3.3',
       classifiers=[

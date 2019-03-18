@@ -5,7 +5,7 @@ import json
 import os
 from collections import defaultdict
 from ast import literal_eval
-from jinja2 import Environment, FileSystemLoader, Template
+from jinja2 import Environment, FileSystemLoader, Template, StrictUndefined
 
 
 colorscale_default = [
@@ -274,8 +274,13 @@ def render_template(
     ):
     # Find the module absolute path and locate templates
     module_root = os.path.join(os.path.dirname(__file__), "templates")
-    env = Environment(loader=FileSystemLoader(module_root))
-    
+    env = Environment(
+            loader=FileSystemLoader(module_root),
+            lstrip_blocks=True,
+            trim_blocks=True,
+            undefined=StrictUndefined,
+            )
+
     # Render the Jinja template, filling fields as appropriate
     rendered_template = env.get_template("base.html").render(
         title=title,
@@ -403,7 +408,6 @@ def _format_tooltip(
     node_ID,
     nbins,
 ):
-    # TODO: Allow customization in the form of aggregate per node and per entry in node.
     # TODO: Allow users to turn off tooltip completely.
 
     custom_tooltips = (

@@ -3,7 +3,7 @@
 
 <h3>{{ dist_label }} Distribution</h3>  
 
-<div id="histogram">
+<div class="histogram">
 <!-- Render histogram -->
 {% for bar in bins %}
     <div class="bin" style="height:{{ bar['height'] or 1.0 }}px; background:{{ bar['color'] }}">

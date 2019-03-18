@@ -238,7 +238,7 @@ if (text_center) {
 node.on("mouseover", function(d) {
   // Change node details
   set_highlight(d);
-  d3.select("#tooltip_content").html(d.tooltip + "<br/>");
+  d3.select("#tooltip_content").html(d3.select("#node_tooltip_data-" + d.tooltip.node_id).html());
 }).on("mousedown", function(d) {
   // TODO: This seems to only stop the one particular node from moving?
 

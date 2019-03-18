@@ -9,7 +9,7 @@
   <link rel="icon" type="image/png" href="http://i.imgur.com/axOG6GJ.jpg" />
 
   <link href='https://fonts.googleapis.com/css?family=Roboto+Mono:700,300' rel='stylesheet' type='text/css'>
-  <style>{{ css_text }}</style>
+  <style>{% include 'static/style.css' %}</style>
 
 </head>
 
@@ -17,8 +17,17 @@
 
   <!-- Storage of data so D3 can access it later. This is in <body> so Chrome doesn't wholesale move all head content to body. -->
   <div id="json_graph" data-graph='{{ mapper_data|tojson|safe }}' style="display:none"></div>
-  <div id="json_colorscale" data-colorscale='{{ colorscale|tojson|safe }}'
-  style="display:none"></div>
+  <div id="json_colorscale" data-colorscale='{{ colorscale|tojson|safe }}' style="display:none"></div>
+  
+  {% import 'cluster_tooltip.html' as cluster_tooltip -%}
+  <div id='node_tooltips' style='display:none'>
+  {% for node_data in mapper_data.nodes %}
+	{% set node_tooltip_data = node_data.tooltip %}
+	<div id='node_tooltip_data-{{ node_tooltip_data.node_id }}'>
+	{{ cluster_tooltip.build(node_tooltip_data) }}
+	</div>
+  {% endfor %}
+  </div>
 
   <div id="canvas">
       <!-- Graph will go in here -->
@@ -57,7 +66,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
 
-  <script>{{ js_text }}</script>
+  <script>{% include 'static/kmapper.js' %}</script>
 </body>
 
 </html>

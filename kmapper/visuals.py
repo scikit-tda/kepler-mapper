@@ -2,8 +2,10 @@
 import numpy as np
 from sklearn import preprocessing
 import json
+import os
 from collections import defaultdict
 from ast import literal_eval
+from jinja2 import Environment, FileSystemLoader, Template
 
 
 colorscale_default = [
@@ -181,7 +183,6 @@ def format_mapper_data(
     lens,
     lens_names,
     custom_tooltips,
-    env,
     nbins=10,
 ):
     json_dict = {"nodes": [], "links": []}
@@ -193,7 +194,6 @@ def format_mapper_data(
         t = _type_node()
         s = _size_node(member_ids)
         tt = _format_tooltip(
-            env,
             member_ids,
             custom_tooltips,
             X,
@@ -264,6 +264,29 @@ def graph_data_distribution(graph, color_data, row_color_function, node_color_fu
     histogram = build_histogram(node_averages, colorscale=colorscale, nbins=nbins)
 
     return histogram
+
+def render_template(
+    title,
+    mapper_summary,
+    histogram,
+    mapper_data,
+    colorscale
+    ):
+    # Find the module absolute path and locate templates
+    module_root = os.path.join(os.path.dirname(__file__), "templates")
+    env = Environment(loader=FileSystemLoader(module_root))
+    
+    # Render the Jinja template, filling fields as appropriate
+    rendered_template = env.get_template("base.html").render(
+        title=title,
+        mapper_summary=mapper_summary,
+        histogram=histogram,
+        dist_label="Node",
+        mapper_data=mapper_data,
+        colorscale=colorscale
+    )
+    
+    return rendered_template
 
 
 def _format_cluster_statistics(member_ids, X, X_names):
@@ -370,7 +393,6 @@ def _tooltip_components(
 
 
 def _format_tooltip(
-    env,
     member_ids,
     custom_tooltips,
     X,
@@ -405,16 +427,16 @@ def _format_tooltip(
         nbins,
     )
 
-    tooltip = env.get_template("cluster_tooltip.html").render(
-        projection_stats=projection_stats,
-        cluster_stats=cluster_stats,
-        custom_tooltips=custom_tooltips,
-        histogram=histogram,
-        dist_label="Member",
-        node_id=node_ID,
-    )
+    tooltip_data = {
+        'projection_stats': projection_stats,
+        'cluster_stats': cluster_stats,
+        'custom_tooltips': custom_tooltips,
+        'histogram': histogram,
+        'dist_label': "Member",
+        'node_id': node_ID,
+    }
 
-    return tooltip
+    return tooltip_data
 
 
 def _size_node(member_ids):

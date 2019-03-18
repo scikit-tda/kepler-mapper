@@ -4,11 +4,9 @@ from collections import defaultdict
 from datetime import datetime
 import inspect
 import itertools
-import os
 import sys
 import warnings
 
-from jinja2 import Environment, FileSystemLoader, Template
 import numpy as np
 from sklearn import cluster, preprocessing, manifold, decomposition
 from sklearn.model_selection import StratifiedKFold, KFold
@@ -25,6 +23,7 @@ from .visuals import (
     colorscale_default,
     _default_row_color_function,
     _default_node_color_function,
+    render_template
 )
 
 __all__ = [
@@ -633,7 +632,6 @@ class KeplerMapper(object):
         X_names=[],
         lens=None,
         lens_names=[],
-        show_tooltips=True,
         nbins=10,
     ):
         """Generate a visualization of the simplicial complex mapper output. Turns the complex dictionary into a HTML/D3.js visualization
@@ -687,9 +685,6 @@ class KeplerMapper(object):
 
         lens_name: list of strings
             Names of each variable in `lens` to be displayed. In None, then display names by index.
-
-        show_tooltips: bool, default is True.
-            If false, completely disable tooltips. This is useful when using output in space-tight pages or will display node data in custom ways.
 
         nbins: int, default is 10
             Number of bins shown in histogram of tooltip color distributions.
@@ -761,10 +756,6 @@ class KeplerMapper(object):
                 "Visualize requires a mapper with more than 0 nodes. \nIt is possible that the constructed mapper could have been constructed with bad parameters. This can occasionally happens when using the default clustering algorithm. Try changing `eps` or `min_samples` in the DBSCAN clustering algorithm."
             )
 
-        # Find the module absolute path and locate templates
-        module_root = os.path.join(os.path.dirname(__file__), "templates")
-        env = Environment(loader=FileSystemLoader(module_root))
-
         color_data = init_color_data(graph, color_data)
         
         mapper_data = format_mapper_data(
@@ -777,8 +768,7 @@ class KeplerMapper(object):
             lens,
             lens_names,
             custom_tooltips,
-            env,
-            nbins,
+            nbins
         )
 
         colorscale = colorscale_default
@@ -789,35 +779,16 @@ class KeplerMapper(object):
         
         mapper_summary = format_meta(graph, custom_meta)
 
-        # Find the absolute module path and the static files
-        js_path = os.path.join(os.path.dirname(__file__), "static", "kmapper.js")
-        with open(js_path, "r") as f:
-            js_text = f.read()
-
-        css_path = os.path.join(os.path.dirname(__file__), "static", "style.css")
-        with open(css_path, "r") as f:
-            css_text = f.read()
-
-        # Render the Jinja template, filling fields as appropriate
-        template = env.get_template("base.html").render(
-            title=title,
-            mapper_summary=mapper_summary,
-            histogram=histogram,
-            dist_label="Node",
-            mapper_data=mapper_data,
-            colorscale=colorscale,
-            js_text=js_text,
-            css_text=css_text,
-            show_tooltips=True,
-        )
+        rendered_template = render_template(title, mapper_summary, histogram, mapper_data, colorscale)
 
         if save_file:
             with open(path_html, "wb") as outfile:
                 if self.verbose > 0:
                     print("Wrote visualization to: %s" % (path_html))
-                outfile.write(template.encode("utf-8"))
+                outfile.write(rendered_template.encode("utf-8"))
 
-        return template
+        return rendered_template
+
 
 
     def data_from_cluster_id(self, cluster_id, graph, data):

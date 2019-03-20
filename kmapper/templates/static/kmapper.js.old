@@ -121,7 +121,7 @@ var color = d3.scale.linear()
  */
 
 var graph = JSON.parse(document.getElementById("json_graph").dataset.graph);
-var nodes_map = new Map(graph.nodes.map(node => [node.name, node]))
+
               
 // Force settings
 var force = d3.layout.force()
@@ -156,8 +156,6 @@ node.on("dblclick.zoom", function(d) { d3.event.stopPropagation();
   zoom.translate([dcx,dcy]);
   g.attr("transform", "translate("+ dcx + "," + dcy  + ")scale(" + zoom.scale() + ")");
 });
-
-
 
 
 // Drop-shadow Filter
@@ -236,44 +234,40 @@ if (text_center) {
  */
 var focus_via_click = false;
 
-node.on("mouseover.focus", function(d) {
+node.on("mouseover.mine", function(d) {
   // Change node details
   if (d3.event.buttons == 0){
-    set_cursor('pointer');
+    svg.style('cursor','pointer');
     if (!focus_via_click) {
       set_focus_node(d);
-    }
+    }   
   }
 })
-.on("mouseout.focus", function(d) {
-  if (d3.event.buttons == 0){
-    set_cursor('move');
+.on("mouseout", function(d) {
+  if (d3.event.buttons =    = 0){
+    svg.style('cursor','move');
     if (!focus_via_click) {
         set_focus_node(null);
     }
   }
 })
-.on('mousedown.cursor', function(d) {
-  set_cursor('grabbing');
-})
 .on('mousedown.focus', function(d){
     d3.event.stopPropagation();
-    if (focus_node != d.name) {
-        //switch click focus
+    
+    if (focus_node != d) {
+        // switch click focus
         set_focus_via_click(d);
     } else if (!focus_via_click) {
-        //d already selected but not via click; set click true
+        // d already selected but not via click; set click true
         focus_via_click = true;
     }
+    svg.style('cursor','grabbing');
 })
 ;
 
 d3.select(window).on("mouseup.focus", function(){
-    if (focus_node != null) {
-        set_cursor('pointer');
-    }
     if (focus_node == null) {
-        set_cursor('move');
+        svg.style('cursor','move');
     }
 });
 
@@ -284,39 +278,25 @@ svg.on('mousedown.focus', function(e){
 // Node highlighting logic
 
 function set_focus_via_click(d) {
-    focus_via_click = (d != null ? true : false);
-    set_lock_selected(d);
-    set_focus_node(d);
-}
-
-function set_lock_selected(d) {
-
+    if (d == null) {
+        focus_via_click = false;
+        set_focus_node(null);
+    } else {
+        focus_via_click = true;
+        set_focus_node(d);        
+    }
 }
 
 function set_focus_node(d){
   if (d == null) {
     focus_node = null;
-    set_cursor('move');
+    svg.style("cursor","move");
     d3.select("#tooltip_content").html('');
-  } else if (d.name != focus_node) {
-    focus_node = d.name;
-    set_cursor('pointer');
+  } else {
+    focus_node = d;
+    svg.style("cursor","pointer");
     d3.select("#tooltip_content").html(d3.select("#node_tooltip_data-" + d.tooltip.node_id).html());
   }
-  // else, it's already the focus node, so do nothing...
-}
-
-function set_cursor(state) {
-    var buttons = d3.event.buttons;
-
-    // always allow a grab if a button is pressed.
-    if (state == 'grabbing' && buttons != 0) {
-        svg.style('cursor', state);
-    }
-    // otherwise, only allow a state change if buttons == 0
-    else if (buttons == 0) {
-        svg.style('cursor', state);
-    }
 }
 
 

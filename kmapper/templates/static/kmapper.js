@@ -234,43 +234,88 @@ if (text_center) {
  * 
  * 
  */
+var focus_via_click = false;
 
-node.on("mouseover", function(d) {
+node.on("mouseover.focus", function(d) {
   // Change node details
-  set_highlight(d);
-  d3.select("#tooltip_content").html(d3.select("#node_tooltip_data-" + d.tooltip.node_id).html());
-}).on("mousedown", function(d) {
-  // TODO: This seems to only stop the one particular node from moving?
-
-  d3.event.stopPropagation();
-  focus_node = d;
-  if (highlight_node === null) {
-    set_highlight(d)
+  if (d3.event.buttons == 0){
+    set_cursor('pointer');
+    if (!focus_via_click) {
+      set_focus_node(d);
+    }
   }
-}).on("mouseout", function(d) {
-  exit_highlight();
+})
+.on("mouseout.focus", function(d) {
+  if (d3.event.buttons == 0){
+    set_cursor('move');
+    if (!focus_via_click) {
+        set_focus_node(null);
+    }
+  }
+})
+.on('mousedown.cursor', function(d) {
+  set_cursor('grabbing');
+})
+.on('mousedown.focus', function(d){
+    d3.event.stopPropagation();
+    if (focus_node != d) {
+        //switch click focus
+        set_focus_via_click(d);
+    } else if (!focus_via_click) {
+        //d already selected but not via click; set click true
+        focus_via_click = true;
+    }
+})
+;
+
+d3.select(window).on("mouseup.focus", function(){
+    if (focus_node != null) {
+        set_cursor('pointer');
+    }
+    if (focus_node == null) {
+        set_cursor('move');
+    }
 });
 
-d3.select(window).on("mouseup", function() {
-  if (focus_node!==null){
-    focus_node = null;
-  }
-  if (highlight_node === null) {
-    exit_highlight();
-  }
-});
+svg.on('mousedown.focus', function(e){
+    set_focus_via_click(null);
+})
 
 // Node highlighting logic
-function exit_highlight(){
-  highlight_node = null;
-  if (focus_node===null){
-    svg.style("cursor","move");
+
+function set_focus_via_click(d) {
+    if (d == null) {
+        focus_via_click = false;
+        set_focus_node(null);
+    } else {
+        focus_via_click = true;
+        set_focus_node(d);        
+    }
+}
+
+function set_focus_node(d){
+  if (d == null) {
+    focus_node = null;
+    set_cursor('move');
+    d3.select("#tooltip_content").html('');
+  } else {
+    focus_node = d;
+    set_cursor('pointer');
+    d3.select("#tooltip_content").html(d3.select("#node_tooltip_data-" + d.tooltip.node_id).html());
   }
 }
 
-function set_highlight(d){
-  svg.style("cursor","pointer");
-  if (focus_node!==null) d = focus_node;
+function set_cursor(state) {
+    var buttons = d3.event.buttons;
+
+    // always allow a grab if a button is pressed.
+    if (state == 'grabbing' && buttons != 0) {
+        svg.style('cursor', state);
+    }
+    // otherwise, only allow a state change if buttons == 0
+    else if (buttons == 0) {
+        svg.style('cursor', state);
+    }
 }
 
 

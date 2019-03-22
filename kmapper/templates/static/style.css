@@ -262,3 +262,7 @@ td, th {
 td {
   border-bottom: 1px solid #111;
 }
+
+.highlight {
+    filter: url(#drop-shadow-pulse);
+}

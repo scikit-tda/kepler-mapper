@@ -13,16 +13,18 @@ authors:
  - name: David Eargle
    orcid: 0000-0002-4056-8114
    affiliation: 3
- - name: Sam Mangham
+ - name: Sam W. Mangham
    orcid: 0000-0001-7511-5652
    affiliation: 4
 affiliations:
  - name: Nubank
    index: 1
- - name: Department of Mathematics and Statistics, Washington State University
+ - name: Department of Mathematics and Statistics, Washington State University Vancouver
    index: 2
  - name: Leeds School of Business, University of Colorado Boulder
    index: 3
+ - name: Department of Electronics & Computer Science, University of Southampton, Southampton, SO17 1BJ, UK
+   index: 4
 date: 12 February 2018
 bibliography: paper.bib
 ---
@@ -35,9 +37,7 @@ This library, Kepler Mapper, is a Python implementation of the Mapper algorithm 
 We leverage Scikit-Learn API-compatible cluster and scaling algorithms to construct network graphs in a flexible and user-friendly way.
 We also an provide extensive suite of tutorials detailing the use of Kepler Mapper for simple and complex use cases.
 
-![breast-cancer](http://i.imgur.com/ewjRodK.png)
-
-_Figure -- Example Kepler Mapper graph visualization using the [Wisconsin Breast Cancer Dataset](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic))_
+![Example Kepler Mapper graph visualization using the Wisconsin Breast Cancer Dataset [@Dua:2019]](http://i.imgur.com/ewjRodK.png)
 
 
 # Library Details
@@ -49,7 +49,7 @@ Visual exploration is a critical aspect of Mapper analysis. For this, we provide
 
 # Source Code
 
-The source code for Kepler Mapper is available on Github through the Scikit-TDA organization [https://github.com/scikit-tda/kepler-mapper](https://github.com/scikit-tda/kepler-mapper). Complete documentation can be found at [kepler-mapper.scikit-tda.org](https://kepler-mapper.scikit-tda.org). 
+The source code for Kepler Mapper is available on Github through the Scikit-TDA organization [github.com/scikit-tda/kepler-mapper](https://github.com/scikit-tda/kepler-mapper). Complete documentation can be found at [kepler-mapper.scikit-tda.org](https://kepler-mapper.scikit-tda.org). 
 
 # Acknowledgements
 

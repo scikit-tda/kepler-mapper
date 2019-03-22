@@ -121,7 +121,6 @@ var color = d3.scale.linear()
  */
 
 var graph = JSON.parse(document.getElementById("json_graph").dataset.graph);
-var nodes_map = new Map(graph.nodes.map(node => [node.name, node]))
               
 // Force settings
 var force = d3.layout.force()

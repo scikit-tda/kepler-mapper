@@ -6,7 +6,6 @@ import os
 from collections import defaultdict
 from ast import literal_eval
 from jinja2 import Environment, FileSystemLoader, Template, StrictUndefined
-from css_html_js_minify import html_minify, js_minify, css_minify
 
 
 colorscale_default = [
@@ -288,12 +287,10 @@ def render_template(
     js_path = os.path.join(static_dir, "kmapper.js")
     with open(js_path, "r") as f:
         js_text = f.read()
-    js_text = js_minify(js_text)
 
     css_path = os.path.join(static_dir, "style.css")
     with open(css_path, "r") as f:
         css_text = f.read()
-    css_text = css_minify(css_text)
 
     # Render the Jinja template, filling fields as appropriate
     rendered_template = env.get_template("base.html").render(
@@ -425,7 +422,6 @@ def _format_tooltip(
     nbins,
 ):
     # TODO: Allow users to turn off tooltip completely.
-
     custom_tooltips = (
         custom_tooltips[member_ids] if custom_tooltips is not None else member_ids
     )

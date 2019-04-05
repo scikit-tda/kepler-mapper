@@ -25,6 +25,7 @@ from .visuals import (
     graph_data_distribution,
     colorscale_default,
 )
+from scipy.sparse import hstack, csr
 
 __all__ = [
     "KeplerMapper", 
@@ -498,7 +499,10 @@ class KeplerMapper(object):
         # Prefix'ing the data with an ID column
         ids = np.array([x for x in range(lens.shape[0])])
         lens = np.c_[ids, lens]
-        X = np.c_[ids, X]
+        if type(X) == csr.csr_matrix:
+            X = hstack([ids[np.newaxis].T, X], format='csr')
+        else:
+            X = np.c_[ids, X]
 
         # Cover scheme defines a list of elements
         bins = self.cover.fit(lens)

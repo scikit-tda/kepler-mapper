@@ -1,3 +1,18 @@
+"""
+
+
+Breast Cancer
+================
+
+
+
+This example generates a Mapper built from the `Wisconsin Breast Cancer Dataset <https://www.kaggle.com/uciml/breast-cancer-wisconsin-data>`_.
+
+
+.. image:: ../../../examples/images/breast-cancer.png
+
+"""
+
 import sys
 try:
     import pandas as pd
@@ -11,8 +26,8 @@ import sklearn
 from sklearn import ensemble
 
 # For data we use the Wisconsin Breast Cancer Dataset
-# Via: https://www.kaggle.com/uciml/breast-cancer-wisconsin-data
-df = pd.read_csv("data.csv")
+# Via: 
+df = pd.read_csv("data/breast-cancer.csv")
 feature_names = [c for c in df.columns if c not in ["id", "diagnosis"]]
 df["diagnosis"] = df["diagnosis"].apply(lambda x: 1 if x == "M" else 0)
 X = np.array(df[feature_names].fillna(0))  # quick and dirty imputation
@@ -33,12 +48,12 @@ lens = np.c_[lens1, lens2]
 # Create the simplicial complex
 graph = mapper.map(lens,
                    X,
-                   cover=km.Cover(n_cubes=15, perc_overlap=0.7),
+                   cover=km.Cover(n_cubes=15, perc_overlap=0.4),
                    clusterer=sklearn.cluster.KMeans(n_clusters=2,
                                                     random_state=1618033))
 
 # Visualization
 mapper.visualize(graph,
-                 path_html="breast-cancer.html",
+                 path_html="output/breast-cancer.html",
                  title="Wisconsin Breast Cancer Dataset",
                  custom_tooltips=y)

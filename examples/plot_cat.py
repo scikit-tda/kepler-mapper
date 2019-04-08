@@ -1,8 +1,19 @@
+""" 
+
+3D Cat Data
+============
+
+
+This example generates a Mapper built from a point-cloud sampled from a 3D model of a cat.
+
+"""
+
+
 import numpy as np
 import sklearn
 import kmapper as km
 
-data = np.genfromtxt('cat-reference.csv', delimiter=',')
+data = np.genfromtxt('data/cat-reference.csv', delimiter=',')
 
 mapper = km.KeplerMapper(verbose=2)
 
@@ -15,16 +26,9 @@ graph = mapper.map(lens,
                    cover=km.Cover(n_cubes=15, perc_overlap=0.2))
 
 mapper.visualize(graph,
-                 path_html="cat_keplermapper_output.html")
+                 path_html="output/cat_keplermapper.html")
 
-# You may want to visualize the original point cloud data in 3D scatter too
-"""
+km.draw_matplotlib(graph)
+
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-ax.scatter(data[:,0],data[:,1],data[:,2])
-plt.savefig("cat-reference.csv.png")
 plt.show()
-"""

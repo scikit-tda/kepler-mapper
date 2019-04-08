@@ -1,3 +1,22 @@
+"""
+
+Digits Dataset
+================
+
+something something something
+
+
+
+.. image:: ../../../examples/images/digits-tooltip.png
+
+
+
+
+
+"""
+
+
+
 import io
 import sys
 import base64
@@ -41,15 +60,18 @@ projected_data = mapper.fit_transform(data,
 # Create the graph (we cluster on the projected data and suffer projection loss)
 graph = mapper.map(projected_data,
                    clusterer=sklearn.cluster.DBSCAN(eps=0.3, min_samples=15),
-                   cover=km.Cover(35, 0.9))
+                   cover=km.Cover(35, 0.4))
 
 # Create the visualizations (increased the graph_gravity for a tighter graph-look.)
 
 # Tooltips with image data for every cluster member
 mapper.visualize(graph,
-                 path_html="keplermapper_digits_custom_tooltips.html",
+                 title="Handwritten digits Mapper",
+                 path_html="output/digits_custom_tooltips.html",
+                 color_function=labels,
                  custom_tooltips=tooltip_s)
 # Tooltips with the target y-labels for every cluster member
 mapper.visualize(graph,
-                 path_html="keplermapper_digits_ylabel_tooltips.html",
+                 title="Handwritten digits Mapper",
+                 path_html="output/digits_ylabel_tooltips.html",
                  custom_tooltips=labels)

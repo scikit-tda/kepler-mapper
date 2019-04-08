@@ -52,14 +52,14 @@ def draw_matplotlib(g, ax=None, fig=None):
     node_r = np.sqrt(node_size / np.pi)
     node_edge = node_r / 3
 
-    pos = nx.spring_layout(g)
+    pos = nx.kamada_kawai_layout(g)
 
-    nodes = nx.draw_networkx_nodes(g, node_size=node_size, pos=pos)
-    edges = nx.draw_networkx_edges(g, pos=pos)
+    nodes = nx.draw_networkx_nodes(g, node_size=node_size, pos=pos, ax=ax)
+    edges = nx.draw_networkx_edges(g, pos=pos, ax=ax)
     nodes.set_edgecolor("w")
     nodes.set_linewidth(node_edge)
 
-    plt.axis("square")
-    plt.axis("off")
+    ax.axis("square")
+    ax.axis("off")
 
     return nodes

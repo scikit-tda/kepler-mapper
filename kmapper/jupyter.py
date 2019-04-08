@@ -1,11 +1,5 @@
 import IPython
 
-# Here we set the custom CSS to override Jupyter's default
-CUSTOM_CSS = """<style>
-    .container { width:100% !important; }
-    .output_scroll {height: 800px !important;}
-    </style>"""
-IPython.core.display.display(IPython.core.display.HTML(CUSTOM_CSS))
 
 
 def display(path_html="mapper_visualization_output.html"):
@@ -54,6 +48,13 @@ def display(path_html="mapper_visualization_output.html"):
     >>> display()
 
     """
+
+    # Here we set the custom CSS to override Jupyter's default
+    CUSTOM_CSS = """<style>
+        .container { width:100% !important; }
+        .output_scroll {height: 800px !important;}
+        </style>"""
+    IPython.core.display.display(IPython.core.display.HTML(CUSTOM_CSS))
 
     iframe = (
         "<iframe src=" + path_html + ' width=100%% height=800 frameBorder="0"></iframe>'

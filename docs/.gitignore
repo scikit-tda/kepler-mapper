@@ -11,3 +11,4 @@ venv/
 backup_docs
 dist/
 test/
+generated

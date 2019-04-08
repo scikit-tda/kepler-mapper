@@ -57,3 +57,5 @@ dist
 .pytest_cache
 .vscode
 .ipynb_checkpoints
+
+_modules

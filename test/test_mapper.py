@@ -412,7 +412,7 @@ class TestLens:
     def test_map_sparse(self):
         mapper = KeplerMapper()
 
-        data = sparse.random(100, 10)
+        data = sparse.random(100, 10, random_state=100101)
         lens = mapper.fit_transform(data)
         mapping = mapper.map(lens, data)
 

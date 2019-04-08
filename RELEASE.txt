@@ -1,5 +1,9 @@
 Alpha
 
+1.2.1 (In progress)
+	Allow sparse matrices in `map` function (PR #163)
+
+
 1.2.0 (Feb 18, 2019)
 	New implementation of the cover API makes it consistent with the literature (your % overlap will probably have to be decreased when updating).
 	New documentation website (kepler-mapper.scikit-tda.org).

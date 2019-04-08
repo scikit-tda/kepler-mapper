@@ -13,7 +13,7 @@ import numpy as np
 from sklearn import cluster, preprocessing, manifold, decomposition
 from sklearn.model_selection import StratifiedKFold, KFold
 from scipy.spatial import distance
-from scipy.sparse import issparse
+from scipy.sparse import issparse, hstack
 
 from .cover import Cover
 from .nerve import GraphNerve
@@ -25,7 +25,6 @@ from .visuals import (
     graph_data_distribution,
     colorscale_default,
 )
-from scipy.sparse import hstack, csr
 
 __all__ = [
     "KeplerMapper", 
@@ -381,7 +380,7 @@ class KeplerMapper(object):
             Lower dimensional representation of data. In general will be output of `fit_transform`.
 
         X: Numpy Array
-            Original data or data to run clustering on. If `None`, then use `lens` as default.
+            Original data or data to run clustering on. If `None`, then use `lens` as default. X can be a SciPy sparse matrix.
 
         clusterer: Default: DBSCAN
             Scikit-learn API compatible clustering algorithm. Must provide `fit` and `predict`.
@@ -499,7 +498,7 @@ class KeplerMapper(object):
         # Prefix'ing the data with an ID column
         ids = np.array([x for x in range(lens.shape[0])])
         lens = np.c_[ids, lens]
-        if type(X) == csr.csr_matrix:
+        if issparse(X):
             X = hstack([ids[np.newaxis].T, X], format='csr')
         else:
             X = np.c_[ids, X]

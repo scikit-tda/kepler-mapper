@@ -408,3 +408,11 @@ class TestLens:
         np.testing.assert_array_equal(lens_10, lens_11)
         assert not np.array_equal(lens_10, lens_2)
         assert not np.array_equal(lens_10, lens_1)
+
+    def test_map_sparse(self):
+        mapper = KeplerMapper()
+
+        data = sparse.random(100, 10)
+        lens = mapper.fit_transform(data)
+        mapping = mapper.map(lens, data)
+

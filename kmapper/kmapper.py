@@ -627,9 +627,9 @@ class KeplerMapper(object):
         title="Kepler Mapper",
         save_file=True,
         X=None,
-        X_names=[],
+        X_names=None,
         lens=None,
-        lens_names=[],
+        lens_names=None,
         show_tooltips=True,
         nbins=10,
     ):
@@ -746,6 +746,12 @@ class KeplerMapper(object):
         env = Environment(loader=FileSystemLoader(module_root))
         # Color function is a vector of colors?
         color_function = init_color_function(graph, color_function)
+
+        if X_names is None:
+            X_names = []
+
+        if lens_names is None:
+            lens_names = []
 
         mapper_data = format_mapper_data(
             graph,

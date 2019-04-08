@@ -258,9 +258,9 @@ def get_mapper_graph(
     custom_tooltips=None,
     custom_meta=None,
     X=None,
-    X_names=[],
+    X_names=None,
     lens=None,
-    lens_names=[],
+    lens_names=None,
 ):
     """Generate data for mapper graph visualization and annotation.
 
@@ -286,6 +286,12 @@ def get_mapper_graph(
         )
 
     color_function = init_color_function(simplicial_complex, color_function)
+
+    if X_names is None:
+        X_names = []
+
+    if lens_names is None:
+        lens_names = []
 
     json_graph = scomplex_to_graph(
         simplicial_complex,

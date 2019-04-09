@@ -282,6 +282,14 @@ class TestLens:
 
         assert lens.shape[0] == data.shape[0]
 
+    def test_lens_names(self):
+        mapper = KeplerMapper()
+
+        data = np.random.rand(100, 10)
+        lens = mapper.fit_transform(data)
+
+        assert lens.shape[0] == data.shape[0]
+
     def test_map_custom_lens(self):
         # I think that map currently requires fit_transform to be called first
         mapper = KeplerMapper()

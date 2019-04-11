@@ -276,19 +276,19 @@ class TestLens:
 
     def test_lens_size(self):
         mapper = KeplerMapper()
-
-        data = np.random.rand(100, 10)
+        data = np.random.rand(100, 5)
         lens = mapper.fit_transform(data)
 
         assert lens.shape[0] == data.shape[0]
 
     def test_lens_names(self):
         mapper = KeplerMapper()
+        data = np.random.rand(100, 5)
+        graph = mapper.fit_transform(data)
+        template = mapper.visualize(graph=graph)
+        template2 = mapper.visualize(graph=graph, lens_names=[])
 
-        data = np.random.rand(100, 10)
-        lens = mapper.fit_transform(data)
-
-        assert lens.shape[0] == data.shape[0]
+        assert template == template2
 
     def test_map_custom_lens(self):
         # I think that map currently requires fit_transform to be called first

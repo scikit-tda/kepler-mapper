@@ -284,7 +284,8 @@ class TestLens:
     def test_lens_names(self):
         mapper = KeplerMapper()
         data = np.random.rand(100, 5)
-        graph = mapper.fit_transform(data)
+        lens = mapper.fit_transform(data)
+        graph = mapper.map(lens, data)
         template = mapper.visualize(graph=graph)
         template2 = mapper.visualize(graph=graph, lens_names=[])
 

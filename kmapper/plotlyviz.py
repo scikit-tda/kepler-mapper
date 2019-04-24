@@ -59,7 +59,7 @@ def mpl_to_plotly(cmap, n_entries):
 
 def plotlyviz(
     scomplex,
-    colorscale=default_colorscale,
+    colorscale=None,
     title="Kepler Mapper",
     graph_layout="kk",
     color_function=None,
@@ -148,6 +148,9 @@ def plotlyviz(
             A FigureWidget that can be shown or editted. See the Plotly Demo notebook for examples of use.
 
     """
+
+    if not colorscale:
+        colorscale = default_colorscale
 
     kmgraph, mapper_summary, n_color_distribution = get_mapper_graph(
         scomplex,
@@ -254,7 +257,7 @@ def get_mapper_graph(
     simplicial_complex,
     color_function=None,
     color_function_name=None,
-    colorscale=default_colorscale,
+    colorscale=None,
     custom_tooltips=None,
     custom_meta=None,
     X=None,
@@ -280,6 +283,10 @@ def get_mapper_graph(
     >>> kmgraph,  mapper_summary, n_distribution = get_mapper_graph(simplicial_complex)
 
     """
+
+    if not colorscale:
+        colorscale = default_colorscale
+
     if not len(simplicial_complex["nodes"]) > 0:
         raise Exception(
             "A mapper graph should have more than 0 nodes. This might be because your clustering algorithm might be too sensitive and be classifying all points as noise."
@@ -342,6 +349,10 @@ def plotly_graph(
     -------
     The plotly traces (dicts) representing the graph edges and nodes
     """
+
+    if not colorscale:
+        colorscale = default_colorscale
+
     # define an igraph.Graph instance of n_nodes
     n_nodes = len(kmgraph["nodes"])
     if n_nodes == 0:

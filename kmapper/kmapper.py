@@ -157,25 +157,6 @@ class KeplerMapper(object):
         >>>     mapper.project(X_inverse, projection="knn_distance_5")
         >>> ]
 
-        >>> # Stack / chain projections. You could do this manually, 
-        >>> # or pipeline with `.fit_transform()`. Works the same as `.project()`,
-        >>> # but accepts lists. f(raw text) -> f(tfidf) -> f(isomap 100d) -> f(umap 2d)
-        >>> projected_X = mapper.fit_transform(
-        >>>     X,
-        >>>     projections=[TfidfVectorizer(analyzer="char",
-        >>>                                  ngram_range=(1,6),
-        >>>                                  max_df=0.93,
-        >>>                                  min_df=0.03),
-        >>>                  manifold.Isomap(n_components=100,
-        >>>                                  n_jobs=-1),
-        >>>                  umap.UMAP(n_components=2,
-        >>>                            random_state=1)],
-        >>>     scalers=[None,
-        >>>              None,
-        >>>              preprocessing.MinMaxScaler()],
-        >>>     distance_matrices=[False,
-        >>>                        False,
-        >>>                        False])
         """
 
         # Sae original values off so they can be referenced by later functions in the pipeline
@@ -310,6 +291,28 @@ class KeplerMapper(object):
         distance_matrix=False,
     ):
         """Same as .project() but accepts lists for arguments so you can chain.
+
+        Examples
+        --------
+        >>> # Stack / chain projections. You could do this manually, 
+        >>> # or pipeline with `.fit_transform()`. Works the same as `.project()`,
+        >>> # but accepts lists. f(raw text) -> f(tfidf) -> f(isomap 100d) -> f(umap 2d)
+        >>> projected_X = mapper.fit_transform(
+        >>>     X,
+        >>>     projections=[TfidfVectorizer(analyzer="char",
+        >>>                                  ngram_range=(1,6),
+        >>>                                  max_df=0.93,
+        >>>                                  min_df=0.03),
+        >>>                  manifold.Isomap(n_components=100,
+        >>>                                  n_jobs=-1),
+        >>>                  umap.UMAP(n_components=2,
+        >>>                            random_state=1)],
+        >>>     scalers=[None,
+        >>>              None,
+        >>>              preprocessing.MinMaxScaler()],
+        >>>     distance_matrices=[False,
+        >>>                        False,
+        >>>                        False])
 
         """
 

@@ -151,6 +151,28 @@ connect these with an edge.</li>
 <dt id="kmapper.KeplerMapper.fit_transform">
 <code class="descname">fit_transform</code><span class="sig-paren">(</span><em>X</em>, <em>projection='sum'</em>, <em>scaler=MinMaxScaler(copy=True</em>, <em>feature_range=(0</em>, <em>1))</em>, <em>distance_matrix=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kmapper/kmapper.html#KeplerMapper.fit_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.KeplerMapper.fit_transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Same as .project() but accepts lists for arguments so you can chain.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Stack / chain projections. You could do this manually,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># or pipeline with `.fit_transform()`. Works the same as `.project()`,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># but accepts lists. f(raw text) -&gt; f(tfidf) -&gt; f(isomap 100d) -&gt; f(umap 2d)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">projected_X</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">X</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">projections</span><span class="o">=</span><span class="p">[</span><span class="n">TfidfVectorizer</span><span class="p">(</span><span class="n">analyzer</span><span class="o">=</span><span class="s2">&quot;char&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>                                 <span class="n">ngram_range</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>                                 <span class="n">max_df</span><span class="o">=</span><span class="mf">0.93</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>                                 <span class="n">min_df</span><span class="o">=</span><span class="mf">0.03</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>                 <span class="n">manifold</span><span class="o">.</span><span class="n">Isomap</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>                                 <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>                 <span class="n">umap</span><span class="o">.</span><span class="n">UMAP</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>                           <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">scalers</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>             <span class="kc">None</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>             <span class="n">preprocessing</span><span class="o">.</span><span class="n">MinMaxScaler</span><span class="p">()],</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">distance_matrices</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>                       <span class="kc">False</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>                       <span class="kc">False</span><span class="p">])</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -163,7 +185,7 @@ connect these with an edge.</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>lens</strong> (<em>Numpy Array</em>) – Lower dimensional representation of data. In general will be output of <cite>fit_transform</cite>.</li>
-<li><strong>X</strong> (<em>Numpy Array</em>) – Original data or data to run clustering on. If <cite>None</cite>, then use <cite>lens</cite> as default.</li>
+<li><strong>X</strong> (<em>Numpy Array</em>) – Original data or data to run clustering on. If <cite>None</cite>, then use <cite>lens</cite> as default. X can be a SciPy sparse matrix.</li>
 <li><strong>clusterer</strong> (<em>Default: DBSCAN</em>) – Scikit-learn API compatible clustering algorithm. Must provide <cite>fit</cite> and <cite>predict</cite>.</li>
 <li><strong>cover</strong> (<a class="reference internal" href="kmapper.Cover.html#kmapper.Cover" title="kmapper.Cover"><em>kmapper.Cover</em></a>) – Cover scheme for lens. Instance of kmapper.cover providing methods <cite>fit</cite> and <cite>transform</cite>.</li>
 <li><strong>nerve</strong> (<em>kmapper.Nerve</em>) – Nerve builder implementing <cite>__call__(nodes)</cite> API</li>
@@ -316,32 +338,11 @@ If False do nothing, else create a squared distance matrix with the chosen metri
 <span class="gp">&gt;&gt;&gt; </span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Stack / chain projections. You could do this manually,</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># or pipeline with `.fit_transform()`. Works the same as `.project()`,</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># but accepts lists. f(raw text) -&gt; f(tfidf) -&gt; f(isomap 100d) -&gt; f(umap 2d)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">projected_X</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">X</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">projections</span><span class="o">=</span><span class="p">[</span><span class="n">TfidfVectorizer</span><span class="p">(</span><span class="n">analyzer</span><span class="o">=</span><span class="s2">&quot;char&quot;</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>                                 <span class="n">ngram_range</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span>
-<span class="gp">&gt;&gt;&gt; </span>                                 <span class="n">max_df</span><span class="o">=</span><span class="mf">0.93</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>                                 <span class="n">min_df</span><span class="o">=</span><span class="mf">0.03</span><span class="p">),</span>
-<span class="gp">&gt;&gt;&gt; </span>                 <span class="n">manifold</span><span class="o">.</span><span class="n">Isomap</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>                                 <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span>
-<span class="gp">&gt;&gt;&gt; </span>                 <span class="n">umap</span><span class="o">.</span><span class="n">UMAP</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>                           <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)],</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">scalers</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>             <span class="kc">None</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>             <span class="n">preprocessing</span><span class="o">.</span><span class="n">MinMaxScaler</span><span class="p">()],</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">distance_matrices</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>                       <span class="kc">False</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>                       <span class="kc">False</span><span class="p">])</span>
-</pre></div>
-</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="kmapper.KeplerMapper.visualize">
-<code class="descname">visualize</code><span class="sig-paren">(</span><em>graph</em>, <em>color_function=None</em>, <em>custom_tooltips=None</em>, <em>custom_meta=None</em>, <em>path_html='mapper_visualization_output.html'</em>, <em>title='Kepler Mapper'</em>, <em>save_file=True</em>, <em>X=None</em>, <em>X_names=[]</em>, <em>lens=None</em>, <em>lens_names=[]</em>, <em>show_tooltips=True</em>, <em>nbins=10</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kmapper/kmapper.html#KeplerMapper.visualize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.KeplerMapper.visualize" title="Permalink to this definition">¶</a></dt>
+<code class="descname">visualize</code><span class="sig-paren">(</span><em>graph</em>, <em>color_function=None</em>, <em>custom_tooltips=None</em>, <em>custom_meta=None</em>, <em>path_html='mapper_visualization_output.html'</em>, <em>title='Kepler Mapper'</em>, <em>save_file=True</em>, <em>X=None</em>, <em>X_names=None</em>, <em>lens=None</em>, <em>lens_names=None</em>, <em>show_tooltips=True</em>, <em>nbins=10</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kmapper/kmapper.html#KeplerMapper.visualize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.KeplerMapper.visualize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate a visualization of the simplicial complex mapper output. Turns the complex dictionary into a HTML/D3.js visualization</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -450,7 +451,9 @@ If False do nothing, else create a squared distance matrix with the chosen metri
 
 <a href=https://github.com/scikit-tda/kepler-mapper>
     <p class="caption"><span class="caption-text">
-        <img src="_static/gh_logo.png" height="18px" width="18px" alt="Github icon">  
+        <img src="../../_static/gh_logo.png" 
+        height="18px" 
+        width="18px" alt="Github icon">  
         scikit-tda/kepler-mapper
     </span></p>
 </a> 
@@ -466,7 +469,6 @@ If False do nothing, else create a squared distance matrix with the chosen metri
 <li class="toctree-l3 current"><a class="current reference internal" href="#">kmapper.KeplerMapper</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kmapper.Cover.html">kmapper.Cover</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kmapper.GraphNerve.html">kmapper.GraphNerve</a></li>
-<li class="toctree-l3"><a class="reference internal" href="kmapper.SimplicialNerve.html">kmapper.SimplicialNerve</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#visuals">Visuals</a></li>

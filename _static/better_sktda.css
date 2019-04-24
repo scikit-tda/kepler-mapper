@@ -13,7 +13,6 @@ p.caption {
 }
 
 .current.reference.internal {
-    text-decoration: underline;
     font-weight: bold;
 }
 

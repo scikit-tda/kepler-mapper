@@ -1,0 +1,356 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Breast Cancer &#8212; KeplerMapper 1.2.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/better.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  </head><body>
+    <header id="pageheader">
+      <h1>
+        <a href="../../index.html ">
+          KeplerMapper 1.2.0 documentation
+        </a>
+        <a id="headermeta" href="https://scikit-tda.org">
+            a scikit-tda project 
+        </a>
+      </h1> 
+  </header>
+  <div class="related top">
+  <nav id="rellinks">
+    <ul>
+    </ul>
+  </nav>
+  <nav id="breadcrumbs">
+    <ul>
+      <li><a href="../../index.html">KeplerMapper</a></li> 
+    </ul>
+  </nav>
+  </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Click <a class="reference internal" href="#sphx-glr-download-generated-gallery-plot-breast-cancer-py"><span class="std std-ref">here</span></a> to download the full example code</p>
+</div>
+<div class="sphx-glr-example-title section" id="breast-cancer">
+<span id="sphx-glr-generated-gallery-plot-breast-cancer-py"></span><h1>Breast Cancer<a class="headerlink" href="#breast-cancer" title="Permalink to this headline">¶</a></h1>
+<p>This example generates a Mapper built from the <a class="reference external" href="https://www.kaggle.com/uciml/breast-cancer-wisconsin-data">Wisconsin Breast Cancer Dataset</a>.</p>
+<img alt="generated/gallery/../../../examples/images/breast-cancer.png" src="generated/gallery/../../../examples/images/breast-cancer.png" />
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>KeplerMapper(verbose=3)
+..Composing projection pipeline of length 1:
+        Projections: l2norm
+        Distance matrices: False
+        Scalers: MinMaxScaler(copy=True, feature_range=(0, 1))
+..Projecting on data shaped (569, 31)
+
+..Projecting data using: l2norm
+
+..Scaling with: MinMaxScaler(copy=True, feature_range=(0, 1))
+
+Mapping on data shaped (569, 31) using lens shaped (569, 2)
+
+Minimal points in hypercube before clustering: 2
+Creating 225 hypercubes.
+Cube_0 is empty.
+
+Cube_1 is empty.
+
+Cube_2 is empty.
+
+Cube_3 is empty.
+
+Cube_4 is empty.
+
+Cube_5 is empty.
+
+Cube_6 is empty.
+
+   &gt; Found 2 clusters in hypercube 7.
+Cube_8 is empty.
+
+Cube_9 is empty.
+
+   &gt; Found 2 clusters in hypercube 10.
+   &gt; Found 2 clusters in hypercube 11.
+Cube_12 is empty.
+
+Cube_13 is empty.
+
+Cube_14 is empty.
+
+   &gt; Found 2 clusters in hypercube 15.
+Cube_16 is empty.
+
+Cube_17 is empty.
+
+Cube_18 is empty.
+
+Cube_19 is empty.
+
+Cube_20 is empty.
+
+   &gt; Found 2 clusters in hypercube 21.
+   &gt; Found 2 clusters in hypercube 22.
+Cube_23 is empty.
+
+   &gt; Found 2 clusters in hypercube 24.
+Cube_25 is empty.
+
+   &gt; Found 2 clusters in hypercube 26.
+   &gt; Found 2 clusters in hypercube 27.
+Cube_28 is empty.
+
+   &gt; Found 2 clusters in hypercube 29.
+   &gt; Found 2 clusters in hypercube 30.
+   &gt; Found 2 clusters in hypercube 31.
+   &gt; Found 2 clusters in hypercube 32.
+   &gt; Found 2 clusters in hypercube 33.
+   &gt; Found 2 clusters in hypercube 34.
+   &gt; Found 2 clusters in hypercube 35.
+   &gt; Found 2 clusters in hypercube 36.
+Cube_37 is empty.
+
+   &gt; Found 2 clusters in hypercube 38.
+   &gt; Found 2 clusters in hypercube 39.
+Cube_40 is empty.
+
+   &gt; Found 2 clusters in hypercube 41.
+Cube_42 is empty.
+
+   &gt; Found 2 clusters in hypercube 43.
+   &gt; Found 2 clusters in hypercube 44.
+   &gt; Found 2 clusters in hypercube 45.
+   &gt; Found 2 clusters in hypercube 46.
+Cube_47 is empty.
+
+Cube_48 is empty.
+
+   &gt; Found 2 clusters in hypercube 49.
+Cube_50 is empty.
+
+Cube_51 is empty.
+
+   &gt; Found 2 clusters in hypercube 52.
+   &gt; Found 2 clusters in hypercube 53.
+Cube_54 is empty.
+
+   &gt; Found 2 clusters in hypercube 55.
+   &gt; Found 2 clusters in hypercube 56.
+   &gt; Found 2 clusters in hypercube 57.
+   &gt; Found 2 clusters in hypercube 58.
+   &gt; Found 2 clusters in hypercube 59.
+   &gt; Found 2 clusters in hypercube 60.
+   &gt; Found 2 clusters in hypercube 61.
+   &gt; Found 2 clusters in hypercube 62.
+   &gt; Found 2 clusters in hypercube 63.
+   &gt; Found 2 clusters in hypercube 64.
+Cube_65 is empty.
+
+   &gt; Found 2 clusters in hypercube 66.
+   &gt; Found 2 clusters in hypercube 67.
+   &gt; Found 2 clusters in hypercube 68.
+   &gt; Found 2 clusters in hypercube 69.
+   &gt; Found 2 clusters in hypercube 70.
+   &gt; Found 2 clusters in hypercube 71.
+   &gt; Found 2 clusters in hypercube 72.
+   &gt; Found 2 clusters in hypercube 73.
+   &gt; Found 2 clusters in hypercube 74.
+   &gt; Found 2 clusters in hypercube 75.
+   &gt; Found 2 clusters in hypercube 76.
+   &gt; Found 2 clusters in hypercube 77.
+   &gt; Found 2 clusters in hypercube 78.
+   &gt; Found 2 clusters in hypercube 79.
+   &gt; Found 2 clusters in hypercube 80.
+   &gt; Found 2 clusters in hypercube 81.
+   &gt; Found 2 clusters in hypercube 82.
+   &gt; Found 2 clusters in hypercube 83.
+   &gt; Found 2 clusters in hypercube 84.
+   &gt; Found 2 clusters in hypercube 85.
+   &gt; Found 2 clusters in hypercube 86.
+   &gt; Found 2 clusters in hypercube 87.
+   &gt; Found 2 clusters in hypercube 88.
+   &gt; Found 2 clusters in hypercube 89.
+   &gt; Found 2 clusters in hypercube 90.
+   &gt; Found 2 clusters in hypercube 91.
+   &gt; Found 2 clusters in hypercube 92.
+   &gt; Found 2 clusters in hypercube 93.
+   &gt; Found 2 clusters in hypercube 94.
+   &gt; Found 2 clusters in hypercube 95.
+   &gt; Found 2 clusters in hypercube 96.
+   &gt; Found 2 clusters in hypercube 97.
+   &gt; Found 2 clusters in hypercube 98.
+   &gt; Found 2 clusters in hypercube 99.
+   &gt; Found 2 clusters in hypercube 100.
+   &gt; Found 2 clusters in hypercube 101.
+   &gt; Found 2 clusters in hypercube 102.
+Cube_103 is empty.
+
+   &gt; Found 2 clusters in hypercube 104.
+   &gt; Found 2 clusters in hypercube 105.
+   &gt; Found 2 clusters in hypercube 106.
+
+Created 297 edges and 154 nodes in 0:00:00.830414.
+Wrote visualization to: output/breast-cancer.html
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;pandas is required for this example. Please install with `pip install pandas` and then try again.&quot;</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">kmapper</span> <span class="k">as</span> <span class="nn">km</span>
+<span class="kn">import</span> <span class="nn">sklearn</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="k">import</span> <span class="n">ensemble</span>
+
+<span class="c1"># For data we use the Wisconsin Breast Cancer Dataset</span>
+<span class="c1"># Via:</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/breast-cancer.csv&quot;</span><span class="p">)</span>
+<span class="n">feature_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;diagnosis&quot;</span><span class="p">]]</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;diagnosis&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;diagnosis&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="s2">&quot;M&quot;</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">feature_names</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>  <span class="c1"># quick and dirty imputation</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;diagnosis&quot;</span><span class="p">])</span>
+
+<span class="c1"># We create a custom 1-D lens with Isolation Forest</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ensemble</span><span class="o">.</span><span class="n">IsolationForest</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">1729</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">lens1</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decision_function</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span>
+
+<span class="c1"># We create another 1-D lens with L2-norm</span>
+<span class="n">mapper</span> <span class="o">=</span> <span class="n">km</span><span class="o">.</span><span class="n">KeplerMapper</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">lens2</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s2">&quot;l2norm&quot;</span><span class="p">)</span>
+
+<span class="c1"># Combine both lenses to create a 2-D [Isolation Forest, L^2-Norm] lens</span>
+<span class="n">lens</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">lens1</span><span class="p">,</span> <span class="n">lens2</span><span class="p">]</span>
+
+<span class="c1"># Create the simplicial complex</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">lens</span><span class="p">,</span>
+                   <span class="n">X</span><span class="p">,</span>
+                   <span class="n">cover</span><span class="o">=</span><span class="n">km</span><span class="o">.</span><span class="n">Cover</span><span class="p">(</span><span class="n">n_cubes</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">perc_overlap</span><span class="o">=</span><span class="mf">0.4</span><span class="p">),</span>
+                   <span class="n">clusterer</span><span class="o">=</span><span class="n">sklearn</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                                    <span class="n">random_state</span><span class="o">=</span><span class="mi">1618033</span><span class="p">))</span>
+
+<span class="c1"># Visualization</span>
+<span class="n">mapper</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span>
+                 <span class="n">path_html</span><span class="o">=</span><span class="s2">&quot;output/breast-cancer.html&quot;</span><span class="p">,</span>
+                 <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Wisconsin Breast Cancer Dataset&quot;</span><span class="p">,</span>
+                 <span class="n">custom_tooltips</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.516 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-gallery-plot-breast-cancer-py">
+<div class="sphx-glr-download docutils container">
+<a class="reference download internal" download="" href="../../_downloads/24aaea14d382dbea62b56766a05e6d9b/plot_breast_cancer.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_breast_cancer.py</span></code></a></div>
+<div class="sphx-glr-download docutils container">
+<a class="reference download internal" download="" href="../../_downloads/c36804259dbeba696d63e13c0538f21c/plot_breast_cancer.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_breast_cancer.ipynb</span></code></a></div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+<form class="search" action="../../search.html" method="get">
+  <input type="text" name="q"
+   placeholder="type to search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<a href=https://github.com/scikit-tda/kepler-mapper>
+    <p class="caption"><span class="caption-text">
+        <img src="../../_static/gh_logo.png" 
+        height="18px" 
+        width="18px" alt="Github icon">  
+        scikit-tda/kepler-mapper
+    </span></p>
+</a> 
+
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../theory.html">Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../applications.html">Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/index.html">API Reference</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/Adapters.html">Adapters example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/Plotly-Demo.html">Demo of Plotlyviz features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/KeplerMapper-usage-in-Jupyter-Notebook.html">Using Kepler Mapper in Jupyter Notebook</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Advanced Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/KeplerMapper-Newsgroup20-Pipeline.html">KeplerMapper &amp; NLP examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/TOR-XGB-TDA.html">Detecting Encrypted TOR Traffic with Boosting and Topological Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/Confidence-Graphs.html">Confidence Graphs: Representing Model Uncertainty in Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/self-guessing.html">Self-guessing mapper</a></li>
+</ul>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  <div class="related bottom">
+  <nav id="rellinks">
+    <ul>
+    </ul>
+  </nav>
+  <nav id="breadcrumbs">
+    <ul>
+      <li><a href="../../index.html">KeplerMapper</a></li> 
+    </ul>
+  </nav>
+  </div>
+  <footer id="pagefooter">&copy; 2019, Hendrik Jacob van Veen and Nathaniel Saul.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a>
+      1.8.4.
+
+  </footer>
+
+  
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-124965309-4', '');
+      ga('send', 'pageview');
+    </script>
+  
+  </body>
+</html>

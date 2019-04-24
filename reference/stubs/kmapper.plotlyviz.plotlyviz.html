@@ -18,6 +18,8 @@
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="kmapper.plotlyviz.mpl_to_plotly" href="kmapper.plotlyviz.mpl_to_plotly.html" />
+    <link rel="prev" title="kmapper.jupyter" href="kmapper.jupyter.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   </head><body>
     <header id="pageheader">
@@ -33,11 +35,22 @@
   <div class="related top">
   <nav id="rellinks">
     <ul>
+        <li>
+          &larr;
+          <a href="kmapper.jupyter.html" title="Previous document">kmapper.jupyter</a>
+        </li>
+        <li>
+          <a href="kmapper.plotlyviz.mpl_to_plotly.html" title="Next document">kmapper.plotlyviz.mpl_to_plotly</a>
+          &rarr;
+        </li>
     </ul>
   </nav>
   <nav id="breadcrumbs">
     <ul>
-      <li><a href="../../index.html">KeplerMapper</a></li> 
+      <li><a href="../../index.html">KeplerMapper</a></li>
+      <li>
+        <a href="../index.html">API Reference</a>
+      </li> 
     </ul>
   </nav>
   </div>  
@@ -49,6 +62,55 @@
             
   <div class="section" id="kmapper-plotlyviz-plotlyviz">
 <h1>kmapper.plotlyviz.plotlyviz<a class="headerlink" href="#kmapper-plotlyviz-plotlyviz" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="kmapper.plotlyviz.plotlyviz">
+<code class="descclassname">kmapper.plotlyviz.</code><code class="descname">plotlyviz</code><span class="sig-paren">(</span><em>scomplex</em>, <em>colorscale=None</em>, <em>title='Kepler Mapper'</em>, <em>graph_layout='kk'</em>, <em>color_function=None</em>, <em>color_function_name=None</em>, <em>dashboard=False</em>, <em>graph_data=False</em>, <em>factor_size=3</em>, <em>edge_linewidth=1.5</em>, <em>node_linecolor='rgb(200</em>, <em>200</em>, <em>200)'</em>, <em>width=600</em>, <em>height=500</em>, <em>bgcolor='rgba(240</em>, <em>240</em>, <em>240</em>, <em>0.95)'</em>, <em>left=10</em>, <em>bottom=35</em>, <em>summary_height=300</em>, <em>summary_width=600</em>, <em>summary_left=20</em>, <em>summary_right=20</em>, <em>hist_left=25</em>, <em>hist_right=25</em>, <em>member_textbox_width=800</em>, <em>filename=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kmapper/plotlyviz.html#plotlyviz"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.plotlyviz.plotlyviz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Visualizations and dashboards for kmapper graphs using Plotly. This method is suitable for use in Jupyter notebooks.</p>
+<p>The generated FigureWidget can be updated (by performing a restyle or relayout). For example, let us add a title
+to the colorbar (the name of the color function, if any),
+and set the title font size. To perform these updates faster, Plotly 3.+ provides a context manager that batches up all data and layout updates:</p>
+<p>To display more info on the generated kmapper-graph, define two more FigureWidget(s):
+the global node distribution figure, and a dummy figure
+that displays info on the  algorithms involved in getting the graph from data, as well as  sklearn  class instances.</p>
+<p>A FigureWidget has event listeners for hovering, clicking or selecting. Using the first one for <cite>fw_graph</cite>
+we   define, via the function <cite>hovering_widgets()</cite>, widgets that display the node distribution, when the node is hovered over, and two textboxes for the cluster size and the member ids/labels of the hovered node members.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>scomplex</strong> (<em>dict</em>) – Simplicial complex is the output from the KeplerMapper <cite>map</cite> method.</li>
+<li><strong>title</strong> (<em>str</em>) – Title of output graphic</li>
+<li><strong>graph_layout</strong> (<em>igraph layout;</em>) – recommended ‘kk’ (kamada-kawai) or ‘fr’ (fruchterman-reingold)</li>
+<li><strong>colorscale</strong> – Plotly colorscale(colormap) to color graph nodes</li>
+<li><strong>dashboard</strong> (<em>bool</em><em>, </em><em>default is False</em>) – If true, display complete dashboard of node information</li>
+<li><strong>graph_data</strong> (<em>bool</em><em>, </em><em>default is False</em>) – If true, display graph metadata</li>
+<li><strong>factor_size</strong> (<em>double</em><em>, </em><em>default is 3</em>) – a factor for the node size</li>
+<li><strong>edge_linewidth</strong> (<em>double</em><em>, </em><em>default is 1.5</em>) – </li>
+<li><strong>node_linecolor</strong> (<em>color str</em><em>, </em><em>default is &quot;rgb</em><em>(</em><em>200</em><em>,</em><em>200</em><em>,</em><em>200</em><em>)</em><em>&quot;</em>) – </li>
+<li><strong>width</strong> (<em>int</em><em>, </em><em>default is 600</em><em>,</em>) – </li>
+<li><strong>height</strong> (<em>int</em><em>, </em><em>default is 500</em><em>,</em>) – </li>
+<li><strong>bgcolor</strong> (<em>color str</em><em>, </em><em>default is &quot;rgba</em><em>(</em><em>240</em><em>, </em><em>240</em><em>, </em><em>240</em><em>, </em><em>0.95</em><em>)</em><em>&quot;</em><em>,</em>) – </li>
+<li><strong>left</strong> (<em>int</em><em>, </em><em>default is 10</em><em>,</em>) – </li>
+<li><strong>bottom</strong> (<em>int</em><em>, </em><em>default is 35</em><em>,</em>) – </li>
+<li><strong>summary_height</strong> (<em>int</em><em>, </em><em>default is 300</em><em>,</em>) – </li>
+<li><strong>summary_width</strong> (<em>int</em><em>, </em><em>default is 600</em><em>,</em>) – </li>
+<li><strong>summary_left</strong> (<em>int</em><em>, </em><em>default is 20</em><em>,</em>) – </li>
+<li><strong>summary_right</strong> (<em>int</em><em>, </em><em>default is 20</em><em>,</em>) – </li>
+<li><strong>hist_left</strong> (<em>int</em><em>, </em><em>default is 25</em><em>,</em>) – </li>
+<li><strong>hist_right</strong> (<em>int</em><em>, </em><em>default is 25</em><em>,</em>) – </li>
+<li><strong>member_textbox_width</strong> (<em>int</em><em>, </em><em>default is 800</em><em>,</em>) – </li>
+<li><strong>filename</strong> (<em>str</em><em>, </em><em>default is None</em>) – if filename is given, the graphic will be saved to that file.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>result</strong> (<em>plotly.FigureWidget</em>) – A FigureWidget that can be shown or editted. See the Plotly Demo notebook for examples of use.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 
 
@@ -70,18 +132,31 @@
 
 <a href=https://github.com/scikit-tda/kepler-mapper>
     <p class="caption"><span class="caption-text">
-        <img src="_static/gh_logo.png" height="18px" width="18px" alt="Github icon">  
+        <img src="../../_static/gh_logo.png" 
+        height="18px" 
+        width="18px" alt="Github icon">  
         scikit-tda/kepler-mapper
     </span></p>
 </a> 
 
 <p class="caption"><span class="caption-text">User Guide</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../theory.html">Background</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../applications.html">Applications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../index.html">API Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html#kepler-mapper">Kepler Mapper</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#visuals">Visuals</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="kmapper.jupyter.html">kmapper.jupyter</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">kmapper.plotlyviz.plotlyviz</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kmapper.plotlyviz.mpl_to_plotly.html">kmapper.plotlyviz.mpl_to_plotly</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kmapper.draw_matplotlib.html">kmapper.draw_matplotlib</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#adapters">Adapters</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">Tutorials</span></p>
 <ul>
@@ -104,11 +179,22 @@
   <div class="related bottom">
   <nav id="rellinks">
     <ul>
+        <li>
+          &larr;
+          <a href="kmapper.jupyter.html" title="Previous document">kmapper.jupyter</a>
+        </li>
+        <li>
+          <a href="kmapper.plotlyviz.mpl_to_plotly.html" title="Next document">kmapper.plotlyviz.mpl_to_plotly</a>
+          &rarr;
+        </li>
     </ul>
   </nav>
   <nav id="breadcrumbs">
     <ul>
-      <li><a href="../../index.html">KeplerMapper</a></li> 
+      <li><a href="../../index.html">KeplerMapper</a></li>
+      <li>
+        <a href="../index.html">API Reference</a>
+      </li> 
     </ul>
   </nav>
   </div>

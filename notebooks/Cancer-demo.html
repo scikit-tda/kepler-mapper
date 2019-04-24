@@ -1,0 +1,968 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Plotly plot of the kmapper graph associated to the breast cancer dataset &#8212; KeplerMapper 1.2.0 documentation</title>
+    <link rel="stylesheet" href="../_static/better.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  </head><body>
+    <header id="pageheader">
+      <h1>
+        <a href="../index.html ">
+          KeplerMapper 1.2.0 documentation
+        </a>
+        <a id="headermeta" href="https://scikit-tda.org">
+            a scikit-tda project 
+        </a>
+      </h1> 
+  </header>
+  <div class="related top">
+  <nav id="rellinks">
+    <ul>
+    </ul>
+  </nav>
+  <nav id="breadcrumbs">
+    <ul>
+      <li><a href="../index.html">KeplerMapper</a></li> 
+    </ul>
+  </nav>
+  </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput,
+div.nbinput div.prompt,
+div.nbinput div.input_area,
+div.nbinput div[class*=highlight],
+div.nbinput div[class*=highlight] pre,
+div.nboutput,
+div.nbinput div.prompt,
+div.nbinput div.output_area,
+div.nboutput div[class*=highlight],
+div.nboutput div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput,
+div.nboutput {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput,
+    div.nboutput {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput div.prompt,
+div.nboutput div.prompt {
+    min-width: 5ex;
+    padding-top: 0.4em;
+    padding-right: 0.4em;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput div.prompt,
+    div.nboutput div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput div.prompt pre,
+div.nboutput div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput div.input_area,
+div.nboutput div.output_area {
+    padding: 0.4em;
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput div.input_area,
+    div.nboutput div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<div class="section" id="Plotly-plot-of-the-kmapper-graph-associated-to-the-breast-cancer-dataset">
+<h1>Plotly plot of the kmapper graph associated to the breast cancer dataset<a class="headerlink" href="#Plotly-plot-of-the-kmapper-graph-associated-to-the-breast-cancer-dataset" title="Permalink to this headline">¶</a></h1>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;pandas is required for this example. Please install with conda or pip  and then try again.&quot;</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sklearn</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">ensemble</span>
+<span class="kn">import</span> <span class="nn">kmapper</span> <span class="kn">as</span> <span class="nn">km</span>
+<span class="kn">from</span> <span class="nn">kmapper.plotlyviz</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">plotly.graph_objs</span> <span class="kn">as</span> <span class="nn">go</span>
+<span class="kn">from</span> <span class="nn">ipywidgets</span> <span class="kn">import</span> <span class="p">(</span><span class="n">HBox</span><span class="p">,</span> <span class="n">VBox</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[65]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Data - the Wisconsin Breast Cancer Dataset</span>
+<span class="c1"># https://www.kaggle.com/uciml/breast-cancer-wisconsin-data</span>
+<span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;/Users/shusasaki/Downloads/FIAS/GitHub/kepler-mapper/examples/breast-cancer/data.csv&#39;</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+<span class="n">feature_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;diagnosis&quot;</span><span class="p">]]</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;diagnosis&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;diagnosis&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="s2">&quot;M&quot;</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">feature_names</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;diagnosis&quot;</span><span class="p">])</span>
+
+<span class="c1"># Create a custom 1-D lens with Isolation Forest</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ensemble</span><span class="o">.</span><span class="n">IsolationForest</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">1729</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">lens1</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">decision_function</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span>
+
+<span class="c1"># Create another 1-D lens with L2-norm</span>
+<span class="n">mapper</span> <span class="o">=</span> <span class="n">km</span><span class="o">.</span><span class="n">KeplerMapper</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">lens2</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s2">&quot;l2norm&quot;</span><span class="p">)</span>
+
+<span class="c1"># Combine lenses pairwise to get a 2-D lens i.e. [Isolation Forest, L^2-Norm] lens</span>
+<span class="n">lens</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">lens1</span><span class="p">,</span> <span class="n">lens2</span><span class="p">]</span>
+
+<span class="c1"># Define the simplicial complex</span>
+<span class="n">scomplex</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">lens</span><span class="p">,</span>
+                      <span class="n">X</span><span class="p">,</span>
+                      <span class="n">nr_cubes</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+                      <span class="n">overlap_perc</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+                      <span class="n">clusterer</span><span class="o">=</span><span class="n">sklearn</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                                       <span class="n">random_state</span><span class="o">=</span><span class="mi">3471</span><span class="p">))</span>
+
+</pre></div>
+</div>
+</div>
+<p>First we visualize the resulting graph via a <code class="docutils literal notranslate"><span class="pre">color_function</span></code> that associates to lens data their x-coordinate distance to min, and colormap these coordinates to a given Plotly colorscale. Here we use the brewer colorscale with hex color codes.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[66]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">pl_brewer</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;#006837&#39;</span><span class="p">],</span>
+             <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="s1">&#39;#1a9850&#39;</span><span class="p">],</span>
+             <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;#66bd63&#39;</span><span class="p">],</span>
+             <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span> <span class="s1">&#39;#a6d96a&#39;</span><span class="p">],</span>
+             <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="s1">&#39;#d9ef8b&#39;</span><span class="p">],</span>
+             <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;#ffffbf&#39;</span><span class="p">],</span>
+             <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="s1">&#39;#fee08b&#39;</span><span class="p">],</span>
+             <span class="p">[</span><span class="mf">0.7</span><span class="p">,</span> <span class="s1">&#39;#fdae61&#39;</span><span class="p">],</span>
+             <span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="s1">&#39;#f46d43&#39;</span><span class="p">],</span>
+             <span class="p">[</span><span class="mf">0.9</span><span class="p">,</span> <span class="s1">&#39;#d73027&#39;</span><span class="p">],</span>
+             <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;#a50026&#39;</span><span class="p">]]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[67]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">color_function</span> <span class="o">=</span> <span class="n">lens</span> <span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">lens</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+<span class="n">my_colorscale</span> <span class="o">=</span> <span class="n">pl_brewer</span>
+<span class="n">kmgraph</span><span class="p">,</span>  <span class="n">mapper_summary</span><span class="p">,</span> <span class="n">colorf_distribution</span> <span class="o">=</span> <span class="n">get_mapper_graph</span><span class="p">(</span><span class="n">scomplex</span><span class="p">,</span>
+                                                                 <span class="n">color_function</span><span class="p">,</span>
+                                                                 <span class="n">color_function_name</span><span class="o">=</span><span class="s1">&#39;Distance to x-min&#39;</span><span class="p">,</span>
+                                                                 <span class="n">colorscale</span><span class="o">=</span><span class="n">my_colorscale</span><span class="p">)</span>
+
+<span class="c1"># assign to node[&#39;custom_tooltips&#39;]  the node label (0 for benign, 1 for malignant)</span>
+<span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">kmgraph</span><span class="p">[</span><span class="s1">&#39;nodes&#39;</span><span class="p">]:</span>
+    <span class="n">node</span><span class="p">[</span><span class="s1">&#39;custom_tooltips&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">scomplex</span><span class="p">[</span><span class="s1">&#39;nodes&#39;</span><span class="p">][</span><span class="n">node</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]]]</span>
+</pre></div>
+</div>
+</div>
+<p>Since the chosen colorscale leads to a few light colors when it it used for histogram bars, we set a black background color to make the bars visible:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[68]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">bgcolor</span> <span class="o">=</span> <span class="s1">&#39;rgba(10,10,10, 0.9)&#39;</span>
+<span class="n">y_gridcolor</span> <span class="o">=</span> <span class="s1">&#39;rgb(150,150,150)&#39;</span><span class="c1"># on a black background the gridlines are set on  grey</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[69]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">plotly_graph_data</span> <span class="o">=</span> <span class="n">plotly_graph</span><span class="p">(</span><span class="n">kmgraph</span><span class="p">,</span> <span class="n">graph_layout</span><span class="o">=</span><span class="s1">&#39;fr&#39;</span><span class="p">,</span> <span class="n">colorscale</span><span class="o">=</span><span class="n">my_colorscale</span><span class="p">,</span>
+                                 <span class="n">factor_size</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">edge_linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">layout</span> <span class="o">=</span> <span class="n">plot_layout</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Topological network representing the&lt;br&gt;  breast cancer  dataset&#39;</span><span class="p">,</span>
+                     <span class="n">width</span><span class="o">=</span><span class="mi">620</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">570</span><span class="p">,</span>
+                     <span class="n">annotation_text</span><span class="o">=</span><span class="n">get_kmgraph_meta</span><span class="p">(</span><span class="n">mapper_summary</span><span class="p">),</span>
+                     <span class="n">bgcolor</span><span class="o">=</span><span class="n">bgcolor</span><span class="p">)</span>
+
+<span class="n">fw_graph</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">FigureWidget</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">plotly_graph_data</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">)</span>
+<span class="n">fw_hist</span> <span class="o">=</span> <span class="n">node_hist_fig</span><span class="p">(</span><span class="n">colorf_distribution</span><span class="p">,</span> <span class="n">bgcolor</span><span class="o">=</span><span class="n">bgcolor</span><span class="p">,</span>
+                        <span class="n">y_gridcolor</span><span class="o">=</span><span class="n">y_gridcolor</span><span class="p">)</span>
+<span class="n">fw_summary</span> <span class="o">=</span> <span class="n">summary_fig</span><span class="p">(</span><span class="n">mapper_summary</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<span class="n">dashboard</span> <span class="o">=</span> <span class="n">hovering_widgets</span><span class="p">(</span><span class="n">kmgraph</span><span class="p">,</span>
+                             <span class="n">fw_graph</span><span class="p">,</span>
+                             <span class="n">ctooltips</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="c1"># ctooltips = True, because we assigned a label to each</span>
+                                             <span class="c1">#cluster member</span>
+                             <span class="n">bgcolor</span><span class="o">=</span><span class="n">bgcolor</span><span class="p">,</span>
+                             <span class="n">y_gridcolor</span><span class="o">=</span><span class="n">y_gridcolor</span><span class="p">,</span>
+                             <span class="n">member_textbox_width</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+
+<span class="c1">#Update the fw_graph colorbar, setting its title:</span>
+
+<span class="n">fw_graph</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">marker</span><span class="o">.</span><span class="n">colorbar</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;dist to&lt;br&gt;x-min&#39;</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[70]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">VBox</span><span class="p">([</span><span class="n">fw_graph</span><span class="p">,</span> <span class="n">HBox</span><span class="p">([</span><span class="n">fw_summary</span><span class="p">,</span> <span class="n">fw_hist</span><span class="p">])])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "0d55665251c74a9e88aa887b9095acf4", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[71]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">dashboard</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "5198c3bc968c40b0a468b029ebb5faf5", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<p>In the following we illustrate how we can duplicate FigureWidget(s) and update them. This is just a pretext to illustrate how the kmapper graph figure can be manipulated for a more in-depth study or for publication.</p>
+<p>Here we duplicate the initial FigureWidget, <code class="docutils literal notranslate"><span class="pre">fw_graph</span></code>, and recolor its graph nodes according to the proportion of malignant members. The two FigureWidgets are then restyled and plotted alonside each other for comparison.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[72]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">breastc_dict</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;benign&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;malignant&#39;</span><span class="p">}</span>
+<span class="n">tooltips</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">fw_graph</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">)</span> <span class="c1"># we perform this conversion because fw.data[1].text is a tuple and we want to update</span>
+                                     <span class="c1"># the tooltips</span>
+
+<span class="n">new_color</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">kmgraph</span><span class="p">[</span><span class="s1">&#39;nodes&#39;</span><span class="p">]):</span>
+    <span class="n">member_label_ids</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">scomplex</span><span class="p">[</span><span class="s1">&#39;nodes&#39;</span><span class="p">][</span><span class="n">node</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]]]</span>
+    <span class="n">member_labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">breastc_dict</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">member_label_ids</span><span class="p">]</span>
+    <span class="n">label_type</span><span class="p">,</span> <span class="n">label_counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">member_labels</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="n">n_members</span> <span class="o">=</span> <span class="n">label_counts</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">label_type</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">label_type</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;benign&#39;</span><span class="p">:</span>
+            <span class="n">new_color</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_color</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">new_color</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">1.0</span><span class="o">*</span><span class="n">label_counts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">n_members</span><span class="p">)</span><span class="c1">#multiply by 1 for python 2.7.+</span>
+
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">label_counts</span><span class="p">)):</span>
+        <span class="n">tooltips</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39;&lt;br&gt;&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">label_type</span><span class="p">[</span><span class="n">m</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">label_counts</span><span class="p">[</span><span class="n">m</span><span class="p">])</span> <span class="c1"># append  how many benign/malign</span>
+                                                                                 <span class="c1"># members exist in each node</span>
+
+<span class="n">fwn_graph</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">FigureWidget</span><span class="p">(</span><span class="n">fw_graph</span><span class="p">)</span> <span class="c1"># copy the initial FigureWidget</span>
+
+<span class="k">with</span> <span class="n">fwn_graph</span><span class="o">.</span><span class="n">batch_update</span><span class="p">():</span> <span class="c1"># make updates for the new figure</span>
+    <span class="n">fwn_graph</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">tooltips</span> <span class="c1"># add the new tooltips</span>
+    <span class="n">fwn_graph</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">marker</span><span class="o">.</span><span class="n">colorbar</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.14</span> <span class="c1"># place toolbar at the figure left side</span>
+    <span class="n">fwn_graph</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="mi">550</span> <span class="c1"># change the figure size in order to plot two &quot;parallel&quot; copies</span>
+    <span class="n">fwn_graph</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="mi">550</span>
+    <span class="n">fwn_graph</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">margin</span><span class="o">.</span><span class="n">r</span> <span class="o">=</span> <span class="mi">45</span> <span class="c1"># decrease the right margin from 60px (default val) to 45 pixels</span>
+
+<span class="n">fw1</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">FigureWidget</span><span class="p">(</span><span class="n">fwn_graph</span><span class="p">)</span> <span class="c1"># define a new figure from  the fwn_graph that will be colored by the new color function</span>
+<span class="k">with</span> <span class="n">fw1</span><span class="o">.</span><span class="n">batch_update</span><span class="p">():</span>
+    <span class="n">fw1</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">marker</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">new_color</span> <span class="c1"># update node colors</span>
+    <span class="n">fw1</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">line</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;rgb(125,125,125)&#39;</span> <span class="c1"># update the graph edge color</span>
+    <span class="n">fw1</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">plot_bgcolor</span> <span class="o">=</span> <span class="s1">&#39;rgb(240,240,240)&#39;</span>
+    <span class="n">fw1</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">annotations</span> <span class="o">=</span> <span class="bp">None</span> <span class="c1"># remove the mapper_summary from the second plot</span>
+    <span class="n">fw1</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">marker</span><span class="o">.</span><span class="n">showscale</span> <span class="o">=</span> <span class="bp">False</span> <span class="c1"># remove the colorbar</span>
+    <span class="n">fw1</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Nodes are colored according to the proportion&lt;br&gt; of malignant members&quot;</span>
+</pre></div>
+</div>
+</div>
+<p>Plot the dashboard consisting in the two figures:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[73]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">HBox</span><span class="p">([</span><span class="n">fwn_graph</span><span class="p">,</span> <span class="n">fw1</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "0749b2d667d24a8f83f64948c883b62b", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<p>To save any of the FigureWidgets generated above uncomment the two lines in the next cell, and replace <code class="docutils literal notranslate"><span class="pre">fw_graph</span></code> and the name of pdf file adequately:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[74]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1">#import plotly.io as pio</span>
+<span class="c1">#pio.write_image(fw_graph, &#39;breast-graph1.pdf&#39;) # or png, swg</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="A-note-on-the-choice-of-lens">
+<h1>A note on the choice of lens<a class="headerlink" href="#A-note-on-the-choice-of-lens" title="Permalink to this headline">¶</a></h1>
+<p>The reasoning behind the choice of lenses in the demonstration above is:</p>
+<p><strong>For lens1:</strong> Lenses that make biological sense; in other words, lenses that highlight special features in the data, that I know about. In the case of this particualr data, using an anomaly score (in this case calculated using the IsolationForest from sklearn) makes biological sense since cancer cells are anomalous.</p>
+<p><strong>For lens2:</strong> Lenses that disperse the data, as opposed to clustering many points together.</p>
+<p>Below we demonstrate the same result can be obtained with a different choice for lens2:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[101]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Create a 1-D lens with the First Principal Component from PCA</span>
+<span class="n">lens3</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="c1"># Combine lenses pairwise to get a 2-D lens i.e. [Isolation Forest, First Principal Component from PCA]</span>
+<span class="n">isoForest_pca</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">lens1</span><span class="p">,</span> <span class="n">lens3</span><span class="p">]</span>
+
+</pre></div>
+</div>
+</div>
+<p>Before we construct the simplicial complexes with these lenses, let us examine the effect the lenses have on the data:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[108]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">lens1</span><span class="p">,</span><span class="n">lens2</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="n">y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Isolation Forest lens&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;L^2-Norm lens&#39;</span><span class="p">)</span>
+
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">lens1</span><span class="p">,</span><span class="n">lens3</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="n">y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Isolation Forest lens&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;First Principal Component lens&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Cancer-demo_22_0.png" src="../_images/notebooks_Cancer-demo_22_0.png" />
+</div>
+</div>
+<p>This shows that using the L^2-Norm and the first principal component as the second lens would probably generate very similar topological graphs.</p>
+<p>(Note that this also shows that the first principal component of the data <strong>is</strong> the L^2-Norm or very close to the L^2-Norm and that can be confirmed by inspecting the values in the arrays.)</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[109]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Define the simplicial complexes</span>
+
+<span class="c1"># one lens</span>
+<span class="n">scomplex_isoForest</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">lens1</span><span class="p">,</span>
+                      <span class="n">X</span><span class="p">,</span>
+                      <span class="n">nr_cubes</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+                      <span class="n">overlap_perc</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+                      <span class="n">clusterer</span><span class="o">=</span><span class="n">sklearn</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                                       <span class="n">random_state</span><span class="o">=</span><span class="mi">3471</span><span class="p">))</span>
+
+<span class="c1"># two lenses</span>
+<span class="n">scomplex_isoForest_pca</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">isoForest_pca</span><span class="p">,</span>
+                      <span class="n">X</span><span class="p">,</span>
+                      <span class="n">nr_cubes</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+                      <span class="n">overlap_perc</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+                      <span class="n">clusterer</span><span class="o">=</span><span class="n">sklearn</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                                       <span class="n">random_state</span><span class="o">=</span><span class="mi">3471</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[106]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># visualise scomplex_isoForest</span>
+<span class="n">color_function</span> <span class="o">=</span> <span class="n">lens1</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">lens1</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+<span class="n">my_colorscale</span> <span class="o">=</span> <span class="n">pl_brewer</span>
+
+<span class="n">kmgraph</span><span class="p">,</span>  <span class="n">mapper_summary</span><span class="p">,</span> <span class="n">colorf_distribution</span> <span class="o">=</span> <span class="n">get_mapper_graph</span><span class="p">(</span><span class="n">scomplex_isoForest</span><span class="p">,</span>
+                                                                 <span class="n">color_function</span><span class="p">,</span>
+                                                                 <span class="n">color_function_name</span><span class="o">=</span><span class="s1">&#39;Distance to x-min&#39;</span><span class="p">,</span>
+                                                                 <span class="n">colorscale</span><span class="o">=</span><span class="n">my_colorscale</span><span class="p">)</span>
+
+
+<span class="c1"># assign to node[&#39;custom_tooltips&#39;]  the node label (0 for benign, 1 for malignant)</span>
+<span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">kmgraph</span><span class="p">[</span><span class="s1">&#39;nodes&#39;</span><span class="p">]:</span>
+    <span class="n">node</span><span class="p">[</span><span class="s1">&#39;custom_tooltips&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">scomplex</span><span class="p">[</span><span class="s1">&#39;nodes&#39;</span><span class="p">][</span><span class="n">node</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]]]</span>
+
+<span class="n">bgcolor</span> <span class="o">=</span> <span class="s1">&#39;rgba(10,10,10, 0.9)&#39;</span>
+<span class="n">y_gridcolor</span> <span class="o">=</span> <span class="s1">&#39;rgb(150,150,150)&#39;</span><span class="c1"># on a black background the gridlines are set on  grey</span>
+<span class="n">plotly_graph_data</span> <span class="o">=</span> <span class="n">plotly_graph</span><span class="p">(</span><span class="n">kmgraph</span><span class="p">,</span> <span class="n">graph_layout</span><span class="o">=</span><span class="s1">&#39;fr&#39;</span><span class="p">,</span> <span class="n">colorscale</span><span class="o">=</span><span class="n">my_colorscale</span><span class="p">,</span>
+                                 <span class="n">factor_size</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">edge_linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">layout</span> <span class="o">=</span> <span class="n">plot_layout</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Topological network representing the&lt;br&gt;  breast cancer  dataset&#39;</span><span class="p">,</span>
+                     <span class="n">width</span><span class="o">=</span><span class="mi">620</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">570</span><span class="p">,</span>
+                     <span class="n">annotation_text</span><span class="o">=</span><span class="n">get_kmgraph_meta</span><span class="p">(</span><span class="n">mapper_summary</span><span class="p">),</span>
+                     <span class="n">bgcolor</span><span class="o">=</span><span class="n">bgcolor</span><span class="p">)</span>
+
+<span class="n">fw_graph</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">FigureWidget</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">plotly_graph_data</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">)</span>
+<span class="n">fw_hist</span> <span class="o">=</span> <span class="n">node_hist_fig</span><span class="p">(</span><span class="n">colorf_distribution</span><span class="p">,</span> <span class="n">bgcolor</span><span class="o">=</span><span class="n">bgcolor</span><span class="p">,</span>
+                        <span class="n">y_gridcolor</span><span class="o">=</span><span class="n">y_gridcolor</span><span class="p">)</span>
+<span class="n">fw_summary</span> <span class="o">=</span> <span class="n">summary_fig</span><span class="p">(</span><span class="n">mapper_summary</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<span class="n">dashboard</span> <span class="o">=</span> <span class="n">hovering_widgets</span><span class="p">(</span><span class="n">kmgraph</span><span class="p">,</span>
+                             <span class="n">fw_graph</span><span class="p">,</span>
+                             <span class="n">ctooltips</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="c1"># ctooltips = True, because we assigned a label to each</span>
+                                             <span class="c1">#cluster member</span>
+                             <span class="n">bgcolor</span><span class="o">=</span><span class="n">bgcolor</span><span class="p">,</span>
+                             <span class="n">y_gridcolor</span><span class="o">=</span><span class="n">y_gridcolor</span><span class="p">,</span>
+                             <span class="n">member_textbox_width</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+
+<span class="c1">#Update the fw_graph colorbar, setting its title:</span>
+
+<span class="n">fw_graph</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">marker</span><span class="o">.</span><span class="n">colorbar</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;dist to&lt;br&gt;x-min&#39;</span>
+
+
+<span class="n">VBox</span><span class="p">([</span><span class="n">fw_graph</span><span class="p">,</span> <span class="n">HBox</span><span class="p">([</span><span class="n">fw_summary</span><span class="p">,</span> <span class="n">fw_hist</span><span class="p">])])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "1884fedfe6f04cc49898bc59cc59e3cb", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[104]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># visualise scomplex_isoForest_pca</span>
+<span class="n">color_function</span> <span class="o">=</span> <span class="n">isoForest_pca</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">isoForest_pca</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+<span class="n">my_colorscale</span> <span class="o">=</span> <span class="n">pl_brewer</span>
+
+<span class="n">kmgraph</span><span class="p">,</span>  <span class="n">mapper_summary</span><span class="p">,</span> <span class="n">colorf_distribution</span> <span class="o">=</span> <span class="n">get_mapper_graph</span><span class="p">(</span><span class="n">scomplex_isoForest_pca</span><span class="p">,</span>
+                                                                 <span class="n">color_function</span><span class="p">,</span>
+                                                                 <span class="n">color_function_name</span><span class="o">=</span><span class="s1">&#39;Distance to x-min&#39;</span><span class="p">,</span>
+                                                                 <span class="n">colorscale</span><span class="o">=</span><span class="n">my_colorscale</span><span class="p">)</span>
+
+
+<span class="c1"># assign to node[&#39;custom_tooltips&#39;]  the node label (0 for benign, 1 for malignant)</span>
+<span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">kmgraph</span><span class="p">[</span><span class="s1">&#39;nodes&#39;</span><span class="p">]:</span>
+    <span class="n">node</span><span class="p">[</span><span class="s1">&#39;custom_tooltips&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">scomplex</span><span class="p">[</span><span class="s1">&#39;nodes&#39;</span><span class="p">][</span><span class="n">node</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]]]</span>
+
+<span class="n">bgcolor</span> <span class="o">=</span> <span class="s1">&#39;rgba(10,10,10, 0.9)&#39;</span>
+<span class="n">y_gridcolor</span> <span class="o">=</span> <span class="s1">&#39;rgb(150,150,150)&#39;</span><span class="c1"># on a black background the gridlines are set on  grey</span>
+<span class="n">plotly_graph_data</span> <span class="o">=</span> <span class="n">plotly_graph</span><span class="p">(</span><span class="n">kmgraph</span><span class="p">,</span> <span class="n">graph_layout</span><span class="o">=</span><span class="s1">&#39;fr&#39;</span><span class="p">,</span> <span class="n">colorscale</span><span class="o">=</span><span class="n">my_colorscale</span><span class="p">,</span>
+                                 <span class="n">factor_size</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">edge_linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">layout</span> <span class="o">=</span> <span class="n">plot_layout</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Topological network representing the&lt;br&gt;  breast cancer  dataset&#39;</span><span class="p">,</span>
+                     <span class="n">width</span><span class="o">=</span><span class="mi">620</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">570</span><span class="p">,</span>
+                     <span class="n">annotation_text</span><span class="o">=</span><span class="n">get_kmgraph_meta</span><span class="p">(</span><span class="n">mapper_summary</span><span class="p">),</span>
+                     <span class="n">bgcolor</span><span class="o">=</span><span class="n">bgcolor</span><span class="p">)</span>
+
+<span class="n">fw_graph</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">FigureWidget</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">plotly_graph_data</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">)</span>
+<span class="n">fw_hist</span> <span class="o">=</span> <span class="n">node_hist_fig</span><span class="p">(</span><span class="n">colorf_distribution</span><span class="p">,</span> <span class="n">bgcolor</span><span class="o">=</span><span class="n">bgcolor</span><span class="p">,</span>
+                        <span class="n">y_gridcolor</span><span class="o">=</span><span class="n">y_gridcolor</span><span class="p">)</span>
+<span class="n">fw_summary</span> <span class="o">=</span> <span class="n">summary_fig</span><span class="p">(</span><span class="n">mapper_summary</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<span class="n">dashboard</span> <span class="o">=</span> <span class="n">hovering_widgets</span><span class="p">(</span><span class="n">kmgraph</span><span class="p">,</span>
+                             <span class="n">fw_graph</span><span class="p">,</span>
+                             <span class="n">ctooltips</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="c1"># ctooltips = True, because we assigned a label to each</span>
+                                             <span class="c1">#cluster member</span>
+                             <span class="n">bgcolor</span><span class="o">=</span><span class="n">bgcolor</span><span class="p">,</span>
+                             <span class="n">y_gridcolor</span><span class="o">=</span><span class="n">y_gridcolor</span><span class="p">,</span>
+                             <span class="n">member_textbox_width</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+
+<span class="c1">#Update the fw_graph colorbar, setting its title:</span>
+
+<span class="n">fw_graph</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">marker</span><span class="o">.</span><span class="n">colorbar</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;dist to&lt;br&gt;x-min&#39;</span>
+
+
+<span class="n">VBox</span><span class="p">([</span><span class="n">fw_graph</span><span class="p">,</span> <span class="n">HBox</span><span class="p">([</span><span class="n">fw_summary</span><span class="p">,</span> <span class="n">fw_hist</span><span class="p">])])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "21bfb5e0e212478e96b7fd9f20622dfb", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<p>This shows that the anomaly score (biologically relevant) elucidates the global shape of the data, and the L^2-Norm (or first PC from principal component from PCA), which disperses the datapoints in one dimension, highlighs less granular (more detailed) local structures.</p>
+<p>We can do a similar analysis using a different biologically-relevant lens:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[136]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Create a 1-D lens with the values of the texture_mean feature of the dataset</span>
+<span class="n">lens4</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="c1"># Combine lenses pairwise to get a 2-D lens i.e. [Isolation Forest, First Principal Component from PCA]</span>
+<span class="n">texture_l2norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">lens4</span><span class="p">,</span> <span class="n">lens2</span><span class="p">]</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[137]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">lens1</span><span class="p">,</span><span class="n">lens2</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="n">y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Isolation Forest lens&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;L^2-Norm lens&#39;</span><span class="p">)</span>
+
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">lens4</span><span class="p">,</span><span class="n">lens2</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="n">y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;texture_mean lens&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;L^2-Norm lens&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_Cancer-demo_29_0.png" src="../_images/notebooks_Cancer-demo_29_0.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[138]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># Define the simplicial complexes</span>
+<span class="c1"># one lens</span>
+<span class="n">scomplex_texture</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">lens4</span><span class="p">,</span>
+                      <span class="n">X</span><span class="p">,</span>
+                      <span class="n">nr_cubes</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+                      <span class="n">overlap_perc</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+                      <span class="n">clusterer</span><span class="o">=</span><span class="n">sklearn</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                                       <span class="n">random_state</span><span class="o">=</span><span class="mi">3471</span><span class="p">))</span>
+
+<span class="c1"># two lenses</span>
+<span class="n">scomplex_texture_l2norm</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">radius_l2norm</span><span class="p">,</span>
+                      <span class="n">X</span><span class="p">,</span>
+                      <span class="n">nr_cubes</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+                      <span class="n">overlap_perc</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+                      <span class="n">clusterer</span><span class="o">=</span><span class="n">sklearn</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                                                       <span class="n">random_state</span><span class="o">=</span><span class="mi">3471</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[139]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># visualise scomplex_radius</span>
+<span class="n">color_function</span> <span class="o">=</span> <span class="n">lens4</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">lens4</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+<span class="n">my_colorscale</span> <span class="o">=</span> <span class="n">pl_brewer</span>
+
+<span class="n">kmgraph</span><span class="p">,</span>  <span class="n">mapper_summary</span><span class="p">,</span> <span class="n">colorf_distribution</span> <span class="o">=</span> <span class="n">get_mapper_graph</span><span class="p">(</span><span class="n">scomplex_texture</span><span class="p">,</span>
+                                                                 <span class="n">color_function</span><span class="p">,</span>
+                                                                 <span class="n">color_function_name</span><span class="o">=</span><span class="s1">&#39;Distance to x-min&#39;</span><span class="p">,</span>
+                                                                 <span class="n">colorscale</span><span class="o">=</span><span class="n">my_colorscale</span><span class="p">)</span>
+
+
+<span class="c1"># assign to node[&#39;custom_tooltips&#39;]  the node label (0 for benign, 1 for malignant)</span>
+<span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">kmgraph</span><span class="p">[</span><span class="s1">&#39;nodes&#39;</span><span class="p">]:</span>
+    <span class="n">node</span><span class="p">[</span><span class="s1">&#39;custom_tooltips&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">scomplex</span><span class="p">[</span><span class="s1">&#39;nodes&#39;</span><span class="p">][</span><span class="n">node</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]]]</span>
+
+<span class="n">bgcolor</span> <span class="o">=</span> <span class="s1">&#39;rgba(10,10,10, 0.9)&#39;</span>
+<span class="n">y_gridcolor</span> <span class="o">=</span> <span class="s1">&#39;rgb(150,150,150)&#39;</span><span class="c1"># on a black background the gridlines are set on  grey</span>
+<span class="n">plotly_graph_data</span> <span class="o">=</span> <span class="n">plotly_graph</span><span class="p">(</span><span class="n">kmgraph</span><span class="p">,</span> <span class="n">graph_layout</span><span class="o">=</span><span class="s1">&#39;fr&#39;</span><span class="p">,</span> <span class="n">colorscale</span><span class="o">=</span><span class="n">my_colorscale</span><span class="p">,</span>
+                                 <span class="n">factor_size</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">edge_linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">layout</span> <span class="o">=</span> <span class="n">plot_layout</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Topological network representing the&lt;br&gt;  breast cancer  dataset&#39;</span><span class="p">,</span>
+                     <span class="n">width</span><span class="o">=</span><span class="mi">620</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">570</span><span class="p">,</span>
+                     <span class="n">annotation_text</span><span class="o">=</span><span class="n">get_kmgraph_meta</span><span class="p">(</span><span class="n">mapper_summary</span><span class="p">),</span>
+                     <span class="n">bgcolor</span><span class="o">=</span><span class="n">bgcolor</span><span class="p">)</span>
+
+<span class="n">fw_graph</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">FigureWidget</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">plotly_graph_data</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">)</span>
+<span class="n">fw_hist</span> <span class="o">=</span> <span class="n">node_hist_fig</span><span class="p">(</span><span class="n">colorf_distribution</span><span class="p">,</span> <span class="n">bgcolor</span><span class="o">=</span><span class="n">bgcolor</span><span class="p">,</span>
+                        <span class="n">y_gridcolor</span><span class="o">=</span><span class="n">y_gridcolor</span><span class="p">)</span>
+<span class="n">fw_summary</span> <span class="o">=</span> <span class="n">summary_fig</span><span class="p">(</span><span class="n">mapper_summary</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<span class="n">dashboard</span> <span class="o">=</span> <span class="n">hovering_widgets</span><span class="p">(</span><span class="n">kmgraph</span><span class="p">,</span>
+                             <span class="n">fw_graph</span><span class="p">,</span>
+                             <span class="n">ctooltips</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="c1"># ctooltips = True, because we assigned a label to each</span>
+                                             <span class="c1">#cluster member</span>
+                             <span class="n">bgcolor</span><span class="o">=</span><span class="n">bgcolor</span><span class="p">,</span>
+                             <span class="n">y_gridcolor</span><span class="o">=</span><span class="n">y_gridcolor</span><span class="p">,</span>
+                             <span class="n">member_textbox_width</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+
+<span class="c1">#Update the fw_graph colorbar, setting its title:</span>
+
+<span class="n">fw_graph</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">marker</span><span class="o">.</span><span class="n">colorbar</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;dist to&lt;br&gt;x-min&#39;</span>
+
+
+<span class="n">VBox</span><span class="p">([</span><span class="n">fw_graph</span><span class="p">,</span> <span class="n">HBox</span><span class="p">([</span><span class="n">fw_summary</span><span class="p">,</span> <span class="n">fw_hist</span><span class="p">])])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "b56ace5527c14c7f9dd300b3b1f3a3d7", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[140]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># visualise scomplex_radius_l2norm</span>
+<span class="n">color_function</span> <span class="o">=</span> <span class="n">texture_l2norm</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">texture_l2norm</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+<span class="n">my_colorscale</span> <span class="o">=</span> <span class="n">pl_brewer</span>
+
+<span class="n">kmgraph</span><span class="p">,</span>  <span class="n">mapper_summary</span><span class="p">,</span> <span class="n">colorf_distribution</span> <span class="o">=</span> <span class="n">get_mapper_graph</span><span class="p">(</span><span class="n">scomplex_texture_l2norm</span><span class="p">,</span>
+                                                                 <span class="n">color_function</span><span class="p">,</span>
+                                                                 <span class="n">color_function_name</span><span class="o">=</span><span class="s1">&#39;Distance to x-min&#39;</span><span class="p">,</span>
+                                                                 <span class="n">colorscale</span><span class="o">=</span><span class="n">my_colorscale</span><span class="p">)</span>
+
+
+<span class="c1"># assign to node[&#39;custom_tooltips&#39;]  the node label (0 for benign, 1 for malignant)</span>
+<span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">kmgraph</span><span class="p">[</span><span class="s1">&#39;nodes&#39;</span><span class="p">]:</span>
+    <span class="n">node</span><span class="p">[</span><span class="s1">&#39;custom_tooltips&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">scomplex</span><span class="p">[</span><span class="s1">&#39;nodes&#39;</span><span class="p">][</span><span class="n">node</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]]]</span>
+
+<span class="n">bgcolor</span> <span class="o">=</span> <span class="s1">&#39;rgba(10,10,10, 0.9)&#39;</span>
+<span class="n">y_gridcolor</span> <span class="o">=</span> <span class="s1">&#39;rgb(150,150,150)&#39;</span><span class="c1"># on a black background the gridlines are set on  grey</span>
+<span class="n">plotly_graph_data</span> <span class="o">=</span> <span class="n">plotly_graph</span><span class="p">(</span><span class="n">kmgraph</span><span class="p">,</span> <span class="n">graph_layout</span><span class="o">=</span><span class="s1">&#39;fr&#39;</span><span class="p">,</span> <span class="n">colorscale</span><span class="o">=</span><span class="n">my_colorscale</span><span class="p">,</span>
+                                 <span class="n">factor_size</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">edge_linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">layout</span> <span class="o">=</span> <span class="n">plot_layout</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Topological network representing the&lt;br&gt;  breast cancer  dataset&#39;</span><span class="p">,</span>
+                     <span class="n">width</span><span class="o">=</span><span class="mi">620</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">570</span><span class="p">,</span>
+                     <span class="n">annotation_text</span><span class="o">=</span><span class="n">get_kmgraph_meta</span><span class="p">(</span><span class="n">mapper_summary</span><span class="p">),</span>
+                     <span class="n">bgcolor</span><span class="o">=</span><span class="n">bgcolor</span><span class="p">)</span>
+
+<span class="n">fw_graph</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">FigureWidget</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">plotly_graph_data</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="n">layout</span><span class="p">)</span>
+<span class="n">fw_hist</span> <span class="o">=</span> <span class="n">node_hist_fig</span><span class="p">(</span><span class="n">colorf_distribution</span><span class="p">,</span> <span class="n">bgcolor</span><span class="o">=</span><span class="n">bgcolor</span><span class="p">,</span>
+                        <span class="n">y_gridcolor</span><span class="o">=</span><span class="n">y_gridcolor</span><span class="p">)</span>
+<span class="n">fw_summary</span> <span class="o">=</span> <span class="n">summary_fig</span><span class="p">(</span><span class="n">mapper_summary</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<span class="n">dashboard</span> <span class="o">=</span> <span class="n">hovering_widgets</span><span class="p">(</span><span class="n">kmgraph</span><span class="p">,</span>
+                             <span class="n">fw_graph</span><span class="p">,</span>
+                             <span class="n">ctooltips</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="c1"># ctooltips = True, because we assigned a label to each</span>
+                                             <span class="c1">#cluster member</span>
+                             <span class="n">bgcolor</span><span class="o">=</span><span class="n">bgcolor</span><span class="p">,</span>
+                             <span class="n">y_gridcolor</span><span class="o">=</span><span class="n">y_gridcolor</span><span class="p">,</span>
+                             <span class="n">member_textbox_width</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+
+<span class="c1">#Update the fw_graph colorbar, setting its title:</span>
+
+<span class="n">fw_graph</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">marker</span><span class="o">.</span><span class="n">colorbar</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;dist to&lt;br&gt;x-min&#39;</span>
+
+
+<span class="n">VBox</span><span class="p">([</span><span class="n">fw_graph</span><span class="p">,</span> <span class="n">HBox</span><span class="p">([</span><span class="n">fw_summary</span><span class="p">,</span> <span class="n">fw_hist</span><span class="p">])])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "e4b6c5fdcc574d15a9b293b6caed3a68", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/logo.png" alt="Logo"/>
+            </a></p>
+<form class="search" action="../search.html" method="get">
+  <input type="text" name="q"
+   placeholder="type to search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<a href=https://github.com/scikit-tda/kepler-mapper>
+    <p class="caption"><span class="caption-text">
+        <img src="../_static/gh_logo.png" 
+        height="18px" 
+        width="18px" alt="Github icon">  
+        scikit-tda/kepler-mapper
+    </span></p>
+</a> 
+
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../applications.html">Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/index.html">API Reference</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Adapters.html">Adapters example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plotly-Demo.html">Demo of Plotlyviz features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="KeplerMapper-usage-in-Jupyter-Notebook.html">Using Kepler Mapper in Jupyter Notebook</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Advanced Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="KeplerMapper-Newsgroup20-Pipeline.html">KeplerMapper &amp; NLP examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TOR-XGB-TDA.html">Detecting Encrypted TOR Traffic with Boosting and Topological Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Confidence-Graphs.html">Confidence Graphs: Representing Model Uncertainty in Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="self-guessing.html">Self-guessing mapper</a></li>
+</ul>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  <div class="related bottom">
+  <nav id="rellinks">
+    <ul>
+    </ul>
+  </nav>
+  <nav id="breadcrumbs">
+    <ul>
+      <li><a href="../index.html">KeplerMapper</a></li> 
+    </ul>
+  </nav>
+  </div>
+  <footer id="pagefooter">&copy; 2019, Hendrik Jacob van Veen and Nathaniel Saul.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a>
+      1.8.4.
+
+  </footer>
+
+  
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-124965309-4', '');
+      ga('send', 'pageview');
+    </script>
+  
+  </body>
+</html>

@@ -59,7 +59,7 @@ def mpl_to_plotly(cmap, n_entries):
 
 def plotlyviz(
     scomplex,
-    colorscale=default_colorscale,
+    colorscale=None,
     title="Kepler Mapper",
     graph_layout="kk",
     color_function=None,
@@ -148,6 +148,9 @@ def plotlyviz(
             A FigureWidget that can be shown or editted. See the Plotly Demo notebook for examples of use.
 
     """
+
+    if not colorscale:
+        colorscale = default_colorscale
 
     kmgraph, mapper_summary, n_color_distribution = get_mapper_graph(
         scomplex,
@@ -254,13 +257,13 @@ def get_mapper_graph(
     simplicial_complex,
     color_function=None,
     color_function_name=None,
-    colorscale=default_colorscale,
+    colorscale=None,
     custom_tooltips=None,
     custom_meta=None,
     X=None,
-    X_names=[],
+    X_names=None,
     lens=None,
-    lens_names=[],
+    lens_names=None,
 ):
     """Generate data for mapper graph visualization and annotation.
 
@@ -280,12 +283,22 @@ def get_mapper_graph(
     >>> kmgraph,  mapper_summary, n_distribution = get_mapper_graph(simplicial_complex)
 
     """
+
+    if not colorscale:
+        colorscale = default_colorscale
+
     if not len(simplicial_complex["nodes"]) > 0:
         raise Exception(
             "A mapper graph should have more than 0 nodes. This might be because your clustering algorithm might be too sensitive and be classifying all points as noise."
         )
 
     color_function = init_color_function(simplicial_complex, color_function)
+
+    if X_names is None:
+        X_names = []
+
+    if lens_names is None:
+        lens_names = []
 
     json_graph = scomplex_to_graph(
         simplicial_complex,
@@ -312,7 +325,7 @@ def get_mapper_graph(
 def plotly_graph(
     kmgraph,
     graph_layout="kk",
-    colorscale=default_colorscale,
+    colorscale=None,
     showscale=True,
     factor_size=3,
     edge_linecolor="rgb(180,180,180)",
@@ -336,6 +349,11 @@ def plotly_graph(
     -------
     The plotly traces (dicts) representing the graph edges and nodes
     """
+
+    if not colorscale:
+        colorscale = default_colorscale
+
+
     # define an igraph.Graph instance of n_nodes
     n_nodes = len(kmgraph["nodes"])
     if n_nodes == 0:

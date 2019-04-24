@@ -325,7 +325,7 @@ def get_mapper_graph(
 def plotly_graph(
     kmgraph,
     graph_layout="kk",
-    colorscale=default_colorscale,
+    colorscale=None,
     showscale=True,
     factor_size=3,
     edge_linecolor="rgb(180,180,180)",
@@ -352,6 +352,7 @@ def plotly_graph(
 
     if not colorscale:
         colorscale = default_colorscale
+
 
     # define an igraph.Graph instance of n_nodes
     n_nodes = len(kmgraph["nodes"])

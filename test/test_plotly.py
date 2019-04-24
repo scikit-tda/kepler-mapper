@@ -14,6 +14,7 @@ from kmapper.plotlyviz import (
     default_colorscale,
     get_mapper_graph,
     _map_val2color,
+    plotly_graph,
     format_meta,
     _to_html_format,
 )
@@ -42,6 +43,20 @@ def test_kepler_to_graph(sc):
     assert json.loads(json.dumps(json_graph)) == json_graph
     assert isinstance(mapper_summary, dict)
     assert isinstance(colorf_distribution, list)
+
+def test_kepler_to_graph_with_colorscale(sc):
+
+    json_graph, mapper_summary, colorf_distribution = get_mapper_graph(sc, colorscale=default_colorscale)
+
+    assert json.loads(json.dumps(json_graph)) == json_graph
+    assert isinstance(mapper_summary, dict)
+    assert isinstance(colorf_distribution, list)
+
+
+def test_plotly_graph(sc):
+    edge_trace, node_trace = plotly_graph(get_mapper_graph(sc)[0])
+    assert isinstance(edge_trace, dict)
+    assert isinstance(node_trace, dict)
 
 
 def test_format_meta(sc):

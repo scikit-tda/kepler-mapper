@@ -20,7 +20,6 @@ Nerves determine the method that constructs the nodes and edges (or higher order
     KeplerMapper
     Cover
     GraphNerve
-    SimplicialNerve
 
 
 Visuals

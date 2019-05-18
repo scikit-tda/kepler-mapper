@@ -78,6 +78,7 @@ To contribute please fork the project make your changes and submit a pull reques
 
     notebooks/Adapters
     notebooks/Plotly-Demo
+    notebooks/Cancer-demo
     notebooks/KeplerMapper-usage-in-Jupyter-Notebook
 
 .. toctree::

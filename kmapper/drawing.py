@@ -8,7 +8,7 @@ import numpy as np
 
 __all__ = ["draw_matplotlib"]
 
-def draw_matplotlib(g, ax=None, fig=None):
+def draw_matplotlib(g, ax=None, fig=None, layout="kk"):
     """Draw the graph using NetworkX drawing functionality.
 
     Parameters
@@ -22,6 +22,17 @@ def draw_matplotlib(g, ax=None, fig=None):
     
     fig: matplotlib Figure object
         A matplotlib Figure object to plot graph on. If none, then use ``plt.figure()``
+
+    layout: string
+        Key for which of NetworkX's layout functions. 
+        Key options implemented are: 
+        ::
+        
+            >>> "kk": nx.kamada_kawai_layout,
+            >>> "spring": nx.spring_layout,
+            >>> "bi": nx.bipartite_layout,
+            >>> "circ": nx.circular_layout,
+            >>> "spect": nx.spectral_layout
 
     Returns
     --------
@@ -52,7 +63,15 @@ def draw_matplotlib(g, ax=None, fig=None):
     node_r = np.sqrt(node_size / np.pi)
     node_edge = node_r / 3
 
-    pos = nx.kamada_kawai_layout(g)
+    layouts = {
+        "kk": nx.kamada_kawai_layout,
+        "spring": nx.spring_layout,
+        "bi": nx.bipartite_layout,
+        "circ": nx.circular_layout,
+        "spect": nx.spectral_layout
+    }
+
+    pos = layouts[layout](g)
 
     nodes = nx.draw_networkx_nodes(g, node_size=node_size, pos=pos, ax=ax)
     edges = nx.draw_networkx_edges(g, pos=pos, ax=ax)

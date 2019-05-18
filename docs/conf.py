@@ -13,6 +13,8 @@ version = __version__
 release = __version__
 
 
+html_static_path = ["../examples/output"]
+
 extensions.append('sphinx_gallery.gen_gallery')
 
 import pathlib

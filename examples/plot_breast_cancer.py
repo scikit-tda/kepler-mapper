@@ -8,8 +8,10 @@ Breast Cancer
 
 This example generates a Mapper built from the `Wisconsin Breast Cancer Dataset <https://www.kaggle.com/uciml/breast-cancer-wisconsin-data>`_.
 
+`Visualization of the breast cancer mapper <../../_static/breast-cancer.html>`_
 
 .. image:: ../../../examples/images/breast-cancer.png
+
 
 """
 
@@ -57,3 +59,8 @@ mapper.visualize(graph,
                  path_html="output/breast-cancer.html",
                  title="Wisconsin Breast Cancer Dataset",
                  custom_tooltips=y)
+
+
+import matplotlib.pyplot as plt
+km.draw_matplotlib(graph)
+plt.show()

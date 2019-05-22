@@ -1,0 +1,1060 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Digits Dataset &#8212; KeplerMapper 1.2.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/better.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="API Reference" href="../../reference/index.html" />
+    <link rel="prev" title="Breast Cancer" href="plot_breast_cancer.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  </head><body>
+    <header id="pageheader">
+      <h1>
+        <a href="../../index.html ">
+          KeplerMapper 1.2.0 documentation
+        </a>
+        <a id="headermeta" href="https://scikit-tda.org">
+            a scikit-tda project 
+        </a>
+      </h1> 
+  </header>
+  <div class="related top">
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="plot_breast_cancer.html" title="Previous document">Breast Cancer</a>
+        </li>
+        <li>
+          <a href="../../reference/index.html" title="Next document">API Reference</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+  <nav id="breadcrumbs">
+    <ul>
+      <li><a href="../../index.html">KeplerMapper</a></li>
+      <li>
+        <a href="index.html">KM Examples Gallery</a>
+      </li> 
+    </ul>
+  </nav>
+  </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Click <a class="reference internal" href="#sphx-glr-download-generated-gallery-plot-digits-py"><span class="std std-ref">here</span></a> to download the full example code</p>
+</div>
+<div class="sphx-glr-example-title section" id="digits-dataset">
+<span id="sphx-glr-generated-gallery-plot-digits-py"></span><h1>Digits Dataset<a class="headerlink" href="#digits-dataset" title="Permalink to this headline">¶</a></h1>
+<p>This digits example shows two ways of customizing the tooltips options in the HTML visualization. It generates the visualization with tooltips set as the y-label, or number of the image. The second generated result uses the actual image in the tooltips.</p>
+<p><a class="reference external" href="../../_static/digits_ylabel_tooltips.html">Visualization with y-label tooltip</a></p>
+<p><a class="reference external" href="../../_static/digits_custom_tooltips.html">Visualization with custom tooltips</a></p>
+<img alt="../../_images/sphx_glr_plot_digits_001.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_digits_001.png" />
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>KeplerMapper(verbose=2)
+..Composing projection pipeline of length 1:
+        Projections: TSNE(angle=0.5, early_exaggeration=12.0, init=&#39;random&#39;, learning_rate=200.0,
+   method=&#39;barnes_hut&#39;, metric=&#39;euclidean&#39;, min_grad_norm=1e-07,
+   n_components=2, n_iter=1000, n_iter_without_progress=300,
+   perplexity=30.0, random_state=None, verbose=0)
+        Distance matrices: False
+        Scalers: MinMaxScaler(copy=True, feature_range=(0, 1))
+..Projecting on data shaped (1797, 64)
+
+..Projecting data using:
+        TSNE(angle=0.5, early_exaggeration=12.0, init=&#39;random&#39;, learning_rate=200.0,
+   method=&#39;barnes_hut&#39;, metric=&#39;euclidean&#39;, min_grad_norm=1e-07,
+   n_components=2, n_iter=1000, n_iter_without_progress=300,
+   perplexity=30.0, random_state=None, verbose=2)
+
+[t-SNE] Computing 91 nearest neighbors...
+[t-SNE] Indexed 1797 samples in 0.002s...
+[t-SNE] Computed neighbors for 1797 samples in 0.287s...
+[t-SNE] Computed conditional probabilities for sample 1000 / 1797
+[t-SNE] Computed conditional probabilities for sample 1797 / 1797
+[t-SNE] Mean sigma: 8.121136
+[t-SNE] Computed conditional probabilities in 0.088s
+[t-SNE] Iteration 50: error = 76.1715927, gradient norm = 0.1268955 (50 iterations in 1.087s)
+[t-SNE] Iteration 100: error = 64.6689377, gradient norm = 0.0592061 (50 iterations in 0.631s)
+[t-SNE] Iteration 150: error = 62.7446213, gradient norm = 0.0453551 (50 iterations in 0.570s)
+[t-SNE] Iteration 200: error = 62.1512909, gradient norm = 0.0265913 (50 iterations in 0.587s)
+[t-SNE] Iteration 250: error = 61.9114990, gradient norm = 0.0265408 (50 iterations in 0.596s)
+[t-SNE] KL divergence after 250 iterations with early exaggeration: 61.911499
+[t-SNE] Iteration 300: error = 1.0544291, gradient norm = 0.0008993 (50 iterations in 0.557s)
+[t-SNE] Iteration 350: error = 0.8799470, gradient norm = 0.0004161 (50 iterations in 0.541s)
+[t-SNE] Iteration 400: error = 0.8235455, gradient norm = 0.0002774 (50 iterations in 0.540s)
+[t-SNE] Iteration 450: error = 0.7982246, gradient norm = 0.0001886 (50 iterations in 0.552s)
+[t-SNE] Iteration 500: error = 0.7842638, gradient norm = 0.0001611 (50 iterations in 0.551s)
+[t-SNE] Iteration 550: error = 0.7759321, gradient norm = 0.0001423 (50 iterations in 0.555s)
+[t-SNE] Iteration 600: error = 0.7705513, gradient norm = 0.0001324 (50 iterations in 0.562s)
+[t-SNE] Iteration 650: error = 0.7663159, gradient norm = 0.0001151 (50 iterations in 0.550s)
+[t-SNE] Iteration 700: error = 0.7626361, gradient norm = 0.0001074 (50 iterations in 0.560s)
+[t-SNE] Iteration 750: error = 0.7590845, gradient norm = 0.0001043 (50 iterations in 0.571s)
+[t-SNE] Iteration 800: error = 0.7552696, gradient norm = 0.0001039 (50 iterations in 0.561s)
+[t-SNE] Iteration 850: error = 0.7530823, gradient norm = 0.0000915 (50 iterations in 0.538s)
+[t-SNE] Iteration 900: error = 0.7511483, gradient norm = 0.0000787 (50 iterations in 0.535s)
+[t-SNE] Iteration 950: error = 0.7491270, gradient norm = 0.0000830 (50 iterations in 0.570s)
+[t-SNE] Iteration 1000: error = 0.7475879, gradient norm = 0.0000725 (50 iterations in 0.597s)
+[t-SNE] KL divergence after 1000 iterations: 0.747588
+
+..Scaling with: MinMaxScaler(copy=True, feature_range=(0, 1))
+
+Mapping on data shaped (1797, 2) using lens shaped (1797, 2)
+
+Minimal points in hypercube before clustering: 15
+Creating 1225 hypercubes.
+Cube_0 is empty.
+
+   &gt; Found 1 clusters in hypercube 1.
+   &gt; Found 1 clusters in hypercube 2.
+Cube_3 is empty.
+
+Cube_4 is empty.
+
+Cube_5 is empty.
+
+Cube_6 is empty.
+
+Cube_7 is empty.
+
+Cube_8 is empty.
+
+Cube_9 is empty.
+
+Cube_10 is empty.
+
+   &gt; Found 1 clusters in hypercube 11.
+   &gt; Found 1 clusters in hypercube 12.
+Cube_13 is empty.
+
+Cube_14 is empty.
+
+Cube_15 is empty.
+
+   &gt; Found 1 clusters in hypercube 16.
+Cube_17 is empty.
+
+Cube_18 is empty.
+
+   &gt; Found 1 clusters in hypercube 19.
+Cube_20 is empty.
+
+Cube_21 is empty.
+
+   &gt; Found 1 clusters in hypercube 22.
+   &gt; Found 1 clusters in hypercube 23.
+   &gt; Found 1 clusters in hypercube 24.
+   &gt; Found 1 clusters in hypercube 25.
+Cube_26 is empty.
+
+Cube_27 is empty.
+
+   &gt; Found 1 clusters in hypercube 28.
+   &gt; Found 1 clusters in hypercube 29.
+   &gt; Found 1 clusters in hypercube 30.
+   &gt; Found 1 clusters in hypercube 31.
+   &gt; Found 1 clusters in hypercube 32.
+Cube_33 is empty.
+
+Cube_34 is empty.
+
+Cube_35 is empty.
+
+   &gt; Found 1 clusters in hypercube 36.
+   &gt; Found 1 clusters in hypercube 37.
+   &gt; Found 1 clusters in hypercube 38.
+   &gt; Found 1 clusters in hypercube 39.
+Cube_40 is empty.
+
+Cube_41 is empty.
+
+   &gt; Found 1 clusters in hypercube 42.
+   &gt; Found 1 clusters in hypercube 43.
+   &gt; Found 1 clusters in hypercube 44.
+   &gt; Found 1 clusters in hypercube 45.
+   &gt; Found 1 clusters in hypercube 46.
+Cube_47 is empty.
+
+Cube_48 is empty.
+
+   &gt; Found 1 clusters in hypercube 49.
+   &gt; Found 1 clusters in hypercube 50.
+Cube_51 is empty.
+
+Cube_52 is empty.
+
+Cube_53 is empty.
+
+Cube_54 is empty.
+
+   &gt; Found 1 clusters in hypercube 55.
+   &gt; Found 1 clusters in hypercube 56.
+   &gt; Found 1 clusters in hypercube 57.
+   &gt; Found 1 clusters in hypercube 58.
+Cube_59 is empty.
+
+Cube_60 is empty.
+
+Cube_61 is empty.
+
+Cube_62 is empty.
+
+Cube_63 is empty.
+
+Cube_64 is empty.
+
+Cube_65 is empty.
+
+Cube_66 is empty.
+
+Cube_67 is empty.
+
+Cube_68 is empty.
+
+Cube_69 is empty.
+
+Cube_70 is empty.
+
+Cube_71 is empty.
+
+   &gt; Found 1 clusters in hypercube 72.
+Cube_73 is empty.
+
+Cube_74 is empty.
+
+Cube_75 is empty.
+
+Cube_76 is empty.
+
+Cube_77 is empty.
+
+Cube_78 is empty.
+
+Cube_79 is empty.
+
+   &gt; Found 1 clusters in hypercube 80.
+Cube_81 is empty.
+
+Cube_82 is empty.
+
+Cube_83 is empty.
+
+Cube_84 is empty.
+
+Cube_85 is empty.
+
+Cube_86 is empty.
+
+Cube_87 is empty.
+
+Cube_88 is empty.
+
+Cube_89 is empty.
+
+Cube_90 is empty.
+
+Cube_91 is empty.
+
+Cube_92 is empty.
+
+Cube_93 is empty.
+
+Cube_94 is empty.
+
+Cube_95 is empty.
+
+   &gt; Found 1 clusters in hypercube 96.
+Cube_97 is empty.
+
+Cube_98 is empty.
+
+Cube_99 is empty.
+
+Cube_100 is empty.
+
+Cube_101 is empty.
+
+Cube_102 is empty.
+
+   &gt; Found 1 clusters in hypercube 103.
+   &gt; Found 1 clusters in hypercube 104.
+Cube_105 is empty.
+
+Cube_106 is empty.
+
+Cube_107 is empty.
+
+   &gt; Found 1 clusters in hypercube 108.
+   &gt; Found 1 clusters in hypercube 109.
+Cube_110 is empty.
+
+Cube_111 is empty.
+
+Cube_112 is empty.
+
+Cube_113 is empty.
+
+Cube_114 is empty.
+
+Cube_115 is empty.
+
+Cube_116 is empty.
+
+Cube_117 is empty.
+
+Cube_118 is empty.
+
+Cube_119 is empty.
+
+Cube_120 is empty.
+
+Cube_121 is empty.
+
+Cube_122 is empty.
+
+   &gt; Found 1 clusters in hypercube 123.
+Cube_124 is empty.
+
+Cube_125 is empty.
+
+   &gt; Found 1 clusters in hypercube 126.
+   &gt; Found 1 clusters in hypercube 127.
+Cube_128 is empty.
+
+Cube_129 is empty.
+
+   &gt; Found 1 clusters in hypercube 130.
+   &gt; Found 1 clusters in hypercube 131.
+   &gt; Found 1 clusters in hypercube 132.
+Cube_133 is empty.
+
+Cube_134 is empty.
+
+   &gt; Found 1 clusters in hypercube 135.
+   &gt; Found 1 clusters in hypercube 136.
+   &gt; Found 1 clusters in hypercube 137.
+   &gt; Found 1 clusters in hypercube 138.
+Cube_139 is empty.
+
+Cube_140 is empty.
+
+Cube_141 is empty.
+
+Cube_142 is empty.
+
+   &gt; Found 1 clusters in hypercube 143.
+   &gt; Found 1 clusters in hypercube 144.
+   &gt; Found 1 clusters in hypercube 145.
+Cube_146 is empty.
+
+Cube_147 is empty.
+
+   &gt; Found 1 clusters in hypercube 148.
+   &gt; Found 1 clusters in hypercube 149.
+   &gt; Found 1 clusters in hypercube 150.
+   &gt; Found 1 clusters in hypercube 151.
+Cube_152 is empty.
+
+Cube_153 is empty.
+
+   &gt; Found 1 clusters in hypercube 154.
+   &gt; Found 1 clusters in hypercube 155.
+   &gt; Found 1 clusters in hypercube 156.
+Cube_157 is empty.
+
+Cube_158 is empty.
+
+Cube_159 is empty.
+
+Cube_160 is empty.
+
+   &gt; Found 1 clusters in hypercube 161.
+   &gt; Found 1 clusters in hypercube 162.
+   &gt; Found 1 clusters in hypercube 163.
+Cube_164 is empty.
+
+Cube_165 is empty.
+
+Cube_166 is empty.
+
+Cube_167 is empty.
+
+   &gt; Found 1 clusters in hypercube 168.
+   &gt; Found 1 clusters in hypercube 169.
+   &gt; Found 1 clusters in hypercube 170.
+   &gt; Found 1 clusters in hypercube 171.
+Cube_172 is empty.
+
+Cube_173 is empty.
+
+   &gt; Found 1 clusters in hypercube 174.
+   &gt; Found 1 clusters in hypercube 175.
+   &gt; Found 1 clusters in hypercube 176.
+Cube_177 is empty.
+
+Cube_178 is empty.
+
+   &gt; Found 1 clusters in hypercube 179.
+Cube_180 is empty.
+
+Cube_181 is empty.
+
+Cube_182 is empty.
+
+Cube_183 is empty.
+
+Cube_184 is empty.
+
+Cube_185 is empty.
+
+Cube_186 is empty.
+
+Cube_187 is empty.
+
+Cube_188 is empty.
+
+   &gt; Found 1 clusters in hypercube 189.
+Cube_190 is empty.
+
+Cube_191 is empty.
+
+Cube_192 is empty.
+
+   &gt; Found 1 clusters in hypercube 193.
+   &gt; Found 1 clusters in hypercube 194.
+   &gt; Found 1 clusters in hypercube 195.
+Cube_196 is empty.
+
+Cube_197 is empty.
+
+Cube_198 is empty.
+
+Cube_199 is empty.
+
+Cube_200 is empty.
+
+Cube_201 is empty.
+
+   &gt; Found 1 clusters in hypercube 202.
+Cube_203 is empty.
+
+Cube_204 is empty.
+
+Cube_205 is empty.
+
+Cube_206 is empty.
+
+   &gt; Found 1 clusters in hypercube 207.
+Cube_208 is empty.
+
+Cube_209 is empty.
+
+Cube_210 is empty.
+
+Cube_211 is empty.
+
+   &gt; Found 1 clusters in hypercube 212.
+   &gt; Found 1 clusters in hypercube 213.
+   &gt; Found 1 clusters in hypercube 214.
+Cube_215 is empty.
+
+Cube_216 is empty.
+
+Cube_217 is empty.
+
+   &gt; Found 1 clusters in hypercube 218.
+   &gt; Found 1 clusters in hypercube 219.
+   &gt; Found 1 clusters in hypercube 220.
+Cube_221 is empty.
+
+Cube_222 is empty.
+
+Cube_223 is empty.
+
+   &gt; Found 1 clusters in hypercube 224.
+Cube_225 is empty.
+
+Cube_226 is empty.
+
+   &gt; Found 1 clusters in hypercube 227.
+Cube_228 is empty.
+
+Cube_229 is empty.
+
+Cube_230 is empty.
+
+Cube_231 is empty.
+
+Cube_232 is empty.
+
+Cube_233 is empty.
+
+   &gt; Found 1 clusters in hypercube 234.
+   &gt; Found 1 clusters in hypercube 235.
+Cube_236 is empty.
+
+Cube_237 is empty.
+
+Cube_238 is empty.
+
+Cube_239 is empty.
+
+Cube_240 is empty.
+
+Cube_241 is empty.
+
+   &gt; Found 1 clusters in hypercube 242.
+Cube_243 is empty.
+
+Cube_244 is empty.
+
+   &gt; Found 1 clusters in hypercube 245.
+Cube_246 is empty.
+
+Cube_247 is empty.
+
+Cube_248 is empty.
+
+Cube_249 is empty.
+
+Cube_250 is empty.
+
+   &gt; Found 1 clusters in hypercube 251.
+   &gt; Found 1 clusters in hypercube 252.
+   &gt; Found 1 clusters in hypercube 253.
+Cube_254 is empty.
+
+Cube_255 is empty.
+
+Cube_256 is empty.
+
+Cube_257 is empty.
+
+Cube_258 is empty.
+
+Cube_259 is empty.
+
+Cube_260 is empty.
+
+Cube_261 is empty.
+
+Cube_262 is empty.
+
+Cube_263 is empty.
+
+Cube_264 is empty.
+
+Cube_265 is empty.
+
+   &gt; Found 1 clusters in hypercube 266.
+   &gt; Found 1 clusters in hypercube 267.
+Cube_268 is empty.
+
+Cube_269 is empty.
+
+   &gt; Found 1 clusters in hypercube 270.
+Cube_271 is empty.
+
+Cube_272 is empty.
+
+Cube_273 is empty.
+
+Cube_274 is empty.
+
+   &gt; Found 1 clusters in hypercube 275.
+   &gt; Found 1 clusters in hypercube 276.
+Cube_277 is empty.
+
+Cube_278 is empty.
+
+Cube_279 is empty.
+
+Cube_280 is empty.
+
+   &gt; Found 1 clusters in hypercube 281.
+   &gt; Found 1 clusters in hypercube 282.
+Cube_283 is empty.
+
+Cube_284 is empty.
+
+   &gt; Found 1 clusters in hypercube 285.
+   &gt; Found 1 clusters in hypercube 286.
+Cube_287 is empty.
+
+Cube_288 is empty.
+
+Cube_289 is empty.
+
+Cube_290 is empty.
+
+Cube_291 is empty.
+
+   &gt; Found 1 clusters in hypercube 292.
+Cube_293 is empty.
+
+Cube_294 is empty.
+
+Cube_295 is empty.
+
+Cube_296 is empty.
+
+Cube_297 is empty.
+
+Cube_298 is empty.
+
+Cube_299 is empty.
+
+Cube_300 is empty.
+
+Cube_301 is empty.
+
+Cube_302 is empty.
+
+Cube_303 is empty.
+
+Cube_304 is empty.
+
+Cube_305 is empty.
+
+Cube_306 is empty.
+
+Cube_307 is empty.
+
+Cube_308 is empty.
+
+Cube_309 is empty.
+
+Cube_310 is empty.
+
+Cube_311 is empty.
+
+Cube_312 is empty.
+
+Cube_313 is empty.
+
+Cube_314 is empty.
+
+   &gt; Found 1 clusters in hypercube 315.
+Cube_316 is empty.
+
+Cube_317 is empty.
+
+   &gt; Found 1 clusters in hypercube 318.
+   &gt; Found 1 clusters in hypercube 319.
+Cube_320 is empty.
+
+Cube_321 is empty.
+
+Cube_322 is empty.
+
+Cube_323 is empty.
+
+Cube_324 is empty.
+
+Cube_325 is empty.
+
+Cube_326 is empty.
+
+Cube_327 is empty.
+
+Cube_328 is empty.
+
+Cube_329 is empty.
+
+Cube_330 is empty.
+
+   &gt; Found 1 clusters in hypercube 331.
+   &gt; Found 1 clusters in hypercube 332.
+Cube_333 is empty.
+
+Cube_334 is empty.
+
+   &gt; Found 1 clusters in hypercube 335.
+   &gt; Found 1 clusters in hypercube 336.
+Cube_337 is empty.
+
+Cube_338 is empty.
+
+Cube_339 is empty.
+
+   &gt; Found 1 clusters in hypercube 340.
+   &gt; Found 1 clusters in hypercube 341.
+   &gt; Found 1 clusters in hypercube 342.
+Cube_343 is empty.
+
+Cube_344 is empty.
+
+Cube_345 is empty.
+
+Cube_346 is empty.
+
+Cube_347 is empty.
+
+   &gt; Found 1 clusters in hypercube 348.
+   &gt; Found 1 clusters in hypercube 349.
+Cube_350 is empty.
+
+Cube_351 is empty.
+
+   &gt; Found 1 clusters in hypercube 352.
+   &gt; Found 1 clusters in hypercube 353.
+   &gt; Found 1 clusters in hypercube 354.
+Cube_355 is empty.
+
+Cube_356 is empty.
+
+   &gt; Found 1 clusters in hypercube 357.
+   &gt; Found 1 clusters in hypercube 358.
+   &gt; Found 1 clusters in hypercube 359.
+Cube_360 is empty.
+
+Cube_361 is empty.
+
+Cube_362 is empty.
+
+Cube_363 is empty.
+
+   &gt; Found 1 clusters in hypercube 364.
+   &gt; Found 1 clusters in hypercube 365.
+   &gt; Found 1 clusters in hypercube 366.
+   &gt; Found 1 clusters in hypercube 367.
+Cube_368 is empty.
+
+Cube_369 is empty.
+
+   &gt; Found 1 clusters in hypercube 370.
+   &gt; Found 1 clusters in hypercube 371.
+   &gt; Found 1 clusters in hypercube 372.
+Cube_373 is empty.
+
+Cube_374 is empty.
+
+   &gt; Found 1 clusters in hypercube 375.
+   &gt; Found 1 clusters in hypercube 376.
+Cube_377 is empty.
+
+Cube_378 is empty.
+
+Cube_379 is empty.
+
+Cube_380 is empty.
+
+Cube_381 is empty.
+
+Cube_382 is empty.
+
+   &gt; Found 1 clusters in hypercube 383.
+   &gt; Found 1 clusters in hypercube 384.
+   &gt; Found 1 clusters in hypercube 385.
+   &gt; Found 1 clusters in hypercube 386.
+Cube_387 is empty.
+
+Cube_388 is empty.
+
+   &gt; Found 1 clusters in hypercube 389.
+   &gt; Found 1 clusters in hypercube 390.
+Cube_391 is empty.
+
+Cube_392 is empty.
+
+   &gt; Found 1 clusters in hypercube 393.
+Cube_394 is empty.
+
+Cube_395 is empty.
+
+Cube_396 is empty.
+
+Cube_397 is empty.
+
+Cube_398 is empty.
+
+Cube_399 is empty.
+
+Cube_400 is empty.
+
+Cube_401 is empty.
+
+   &gt; Found 1 clusters in hypercube 402.
+   &gt; Found 1 clusters in hypercube 403.
+Cube_404 is empty.
+
+Cube_405 is empty.
+
+   &gt; Found 1 clusters in hypercube 406.
+   &gt; Found 1 clusters in hypercube 407.
+   &gt; Found 1 clusters in hypercube 408.
+Cube_409 is empty.
+
+Cube_410 is empty.
+
+Cube_411 is empty.
+
+Cube_412 is empty.
+
+Cube_413 is empty.
+
+   &gt; Found 1 clusters in hypercube 414.
+   &gt; Found 1 clusters in hypercube 415.
+   &gt; Found 1 clusters in hypercube 416.
+Cube_417 is empty.
+
+Cube_418 is empty.
+
+Cube_419 is empty.
+
+Cube_420 is empty.
+
+Cube_421 is empty.
+
+Cube_422 is empty.
+
+Cube_423 is empty.
+
+   &gt; Found 1 clusters in hypercube 424.
+   &gt; Found 1 clusters in hypercube 425.
+   &gt; Found 1 clusters in hypercube 426.
+Cube_427 is empty.
+
+Cube_428 is empty.
+
+Cube_429 is empty.
+
+   &gt; Found 1 clusters in hypercube 430.
+   &gt; Found 1 clusters in hypercube 431.
+   &gt; Found 1 clusters in hypercube 432.
+Cube_433 is empty.
+
+Cube_434 is empty.
+
+Cube_435 is empty.
+
+Cube_436 is empty.
+
+Cube_437 is empty.
+
+Cube_438 is empty.
+
+   &gt; Found 1 clusters in hypercube 439.
+   &gt; Found 1 clusters in hypercube 440.
+   &gt; Found 1 clusters in hypercube 441.
+   &gt; Found 1 clusters in hypercube 442.
+Cube_443 is empty.
+
+Cube_444 is empty.
+
+Cube_445 is empty.
+
+Cube_446 is empty.
+
+Cube_447 is empty.
+
+   &gt; Found 1 clusters in hypercube 448.
+   &gt; Found 1 clusters in hypercube 449.
+Cube_450 is empty.
+
+
+Created 337 edges and 153 nodes in 0:00:00.212356.
+Output graph examples to html
+Wrote visualization to: output/digits_custom_tooltips.html
+Wrote visualization to: output/digits_ylabel_tooltips.html
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sklearn</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="k">import</span> <span class="n">datasets</span>
+<span class="kn">import</span> <span class="nn">kmapper</span> <span class="k">as</span> <span class="nn">km</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">scipy.misc</span> <span class="k">import</span> <span class="n">imsave</span><span class="p">,</span> <span class="n">toimage</span>
+<span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;imsave requires you to install pillow. Run `pip install pillow` and then try again.&quot;</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+
+<span class="c1"># Load digits dat</span>
+<span class="n">data</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_digits</span><span class="p">()</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_digits</span><span class="p">()</span><span class="o">.</span><span class="n">target</span>
+
+<span class="c1"># Create images for a custom tooltip array</span>
+<span class="n">tooltip_s</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">image_data</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">toimage</span><span class="p">(</span><span class="n">image_data</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">)))</span>  <span class="c1"># Data was a flat row of 64 &quot;pixels&quot;.</span>
+    <span class="n">img</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;PNG&quot;</span><span class="p">)</span>
+    <span class="n">contents</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+    <span class="n">img_encoded</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span>
+    <span class="n">img_tag</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;&lt;img src=&quot;data:image/png;base64,</span><span class="si">{}</span><span class="s2">&quot;&gt;&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">img_encoded</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+    <span class="n">tooltip_s</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">img_tag</span><span class="p">)</span>
+    <span class="n">output</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="n">tooltip_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">tooltip_s</span><span class="p">)</span>  <span class="c1"># need to make sure to feed it as a NumPy array, not a list</span>
+
+<span class="c1"># Initialize to use t-SNE with 2 components (reduces data to 2 dimensions). Also note high overlap_percentage.</span>
+<span class="n">mapper</span> <span class="o">=</span> <span class="n">km</span><span class="o">.</span><span class="n">KeplerMapper</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># Fit and transform data</span>
+<span class="n">projected_data</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">,</span>
+                                      <span class="n">projection</span><span class="o">=</span><span class="n">sklearn</span><span class="o">.</span><span class="n">manifold</span><span class="o">.</span><span class="n">TSNE</span><span class="p">())</span>
+
+<span class="c1"># Create the graph (we cluster on the projected data and suffer projection loss)</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">projected_data</span><span class="p">,</span>
+                   <span class="n">clusterer</span><span class="o">=</span><span class="n">sklearn</span><span class="o">.</span><span class="n">cluster</span><span class="o">.</span><span class="n">DBSCAN</span><span class="p">(</span><span class="n">eps</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">min_samples</span><span class="o">=</span><span class="mi">15</span><span class="p">),</span>
+                   <span class="n">cover</span><span class="o">=</span><span class="n">km</span><span class="o">.</span><span class="n">Cover</span><span class="p">(</span><span class="mi">35</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">))</span>
+
+<span class="c1"># Create the visualizations (increased the graph_gravity for a tighter graph-look.)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Output graph examples to html&quot;</span> <span class="p">)</span>
+<span class="c1"># Tooltips with image data for every cluster member</span>
+<span class="n">mapper</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span>
+                 <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Handwritten digits Mapper&quot;</span><span class="p">,</span>
+                 <span class="n">path_html</span><span class="o">=</span><span class="s2">&quot;output/digits_custom_tooltips.html&quot;</span><span class="p">,</span>
+                 <span class="n">color_function</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+                 <span class="n">custom_tooltips</span><span class="o">=</span><span class="n">tooltip_s</span><span class="p">)</span>
+<span class="c1"># Tooltips with the target y-labels for every cluster member</span>
+<span class="n">mapper</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span>
+                 <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Handwritten digits Mapper&quot;</span><span class="p">,</span>
+                 <span class="n">path_html</span><span class="o">=</span><span class="s2">&quot;output/digits_ylabel_tooltips.html&quot;</span><span class="p">,</span>
+                 <span class="n">custom_tooltips</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
+
+<span class="c1"># Matplotlib examples</span>
+<span class="n">km</span><span class="o">.</span><span class="n">draw_matplotlib</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">layout</span><span class="o">=</span><span class="s2">&quot;spring&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  13.909 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-gallery-plot-digits-py">
+<div class="sphx-glr-download docutils container">
+<a class="reference download internal" download="" href="../../_downloads/b1ca15be7f63dd8df51bac2ddfeb6673/plot_digits.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_digits.py</span></code></a></div>
+<div class="sphx-glr-download docutils container">
+<a class="reference download internal" download="" href="../../_downloads/c0f68e5aede7b72052924174b807bfb1/plot_digits.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_digits.ipynb</span></code></a></div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/logo.png" alt="Logo"/>
+            </a></p>
+<form class="search" action="../../search.html" method="get">
+  <input type="text" name="q"
+   placeholder="type to search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+<a href=https://github.com/scikit-tda/kepler-mapper>
+    <p class="caption"><span class="caption-text">
+        <img src="../../_static/gh_logo.png" 
+        height="18px" 
+        width="18px" alt="Github icon">  
+        scikit-tda/kepler-mapper
+    </span></p>
+</a> 
+
+<p class="caption"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../theory.html">Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../applications.html">Applications</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">KM Examples Gallery</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="plot_cat.html">3D Cat Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_horse.html">3D Horse Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_breast_cancer.html">Breast Cancer</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Digits Dataset</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference/index.html">API Reference</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/Adapters.html">Adapters example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/Plotly-Demo.html">Demo of Plotlyviz features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/Cancer-demo.html">Choosing a lens</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/KeplerMapper-usage-in-Jupyter-Notebook.html">Using Kepler Mapper in Jupyter Notebook</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Advanced Case Studies</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/KeplerMapper-Newsgroup20-Pipeline.html">KeplerMapper &amp; NLP examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/TOR-XGB-TDA.html">Detecting Encrypted TOR Traffic with Boosting and Topological Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/Confidence-Graphs.html">Confidence Graphs: Representing Model Uncertainty in Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/self-guessing.html">Self-guessing mapper</a></li>
+</ul>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  <div class="related bottom">
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="plot_breast_cancer.html" title="Previous document">Breast Cancer</a>
+        </li>
+        <li>
+          <a href="../../reference/index.html" title="Next document">API Reference</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+  <nav id="breadcrumbs">
+    <ul>
+      <li><a href="../../index.html">KeplerMapper</a></li>
+      <li>
+        <a href="index.html">KM Examples Gallery</a>
+      </li> 
+    </ul>
+  </nav>
+  </div>
+  <footer id="pagefooter">&copy; 2019, Hendrik Jacob van Veen and Nathaniel Saul.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a>
+      1.8.4.
+
+  </footer>
+
+  
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-124965309-4', '');
+      ga('send', 'pageview');
+    </script>
+  
+  </body>
+</html>

@@ -6,9 +6,10 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Plotly plot of the kmapper graph associated to the breast cancer dataset &#8212; KeplerMapper 1.2.0 documentation</title>
+    <title>Choosing a lens &#8212; KeplerMapper 1.2.0 documentation</title>
     <link rel="stylesheet" href="../_static/better.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
@@ -18,6 +19,8 @@
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Using Kepler Mapper in Jupyter Notebook" href="KeplerMapper-usage-in-Jupyter-Notebook.html" />
+    <link rel="prev" title="Demo of Plotlyviz features" href="Plotly-Demo.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   </head><body>
     <header id="pageheader">
@@ -33,6 +36,14 @@
   <div class="related top">
   <nav id="rellinks">
     <ul>
+        <li>
+          &larr;
+          <a href="Plotly-Demo.html" title="Previous document">Demo of Plotlyviz features</a>
+        </li>
+        <li>
+          <a href="KeplerMapper-usage-in-Jupyter-Notebook.html" title="Next document">Using Kepler Mapper in Jupyter Notebook</a>
+          &rarr;
+        </li>
     </ul>
   </nav>
   <nav id="breadcrumbs">
@@ -247,8 +258,10 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
+<div class="section" id="Choosing-a-lens">
+<h1>Choosing a lens<a class="headerlink" href="#Choosing-a-lens" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="Plotly-plot-of-the-kmapper-graph-associated-to-the-breast-cancer-dataset">
-<h1>Plotly plot of the kmapper graph associated to the breast cancer dataset<a class="headerlink" href="#Plotly-plot-of-the-kmapper-graph-associated-to-the-breast-cancer-dataset" title="Permalink to this headline">¶</a></h1>
+<h2>Plotly plot of the kmapper graph associated to the breast cancer dataset<a class="headerlink" href="#Plotly-plot-of-the-kmapper-graph-associated-to-the-breast-cancer-dataset" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
@@ -510,7 +523,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="section" id="A-note-on-the-choice-of-lens">
-<h1>A note on the choice of lens<a class="headerlink" href="#A-note-on-the-choice-of-lens" title="Permalink to this headline">¶</a></h1>
+<h2>A note on the choice of lens<a class="headerlink" href="#A-note-on-the-choice-of-lens" title="Permalink to this headline">¶</a></h2>
 <p>The reasoning behind the choice of lenses in the demonstration above is:</p>
 <p><strong>For lens1:</strong> Lenses that make biological sense; in other words, lenses that highlight special features in the data, that I know about. In the case of this particualr data, using an anomaly score (in this case calculated using the IsolationForest from sklearn) makes biological sense since cancer cells are anomalous.</p>
 <p><strong>For lens2:</strong> Lenses that disperse the data, as opposed to clustering many points together.</p>
@@ -555,7 +568,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_Cancer-demo_22_0.png" src="../_images/notebooks_Cancer-demo_22_0.png" />
+<img alt="../_images/notebooks_Cancer-demo_23_0.png" src="../_images/notebooks_Cancer-demo_23_0.png" />
 </div>
 </div>
 <p>This shows that using the L^2-Norm and the first principal component as the second lens would probably generate very similar topological graphs.</p>
@@ -736,7 +749,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_Cancer-demo_29_0.png" src="../_images/notebooks_Cancer-demo_29_0.png" />
+<img alt="../_images/notebooks_Cancer-demo_30_0.png" src="../_images/notebooks_Cancer-demo_30_0.png" />
 </div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -883,6 +896,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 </div>
+</div>
 
 
           </div>
@@ -915,13 +929,18 @@ div.rendered_html tbody tr:hover {
 <li class="toctree-l1"><a class="reference internal" href="../theory.html">Background</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../applications.html">Applications</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../generated/gallery/index.html">KM Examples Gallery</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../reference/index.html">API Reference</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Tutorials</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Adapters.html">Adapters example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Plotly-Demo.html">Demo of Plotlyviz features</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Choosing a lens</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Plotly-plot-of-the-kmapper-graph-associated-to-the-breast-cancer-dataset">Plotly plot of the kmapper graph associated to the breast cancer dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#A-note-on-the-choice-of-lens">A note on the choice of lens</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="KeplerMapper-usage-in-Jupyter-Notebook.html">Using Kepler Mapper in Jupyter Notebook</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Advanced Case Studies</span></p>
@@ -939,6 +958,14 @@ div.rendered_html tbody tr:hover {
   <div class="related bottom">
   <nav id="rellinks">
     <ul>
+        <li>
+          &larr;
+          <a href="Plotly-Demo.html" title="Previous document">Demo of Plotlyviz features</a>
+        </li>
+        <li>
+          <a href="KeplerMapper-usage-in-Jupyter-Notebook.html" title="Next document">Using Kepler Mapper in Jupyter Notebook</a>
+          &rarr;
+        </li>
     </ul>
   </nav>
   <nav id="breadcrumbs">

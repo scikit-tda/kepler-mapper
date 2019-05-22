@@ -53,8 +53,9 @@
 </div>
 <div class="sphx-glr-example-title section" id="digits-dataset">
 <span id="sphx-glr-generated-gallery-digits-py"></span><h1>Digits Dataset<a class="headerlink" href="#digits-dataset" title="Permalink to this headline">¶</a></h1>
-<p>something something something</p>
-<img alt="generated/gallery/../../../examples/images/digits-tooltip.png" src="generated/gallery/../../../examples/images/digits-tooltip.png" />
+<p>This digits example shows two ways of customizing the tooltips options in the HTML visualization. It generates the visualization with tooltips set as the y-label, or number of the image. The second generated result uses the actual image in the tooltips.</p>
+<p><a class="reference external" href="../../_static/digits_ylabel_tooltips.html">Visualization with y-label tooltip</a></p>
+<p><a class="reference external" href="../../_static/digits_custom_tooltips.html">Visualization with custom tooltips</a></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">io</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">base64</span>
@@ -101,7 +102,7 @@
                    <span class="n">cover</span><span class="o">=</span><span class="n">km</span><span class="o">.</span><span class="n">Cover</span><span class="p">(</span><span class="mi">35</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">))</span>
 
 <span class="c1"># Create the visualizations (increased the graph_gravity for a tighter graph-look.)</span>
-
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Output graph examples to html&quot;</span> <span class="p">)</span>
 <span class="c1"># Tooltips with image data for every cluster member</span>
 <span class="n">mapper</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span>
                  <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Handwritten digits Mapper&quot;</span><span class="p">,</span>

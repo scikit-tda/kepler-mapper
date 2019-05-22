@@ -9,6 +9,7 @@
     <title>Breast Cancer &#8212; KeplerMapper 1.2.0 documentation</title>
     <link rel="stylesheet" href="../../_static/better.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
@@ -18,6 +19,8 @@
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Digits Dataset" href="plot_digits.html" />
+    <link rel="prev" title="3D Horse Data" href="plot_horse.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   </head><body>
     <header id="pageheader">
@@ -33,11 +36,22 @@
   <div class="related top">
   <nav id="rellinks">
     <ul>
+        <li>
+          &larr;
+          <a href="plot_horse.html" title="Previous document">3D Horse Data</a>
+        </li>
+        <li>
+          <a href="plot_digits.html" title="Next document">Digits Dataset</a>
+          &rarr;
+        </li>
     </ul>
   </nav>
   <nav id="breadcrumbs">
     <ul>
-      <li><a href="../../index.html">KeplerMapper</a></li> 
+      <li><a href="../../index.html">KeplerMapper</a></li>
+      <li>
+        <a href="index.html">KM Examples Gallery</a>
+      </li> 
     </ul>
   </nav>
   </div>  
@@ -54,7 +68,16 @@
 <div class="sphx-glr-example-title section" id="breast-cancer">
 <span id="sphx-glr-generated-gallery-plot-breast-cancer-py"></span><h1>Breast Cancer<a class="headerlink" href="#breast-cancer" title="Permalink to this headline">¶</a></h1>
 <p>This example generates a Mapper built from the <a class="reference external" href="https://www.kaggle.com/uciml/breast-cancer-wisconsin-data">Wisconsin Breast Cancer Dataset</a>.</p>
-<img alt="generated/gallery/../../../examples/images/breast-cancer.png" src="generated/gallery/../../../examples/images/breast-cancer.png" />
+<p><a class="reference external" href="../../_static/breast-cancer.html">Visualization of the breast cancer mapper</a></p>
+<p>The reasoning behind the choice of lenses in the demonstration above is:</p>
+<ul class="simple">
+<li><strong>For lens1:</strong> Lenses that make biological sense; in other words, lenses that highlight special features in the data, that I know about.</li>
+<li><strong>For lens2:</strong> Lenses that disperse the data, as opposed to clustering many points together.</li>
+</ul>
+<p>In the case of this particualr data, using an anomaly score (in this case calculated using the IsolationForest from sklearn) makes biological sense since cancer cells are anomalous. For the second lens, we use the <span class="math notranslate nohighlight">\(l^2\)</span> norm.</p>
+<p>For an interactive exploration of lens for the breast cancer, see the <a class="reference external" href="../../notebooks/Cancer-demo.html">Choosing a lens notebook</a>.</p>
+<img alt="../../_images/breast-cancer.png" src="../../_images/breast-cancer.png" />
+<img alt="../../_images/sphx_glr_plot_breast_cancer_001.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_breast_cancer_001.png" />
 <p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>KeplerMapper(verbose=3)
 ..Composing projection pipeline of length 1:
@@ -209,7 +232,7 @@ Cube_103 is empty.
    &gt; Found 2 clusters in hypercube 105.
    &gt; Found 2 clusters in hypercube 106.
 
-Created 297 edges and 154 nodes in 0:00:00.830414.
+Created 297 edges and 154 nodes in 0:00:00.846924.
 Wrote visualization to: output/breast-cancer.html
 </pre></div>
 </div>
@@ -260,9 +283,14 @@ Wrote visualization to: output/breast-cancer.html
                  <span class="n">path_html</span><span class="o">=</span><span class="s2">&quot;output/breast-cancer.html&quot;</span><span class="p">,</span>
                  <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Wisconsin Breast Cancer Dataset&quot;</span><span class="p">,</span>
                  <span class="n">custom_tooltips</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="n">km</span><span class="o">.</span><span class="n">draw_matplotlib</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.516 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.817 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-gallery-plot-breast-cancer-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../../_downloads/24aaea14d382dbea62b56766a05e6d9b/plot_breast_cancer.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_breast_cancer.py</span></code></a></div>
@@ -299,20 +327,27 @@ Wrote visualization to: output/breast-cancer.html
 </a> 
 
 <p class="caption"><span class="caption-text">User Guide</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../theory.html">Background</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../applications.html">Applications</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">KM Examples Gallery</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="plot_cat.html">3D Cat Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_horse.html">3D Horse Data</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Breast Cancer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_digits.html">Digits Dataset</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../reference/index.html">API Reference</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Tutorials</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/Adapters.html">Adapters example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/Plotly-Demo.html">Demo of Plotlyviz features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/Cancer-demo.html">Choosing a lens</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/KeplerMapper-usage-in-Jupyter-Notebook.html">Using Kepler Mapper in Jupyter Notebook</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Advanced Tutorials</span></p>
+<p class="caption"><span class="caption-text">Advanced Case Studies</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/KeplerMapper-Newsgroup20-Pipeline.html">KeplerMapper &amp; NLP examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/TOR-XGB-TDA.html">Detecting Encrypted TOR Traffic with Boosting and Topological Data Analysis</a></li>
@@ -327,11 +362,22 @@ Wrote visualization to: output/breast-cancer.html
   <div class="related bottom">
   <nav id="rellinks">
     <ul>
+        <li>
+          &larr;
+          <a href="plot_horse.html" title="Previous document">3D Horse Data</a>
+        </li>
+        <li>
+          <a href="plot_digits.html" title="Next document">Digits Dataset</a>
+          &rarr;
+        </li>
     </ul>
   </nav>
   <nav id="breadcrumbs">
     <ul>
-      <li><a href="../../index.html">KeplerMapper</a></li> 
+      <li><a href="../../index.html">KeplerMapper</a></li>
+      <li>
+        <a href="index.html">KM Examples Gallery</a>
+      </li> 
     </ul>
   </nav>
   </div>

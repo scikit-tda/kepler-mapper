@@ -9,6 +9,7 @@
     <title>kmapper.draw_matplotlib &#8212; KeplerMapper 1.2.0 documentation</title>
     <link rel="stylesheet" href="../../_static/better.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
@@ -64,7 +65,7 @@
 <h1>kmapper.draw_matplotlib<a class="headerlink" href="#kmapper-draw-matplotlib" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="kmapper.draw_matplotlib">
-<code class="descclassname">kmapper.</code><code class="descname">draw_matplotlib</code><span class="sig-paren">(</span><em>g</em>, <em>ax=None</em>, <em>fig=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kmapper/drawing.html#draw_matplotlib"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.draw_matplotlib" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">kmapper.</code><code class="descname">draw_matplotlib</code><span class="sig-paren">(</span><em>g</em>, <em>ax=None</em>, <em>fig=None</em>, <em>layout='kk'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kmapper/drawing.html#draw_matplotlib"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.draw_matplotlib" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw the graph using NetworkX drawing functionality.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -74,6 +75,16 @@
 <li><strong>g</strong> (graph object returned by <code class="docutils literal notranslate"><span class="pre">map</span></code>) – The Mapper graph as constructed by <code class="docutils literal notranslate"><span class="pre">KeplerMapper.map</span></code></li>
 <li><strong>ax</strong> (<em>matplotlib Axes object</em>) – A matplotlib axes object to plot graph on. If none, then use <code class="docutils literal notranslate"><span class="pre">plt.gca()</span></code></li>
 <li><strong>fig</strong> (<em>matplotlib Figure object</em>) – A matplotlib Figure object to plot graph on. If none, then use <code class="docutils literal notranslate"><span class="pre">plt.figure()</span></code></li>
+<li><strong>layout</strong> (<em>string</em>) – <p>Key for which of NetworkX’s layout functions.
+Key options implemented are:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;kk&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">kamada_kawai_layout</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;spring&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">spring_layout</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;bi&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">bipartite_layout</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;circ&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">circular_layout</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;spect&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">spectral_layout</span>
+</pre></div>
+</div>
+</li>
 </ul>
 </td>
 </tr>
@@ -117,7 +128,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../theory.html">Background</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../applications.html">Applications</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../generated/gallery/index.html">KM Examples Gallery</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../index.html#kepler-mapper">Kepler Mapper</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html#visuals">Visuals</a><ul class="current">
@@ -135,6 +146,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/Adapters.html">Adapters example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/Plotly-Demo.html">Demo of Plotlyviz features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/Cancer-demo.html">Choosing a lens</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/KeplerMapper-usage-in-Jupyter-Notebook.html">Using Kepler Mapper in Jupyter Notebook</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Advanced Case Studies</span></p>

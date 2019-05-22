@@ -9,6 +9,7 @@
     <title>3D Cat Data &#8212; KeplerMapper 1.2.0 documentation</title>
     <link rel="stylesheet" href="../../_static/better.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
@@ -18,6 +19,8 @@
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="3D Horse Data" href="plot_horse.html" />
+    <link rel="prev" title="KM Examples Gallery" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   </head><body>
     <header id="pageheader">
@@ -33,11 +36,22 @@
   <div class="related top">
   <nav id="rellinks">
     <ul>
+        <li>
+          &larr;
+          <a href="index.html" title="Previous document">KM Examples Gallery</a>
+        </li>
+        <li>
+          <a href="plot_horse.html" title="Next document">3D Horse Data</a>
+          &rarr;
+        </li>
     </ul>
   </nav>
   <nav id="breadcrumbs">
     <ul>
-      <li><a href="../../index.html">KeplerMapper</a></li> 
+      <li><a href="../../index.html">KeplerMapper</a></li>
+      <li>
+        <a href="index.html">KM Examples Gallery</a>
+      </li> 
     </ul>
   </nav>
   </div>  
@@ -54,6 +68,7 @@
 <div class="sphx-glr-example-title section" id="d-cat-data">
 <span id="sphx-glr-generated-gallery-plot-cat-py"></span><h1>3D Cat Data<a class="headerlink" href="#d-cat-data" title="Permalink to this headline">¶</a></h1>
 <p>This example generates a Mapper built from a point-cloud sampled from a 3D model of a cat.</p>
+<p><a class="reference external" href="../../_static/cat.html">Visualization of the cat mapper</a></p>
 <img alt="../../_images/sphx_glr_plot_cat_001.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_cat_001.png" />
 <p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>KeplerMapper(verbose=2)
@@ -87,8 +102,8 @@ Creating 15 hypercubes.
    &gt; Found 1 clusters in hypercube 13.
    &gt; Found 1 clusters in hypercube 14.
 
-Created 19 edges and 20 nodes in 0:00:00.122071.
-Wrote visualization to: output/cat_keplermapper.html
+Created 19 edges and 20 nodes in 0:00:00.147506.
+Wrote visualization to: output/cat.html
 </pre></div>
 </div>
 <div class="line-block">
@@ -102,7 +117,6 @@ Wrote visualization to: output/cat_keplermapper.html
 
 <span class="n">mapper</span> <span class="o">=</span> <span class="n">km</span><span class="o">.</span><span class="n">KeplerMapper</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
-
 <span class="n">lens</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
 <span class="n">graph</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">lens</span><span class="p">,</span>
@@ -111,7 +125,7 @@ Wrote visualization to: output/cat_keplermapper.html
                    <span class="n">cover</span><span class="o">=</span><span class="n">km</span><span class="o">.</span><span class="n">Cover</span><span class="p">(</span><span class="n">n_cubes</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">perc_overlap</span><span class="o">=</span><span class="mf">0.2</span><span class="p">))</span>
 
 <span class="n">mapper</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span>
-                 <span class="n">path_html</span><span class="o">=</span><span class="s2">&quot;output/cat_keplermapper.html&quot;</span><span class="p">)</span>
+                 <span class="n">path_html</span><span class="o">=</span><span class="s2">&quot;output/cat.html&quot;</span><span class="p">)</span>
 
 <span class="n">km</span><span class="o">.</span><span class="n">draw_matplotlib</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 
@@ -119,7 +133,7 @@ Wrote visualization to: output/cat_keplermapper.html
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.523 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.603 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-generated-gallery-plot-cat-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../../_downloads/35016702dc7836dc0a96ff7b1005e407/plot_cat.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_cat.py</span></code></a></div>
@@ -156,20 +170,27 @@ Wrote visualization to: output/cat_keplermapper.html
 </a> 
 
 <p class="caption"><span class="caption-text">User Guide</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../theory.html">Background</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../applications.html">Applications</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">KM Examples Gallery</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">3D Cat Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_horse.html">3D Horse Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_breast_cancer.html">Breast Cancer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_digits.html">Digits Dataset</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../reference/index.html">API Reference</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Tutorials</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/Adapters.html">Adapters example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/Plotly-Demo.html">Demo of Plotlyviz features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/Cancer-demo.html">Choosing a lens</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/KeplerMapper-usage-in-Jupyter-Notebook.html">Using Kepler Mapper in Jupyter Notebook</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Advanced Tutorials</span></p>
+<p class="caption"><span class="caption-text">Advanced Case Studies</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/KeplerMapper-Newsgroup20-Pipeline.html">KeplerMapper &amp; NLP examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/TOR-XGB-TDA.html">Detecting Encrypted TOR Traffic with Boosting and Topological Data Analysis</a></li>
@@ -184,11 +205,22 @@ Wrote visualization to: output/cat_keplermapper.html
   <div class="related bottom">
   <nav id="rellinks">
     <ul>
+        <li>
+          &larr;
+          <a href="index.html" title="Previous document">KM Examples Gallery</a>
+        </li>
+        <li>
+          <a href="plot_horse.html" title="Next document">3D Horse Data</a>
+          &rarr;
+        </li>
     </ul>
   </nav>
   <nav id="breadcrumbs">
     <ul>
-      <li><a href="../../index.html">KeplerMapper</a></li> 
+      <li><a href="../../index.html">KeplerMapper</a></li>
+      <li>
+        <a href="index.html">KM Examples Gallery</a>
+      </li> 
     </ul>
   </nav>
   </div>

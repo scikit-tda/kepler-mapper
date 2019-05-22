@@ -8,8 +8,22 @@ Breast Cancer
 
 This example generates a Mapper built from the `Wisconsin Breast Cancer Dataset <https://www.kaggle.com/uciml/breast-cancer-wisconsin-data>`_.
 
+`Visualization of the breast cancer mapper <../../_static/breast-cancer.html>`_
+
+
+The reasoning behind the choice of lenses in the demonstration above is:
+
+- **For lens1:** Lenses that make biological sense; in other words, lenses that highlight special features in the data, that I know about. 
+- **For lens2:** Lenses that disperse the data, as opposed to clustering many points together.
+
+In the case of this particualr data, using an anomaly score (in this case calculated using the IsolationForest from sklearn) makes biological sense since cancer cells are anomalous. For the second lens, we use the :math:`l^2` norm.
+
+For an interactive exploration of lens for the breast cancer, see the `Choosing a lens notebook <../../notebooks/Cancer-demo.html>`_.
+
+
 
 .. image:: ../../../examples/images/breast-cancer.png
+
 
 """
 
@@ -57,3 +71,8 @@ mapper.visualize(graph,
                  path_html="output/breast-cancer.html",
                  title="Wisconsin Breast Cancer Dataset",
                  custom_tooltips=y)
+
+
+import matplotlib.pyplot as plt
+km.draw_matplotlib(graph)
+plt.show()

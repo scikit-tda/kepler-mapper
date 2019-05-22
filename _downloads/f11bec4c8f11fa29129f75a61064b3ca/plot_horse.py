@@ -6,6 +6,10 @@
 
 This example generates a Mapper built from a point-cloud sampled from a 3D model of a horse.
 
+`Visualization of the horse data <../../_static/horse.html>`_
+
+
+
 """
 
 import matplotlib.pyplot as plt
@@ -28,11 +32,10 @@ graph = mapper.map(lens,
                    cover=km.Cover(30, 0.2))
 
 mapper.visualize(graph,
-                 path_html="output/horse_keplermapper.html",
+                 path_html="output/horse.html",
                  custom_tooltips=np.arange(len(lens)))
 
 
 km.drawing.draw_matplotlib(graph)
-
 plt.show()
 

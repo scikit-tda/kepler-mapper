@@ -945,7 +945,9 @@ class KeplerMapper(object):
                     dict[element] = 1
             for element in itertools.product(core_node, core_node):
                     dict[element] = 0
-
+        
+        # It has to be solved how to obtaion path length more than 2...
+        
         # Creating dataframe. Note we use the data index for index, columns of result.  
         result = pd.Series(dict).unstack()
         result = pd.DataFrame(result)

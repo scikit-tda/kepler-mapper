@@ -899,45 +899,18 @@ class KeplerMapper(object):
 
         return X
     
-    def path_length(
-        self,
-        X,
-        a,
-        b
-    ):
-        """Let members a, b each in nodes n, m. And define path length r of a and b; least number of edges that connect a, b. 
-           If a and b is connected by same node, then r is 0. And if a and b is not connected, then r is -1.
-        
-        Parameters
-        ----------
-        X : Numpy Array
-            The data mapped
-        a : a member
-        b : a member
-        
-        Returns
-        -------
-        r : int
-            path length r of a and b
-        
-        """
-        
-        
-        
-        return r
-        
-        
+    
     def digitize_relationship(
-        self,
-        X,
-    ):
-        """This function print out Dataframe that every path length of the data mapped.
-           It's meaningful to digitize relationship.
-        
+            self,
+            graph,
+        ):
+        """Let members a, b each in nodes n, m. And define path length r of a and b; least number of edges that connect a, b. 
+           If a and b is connected by same node, then r is 0. And if a and b is not connected, then r is -1
+           This function print out Dataframe that every path length of the data mapped. It's meaningful to digitize relationship.
+
         Parameters
         ----------
-
-        X : Numpy Array
+        graph : Dictionary
             The data mapped
 
         Returns
@@ -945,10 +918,41 @@ class KeplerMapper(object):
         result : Dataframe
             every path length of the data mapped.       
         """
-        
-        
-        
-        result.index, result.columns = 
+
+        # From graph, we can obtain nodes and links
+        nodes = graph.get('nodes')
+        nodes_k = list(nodes)
+        nodes_v = list(nodes.values())
+        links = graph.get('links')
+
+        # Made array for grouping linked node
+        relative = []
+        for node in nodes_k:
+            members = nodes.get(node)
+            linked = [members]
+            other_nodes = links.get(node)
+            if not other_nodes == None:
+                for other_node in other_nodes:
+                    linked.append(nodes.get(other_node))
+            relative.append(linked)
+
+        # Using a definition of path length, obtain the value between order pairs.
+        dict = {}
+        for linked in relative:
+            core_node = linked[0]
+            for node in linked:
+                for element in itertools.product(core_node, node):
+                    dict[element] = 1
+            for element in itertools.product(core_node, core_node):
+                    dict[element] = 0
+
+        # Creating dataframe. Note we use the data index for index, columns of result.  
+        result = pd.Series(dict).unstack()
+        result = pd.DataFrame(result)
+        result.index, result.columns = Data.index, Data.index
+
+        # 'Nan' mean the order pairs be unrelated; path length is -1.
+        result.fillna(-1)
         return result
             
             

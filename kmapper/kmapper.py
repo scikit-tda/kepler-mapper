@@ -953,9 +953,9 @@ class KeplerMapper(object):
             for other_member in range(len(index)):
                 try:
                     dict[(member, other_member)] = int(nx.shortest_path_length(G, 
-                                                                           source=member, 
-                                                                           target=other_member, 
-                                                                           method='dijkstra')) - 1
+                                                                               source=member, 
+                                                                               target=other_member, 
+                                                                               method='dijkstra')) - 1
                 except (nx.NetworkXNoPath):
                     dict[(member, other_member)] = -1
 

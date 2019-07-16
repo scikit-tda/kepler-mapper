@@ -902,7 +902,7 @@ class KeplerMapper(object):
 
         return X
     
-    def digitize_relationship(graph, index):
+    def digitize_relationship(self, graph, index):
         """Let members a, b each in nodes n, m. And define path length r of a and b; least number of edges that connect a, b. 
            If a and b is connected by same node, then r is 0. And if a and b is not connected, then r is -1
            This function print out Dataframe that every path length of the data mapped. It's meaningful to digitize relationship.

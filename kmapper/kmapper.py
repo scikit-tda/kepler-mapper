@@ -943,25 +943,24 @@ class KeplerMapper(object):
             nx.add_path(G, node)
 
         # Using a definition of path length, obtain the value between order pairs.
-        dict = {}
+        result = {}
         for member in range(len(index)):
             for other_member in range(len(index)):
                 try:
-                    dict[(member, other_member)] = int(nx.shortest_path_length(G, 
-                                                                               source=member, 
-                                                                               target=other_member, 
-                                                                               method='dijkstra')) - 1
+                    if member == other_member:
+                        result[(member, other_member)] = 0
+                    else:
+                        result[(member, other_member)] = int(nx.shortest_path_length(G, 
+                                                                                     source=member, 
+                                                                                     target=other_member, 
+                                                                                     method='dijkstra')) - 1
                 except (nx.NetworkXNoPath):
-                    dict[(member, other_member)] = -1
-
-        # Consider members in same node
-        for linked in relative:
-            for element in itertools.product(linked[0], linked[0]):
-                dict[element] = 0
+                    pass
 
         # Creating dataframe. Note we use the data index for index, columns of result.  
-        result = pd.Series(dict).unstack()
-        result = pd.DataFrame(result)
+        result = pd.Series(result).unstack()
+        result = pd.DataFrame(result).fillna(-1)    # Nan means no relationship.
         result.index, result.columns = index, index
+
         return result
 

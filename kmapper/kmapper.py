@@ -9,6 +9,7 @@ import sys
 import warnings
 import networkx as nx
 import itertools
+import pandas as pd
 
 from jinja2 import Environment, FileSystemLoader, Template
 import numpy as np

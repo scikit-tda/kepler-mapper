@@ -902,7 +902,6 @@ class KeplerMapper(object):
 
         return X
     
-    
     def digitize_relationship(
             self,
             graph,

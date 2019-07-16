@@ -8,7 +8,6 @@ import os
 import sys
 import warnings
 import networkx as nx
-import itertools
 import pandas as pd
 
 from jinja2 import Environment, FileSystemLoader, Template
@@ -920,26 +919,9 @@ class KeplerMapper(object):
             every path length of the data mapped.      
 
         """
-        # From graph, we can obtain nodes and links
-        nodes = graph.get('nodes')
-        nodes_k = list(nodes)
-        nodes_v = list(nodes.values())
-        links = graph.get('links')
-
-        # Made array for grouping linked node
-        relative = []
-        for node in nodes_k:
-            members = nodes.get(node)
-            linked = [members]
-            other_nodes = links.get(node)
-            if not other_nodes == None:
-                for other_node in other_nodes:
-                    linked.append(nodes.get(other_node))
-            relative.append(linked)
-
         # Creating graph for using networkx module
         G = nx.Graph()
-        for node in nodes_v:
+        for node in list(graph.get('nodes').values()):
             nx.add_path(G, node)
 
         # Using a definition of path length, obtain the value between order pairs.

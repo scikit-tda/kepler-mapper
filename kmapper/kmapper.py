@@ -905,7 +905,7 @@ class KeplerMapper(object):
     def digitize_relationship(
             self,
             graph,
-            index,
+            index
         ):
         """Let members a, b each in nodes n, m. And define path length r of a and b; least number of edges that connect a, b. 
            If a and b is connected by same node, then r is 0. And if a and b is not connected, then r is -1

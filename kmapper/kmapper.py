@@ -8,6 +8,7 @@ import os
 import sys
 import warnings
 import networkx as nx
+import itertools
 
 from jinja2 import Environment, FileSystemLoader, Template
 import numpy as np
@@ -902,66 +903,72 @@ class KeplerMapper(object):
     
     
     def digitize_relationship(
-        self,
-        graph,
-        index,
-    ):
-    """Let members a, b each in nodes n, m. And define path length r of a and b; least number of edges that connect a, b. 
-       If a and b is connected by same node, then r is 0. And if a and b is not connected, then r is -1
-       This function print out Dataframe that every path length of the data mapped. It's meaningful to digitize relationship.
-        
-    Parameters
-    ----------
-    graph : Dictionary
-        The data mapped
-    index : list
-        Index of the data 
-    
-    Returns
-    -------
-    result : Dataframe
-        every path length of the data mapped.      
-     
-    """
+            self,
+            graph,
+            index,
+        ):
+        """Let members a, b each in nodes n, m. And define path length r of a and b; least number of edges that connect a, b. 
+           If a and b is connected by same node, then r is 0. And if a and b is not connected, then r is -1
+           This function print out Dataframe that every path length of the data mapped. It's meaningful to digitize relationship.
 
-    # From graph, we can obtain nodes and links
-    nodes = graph.get('nodes')
-    nodes_k = list(nodes)
-    nodes_v = list(nodes.values())
-    links = graph.get('links')
-    
-    # Made array for grouping linked node
-    relative = []
-    for node in nodes_k:
-        members = nodes.get(node)
-        linked = [members]
-        other_nodes = links.get(node)
-        if not other_nodes == None:
-            for other_node in other_nodes:
-                linked.append(nodes.get(other_node))
-        relative.append(linked)
-    
-    # Creating graph for using networkx module
-    G = nx.Graph()
-    for node in nodes_v:
-        nx.add_path(G, node)
-    
-    # Using a definition of path length, obtain the value between order pairs.
-    dict = {}
-    for member in range(len(index)):
-        for other_member in range(len(index)):
-            try:
-                dict[(member, other_member)] = nx.shortest_path_length(G, 
-                                                                       source=member, 
-                                                                       target=other_member, 
-                                                                       method='dijkstra')
-            except (nx.NetworkXNoPath):
-                dict[(member, other_member)] = -1
-                    
-    # Creating dataframe. Note we use the data index for index, columns of result.  
-    result = pd.Series(dict).unstack()
-    result = pd.DataFrame(result)
-    result.index, result.columns = index, index
+        Parameters
+        ----------
+        graph : Dictionary
+            The data mapped
+        index : list
+            Index of the data 
 
-    return result
+        Returns
+        -------
+        result : Dataframe
+            every path length of the data mapped.      
+
+        """
+
+        # From graph, we can obtain nodes and links
+        nodes = graph.get('nodes')
+        nodes_k = list(nodes)
+        nodes_v = list(nodes.values())
+        links = graph.get('links')
+
+        # Made array for grouping linked node
+        relative = []
+        for node in nodes_k:
+            members = nodes.get(node)
+            linked = [members]
+            other_nodes = links.get(node)
+            if not other_nodes == None:
+                for other_node in other_nodes:
+                    linked.append(nodes.get(other_node))
+            relative.append(linked)
+
+        # Creating graph for using networkx module
+        G = nx.Graph()
+        for node in nodes_v:
+            nx.add_path(G, node)
+
+        # Using a definition of path length, obtain the value between order pairs.
+        dict = {}
+        for member in range(len(index)):
+            for other_member in range(len(index)):
+                try:
+                    dict[(member, other_member)] = int(nx.shortest_path_length(G, 
+                                                                           source=member, 
+                                                                           target=other_member, 
+                                                                           method='dijkstra')) - 1
+                except (nx.NetworkXNoPath):
+                    dict[(member, other_member)] = -1
+
+        # Consider members in same node
+        for linked in relative:
+            core_node = linked[0]
+            for element in itertools.product(core_node, core_node):
+                    dict[element] = 0
+
+        # Creating dataframe. Note we use the data index for index, columns of result.  
+        result = pd.Series(dict).unstack()
+        result = pd.DataFrame(result)
+        result.index, result.columns = index, index
+
+        return result
 

@@ -961,8 +961,7 @@ class KeplerMapper(object):
 
         # Consider members in same node
         for linked in relative:
-            core_node = linked[0]
-            for element in itertools.product(core_node, core_node):
+            for element in itertools.product(linked[0], linked[0]):
                     dict[element] = 0
 
         # Creating dataframe. Note we use the data index for index, columns of result.  

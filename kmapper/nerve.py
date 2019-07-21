@@ -1,7 +1,7 @@
 import itertools
 from collections import defaultdict
 
-__all__ = ["GraphNerve", "SimplicialNerve"]
+__all__ = ["GraphNerve"]
 
 
 class Nerve:

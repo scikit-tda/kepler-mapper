@@ -78,7 +78,7 @@ To contribute please fork the project make your changes and submit a pull reques
 .. toctree::
     :hidden:
     :maxdepth: 1
-    :caption: Advanced Tutorials
+    :caption: Advanced Case Studies
 
     notebooks/KeplerMapper-Newsgroup20-Pipeline
     notebooks/TOR-XGB-TDA

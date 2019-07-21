@@ -1,7 +1,21 @@
+"""
+
+Digits Dataset
+================
+
+This digits example shows two ways of customizing the tooltips options in the HTML visualization. It generates the visualization with tooltips set as the y-label, or number of the image. The second generated result uses the actual image in the tooltips. 
+
+`Visualization with y-label tooltip <../../_static/digits_ylabel_tooltips.html>`_
+
+`Visualization with custom tooltips <../../_static/digits_custom_tooltips.html>`_
+
+"""
+
 import io
 import sys
 import base64
 
+import matplotlib.pyplot as plt
 import numpy as np
 import sklearn
 from sklearn import datasets
@@ -41,15 +55,22 @@ projected_data = mapper.fit_transform(data,
 # Create the graph (we cluster on the projected data and suffer projection loss)
 graph = mapper.map(projected_data,
                    clusterer=sklearn.cluster.DBSCAN(eps=0.3, min_samples=15),
-                   cover=km.Cover(35, 0.9))
+                   cover=km.Cover(35, 0.4))
 
 # Create the visualizations (increased the graph_gravity for a tighter graph-look.)
-
+print("Output graph examples to html" )
 # Tooltips with image data for every cluster member
 mapper.visualize(graph,
-                 path_html="keplermapper_digits_custom_tooltips.html",
+                 title="Handwritten digits Mapper",
+                 path_html="output/digits_custom_tooltips.html",
+                 color_function=labels,
                  custom_tooltips=tooltip_s)
 # Tooltips with the target y-labels for every cluster member
 mapper.visualize(graph,
-                 path_html="keplermapper_digits_ylabel_tooltips.html",
+                 title="Handwritten digits Mapper",
+                 path_html="output/digits_ylabel_tooltips.html",
                  custom_tooltips=labels)
+
+# Matplotlib examples
+km.draw_matplotlib(graph, layout="spring")
+plt.show()

@@ -5,7 +5,7 @@ gh-pages:
 
 	cd docs; make html
 	git checkout gh-pages
-	rm -rf _sources _static _modules _images notebooks reference
+	rm -rf _sources _static _modules _images notebooks reference _downloads generated
 	mv -fv docs/_build/html/* .
 	rm -rf docs
 	git add -A

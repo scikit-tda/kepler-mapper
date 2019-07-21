@@ -6,6 +6,10 @@
 |DOI| |PyPI version| |Downloads| 
 |Build Status| |Codecov| 
 
+Kepler Mapper
+----------------
+
+
     Nature uses as little as possible of anything. - Johannes Kepler
 
 This is a library implementing the Mapper algorithm in Python. KeplerMapper can be used for visualization of high-dimensional data and 3D point cloud data. KeplerMapper can make use of Scikit-Learn API compatible cluster and scaling algorithms. You can find the source code on github at 
@@ -14,7 +18,7 @@ This is a library implementing the Mapper algorithm in Python. KeplerMapper can 
 KeplerMapper employs approaches based on the MAPPER algorithm (Singh et al.) as first described in the paper "Topological Methods for the Analysis of High Dimensional Data Sets and 3D Object Recognition".
 
 Setup
----------------
+=======================
 
 Install KeplerMapper with pip:
 
@@ -25,7 +29,7 @@ Install KeplerMapper with pip:
 
 
 Citations
----------
+=======================
 
 Hendrik Jacob van Veen, and Nathaniel Saul. (2017, November 17).
 MLWave/kepler-mapper: 186f (Version 1.0.1). Zenodo.
@@ -49,7 +53,8 @@ Bibtex entry:
 
 
 Contributions
-----------------
+=======================
+
 We welcome contributions of all shapes and sizes. There are lots of opportunities for potential projects, so please get in touch if you would like to help out. Everything from an implementation of your favorite distance, notebooks, examples, and documentation are all equally valuable so please don’t feel you can’t contribute.
 
 To contribute please fork the project make your changes and submit a pull request. We will do our best to work through any issues with you and get your code merged into the main branch.
@@ -63,7 +68,7 @@ To contribute please fork the project make your changes and submit a pull reques
     theory
     started
     applications
-    examples
+    generated/gallery/index
     reference/index
 
 .. toctree::
@@ -73,6 +78,7 @@ To contribute please fork the project make your changes and submit a pull reques
 
     notebooks/Adapters
     notebooks/Plotly-Demo
+    notebooks/Cancer-demo
     notebooks/KeplerMapper-usage-in-Jupyter-Notebook
 
 .. toctree::

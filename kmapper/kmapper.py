@@ -79,7 +79,7 @@ class KeplerMapper(object):
         self,
         X,
         projection="sum",
-        scaler=preprocessing.MinMaxScaler(),
+        scaler=None,
         distance_matrix=None,
     ):
         """Creates the projection/lens from a dataset. Input the data set. Specify a projection/lens type. Output the projected data/lens.
@@ -161,7 +161,7 @@ class KeplerMapper(object):
 
         # Sae original values off so they can be referenced by later functions in the pipeline
         self.inverse = X
-        self.scaler = scaler
+        self.scaler = scaler or preprocessing.MinMaxScaler()
         self.projection = str(projection)
         self.distance_matrix = distance_matrix
 
@@ -287,7 +287,7 @@ class KeplerMapper(object):
         self,
         X,
         projection="sum",
-        scaler=preprocessing.MinMaxScaler(),
+        scaler=None,
         distance_matrix=False,
     ):
         """Same as .project() but accepts lists for arguments so you can chain.
@@ -317,7 +317,7 @@ class KeplerMapper(object):
         """
 
         projections = projection
-        scalers = scaler
+        scalers = scaler or preprocessing.MinMaxScaler()
         distance_matrices = distance_matrix
 
         # Turn single projection arguments into a pipeline
@@ -366,14 +366,11 @@ class KeplerMapper(object):
         self,
         lens,
         X=None,
-        clusterer=cluster.DBSCAN(eps=0.5, min_samples=3),
-        cover=Cover(n_cubes=10, perc_overlap=0.1),
-        nerve=GraphNerve(),
+        clusterer=None,
+        cover=None,
+        nerve=None,
         precomputed=False,
         remove_duplicate_nodes=False,
-        # These arguments are all deprecated
-        overlap_perc=None,
-        nr_cubes=None
     ):
         """Apply Mapper algorithm on this projection and build a simplicial complex. Returns a dictionary with nodes and links.
 
@@ -466,6 +463,10 @@ class KeplerMapper(object):
         """
 
         start = datetime.now()
+
+        clusterer = clusterer or cluster.DBSCAN(eps=0.5, min_samples=3)
+        cover = cover or Cover(n_cubes=10, perc_overlap=0.1)
+        nerve = nerve or GraphNerve()
 
         nodes = defaultdict(list)
         meta = defaultdict(list)

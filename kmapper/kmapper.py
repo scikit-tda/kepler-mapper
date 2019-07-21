@@ -79,7 +79,7 @@ class KeplerMapper(object):
         self,
         X,
         projection="sum",
-        scaler=None,
+        scaler="default:MinMaxScaler",
         distance_matrix=None,
     ):
         """Creates the projection/lens from a dataset. Input the data set. Specify a projection/lens type. Output the projected data/lens.
@@ -161,7 +161,8 @@ class KeplerMapper(object):
 
         # Sae original values off so they can be referenced by later functions in the pipeline
         self.inverse = X
-        self.scaler = scaler or preprocessing.MinMaxScaler()
+        scaler = preprocessing.MinMaxScaler() if scaler == "default:MinMaxScaler" else scaler
+        self.scaler = scaler
         self.projection = str(projection)
         self.distance_matrix = distance_matrix
 
@@ -287,7 +288,7 @@ class KeplerMapper(object):
         self,
         X,
         projection="sum",
-        scaler=None,
+        scaler="default:MinMaxScaler",
         distance_matrix=False,
     ):
         """Same as .project() but accepts lists for arguments so you can chain.
@@ -317,7 +318,8 @@ class KeplerMapper(object):
         """
 
         projections = projection
-        scalers = scaler or preprocessing.MinMaxScaler()
+        scaler = preprocessing.MinMaxScaler() if scaler == "default:MinMaxScaler" else scaler
+        scalers = scaler
         distance_matrices = distance_matrix
 
         # Turn single projection arguments into a pipeline
@@ -465,7 +467,7 @@ class KeplerMapper(object):
         start = datetime.now()
 
         clusterer = clusterer or cluster.DBSCAN(eps=0.5, min_samples=3)
-        cover = cover or Cover(n_cubes=10, perc_overlap=0.1)
+        self.cover = cover or Cover(n_cubes=10, perc_overlap=0.1)
         nerve = nerve or GraphNerve()
 
         nodes = defaultdict(list)
@@ -475,23 +477,6 @@ class KeplerMapper(object):
         # If inverse image is not provided, we use the projection as the inverse image (suffer projection loss)
         if X is None:
             X = lens
-
-        # Deprecation warnings
-        if nr_cubes is not None or overlap_perc is not None:
-            warnings.warn(
-                "Deprecation Warning: Please supply km.Cover object. Explicitly passing in n_cubes/nr_cubes and overlap_perc will be deprecated in future releases. ",
-                DeprecationWarning,
-            )
-
-
-        # If user supplied nr_cubes, overlap_perc, or coverer, opt for those
-        # TODO: remove this conditional after release in 1.2
-        if nr_cubes is not None or overlap_perc is not None:
-            n_cubes = nr_cubes if nr_cubes else 10
-            overlap_perc = overlap_perc if overlap_perc else 0.1
-            self.cover = Cover(n_cubes=n_cubes, perc_overlap=overlap_perc)
-        else:
-            self.cover = cover
 
         if self.verbose > 0:
             print(

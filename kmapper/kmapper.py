@@ -904,7 +904,7 @@ class KeplerMapper(object):
     def digitize_relationship(self, graph, index):
         """Let members a, b each in nodes n, m. And define path length r of a and b; least number of edges that connect a, b. 
            If a and b is connected by same node, then r is 0. And if a and b is not connected, then r is -1
-           This function print out Dataframe that every path length of the data mapped. It's meaningful to digitize relationship.
+           This function print out Dataframe that every path length of the data mapped. 
 
         Parameters
         ----------
@@ -917,7 +917,25 @@ class KeplerMapper(object):
         -------
         result : Dataframe
             every path length of the data mapped.      
-
+            
+        Examples
+        --------
+        >>> from sklearn.datasets import load_iris
+        >>> import kmapper as km
+        >>> # Data setting
+        >>> inverse_data = load_iris().get('data')
+        >>> index = []
+        >>> for name in load_iris().get('target_names'):
+        >>>     for x in range(50):
+        >>>        y = '%s_%s' % (name, x)
+        >>>        index.append(y)
+        >>> # creating graph
+        >>> mapper = km.KeplerMapper(verbose=0)
+        >>> projected_data = mapper.project(inverse_data, projection="knn_distance_2", distance_matrix='euclidean')
+        >>> graph = mapper.map(projected_data, cover=km.Cover(n_cubes=3, perc_overlap=0.2))
+        >>> # digitize_relationship
+        >>> km.digitize_relationship(graph, index)
+        
         """
         # Creating graph for using networkx module
         G = nx.Graph()

@@ -922,6 +922,7 @@ class KeplerMapper(object):
         --------
         >>> from sklearn.datasets import load_iris
         >>> import kmapper as km
+        >>> 
         >>> # Data setting
         >>> inverse_data = load_iris().get('data')
         >>> index = []
@@ -929,10 +930,12 @@ class KeplerMapper(object):
         >>>     for x in range(50):
         >>>        y = '%s_%s' % (name, x)
         >>>        index.append(y)
+        >>> 
         >>> # creating graph
         >>> mapper = km.KeplerMapper(verbose=0)
         >>> projected_data = mapper.project(inverse_data, projection="knn_distance_2", distance_matrix='euclidean')
         >>> graph = mapper.map(projected_data, cover=km.Cover(n_cubes=3, perc_overlap=0.2))
+        >>> 
         >>> # digitize_relationship
         >>> km.digitize_relationship(graph, index)
         

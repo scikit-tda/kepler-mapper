@@ -940,10 +940,24 @@ class KeplerMapper(object):
         >>> km.digitize_relationship(graph, index)
         
         """
-        # Creating graph for using networkx module
-        G = nx.Graph()
-        for node in list(graph.get('nodes').values()):
-            nx.add_path(G, node)
+        # Obtain information of node from graph; output from the `map` method.
+        nodes = graph.get('nodes')
+        nodes_k = list(nodes)
+        nodes_v = list(nodes.values())
+
+
+        # Creating MultiGraph for using networkx module
+        G = nx.MultiGraph()
+        for x in range(len(nodes_k)):
+            G.add_node(tuple(nodes_v[x]), nodes=nodes_k[x])
+
+        # Adding path between nodes
+        for node in nodes_k:
+            members = tuple(nodes.get(node))
+            other_nodes = links.get(node)
+            if not other_nodes == None:
+                for other_node in other_nodes:
+                    nx.add_path(G, [members, tuple(nodes.get(other_node))])
 
         # Using a definition of path length, obtain the value between order pairs.
         result = {}

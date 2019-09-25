@@ -2,7 +2,7 @@
 [![Downloads](https://pypip.in/download/kmapper/badge.svg)](https://pypi.python.org/pypi/kmapper/)
 [![Build Status](https://travis-ci.org/scikit-tda/kepler-mapper.svg?branch=master)](https://travis-ci.org/scikit-tda/kepler-mapper)
 [![Codecov](https://codecov.io/gh/scikit-tda/kepler-mapper/branch/master/graph/badge.svg)](https://codecov.io/gh/scikit-tda/kepler-mapper)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1054444.svg)](https://doi.org/10.5281/zenodo.1054444)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1002377.svg)](https://doi.org/10.5281/zenodo.1002377)
 
 
 # KeplerMapper <img align="right" width="40" height="40" src="http://i.imgur.com/axOG6GJ.jpg">
@@ -86,4 +86,4 @@ Standard MIT disclaimer applies, see `DISCLAIMER.md` for full text. Development 
 
 ## Cite
 
-Nathaniel Saul, & Hendrik Jacob van Veen. (2017, November 17). MLWave/kepler-mapper: 186f (Version 1.0.1). Zenodo. http://doi.org/10.5281/zenodo.1054444
+If citing a specific version of kepler-mapper, visit [https://doi.org/10.5281/zenodo.1002377](https://doi.org/10.5281/zenodo.1002377) and select the DOI for that version.

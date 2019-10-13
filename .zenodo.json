@@ -11,14 +11,14 @@
     },
     {
       "affiliation": "Leeds School of Business, University of Colorado Boulder",
-      "name": "Sam W. Mangham",
-      "orcid": "0000-0001-7511-5652"
-    },
-    {
-      "affiliation": "Department of Electronics & Computer Science, University of Southampton, Southampton, SO17 1BJ, UK",
       "name": "Eargle, David",
       "orcid": "0000-0002-4056-8114"
     }
+    {
+      "affiliation": "Department of Electronics & Computer Science, University of Southampton, Southampton, SO17 1BJ, UK",
+      "name": "Sam W. Mangham",
+      "orcid": "0000-0001-7511-5652"
+    },
   ],
   "keywords": [
     "Python",

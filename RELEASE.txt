@@ -1,8 +1,10 @@
 Alpha
 
-1.2.1 (In progress)
+1.3.0 (October 12, 2019)
+    JOSS Release -- final revision
 	Allow sparse matrices in `map` function (PR #163)
-
+    Use sphinx-gallery for documentation examples (#164)
+    Removed mutable arguments (#165)
 
 1.2.0 (Feb 18, 2019)
 	New implementation of the cover API makes it consistent with the literature (your % overlap will probably have to be decreased when updating).

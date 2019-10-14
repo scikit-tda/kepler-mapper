@@ -1,4 +1,6 @@
 {
+  "title": "Kepler Mapper: A flexible Python implementation of the Mapper algorithm",
+  "description: This is a Python implementation of the TDA Mapper algorithm for visualization of high-dimensional data. For complete documentation, see <a href=\"https://kepler-mapper.scikit-tda.org\">kepler-mapper.scikit-tda.org</a>.",
   "creators": [
     {
       "affiliation": "Nubank",

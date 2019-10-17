@@ -2,8 +2,8 @@
 [![Downloads](https://pypip.in/download/kmapper/badge.svg)](https://pypi.python.org/pypi/kmapper/)
 [![Build Status](https://travis-ci.org/scikit-tda/kepler-mapper.svg?branch=master)](https://travis-ci.org/scikit-tda/kepler-mapper)
 [![Codecov](https://codecov.io/gh/scikit-tda/kepler-mapper/branch/master/graph/badge.svg)](https://codecov.io/gh/scikit-tda/kepler-mapper)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.01315/status.svg)](https://doi.org/10.21105/joss.01315)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1002377.svg)](https://doi.org/10.5281/zenodo.1002377)
-
 
 # KeplerMapper <img align="right" width="40" height="40" src="http://i.imgur.com/axOG6GJ.jpg">
 
@@ -84,6 +84,10 @@ mapper.visualize(graph, path_html="make_circles_keplermapper_output.html",
 
 Standard MIT disclaimer applies, see `DISCLAIMER.md` for full text. Development status is Alpha.
 
-## Cite
+## How to cite
 
-If citing a specific version of kepler-mapper, visit [https://doi.org/10.5281/zenodo.1002377](https://doi.org/10.5281/zenodo.1002377) and select the DOI for that version.
+To credit KeplerMapper in your work, please cite both the [JOSS paper](https://doi.org/10.21105/joss.01315) and the [Zenodo archive](https://doi.org/10.5281/zenodo.1002377). The former provides a high level description of the package, and the latter points to a permanent record of all KeplerMapper versions (we encourage you to cite the specific version you used). Example citations (for KeplerMapper 1.3.3):
+
+van Veen et al., (2019). Kepler Mapper: A flexible Python implementation of the Mapper algorithm. Journal of Open Source Software, 4(42), 1315, https://doi.org/10.21105/joss.01315
+
+Hendrik Jacob van Veen, Nathaniel Saul, Eargle, David, & Sam W. Mangham. (2019, October 14). Kepler Mapper: A flexible Python implementation of the Mapper algorithm (Version 1.3.3). Zenodo. http://doi.org/10.5281/zenodo.3485851

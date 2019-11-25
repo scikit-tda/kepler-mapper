@@ -500,17 +500,19 @@ class KeplerMapper(object):
         # we consider clustering or skipping it.
         cluster_params = clusterer.get_params()
 
-        min_cluster_samples = cluster_params.get(
-            "n_clusters",
-            cluster_params.get(
-                "min_cluster_size", cluster_params.get("min_samples", 1)
-            ),
-        )
+        if precomputed:
+            min_cluster_samples = 2
+        else:
+            min_cluster_samples = cluster_params.get(
+                "n_clusters",
+                cluster_params.get(
+                    "min_cluster_size", cluster_params.get("min_samples", 1)
+                ),
+            )
 
         if self.verbose > 1:
             print(
-                "Minimal points in hypercube before clustering: %d"
-                % (min_cluster_samples)
+                "Minimal points in hypercube before clustering: {}".format(min_cluster_samples)
             )
 
         # Subdivide the projected data X in intervals/hypercubes with overlap

@@ -271,7 +271,7 @@ def _format_cluster_statistics(member_ids, X, X_names):
         if scipy.sparse.issparse(X):
             if X.format not in ["csr", "csc"]:
                 raise ValueError(
-                    f"sparse matrix format must be csr or csc but found {X.format}")
+                    "sparse matrix format must be csr or csc but found {}".format(X.format))
 
         # wrap cluster_X_mean, X_mean, and X_std in np.array(---).squeeze()
         # to get the same treatment for dense and sparse arrays

@@ -231,6 +231,13 @@ class TestVisualHelpers:
         assert isinstance(cluster_data, dict)
         assert cluster_data["size"] == len(ids)
 
+    def test_cluster_stats_sparse_coo(self):
+        X = scipy.sparse.random(1000, 3, density=1.0, format="coo")
+        ids = np.random.choice(20, 1000)
+
+        with pytest.raises(ValueError, match=r".*sparse matrix format must be csr or csc.*"):
+            cluster_data = visuals._format_cluster_statistics(ids, X, ["a", "b", "c"])
+
     def test_cluster_stats_above(self):
         X = np.ones((1000, 3))
         ids = np.random.choice(20, 1000)

@@ -13,7 +13,7 @@ import numpy as np
 from sklearn import cluster, preprocessing, manifold, decomposition
 from sklearn.model_selection import StratifiedKFold, KFold
 from scipy.spatial import distance
-from scipy.sparse import issparse
+from scipy.sparse import issparse, hstack
 
 from .cover import Cover
 from .nerve import GraphNerve
@@ -79,7 +79,7 @@ class KeplerMapper(object):
         self,
         X,
         projection="sum",
-        scaler=preprocessing.MinMaxScaler(),
+        scaler="default:MinMaxScaler",
         distance_matrix=None,
     ):
         """Creates the projection/lens from a dataset. Input the data set. Specify a projection/lens type. Output the projected data/lens.
@@ -157,29 +157,11 @@ class KeplerMapper(object):
         >>>     mapper.project(X_inverse, projection="knn_distance_5")
         >>> ]
 
-        >>> # Stack / chain projections. You could do this manually, 
-        >>> # or pipeline with `.fit_transform()`. Works the same as `.project()`,
-        >>> # but accepts lists. f(raw text) -> f(tfidf) -> f(isomap 100d) -> f(umap 2d)
-        >>> projected_X = mapper.fit_transform(
-        >>>     X,
-        >>>     projections=[TfidfVectorizer(analyzer="char",
-        >>>                                  ngram_range=(1,6),
-        >>>                                  max_df=0.93,
-        >>>                                  min_df=0.03),
-        >>>                  manifold.Isomap(n_components=100,
-        >>>                                  n_jobs=-1),
-        >>>                  umap.UMAP(n_components=2,
-        >>>                            random_state=1)],
-        >>>     scalers=[None,
-        >>>              None,
-        >>>              preprocessing.MinMaxScaler()],
-        >>>     distance_matrices=[False,
-        >>>                        False,
-        >>>                        False])
         """
 
         # Sae original values off so they can be referenced by later functions in the pipeline
         self.inverse = X
+        scaler = preprocessing.MinMaxScaler() if scaler == "default:MinMaxScaler" else scaler
         self.scaler = scaler
         self.projection = str(projection)
         self.distance_matrix = distance_matrix
@@ -306,14 +288,37 @@ class KeplerMapper(object):
         self,
         X,
         projection="sum",
-        scaler=preprocessing.MinMaxScaler(),
+        scaler="default:MinMaxScaler",
         distance_matrix=False,
     ):
         """Same as .project() but accepts lists for arguments so you can chain.
 
+        Examples
+        --------
+        >>> # Stack / chain projections. You could do this manually, 
+        >>> # or pipeline with `.fit_transform()`. Works the same as `.project()`,
+        >>> # but accepts lists. f(raw text) -> f(tfidf) -> f(isomap 100d) -> f(umap 2d)
+        >>> projected_X = mapper.fit_transform(
+        >>>     X,
+        >>>     projections=[TfidfVectorizer(analyzer="char",
+        >>>                                  ngram_range=(1,6),
+        >>>                                  max_df=0.93,
+        >>>                                  min_df=0.03),
+        >>>                  manifold.Isomap(n_components=100,
+        >>>                                  n_jobs=-1),
+        >>>                  umap.UMAP(n_components=2,
+        >>>                            random_state=1)],
+        >>>     scalers=[None,
+        >>>              None,
+        >>>              preprocessing.MinMaxScaler()],
+        >>>     distance_matrices=[False,
+        >>>                        False,
+        >>>                        False])
+
         """
 
         projections = projection
+        scaler = preprocessing.MinMaxScaler() if scaler == "default:MinMaxScaler" else scaler
         scalers = scaler
         distance_matrices = distance_matrix
 
@@ -363,14 +368,11 @@ class KeplerMapper(object):
         self,
         lens,
         X=None,
-        clusterer=cluster.DBSCAN(eps=0.5, min_samples=3),
-        cover=Cover(n_cubes=10, perc_overlap=0.1),
-        nerve=GraphNerve(),
+        clusterer=None,
+        cover=None,
+        nerve=None,
         precomputed=False,
         remove_duplicate_nodes=False,
-        # These arguments are all deprecated
-        overlap_perc=None,
-        nr_cubes=None
     ):
         """Apply Mapper algorithm on this projection and build a simplicial complex. Returns a dictionary with nodes and links.
 
@@ -380,7 +382,7 @@ class KeplerMapper(object):
             Lower dimensional representation of data. In general will be output of `fit_transform`.
 
         X: Numpy Array
-            Original data or data to run clustering on. If `None`, then use `lens` as default.
+            Original data or data to run clustering on. If `None`, then use `lens` as default. X can be a SciPy sparse matrix.
 
         clusterer: Default: DBSCAN
             Scikit-learn API compatible clustering algorithm. Must provide `fit` and `predict`.
@@ -464,6 +466,10 @@ class KeplerMapper(object):
 
         start = datetime.now()
 
+        clusterer = clusterer or cluster.DBSCAN(eps=0.5, min_samples=3)
+        self.cover = cover or Cover(n_cubes=10, perc_overlap=0.1)
+        nerve = nerve or GraphNerve()
+
         nodes = defaultdict(list)
         meta = defaultdict(list)
         graph = {}
@@ -471,23 +477,6 @@ class KeplerMapper(object):
         # If inverse image is not provided, we use the projection as the inverse image (suffer projection loss)
         if X is None:
             X = lens
-
-        # Deprecation warnings
-        if nr_cubes is not None or overlap_perc is not None:
-            warnings.warn(
-                "Deprecation Warning: Please supply km.Cover object. Explicitly passing in n_cubes/nr_cubes and overlap_perc will be deprecated in future releases. ",
-                DeprecationWarning,
-            )
-
-
-        # If user supplied nr_cubes, overlap_perc, or coverer, opt for those
-        # TODO: remove this conditional after release in 1.2
-        if nr_cubes is not None or overlap_perc is not None:
-            n_cubes = nr_cubes if nr_cubes else 10
-            overlap_perc = overlap_perc if overlap_perc else 0.1
-            self.cover = Cover(n_cubes=n_cubes, perc_overlap=overlap_perc)
-        else:
-            self.cover = cover
 
         if self.verbose > 0:
             print(
@@ -498,7 +487,10 @@ class KeplerMapper(object):
         # Prefix'ing the data with an ID column
         ids = np.array([x for x in range(lens.shape[0])])
         lens = np.c_[ids, lens]
-        X = np.c_[ids, X]
+        if issparse(X):
+            X = hstack([ids[np.newaxis].T, X], format='csr')
+        else:
+            X = np.c_[ids, X]
 
         # Cover scheme defines a list of elements
         bins = self.cover.fit(lens)
@@ -508,17 +500,19 @@ class KeplerMapper(object):
         # we consider clustering or skipping it.
         cluster_params = clusterer.get_params()
 
-        min_cluster_samples = cluster_params.get(
-            "n_clusters",
-            cluster_params.get(
-                "min_cluster_size", cluster_params.get("min_samples", 1)
-            ),
-        )
+        if precomputed:
+            min_cluster_samples = 2
+        else:
+            min_cluster_samples = cluster_params.get(
+                "n_clusters",
+                cluster_params.get(
+                    "min_cluster_size", cluster_params.get("min_samples", 1)
+                ),
+            )
 
         if self.verbose > 1:
             print(
-                "Minimal points in hypercube before clustering: %d"
-                % (min_cluster_samples)
+                "Minimal points in hypercube before clustering: {}".format(min_cluster_samples)
             )
 
         # Subdivide the projected data X in intervals/hypercubes with overlap
@@ -627,9 +621,9 @@ class KeplerMapper(object):
         title="Kepler Mapper",
         save_file=True,
         X=None,
-        X_names=[],
+        X_names=None,
         lens=None,
-        lens_names=[],
+        lens_names=None,
         show_tooltips=True,
         nbins=10,
     ):
@@ -746,6 +740,12 @@ class KeplerMapper(object):
         env = Environment(loader=FileSystemLoader(module_root))
         # Color function is a vector of colors?
         color_function = init_color_function(graph, color_function)
+
+        if X_names is None:
+            X_names = []
+
+        if lens_names is None:
+            lens_names = []
 
         mapper_data = format_mapper_data(
             graph,

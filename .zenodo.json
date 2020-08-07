@@ -1,0 +1,32 @@
+{
+  "title": "Kepler Mapper: A flexible Python implementation of the Mapper algorithm",
+  "description": "This is a Python implementation of the TDA Mapper algorithm for visualization of high-dimensional data. For complete documentation, see <a href=\"https://kepler-mapper.scikit-tda.org\">kepler-mapper.scikit-tda.org</a>.",
+  "creators": [
+    {
+      "affiliation": "Nubank",
+      "name": "Hendrik Jacob van Veen"
+    },
+    {
+      "affiliation": "New Relic",
+      "name": "Nathaniel Saul",
+      "orcid": "0000-0002-8549-9810"
+    },
+    {
+      "affiliation": "Leeds School of Business, University of Colorado Boulder",
+      "name": "Eargle, David",
+      "orcid": "0000-0002-4056-8114"
+    },
+    {
+      "affiliation": "Department of Electronics & Computer Science, University of Southampton, Southampton, SO17 1BJ, UK",
+      "name": "Sam W. Mangham",
+      "orcid": "0000-0001-7511-5652"
+    }
+  ],
+  "keywords": [
+    "Python",
+    "Mapper",
+    "Topological Data Analysis"
+  ],
+  "license": "mit-license",
+  "upload_type": "software"
+}

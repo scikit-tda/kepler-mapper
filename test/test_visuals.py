@@ -4,6 +4,7 @@ import json
 import pytest
 
 import numpy as np
+import scipy.sparse
 from sklearn.datasets import make_circles
 from kmapper import KeplerMapper
 
@@ -33,8 +34,8 @@ np.random.seed(1)
 
 
     The visualize method should have sane defaults.
-        
-    Tooltips   
+
+    Tooltips
         - [x] Tooltips should default to showing the ID of data point in each node.
         - Tooltips should be able to be disabled.
         - [was done already?] Tooltips should be able to show aggregate data for each node.
@@ -48,13 +49,13 @@ np.random.seed(1)
         - Color funcs should be easier to use.
         - Should be able to choose any D3 palette
         - [x] Cold is low, hot is high.
-    
+
     Style:
         - [x] 'inverse_X' should just be called X
         - [x] More of the html stuff should be in the jinja2 stuff.
         - If running from source, should be able to run offline
 
-    Map 
+    Map
         - Move all of these arguments into the init method
 
 """
@@ -211,6 +212,31 @@ class TestVisualHelpers:
 
         assert isinstance(cluster_data, dict)
         assert cluster_data["size"] == len(ids)
+
+    def test_cluster_stats_sparse_csr(self):
+        X = scipy.sparse.random(1000, 3, density=1.0, format="csr")
+        ids = np.random.choice(20, 1000)
+
+        cluster_data = visuals._format_cluster_statistics(ids, X, ["a", "b", "c"])
+
+        assert isinstance(cluster_data, dict)
+        assert cluster_data["size"] == len(ids)
+
+    def test_cluster_stats_sparse_csc(self):
+        X = scipy.sparse.random(1000, 3, density=1.0, format="csc")
+        ids = np.random.choice(20, 1000)
+
+        cluster_data = visuals._format_cluster_statistics(ids, X, ["a", "b", "c"])
+
+        assert isinstance(cluster_data, dict)
+        assert cluster_data["size"] == len(ids)
+
+    def test_cluster_stats_sparse_coo(self):
+        X = scipy.sparse.random(1000, 3, density=1.0, format="coo")
+        ids = np.random.choice(20, 1000)
+
+        with pytest.raises(ValueError, match=r".*sparse matrix format must be csr or csc.*"):
+            cluster_data = visuals._format_cluster_statistics(ids, X, ["a", "b", "c"])
 
     def test_cluster_stats_above(self):
         X = np.ones((1000, 3))

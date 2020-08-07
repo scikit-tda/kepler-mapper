@@ -1,5 +1,6 @@
 # A small helper class to house functions needed by KeplerMapper.visualize
 import numpy as np
+import scipy.sparse
 from sklearn import preprocessing
 import json
 from collections import defaultdict
@@ -58,7 +59,7 @@ palette = [
 
 
 def _colors_to_rgb(colorscale):
-    """ Ensure that the color scale is formatted in rgb strings. 
+    """ Ensure that the color scale is formatted in rgb strings.
         If the colorscale is a hex string, then convert to rgb.
     """
     if colorscale[0][1][0] == "#":
@@ -266,9 +267,25 @@ def _format_cluster_statistics(member_ids, X, X_names):
         if X_names.shape[0] == 0:
             X_names = np.array(["f_%s" % (i) for i in range(X.shape[1])])
 
-        cluster_X_mean = np.mean(X[member_ids], axis=0)
-        X_mean = np.mean(X, axis=0)
-        X_std = np.std(X, axis=0)
+        # be explicit about the allowed sparse formats
+        if scipy.sparse.issparse(X):
+            if X.format not in ["csr", "csc"]:
+                raise ValueError(
+                    "sparse matrix format must be csr or csc but found {}".format(X.format))
+
+        # wrap cluster_X_mean, X_mean, and X_std in np.array(---).squeeze()
+        # to get the same treatment for dense and sparse arrays
+        cluster_X_mean = np.array(
+            np.mean(X[member_ids], axis=0)
+        ).squeeze()
+        X_mean = np.array(
+            np.mean(X, axis=0)
+        ).squeeze()
+        X_std = np.array(
+            # use StandardScaler as a way to get std for dense or sparse array
+            np.sqrt(preprocessing.StandardScaler(with_mean=False).fit(X).var_)
+        ).squeeze()
+
         above_mean = cluster_X_mean > X_mean
         std_m = np.sqrt((cluster_X_mean - X_mean) ** 2) / X_std
 
@@ -276,10 +293,10 @@ def _format_cluster_statistics(member_ids, X, X_names):
             zip(
                 std_m,
                 X_names,
-                np.mean(X, axis=0),
+                X_mean,
                 cluster_X_mean,
                 above_mean,
-                np.std(X, axis=0),
+                X_std,
             )
         )
         stats = sorted(stat_zip, reverse=True)

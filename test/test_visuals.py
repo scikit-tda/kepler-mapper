@@ -213,8 +213,17 @@ class TestVisualHelpers:
         assert isinstance(cluster_data, dict)
         assert cluster_data["size"] == len(ids)
 
-    def test_cluster_stats_sparse(self):
-        X = scipy.sparse.random(1000, 3, density=0.1, format="csr")
+    def test_cluster_stats_sparse_csr(self):
+        X = scipy.sparse.random(1000, 3, density=1.0, format="csr")
+        ids = np.random.choice(20, 1000)
+
+        cluster_data = visuals._format_cluster_statistics(ids, X, ["a", "b", "c"])
+
+        assert isinstance(cluster_data, dict)
+        assert cluster_data["size"] == len(ids)
+
+    def test_cluster_stats_sparse_csc(self):
+        X = scipy.sparse.random(1000, 3, density=1.0, format="csc")
         ids = np.random.choice(20, 1000)
 
         cluster_data = visuals._format_cluster_statistics(ids, X, ["a", "b", "c"])

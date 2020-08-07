@@ -1,5 +1,6 @@
 # A small helper class to house functions needed by KeplerMapper.visualize
 import numpy as np
+import scipy.sparse
 from sklearn import preprocessing
 import json
 from collections import defaultdict
@@ -265,6 +266,12 @@ def _format_cluster_statistics(member_ids, X, X_names):
         # Defaults when providing no X_names
         if X_names.shape[0] == 0:
             X_names = np.array(["f_%s" % (i) for i in range(X.shape[1])])
+
+        # be explicit about the allowed sparse formats
+        if scipy.sparse.issparse(X):
+            if X.format not in ["csr", "csc"]:
+                raise ValueError(
+                    f"sparse matrix format must be csr or csc but found {X.format}")
 
         # wrap cluster_X_mean, X_mean, and X_std in np.array(---).squeeze()
         # to get the same treatment for dense and sparse arrays

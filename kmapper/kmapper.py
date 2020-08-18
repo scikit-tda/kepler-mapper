@@ -754,7 +754,6 @@ class KeplerMapper(object):
         mapper_data = format_mapper_data(
             graph,
             color_function,
-            colorscale,
             X,
             X_names,
             lens,
@@ -762,6 +761,7 @@ class KeplerMapper(object):
             custom_tooltips,
             env,
             nbins,
+            colorscale=colorscale,
         )
 
         histogram = graph_data_distribution(graph, color_function, colorscale)

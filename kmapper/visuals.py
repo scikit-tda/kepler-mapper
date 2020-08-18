@@ -165,7 +165,7 @@ def format_meta(graph, custom_meta=None, color_function_name=None):
 
 
 def format_mapper_data(
-    graph, color_function, colorscale, X, X_names, lens, lens_names, custom_tooltips, env, nbins=10
+        graph, color_function, X, X_names, lens, lens_names, custom_tooltips, env, nbins=10, colorscale=colorscale_default,
 ):
     # import pdb; pdb.set_trace()
     json_dict = {"nodes": [], "links": []}

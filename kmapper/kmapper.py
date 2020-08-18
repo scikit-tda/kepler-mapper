@@ -27,7 +27,7 @@ from .visuals import (
 )
 
 __all__ = [
-    "KeplerMapper", 
+    "KeplerMapper",
     "cluster" #expose this to make examples and usage tidier
 ]
 
@@ -35,19 +35,19 @@ __all__ = [
 class KeplerMapper(object):
     """With this class you can build topological networks from (high-dimensional) data.
 
-    1)   	Fit a projection/lens/function to a dataset and transform it.
+    1)          Fit a projection/lens/function to a dataset and transform it.
                 For instance "mean_of_row(x) for x in X"
-    2)   	Map this projection with overlapping intervals/hypercubes.
+    2)          Map this projection with overlapping intervals/hypercubes.
                 Cluster the points inside the interval
                 (Note: we cluster on the inverse image/original data to lessen projection loss).
                 If two clusters/nodes have the same members (due to the overlap), then:
                 connect these with an edge.
-    3)  	Visualize the network using HTML and D3.js.
+    3)          Visualize the network using HTML and D3.js.
 
     KM has a number of nice features, some which get forgotten.
         - ``project``: Some projections it makes sense to use a distance matrix, such as knn_distance_#. Using ``distance_matrix = <metric>`` for a custom metric.
-        - ``fit_transform``: Applies a sequence of projections. Currently, this API is a little confusing and might be changed in the future. 
-    
+        - ``fit_transform``: Applies a sequence of projections. Currently, this API is a little confusing and might be changed in the future.
+
 
 
     """
@@ -60,7 +60,7 @@ class KeplerMapper(object):
 
         verbose: int, default is 0
             Logging level. Currently 3 levels (0,1,2) are supported. For no logging, set `verbose=0`. For some logging, set `verbose=1`. For complete logging, set `verbose=2`.
-            
+
         """
 
         # TODO: move as many of the arguments from fit_transform and map into here.
@@ -97,7 +97,7 @@ class KeplerMapper(object):
             Scaler of the data applied after mapping. Use None for no scaling. Default = preprocessing.MinMaxScaler() if None, do no scaling, else apply scaling to the projection. Default: Min-Max scaling
 
         distance_matrix : Either str or None
-            If not None, then any of ["braycurtis", "canberra", "chebyshev", "cityblock", "correlation", "cosine", "dice", "euclidean", "hamming", "jaccard", "kulsinski", "mahalanobis", "matching", "minkowski", "rogerstanimoto", "russellrao", "seuclidean", "sokalmichener", "sokalsneath", "sqeuclidean", "yule"]. 
+            If not None, then any of ["braycurtis", "canberra", "chebyshev", "cityblock", "correlation", "cosine", "dice", "euclidean", "hamming", "jaccard", "kulsinski", "mahalanobis", "matching", "minkowski", "rogerstanimoto", "russellrao", "seuclidean", "sokalmichener", "sokalsneath", "sqeuclidean", "yule"].
             If False do nothing, else create a squared distance matrix with the chosen metric, before applying the projection.
 
         Returns
@@ -295,7 +295,7 @@ class KeplerMapper(object):
 
         Examples
         --------
-        >>> # Stack / chain projections. You could do this manually, 
+        >>> # Stack / chain projections. You could do this manually,
         >>> # or pipeline with `.fit_transform()`. Works the same as `.project()`,
         >>> # but accepts lists. f(raw text) -> f(tfidf) -> f(isomap 100d) -> f(umap 2d)
         >>> projected_X = mapper.fit_transform(
@@ -396,29 +396,29 @@ class KeplerMapper(object):
         precomputed : Boolean
             Tell Mapper whether the data that you are clustering on is a precomputed distance matrix. If set to
             `True`, the assumption is that you are also telling your `clusterer` that `metric='precomputed'` (which
-            is an argument for DBSCAN among others), which 
+            is an argument for DBSCAN among others), which
             will then cause the clusterer to expect a square distance matrix for each hypercube. `precomputed=True` will give a square matrix
             to the clusterer to fit on for each hypercube.
-            
+
         remove_duplicate_nodes: Boolean
             Removes duplicate nodes before edges are determined. A node is considered to be duplicate
             if it has exactly the same set of points as another node.
 
         nr_cubes: Int
-            
+
             .. deprecated:: 1.1.6
 
                 define Cover explicitly in future versions
 
             The number of intervals/hypercubes to create. Default = 10.
-            
+
         overlap_perc: Float
             .. deprecated:: 1.1.6
 
-                define Cover explicitly in future versions    
+                define Cover explicitly in future versions
 
-            The percentage of overlap "between" the intervals/hypercubes. Default = 0.1. 
-            
+            The percentage of overlap "between" the intervals/hypercubes. Default = 0.1.
+
 
 
         Returns
@@ -436,10 +436,10 @@ class KeplerMapper(object):
         >>> graph = mapper.map(X_projected)
 
         >>> # Use 20 cubes/intervals per projection dimension, with a 50% overlap
-        >>> graph = mapper.map(X_projected, X_inverse, 
+        >>> graph = mapper.map(X_projected, X_inverse,
         >>>                    cover=kmapper.Cover(n_cubes=20, perc_overlap=0.5))
 
-        >>> # Use multiple different cubes/intervals per projection dimension, 
+        >>> # Use multiple different cubes/intervals per projection dimension,
         >>> # And vary the overlap
         >>> graph = mapper.map(X_projected, X_inverse,
         >>>                    cover=km.Cover(n_cubes=[10,20,5],
@@ -545,12 +545,12 @@ class KeplerMapper(object):
                             ).shape[0], i
                         )
                     )
-        
+
                 for pred in np.unique(cluster_predictions):
-                    # if not predicted as noise                       
-                    if pred != -1 and not np.isnan(pred):  
+                    # if not predicted as noise
+                    if pred != -1 and not np.isnan(pred):
                         cluster_id = "cube{}_cluster{}".format(i, int(pred))
-                        
+
                         nodes[cluster_id] = hypercube[:, 0][cluster_predictions == pred].astype(int).tolist()
             elif self.verbose > 1:
                 print("Cube_%s is empty.\n" % (i))
@@ -615,6 +615,7 @@ class KeplerMapper(object):
         self,
         graph,
         color_function=None,
+        colorscale=colorscale_default,
         custom_tooltips=None,
         custom_meta=None,
         path_html="mapper_visualization_output.html",
@@ -637,11 +638,14 @@ class KeplerMapper(object):
         color_function : list or 1d array
             A 1d vector with length equal to number of data points used to build Mapper. Each value should correspond to a value for each data point and color of node is computed as the average value for members in a node.
 
+        colorscale : list
+            Specify the colorscale to use. See visuals.colorscale_default.
+
         path_html : String
             file name for outputing the resulting html.
 
         custom_meta: dict
-            Render (key, value) in the Mapper Summary pane. 
+            Render (key, value) in the Mapper Summary pane.
 
         custom_tooltip: list or array like
             Value to display for each entry in the node. The cluster data pane will display entry for all values in the node. Default is index of data.
@@ -685,7 +689,7 @@ class KeplerMapper(object):
 
         >>> # Customizing the output text
         >>> html = mapper.visualize(
-        >>>     graph, 
+        >>>     graph,
         >>>     path_html="kepler-mapper-output.html",
         >>>     title="Fashion MNIST with UMAP",
         >>>     custom_meta={"Description":"A short description.",
@@ -708,7 +712,7 @@ class KeplerMapper(object):
         >>> # Customizing the tooltips with binary target variables
         >>> X, y = split_data(df)
         >>> html = mapper.visualize(
-        >>>     graph, 
+        >>>     graph,
         >>>     path_html="kepler-mapper-output.html",
         >>>     title="Fashion MNIST with UMAP",
         >>>     custom_tooltips=y
@@ -716,7 +720,7 @@ class KeplerMapper(object):
 
         >>> # Customizing the tooltips with html-strings: locally stored images of an image dataset
         >>> html = mapper.visualize(
-        >>>     graph, 
+        >>>     graph,
         >>>     path_html="kepler-mapper-output.html",
         >>>     title="Fashion MNIST with UMAP",
         >>>     custom_tooltips=np.array(
@@ -750,6 +754,7 @@ class KeplerMapper(object):
         mapper_data = format_mapper_data(
             graph,
             color_function,
+            colorscale,
             X,
             X_names,
             lens,
@@ -758,8 +763,6 @@ class KeplerMapper(object):
             env,
             nbins,
         )
-
-        colorscale = colorscale_default
 
         histogram = graph_data_distribution(graph, color_function, colorscale)
 

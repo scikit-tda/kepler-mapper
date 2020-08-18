@@ -165,7 +165,7 @@ def format_meta(graph, custom_meta=None, color_function_name=None):
 
 
 def format_mapper_data(
-    graph, color_function, X, X_names, lens, lens_names, custom_tooltips, env, nbins=10
+    graph, color_function, colorscale, X, X_names, lens, lens_names, custom_tooltips, env, nbins=10
 ):
     # import pdb; pdb.set_trace()
     json_dict = {"nodes": [], "links": []}
@@ -184,6 +184,7 @@ def format_mapper_data(
             lens,
             lens_names,
             color_function,
+            colorscale,
             node_id,
             nbins,
         )
@@ -210,12 +211,9 @@ def format_mapper_data(
     return json_dict
 
 
-def build_histogram(data, colorscale=None, nbins=10):
+def build_histogram(data, colorscale=colorscale_default, nbins=10):
     """ Build histogram of data based on values of color_function
     """
-
-    if colorscale is None:
-        colorscale = colorscale_default
 
     # TODO: we should weave this method of handling colors into the normal build_histogram and combine both functions
     colorscale = _colors_to_rgb(colorscale)
@@ -377,6 +375,7 @@ def _format_tooltip(
     lens,
     lens_names,
     color_function,
+    colorscale,
     node_ID,
     nbins,
 ):
@@ -389,8 +388,6 @@ def _format_tooltip(
 
     # list will render better than numpy arrays
     custom_tooltips = list(custom_tooltips)
-
-    colorscale = colorscale_default
 
     projection_stats, cluster_stats, histogram = _tooltip_components(
         member_ids,

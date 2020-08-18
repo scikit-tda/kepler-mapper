@@ -615,7 +615,7 @@ class KeplerMapper(object):
         self,
         graph,
         color_function=None,
-        colorscale=colorscale_default,
+        colorscale=None,
         custom_tooltips=None,
         custom_meta=None,
         path_html="mapper_visualization_output.html",
@@ -729,6 +729,8 @@ class KeplerMapper(object):
         >>> )
 
         """
+        if colorscale is None:
+            colorscale = colorscale_default
 
         # TODO:
         #   - Make color functions more intuitive. How do they even work?

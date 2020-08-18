@@ -165,8 +165,11 @@ def format_meta(graph, custom_meta=None, color_function_name=None):
 
 
 def format_mapper_data(
-        graph, color_function, X, X_names, lens, lens_names, custom_tooltips, env, nbins=10, colorscale=colorscale_default,
+        graph, color_function, X, X_names, lens, lens_names, custom_tooltips, env, nbins=10, colorscale=None,
 ):
+    if colorscale is None:
+        colorscale = colorscale_default
+
     # import pdb; pdb.set_trace()
     json_dict = {"nodes": [], "links": []}
     node_id_to_num = {}
@@ -211,9 +214,11 @@ def format_mapper_data(
     return json_dict
 
 
-def build_histogram(data, colorscale=colorscale_default, nbins=10):
+def build_histogram(data, colorscale=None, nbins=10):
     """ Build histogram of data based on values of color_function
     """
+    if colorscale is None:
+        colorscale = colorscale_default
 
     # TODO: we should weave this method of handling colors into the normal build_histogram and combine both functions
     colorscale = _colors_to_rgb(colorscale)

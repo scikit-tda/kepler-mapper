@@ -60,11 +60,49 @@ palette = [
 
 def colorscale_from_matplotlib_cmap(cmap, ii_off=0, ff_off=0, nbins=10):
     """Create a colorscale from a matplotlib colormap.
-    see https://matplotlib.org/tutorials/colors/colormaps.html
 
-    Example:
-      import matplotlib.pyplot as plt
-      colorscale = colorscale_from_matplotlib_cmap(plt.cm.cool)
+    See https://matplotlib.org/tutorials/colors/colormaps.html
+    for more details about matplotlib colormaps.
+
+    Parameters
+    ----------
+
+    cmap : matplotlib.colors.LinearSegmentedColormap
+        A matplotlib colormap
+
+    ii_off : int
+        The starting index offset to use when sampling the matplotlib
+        colormap. Must be in the range 0-255.
+
+    ff_off : int
+        The ending index offset to use when sampling the matplotlib
+        colormap. Must be in the range 0-255.
+
+    nbins : int
+        Number of bins (i.e. samples of the colormap) to take when
+        constructing the colorscale.
+
+    Returns
+    -------
+
+    colorscale
+        A colorscale
+
+    Examples
+    --------
+
+    >>> import matplotlib.pyplot as plt
+    >>> # use a non-truncated colormap
+    >>> colorscale = colorscale_from_matplotlib_cmap(plt.cm.cool)
+
+    >>> import matplotlib.pyplot as plt
+    >>> # skip the first 10% of the matplotlib colormap
+    >>> colorscale = colorscale_from_matplotlib_cmap(plt.cm.cool, ii_off=255//10)
+
+    >>> import matplotlib.pyplot as plt
+    >>> # skip the last 10% of the matplotlib colormap
+    >>> colorscale = colorscale_from_matplotlib_cmap(plt.cm.cool, ff_off=255//10)
+
     """
     ii = 0 + ii_off
     ff = cmap.N - ff_off

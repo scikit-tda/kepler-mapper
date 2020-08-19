@@ -58,6 +58,21 @@ palette = [
 ]
 
 
+def colorscale_from_matplotlib_cmap(cmap, ii_off=0, ff_off=0, nbins=10):
+    ii = 0 + ii_off
+    ff = cmap.N - ff_off
+    sk = (cmap.N - ii_off - ff_off) // (nbins + 1)
+    cmap_list = [
+        cmap(el) for el in np.arange(cmap.N)[ii:ff:sk]
+    ]
+    rgb_strings = [
+        "rgb({}, {}, {})".format(
+            int(255 * el[0]), int(255 * el[1]), int(255 * el[2])
+        ) for el in cmap_list
+    ]
+    return list(zip(np.arange(nbins + 1) / nbins, rgb_strings))
+
+
 def _colors_to_rgb(colorscale):
     """ Ensure that the color scale is formatted in rgb strings.
         If the colorscale is a hex string, then convert to rgb.

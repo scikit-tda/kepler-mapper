@@ -72,7 +72,7 @@ This example generates a Mapper built from a point-cloud sampled from a 3D model
        > Found 1 clusters in hypercube 28.
        > Found 1 clusters in hypercube 29.
 
-    Created 48 edges and 48 nodes in 0:00:00.104781.
+    Created 48 edges and 48 nodes in 0:00:00.107431.
     Wrote visualization to: output/horse.html
 
 

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>kmapper.jupyter &#8212; KeplerMapper 1.4.0 documentation</title>
+    <title>kmapper.visuals.colorscale_from_matplotlib_cmap &#8212; KeplerMapper 1.4.0 documentation</title>
     <link rel="stylesheet" href="../../_static/better.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
@@ -19,8 +19,8 @@
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="kmapper.plotlyviz.plotlyviz" href="kmapper.plotlyviz.plotlyviz.html" />
-    <link rel="prev" title="kmapper.GraphNerve" href="kmapper.GraphNerve.html" />
+    <link rel="next" title="kmapper.adapter" href="kmapper.adapter.html" />
+    <link rel="prev" title="kmapper.draw_matplotlib" href="kmapper.draw_matplotlib.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   </head><body>
     <header id="pageheader">
@@ -38,10 +38,10 @@
     <ul>
         <li>
           &larr;
-          <a href="kmapper.GraphNerve.html" title="Previous document">kmapper.GraphNerve</a>
+          <a href="kmapper.draw_matplotlib.html" title="Previous document">kmapper.draw_matplotlib</a>
         </li>
         <li>
-          <a href="kmapper.plotlyviz.plotlyviz.html" title="Next document">kmapper.plotlyviz.plotlyviz</a>
+          <a href="kmapper.adapter.html" title="Next document">kmapper.adapter</a>
           &rarr;
         </li>
     </ul>
@@ -61,61 +61,48 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="module-kmapper.jupyter">
-<span id="kmapper-jupyter"></span><h1>kmapper.jupyter<a class="headerlink" href="#module-kmapper.jupyter" title="Permalink to this headline">¶</a></h1>
-<p class="rubric">Functions</p>
-<table border="1" class="longtable docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#kmapper.jupyter.display" title="kmapper.jupyter.display"><code class="xref py py-obj docutils literal notranslate"><span class="pre">display</span></code></a>([path_html])</td>
-<td>Displays a html file inside a Jupyter Notebook output cell.</td>
-</tr>
-</tbody>
-</table>
+  <div class="section" id="kmapper-visuals-colorscale-from-matplotlib-cmap">
+<h1>kmapper.visuals.colorscale_from_matplotlib_cmap<a class="headerlink" href="#kmapper-visuals-colorscale-from-matplotlib-cmap" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
-<dt id="kmapper.jupyter.display">
-<code class="descclassname">kmapper.jupyter.</code><code class="descname">display</code><span class="sig-paren">(</span><em>path_html='mapper_visualization_output.html'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kmapper/jupyter.html#display"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.jupyter.display" title="Permalink to this definition">¶</a></dt>
-<dd><p>Displays a html file inside a Jupyter Notebook output cell.</p>
-<blockquote>
-<div><div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Must run <code class="docutils literal notranslate"><span class="pre">KeplerMapper.visualize</span></code> first to generate html. This function will then render that output from a file saved to disk.</p>
-</div>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Thanks to <a class="reference external" href="https://github.com/smartinsightsfromdata">smartinsightsfromdata</a> for the <a class="reference external" href="https://github.com/MLWave/kepler-mapper/issues/10">github issue 10</a> that suggested this method.</p>
-</div>
-</div></blockquote>
+<dt id="kmapper.visuals.colorscale_from_matplotlib_cmap">
+<code class="descclassname">kmapper.visuals.</code><code class="descname">colorscale_from_matplotlib_cmap</code><span class="sig-paren">(</span><em>cmap</em>, <em>ii_off=0</em>, <em>ff_off=0</em>, <em>nbins=10</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kmapper/visuals.html#colorscale_from_matplotlib_cmap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.visuals.colorscale_from_matplotlib_cmap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a colorscale from a matplotlib colormap.</p>
+<p>See <a class="reference external" href="https://matplotlib.org/tutorials/colors/colormaps.html">https://matplotlib.org/tutorials/colors/colormaps.html</a>
+for more details about matplotlib colormaps.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path_html</strong> (<em>str</em>) – Path to html. Use file name for file inside current working
-directory. Use <code class="docutils literal notranslate"><span class="pre">file://</span></code> browser url-format for path to local file.
-Use <code class="docutils literal notranslate"><span class="pre">https://</span></code> urls for externally hosted resources.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>cmap</strong> (<em>matplotlib.colors.LinearSegmentedColormap</em>) – A matplotlib colormap</li>
+<li><strong>ii_off</strong> (<em>int</em>) – The starting index offset to use when sampling the matplotlib
+colormap. Must be in the range 0-255.</li>
+<li><strong>ff_off</strong> (<em>int</em>) – The ending index offset to use when sampling the matplotlib
+colormap. Must be in the range 0-255.</li>
+<li><strong>nbins</strong> (<em>int</em>) – Number of bins (i.e. samples of the colormap) to take when
+constructing the colorscale.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>colorscale</em> – A colorscale</p>
+</td>
 </tr>
 </tbody>
 </table>
 <p class="rubric">Examples</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">kmapper</span> <span class="k">as</span> <span class="nn">km</span>
-<span class="kn">from</span> <span class="nn">kmapper.jupyter</span> <span class="k">import</span> <span class="n">display</span>
-
-<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-<span class="n">mapper</span> <span class="o">=</span> <span class="n">km</span><span class="o">.</span><span class="n">KeplerMapper</span><span class="p">()</span>
-<span class="n">lens</span> <span class="o">=</span> <span class="n">km</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-<span class="n">graph</span> <span class="o">=</span> <span class="n">km</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">lens</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">km</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">path_html</span><span class="o">=</span><span class="s2">&quot;filename.html&quot;</span><span class="p">)</span>
-
-<span class="n">display</span><span class="p">(</span><span class="s2">&quot;filename.html&quot;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># use a non-truncated colormap</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">colorscale</span> <span class="o">=</span> <span class="n">colorscale_from_matplotlib_cmap</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">cool</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The default filename is the same default as the <code class="docutils literal notranslate"><span class="pre">.visualize</span></code> method, so using both without arguments will show the last constructed graph:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">_</span> <span class="o">=</span> <span class="n">km</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">display</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># skip the first 10% of the matplotlib colormap</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">colorscale</span> <span class="o">=</span> <span class="n">colorscale_from_matplotlib_cmap</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">cool</span><span class="p">,</span> <span class="n">ii_off</span><span class="o">=</span><span class="mi">255</span><span class="o">//</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># skip the last 10% of the matplotlib colormap</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">colorscale</span> <span class="o">=</span> <span class="n">colorscale_from_matplotlib_cmap</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">cool</span><span class="p">,</span> <span class="n">ff_off</span><span class="o">=</span><span class="mi">255</span><span class="o">//</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -157,11 +144,11 @@ Use <code class="docutils literal notranslate"><span class="pre">https://</span>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../index.html#kepler-mapper">Kepler Mapper</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html#visuals">Visuals</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">kmapper.jupyter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kmapper.jupyter.html">kmapper.jupyter</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kmapper.plotlyviz.plotlyviz.html">kmapper.plotlyviz.plotlyviz</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kmapper.plotlyviz.mpl_to_plotly.html">kmapper.plotlyviz.mpl_to_plotly</a></li>
 <li class="toctree-l3"><a class="reference internal" href="kmapper.draw_matplotlib.html">kmapper.draw_matplotlib</a></li>
-<li class="toctree-l3"><a class="reference internal" href="kmapper.visuals.colorscale_from_matplotlib_cmap.html">kmapper.visuals.colorscale_from_matplotlib_cmap</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">kmapper.visuals.colorscale_from_matplotlib_cmap</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#adapters">Adapters</a></li>
@@ -192,10 +179,10 @@ Use <code class="docutils literal notranslate"><span class="pre">https://</span>
     <ul>
         <li>
           &larr;
-          <a href="kmapper.GraphNerve.html" title="Previous document">kmapper.GraphNerve</a>
+          <a href="kmapper.draw_matplotlib.html" title="Previous document">kmapper.draw_matplotlib</a>
         </li>
         <li>
-          <a href="kmapper.plotlyviz.plotlyviz.html" title="Next document">kmapper.plotlyviz.plotlyviz</a>
+          <a href="kmapper.adapter.html" title="Next document">kmapper.adapter</a>
           &rarr;
         </li>
     </ul>

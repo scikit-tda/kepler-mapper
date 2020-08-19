@@ -5,9 +5,9 @@
 
 Computation times
 =================
-**00:16.147** total execution time for **generated_gallery** files:
+**00:15.855** total execution time for **generated_gallery** files:
 
-- **00:13.309**: :ref:`sphx_glr_generated_gallery_plot_digits.py` (``plot_digits.py``)
-- **00:01.765**: :ref:`sphx_glr_generated_gallery_plot_breast_cancer.py` (``plot_breast_cancer.py``)
-- **00:00.593**: :ref:`sphx_glr_generated_gallery_plot_cat.py` (``plot_cat.py``)
+- **00:13.125**: :ref:`sphx_glr_generated_gallery_plot_digits.py` (``plot_digits.py``)
+- **00:01.752**: :ref:`sphx_glr_generated_gallery_plot_breast_cancer.py` (``plot_breast_cancer.py``)
+- **00:00.499**: :ref:`sphx_glr_generated_gallery_plot_cat.py` (``plot_cat.py``)
 - **00:00.479**: :ref:`sphx_glr_generated_gallery_plot_horse.py` (``plot_horse.py``)

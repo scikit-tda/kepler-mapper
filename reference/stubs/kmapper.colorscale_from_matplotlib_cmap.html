@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>kmapper.draw_matplotlib &#8212; KeplerMapper 1.4.0 documentation</title>
+    <title>kmapper.colorscale_from_matplotlib_cmap &#8212; KeplerMapper 1.4.0 documentation</title>
     <link rel="stylesheet" href="../../_static/better.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
@@ -19,8 +19,6 @@
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="kmapper.visuals.colorscale_from_matplotlib_cmap" href="kmapper.visuals.colorscale_from_matplotlib_cmap.html" />
-    <link rel="prev" title="kmapper.plotlyviz.mpl_to_plotly" href="kmapper.plotlyviz.mpl_to_plotly.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   </head><body>
     <header id="pageheader">
@@ -36,22 +34,11 @@
   <div class="related top">
   <nav id="rellinks">
     <ul>
-        <li>
-          &larr;
-          <a href="kmapper.plotlyviz.mpl_to_plotly.html" title="Previous document">kmapper.plotlyviz.mpl_to_plotly</a>
-        </li>
-        <li>
-          <a href="kmapper.visuals.colorscale_from_matplotlib_cmap.html" title="Next document">kmapper.visuals.colorscale_from_matplotlib_cmap</a>
-          &rarr;
-        </li>
     </ul>
   </nav>
   <nav id="breadcrumbs">
     <ul>
-      <li><a href="../../index.html">KeplerMapper</a></li>
-      <li>
-        <a href="../index.html">API Reference</a>
-      </li> 
+      <li><a href="../../index.html">KeplerMapper</a></li> 
     </ul>
   </nav>
   </div>  
@@ -61,38 +48,50 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="kmapper-draw-matplotlib">
-<h1>kmapper.draw_matplotlib<a class="headerlink" href="#kmapper-draw-matplotlib" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="kmapper-colorscale-from-matplotlib-cmap">
+<h1>kmapper.colorscale_from_matplotlib_cmap<a class="headerlink" href="#kmapper-colorscale-from-matplotlib-cmap" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
-<dt id="kmapper.draw_matplotlib">
-<code class="descclassname">kmapper.</code><code class="descname">draw_matplotlib</code><span class="sig-paren">(</span><em>g</em>, <em>ax=None</em>, <em>fig=None</em>, <em>layout='kk'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kmapper/drawing.html#draw_matplotlib"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.draw_matplotlib" title="Permalink to this definition">¶</a></dt>
-<dd><p>Draw the graph using NetworkX drawing functionality.</p>
+<dt id="kmapper.visuals.colorscale_from_matplotlib_cmap">
+<code class="descclassname">kmapper.visuals.</code><code class="descname">colorscale_from_matplotlib_cmap</code><span class="sig-paren">(</span><em>cmap</em>, <em>ii_off=0</em>, <em>ff_off=0</em>, <em>nbins=10</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kmapper/visuals.html#colorscale_from_matplotlib_cmap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kmapper.visuals.colorscale_from_matplotlib_cmap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a colorscale from a matplotlib colormap.</p>
+<p>See <a class="reference external" href="https://matplotlib.org/tutorials/colors/colormaps.html">https://matplotlib.org/tutorials/colors/colormaps.html</a>
+for more details about matplotlib colormaps.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>g</strong> (graph object returned by <code class="docutils literal notranslate"><span class="pre">map</span></code>) – The Mapper graph as constructed by <code class="docutils literal notranslate"><span class="pre">KeplerMapper.map</span></code></li>
-<li><strong>ax</strong> (<em>matplotlib Axes object</em>) – A matplotlib axes object to plot graph on. If none, then use <code class="docutils literal notranslate"><span class="pre">plt.gca()</span></code></li>
-<li><strong>fig</strong> (<em>matplotlib Figure object</em>) – A matplotlib Figure object to plot graph on. If none, then use <code class="docutils literal notranslate"><span class="pre">plt.figure()</span></code></li>
-<li><strong>layout</strong> (<em>string</em>) – <p>Key for which of NetworkX’s layout functions.
-Key options implemented are:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;kk&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">kamada_kawai_layout</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;spring&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">spring_layout</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;bi&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">bipartite_layout</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;circ&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">circular_layout</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;spect&quot;</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">spectral_layout</span>
-</pre></div>
-</div>
-</li>
+<li><strong>cmap</strong> (<em>matplotlib.colors.LinearSegmentedColormap</em>) – A matplotlib colormap</li>
+<li><strong>ii_off</strong> (<em>int</em>) – The starting index offset to use when sampling the matplotlib
+colormap. Must be in the range 0-255.</li>
+<li><strong>ff_off</strong> (<em>int</em>) – The ending index offset to use when sampling the matplotlib
+colormap. Must be in the range 0-255.</li>
+<li><strong>nbins</strong> (<em>int</em>) – Number of bins (i.e. samples of the colormap) to take when
+constructing the colorscale.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>nodes</strong> (<em>nx node set object list</em>) – List of nodes constructed with Networkx <code class="docutils literal notranslate"><span class="pre">draw_networkx_nodes</span></code>. This can be used to further customize node attributes.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>colorscale</em> – A colorscale</p>
 </td>
 </tr>
 </tbody>
 </table>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># use a non-truncated colormap</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">colorscale</span> <span class="o">=</span> <span class="n">colorscale_from_matplotlib_cmap</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">cool</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># skip the first 10% of the matplotlib colormap</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">colorscale</span> <span class="o">=</span> <span class="n">colorscale_from_matplotlib_cmap</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">cool</span><span class="p">,</span> <span class="n">ii_off</span><span class="o">=</span><span class="mi">255</span><span class="o">//</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># skip the last 10% of the matplotlib colormap</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">colorscale</span> <span class="o">=</span> <span class="n">colorscale_from_matplotlib_cmap</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">cool</span><span class="p">,</span> <span class="n">ff_off</span><span class="o">=</span><span class="mi">255</span><span class="o">//</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </div>
@@ -124,24 +123,12 @@ Key options implemented are:</p>
 </a> 
 
 <p class="caption"><span class="caption-text">User Guide</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../theory.html">Background</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../applications.html">Applications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../generated/gallery/index.html">KM Examples Gallery</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API Reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../index.html#kepler-mapper">Kepler Mapper</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../index.html#visuals">Visuals</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="kmapper.jupyter.html">kmapper.jupyter</a></li>
-<li class="toctree-l3"><a class="reference internal" href="kmapper.plotlyviz.plotlyviz.html">kmapper.plotlyviz.plotlyviz</a></li>
-<li class="toctree-l3"><a class="reference internal" href="kmapper.plotlyviz.mpl_to_plotly.html">kmapper.plotlyviz.mpl_to_plotly</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">kmapper.draw_matplotlib</a></li>
-<li class="toctree-l3"><a class="reference internal" href="kmapper.visuals.colorscale_from_matplotlib_cmap.html">kmapper.visuals.colorscale_from_matplotlib_cmap</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../index.html#adapters">Adapters</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">API Reference</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Tutorials</span></p>
 <ul>
@@ -165,22 +152,11 @@ Key options implemented are:</p>
   <div class="related bottom">
   <nav id="rellinks">
     <ul>
-        <li>
-          &larr;
-          <a href="kmapper.plotlyviz.mpl_to_plotly.html" title="Previous document">kmapper.plotlyviz.mpl_to_plotly</a>
-        </li>
-        <li>
-          <a href="kmapper.visuals.colorscale_from_matplotlib_cmap.html" title="Next document">kmapper.visuals.colorscale_from_matplotlib_cmap</a>
-          &rarr;
-        </li>
     </ul>
   </nav>
   <nav id="breadcrumbs">
     <ul>
-      <li><a href="../../index.html">KeplerMapper</a></li>
-      <li>
-        <a href="../index.html">API Reference</a>
-      </li> 
+      <li><a href="../../index.html">KeplerMapper</a></li> 
     </ul>
   </nav>
   </div>

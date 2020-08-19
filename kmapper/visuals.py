@@ -58,6 +58,75 @@ palette = [
 ]
 
 
+def colorscale_from_matplotlib_cmap(cmap, ii_off=0, ff_off=0, nbins=10):
+    """Create a colorscale from a matplotlib colormap.
+
+    See https://matplotlib.org/tutorials/colors/colormaps.html
+    for more details about matplotlib colormaps.
+
+    Parameters
+    ----------
+
+    cmap : matplotlib.colors.LinearSegmentedColormap
+        A matplotlib colormap
+
+    ii_off : int
+        The starting index offset to use when sampling the matplotlib
+        colormap. Must be in the range 0-255.
+
+    ff_off : int
+        The ending index offset to use when sampling the matplotlib
+        colormap. Must be in the range 0-255.
+
+    nbins : int
+        Number of bins (i.e. samples of the colormap) to take when
+        constructing the colorscale.
+
+    Returns
+    -------
+
+    colorscale
+        A colorscale
+
+    Examples
+    --------
+
+    >>> import matplotlib.pyplot as plt
+    >>> # use a non-truncated colormap
+    >>> colorscale = colorscale_from_matplotlib_cmap(plt.cm.cool)
+
+    >>> import matplotlib.pyplot as plt
+    >>> # skip the first 10% of the matplotlib colormap
+    >>> colorscale = colorscale_from_matplotlib_cmap(plt.cm.cool, ii_off=255//10)
+
+    >>> import matplotlib.pyplot as plt
+    >>> # skip the last 10% of the matplotlib colormap
+    >>> colorscale = colorscale_from_matplotlib_cmap(plt.cm.cool, ff_off=255//10)
+
+    """
+    if cmap.N != 256:
+        raise ValueError("Not implemented for colormaps with cmap.N != 256")
+
+    if ii_off + ff_off > 256:
+        raise ValueError("ii_off + ff_off must be less than 256")
+
+    ii = 0 + ii_off
+    ff = cmap.N - ff_off
+    sk = (cmap.N - ii_off - ff_off) // (nbins + 1)
+    cmap_list = [
+        cmap(el) for el in np.arange(cmap.N)[ii:ff:sk]
+    ]
+    rgb_strings = [
+        "rgb({}, {}, {})".format(
+            int(255 * el[0]), int(255 * el[1]), int(255 * el[2])
+        ) for el in cmap_list
+    ]
+    if len(cmap_list) != nbins + 1:
+        raise ValueError("Failed to build correct size colorscale")
+
+    return list(zip(np.arange(nbins + 1) / nbins, rgb_strings))
+
+
 def _colors_to_rgb(colorscale):
     """ Ensure that the color scale is formatted in rgb strings.
         If the colorscale is a hex string, then convert to rgb.
@@ -165,8 +234,11 @@ def format_meta(graph, custom_meta=None, color_function_name=None):
 
 
 def format_mapper_data(
-    graph, color_function, X, X_names, lens, lens_names, custom_tooltips, env, nbins=10
+        graph, color_function, X, X_names, lens, lens_names, custom_tooltips, env, nbins=10, colorscale=None,
 ):
+    if colorscale is None:
+        colorscale = colorscale_default
+
     # import pdb; pdb.set_trace()
     json_dict = {"nodes": [], "links": []}
     node_id_to_num = {}
@@ -184,6 +256,7 @@ def format_mapper_data(
             lens,
             lens_names,
             color_function,
+            colorscale,
             node_id,
             nbins,
         )
@@ -213,7 +286,6 @@ def format_mapper_data(
 def build_histogram(data, colorscale=None, nbins=10):
     """ Build histogram of data based on values of color_function
     """
-
     if colorscale is None:
         colorscale = colorscale_default
 
@@ -377,6 +449,7 @@ def _format_tooltip(
     lens,
     lens_names,
     color_function,
+    colorscale,
     node_ID,
     nbins,
 ):
@@ -389,8 +462,6 @@ def _format_tooltip(
 
     # list will render better than numpy arrays
     custom_tooltips = list(custom_tooltips)
-
-    colorscale = colorscale_default
 
     projection_stats, cluster_stats, histogram = _tooltip_components(
         member_ids,

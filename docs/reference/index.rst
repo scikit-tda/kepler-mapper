@@ -37,6 +37,7 @@ There are many ways to visualize your constructed Mapper. The original and most 
     plotlyviz.plotlyviz
     plotlyviz.mpl_to_plotly
     draw_matplotlib
+    visuals.colorscale_from_matplotlib_cmap
 
 
 Adapters

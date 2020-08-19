@@ -104,6 +104,12 @@ def colorscale_from_matplotlib_cmap(cmap, ii_off=0, ff_off=0, nbins=10):
     >>> colorscale = colorscale_from_matplotlib_cmap(plt.cm.cool, ff_off=255//10)
 
     """
+    if cmap.N != 256:
+        raise ValueError("Not implemented for colormaps with cmap.N != 256")
+
+    if ii_off + ff_off > 256:
+        raise ValueError("ii_off + ff_off must be less than 256")
+
     ii = 0 + ii_off
     ff = cmap.N - ff_off
     sk = (cmap.N - ii_off - ff_off) // (nbins + 1)
@@ -115,6 +121,9 @@ def colorscale_from_matplotlib_cmap(cmap, ii_off=0, ff_off=0, nbins=10):
             int(255 * el[0]), int(255 * el[1]), int(255 * el[2])
         ) for el in cmap_list
     ]
+    if len(cmap_list) != nbins + 1:
+        raise ValueError("Failed to build correct size colorscale")
+
     return list(zip(np.arange(nbins + 1) / nbins, rgb_strings))
 
 

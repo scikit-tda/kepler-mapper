@@ -59,6 +59,14 @@ palette = [
 
 
 def colorscale_from_matplotlib_cmap(cmap, ii_off=0, ff_off=0, nbins=10):
+    """Create a colorscale from a matplotlib colormap.
+    see https://matplotlib.org/tutorials/colors/colormaps.html
+
+    Example:
+      import matplotlib.pyplot as plt
+      cmap = plt.cm.cool
+      colorscale = colorscale_from_matplotlib_cmap(plt.cm.cool)
+    """
     ii = 0 + ii_off
     ff = cmap.N - ff_off
     sk = (cmap.N - ii_off - ff_off) // (nbins + 1)

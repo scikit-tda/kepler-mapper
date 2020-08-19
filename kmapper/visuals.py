@@ -64,7 +64,6 @@ def colorscale_from_matplotlib_cmap(cmap, ii_off=0, ff_off=0, nbins=10):
 
     Example:
       import matplotlib.pyplot as plt
-      cmap = plt.cm.cool
       colorscale = colorscale_from_matplotlib_cmap(plt.cm.cool)
     """
     ii = 0 + ii_off

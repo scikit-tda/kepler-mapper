@@ -194,7 +194,7 @@ For an interactive exploration of lens for the breast cancer, see the `Choosing 
        > Found 2 clusters in hypercube 105.
        > Found 2 clusters in hypercube 106.
 
-    Created 297 edges and 154 nodes in 0:00:00.828818.
+    Created 297 edges and 154 nodes in 0:00:00.805196.
     Wrote visualization to: output/breast-cancer.html
 
 
@@ -258,7 +258,7 @@ For an interactive exploration of lens for the breast cancer, see the `Choosing 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.926 seconds)
+   **Total running time of the script:** ( 0 minutes  1.765 seconds)
 
 
 .. _sphx_glr_download_generated_gallery_plot_breast_cancer.py:

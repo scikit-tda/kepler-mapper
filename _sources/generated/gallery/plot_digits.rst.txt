@@ -45,33 +45,33 @@ This digits example shows two ways of customizing the tooltips options in the HT
 
     [t-SNE] Computing 91 nearest neighbors...
     [t-SNE] Indexed 1797 samples in 0.002s...
-    [t-SNE] Computed neighbors for 1797 samples in 0.311s...
+    [t-SNE] Computed neighbors for 1797 samples in 0.280s...
     [t-SNE] Computed conditional probabilities for sample 1000 / 1797
     [t-SNE] Computed conditional probabilities for sample 1797 / 1797
     [t-SNE] Mean sigma: 8.121136
-    [t-SNE] Computed conditional probabilities in 0.089s
-    [t-SNE] Iteration 50: error = 75.5607758, gradient norm = 0.1324439 (50 iterations in 0.987s)
-    [t-SNE] Iteration 100: error = 64.0872498, gradient norm = 0.0531824 (50 iterations in 0.569s)
-    [t-SNE] Iteration 150: error = 62.6140709, gradient norm = 0.0351771 (50 iterations in 0.554s)
-    [t-SNE] Iteration 200: error = 62.1142731, gradient norm = 0.0276543 (50 iterations in 0.543s)
-    [t-SNE] Iteration 250: error = 61.8839035, gradient norm = 0.0306578 (50 iterations in 0.542s)
-    [t-SNE] KL divergence after 250 iterations with early exaggeration: 61.883904
-    [t-SNE] Iteration 300: error = 1.0669582, gradient norm = 0.0009094 (50 iterations in 0.526s)
-    [t-SNE] Iteration 350: error = 0.8864648, gradient norm = 0.0004199 (50 iterations in 0.513s)
-    [t-SNE] Iteration 400: error = 0.8296416, gradient norm = 0.0002803 (50 iterations in 0.509s)
-    [t-SNE] Iteration 450: error = 0.8034588, gradient norm = 0.0002075 (50 iterations in 0.510s)
-    [t-SNE] Iteration 500: error = 0.7891181, gradient norm = 0.0001700 (50 iterations in 0.511s)
-    [t-SNE] Iteration 550: error = 0.7798692, gradient norm = 0.0001618 (50 iterations in 0.513s)
-    [t-SNE] Iteration 600: error = 0.7733858, gradient norm = 0.0001280 (50 iterations in 0.513s)
-    [t-SNE] Iteration 650: error = 0.7688195, gradient norm = 0.0001267 (50 iterations in 0.505s)
-    [t-SNE] Iteration 700: error = 0.7650961, gradient norm = 0.0001246 (50 iterations in 0.502s)
-    [t-SNE] Iteration 750: error = 0.7622283, gradient norm = 0.0001175 (50 iterations in 0.500s)
-    [t-SNE] Iteration 800: error = 0.7591587, gradient norm = 0.0001101 (50 iterations in 0.498s)
-    [t-SNE] Iteration 850: error = 0.7565409, gradient norm = 0.0001135 (50 iterations in 0.497s)
-    [t-SNE] Iteration 900: error = 0.7549771, gradient norm = 0.0001124 (50 iterations in 0.492s)
-    [t-SNE] Iteration 950: error = 0.7535065, gradient norm = 0.0000926 (50 iterations in 0.484s)
-    [t-SNE] Iteration 1000: error = 0.7522733, gradient norm = 0.0000857 (50 iterations in 0.485s)
-    [t-SNE] KL divergence after 1000 iterations: 0.752273
+    [t-SNE] Computed conditional probabilities in 0.097s
+    [t-SNE] Iteration 50: error = 75.2072525, gradient norm = 0.1071177 (50 iterations in 1.166s)
+    [t-SNE] Iteration 100: error = 65.0956268, gradient norm = 0.0682651 (50 iterations in 0.584s)
+    [t-SNE] Iteration 150: error = 63.1726723, gradient norm = 0.0428717 (50 iterations in 0.566s)
+    [t-SNE] Iteration 200: error = 62.5427361, gradient norm = 0.0321822 (50 iterations in 0.568s)
+    [t-SNE] Iteration 250: error = 62.2195358, gradient norm = 0.0336390 (50 iterations in 0.573s)
+    [t-SNE] KL divergence after 250 iterations with early exaggeration: 62.219536
+    [t-SNE] Iteration 300: error = 1.0665025, gradient norm = 0.0009114 (50 iterations in 0.525s)
+    [t-SNE] Iteration 350: error = 0.8894913, gradient norm = 0.0005234 (50 iterations in 0.525s)
+    [t-SNE] Iteration 400: error = 0.8336146, gradient norm = 0.0002797 (50 iterations in 0.497s)
+    [t-SNE] Iteration 450: error = 0.8091984, gradient norm = 0.0002115 (50 iterations in 0.506s)
+    [t-SNE] Iteration 500: error = 0.7946162, gradient norm = 0.0001706 (50 iterations in 0.510s)
+    [t-SNE] Iteration 550: error = 0.7847141, gradient norm = 0.0001490 (50 iterations in 0.513s)
+    [t-SNE] Iteration 600: error = 0.7773276, gradient norm = 0.0001349 (50 iterations in 0.511s)
+    [t-SNE] Iteration 650: error = 0.7723792, gradient norm = 0.0001278 (50 iterations in 0.511s)
+    [t-SNE] Iteration 700: error = 0.7684152, gradient norm = 0.0001049 (50 iterations in 0.509s)
+    [t-SNE] Iteration 750: error = 0.7650824, gradient norm = 0.0001085 (50 iterations in 0.519s)
+    [t-SNE] Iteration 800: error = 0.7622710, gradient norm = 0.0000991 (50 iterations in 0.512s)
+    [t-SNE] Iteration 850: error = 0.7597861, gradient norm = 0.0000905 (50 iterations in 0.512s)
+    [t-SNE] Iteration 900: error = 0.7575140, gradient norm = 0.0000917 (50 iterations in 0.515s)
+    [t-SNE] Iteration 950: error = 0.7555446, gradient norm = 0.0000987 (50 iterations in 0.517s)
+    [t-SNE] Iteration 1000: error = 0.7538162, gradient norm = 0.0000826 (50 iterations in 0.517s)
+    [t-SNE] KL divergence after 1000 iterations: 0.753816
 
     ..Scaling with: MinMaxScaler(copy=True, feature_range=(0, 1))
 
@@ -81,56 +81,61 @@ This digits example shows two ways of customizing the tooltips options in the HT
     Creating 1225 hypercubes.
     Cube_0 is empty.
 
-    Cube_1 is empty.
-
-    Cube_2 is empty.
-
+       > Found 1 clusters in hypercube 1.
+       > Found 1 clusters in hypercube 2.
     Cube_3 is empty.
 
-       > Found 1 clusters in hypercube 4.
-       > Found 1 clusters in hypercube 5.
-    Cube_6 is empty.
+    Cube_4 is empty.
 
-    Cube_7 is empty.
+    Cube_5 is empty.
 
+       > Found 1 clusters in hypercube 6.
+       > Found 1 clusters in hypercube 7.
     Cube_8 is empty.
 
-       > Found 1 clusters in hypercube 9.
+    Cube_9 is empty.
+
     Cube_10 is empty.
 
-    Cube_11 is empty.
-
-    Cube_12 is empty.
-
+       > Found 1 clusters in hypercube 11.
+       > Found 1 clusters in hypercube 12.
        > Found 1 clusters in hypercube 13.
        > Found 1 clusters in hypercube 14.
-       > Found 1 clusters in hypercube 15.
-       > Found 1 clusters in hypercube 16.
-       > Found 1 clusters in hypercube 17.
-    Cube_18 is empty.
+    Cube_15 is empty.
 
-    Cube_19 is empty.
+    Cube_16 is empty.
 
+    Cube_17 is empty.
+
+       > Found 1 clusters in hypercube 18.
+       > Found 1 clusters in hypercube 19.
        > Found 1 clusters in hypercube 20.
        > Found 1 clusters in hypercube 21.
-       > Found 1 clusters in hypercube 22.
+    Cube_22 is empty.
+
     Cube_23 is empty.
 
     Cube_24 is empty.
 
-       > Found 1 clusters in hypercube 25.
+    Cube_25 is empty.
+
        > Found 1 clusters in hypercube 26.
-       > Found 1 clusters in hypercube 27.
-       > Found 1 clusters in hypercube 28.
-       > Found 1 clusters in hypercube 29.
+    Cube_27 is empty.
+
+    Cube_28 is empty.
+
+    Cube_29 is empty.
+
     Cube_30 is empty.
 
     Cube_31 is empty.
 
        > Found 1 clusters in hypercube 32.
        > Found 1 clusters in hypercube 33.
-       > Found 1 clusters in hypercube 34.
-       > Found 1 clusters in hypercube 35.
+    Cube_34 is empty.
+
+    Cube_35 is empty.
+
     Cube_36 is empty.
 
     Cube_37 is empty.
@@ -138,21 +143,23 @@ This digits example shows two ways of customizing the tooltips options in the HT
     Cube_38 is empty.
 
        > Found 1 clusters in hypercube 39.
-       > Found 1 clusters in hypercube 40.
-       > Found 1 clusters in hypercube 41.
+    Cube_40 is empty.
+
+    Cube_41 is empty.
+
        > Found 1 clusters in hypercube 42.
     Cube_43 is empty.
 
     Cube_44 is empty.
 
-       > Found 1 clusters in hypercube 45.
-       > Found 1 clusters in hypercube 46.
+    Cube_45 is empty.
+
+    Cube_46 is empty.
+
     Cube_47 is empty.
 
-    Cube_48 is empty.
-
-    Cube_49 is empty.
-
+       > Found 1 clusters in hypercube 48.
+       > Found 1 clusters in hypercube 49.
     Cube_50 is empty.
 
     Cube_51 is empty.
@@ -169,73 +176,72 @@ This digits example shows two ways of customizing the tooltips options in the HT
 
        > Found 1 clusters in hypercube 57.
        > Found 1 clusters in hypercube 58.
-       > Found 1 clusters in hypercube 59.
+    Cube_59 is empty.
+
     Cube_60 is empty.
 
     Cube_61 is empty.
 
-    Cube_62 is empty.
-
-    Cube_63 is empty.
-
+       > Found 1 clusters in hypercube 62.
+       > Found 1 clusters in hypercube 63.
     Cube_64 is empty.
 
-    Cube_65 is empty.
+       > Found 1 clusters in hypercube 65.
+       > Found 1 clusters in hypercube 66.
+    Cube_67 is empty.
 
-    Cube_66 is empty.
+    Cube_68 is empty.
 
-       > Found 1 clusters in hypercube 67.
-       > Found 1 clusters in hypercube 68.
-       > Found 1 clusters in hypercube 69.
+    Cube_69 is empty.
+
     Cube_70 is empty.
 
     Cube_71 is empty.
 
     Cube_72 is empty.
 
-    Cube_73 is empty.
-
-    Cube_74 is empty.
-
+       > Found 1 clusters in hypercube 73.
+       > Found 1 clusters in hypercube 74.
     Cube_75 is empty.
 
     Cube_76 is empty.
 
     Cube_77 is empty.
 
-    Cube_78 is empty.
-
+       > Found 1 clusters in hypercube 78.
     Cube_79 is empty.
 
     Cube_80 is empty.
 
     Cube_81 is empty.
 
-    Cube_82 is empty.
-
-    Cube_83 is empty.
-
-    Cube_84 is empty.
-
+       > Found 1 clusters in hypercube 82.
+       > Found 1 clusters in hypercube 83.
+       > Found 1 clusters in hypercube 84.
     Cube_85 is empty.
 
-       > Found 1 clusters in hypercube 86.
-       > Found 1 clusters in hypercube 87.
-       > Found 1 clusters in hypercube 88.
+    Cube_86 is empty.
+
+    Cube_87 is empty.
+
+    Cube_88 is empty.
+
     Cube_89 is empty.
 
-    Cube_90 is empty.
-
+       > Found 1 clusters in hypercube 90.
     Cube_91 is empty.
 
     Cube_92 is empty.
 
-    Cube_93 is empty.
+       > Found 1 clusters in hypercube 93.
+    Cube_94 is empty.
 
-       > Found 1 clusters in hypercube 94.
-       > Found 1 clusters in hypercube 95.
-       > Found 1 clusters in hypercube 96.
-       > Found 1 clusters in hypercube 97.
+    Cube_95 is empty.
+
+    Cube_96 is empty.
+
+    Cube_97 is empty.
+
     Cube_98 is empty.
 
     Cube_99 is empty.
@@ -245,45 +251,42 @@ This digits example shows two ways of customizing the tooltips options in the HT
     Cube_101 is empty.
 
        > Found 1 clusters in hypercube 102.
-    Cube_103 is empty.
-
+       > Found 1 clusters in hypercube 103.
     Cube_104 is empty.
 
     Cube_105 is empty.
 
-       > Found 1 clusters in hypercube 106.
+    Cube_106 is empty.
+
     Cube_107 is empty.
 
     Cube_108 is empty.
 
     Cube_109 is empty.
 
-    Cube_110 is empty.
-
-    Cube_111 is empty.
-
-    Cube_112 is empty.
-
+       > Found 1 clusters in hypercube 110.
+       > Found 1 clusters in hypercube 111.
+       > Found 1 clusters in hypercube 112.
     Cube_113 is empty.
 
     Cube_114 is empty.
 
-       > Found 1 clusters in hypercube 115.
+    Cube_115 is empty.
+
        > Found 1 clusters in hypercube 116.
        > Found 1 clusters in hypercube 117.
-    Cube_118 is empty.
-
+       > Found 1 clusters in hypercube 118.
     Cube_119 is empty.
 
     Cube_120 is empty.
 
-    Cube_121 is empty.
-
-    Cube_122 is empty.
-
+       > Found 1 clusters in hypercube 121.
+       > Found 1 clusters in hypercube 122.
        > Found 1 clusters in hypercube 123.
-       > Found 1 clusters in hypercube 124.
-       > Found 1 clusters in hypercube 125.
+    Cube_124 is empty.
+
+    Cube_125 is empty.
+
     Cube_126 is empty.
 
     Cube_127 is empty.
@@ -292,112 +295,92 @@ This digits example shows two ways of customizing the tooltips options in the HT
 
     Cube_129 is empty.
 
-    Cube_130 is empty.
-
-    Cube_131 is empty.
-
-    Cube_132 is empty.
-
+       > Found 1 clusters in hypercube 130.
+       > Found 1 clusters in hypercube 131.
+       > Found 1 clusters in hypercube 132.
     Cube_133 is empty.
 
     Cube_134 is empty.
 
-    Cube_135 is empty.
-
+       > Found 1 clusters in hypercube 135.
        > Found 1 clusters in hypercube 136.
        > Found 1 clusters in hypercube 137.
        > Found 1 clusters in hypercube 138.
     Cube_139 is empty.
 
-    Cube_140 is empty.
-
-    Cube_141 is empty.
-
-    Cube_142 is empty.
-
+       > Found 1 clusters in hypercube 140.
+       > Found 1 clusters in hypercube 141.
+       > Found 1 clusters in hypercube 142.
     Cube_143 is empty.
 
     Cube_144 is empty.
 
     Cube_145 is empty.
 
-    Cube_146 is empty.
-
-    Cube_147 is empty.
-
+       > Found 1 clusters in hypercube 146.
+       > Found 1 clusters in hypercube 147.
     Cube_148 is empty.
 
     Cube_149 is empty.
 
-    Cube_150 is empty.
+       > Found 1 clusters in hypercube 150.
+       > Found 1 clusters in hypercube 151.
+    Cube_152 is empty.
 
-    Cube_151 is empty.
+    Cube_153 is empty.
 
-       > Found 1 clusters in hypercube 152.
-       > Found 1 clusters in hypercube 153.
        > Found 1 clusters in hypercube 154.
-    Cube_155 is empty.
-
-    Cube_156 is empty.
-
-    Cube_157 is empty.
-
-    Cube_158 is empty.
-
+       > Found 1 clusters in hypercube 155.
+       > Found 1 clusters in hypercube 156.
+       > Found 1 clusters in hypercube 157.
+       > Found 1 clusters in hypercube 158.
        > Found 1 clusters in hypercube 159.
     Cube_160 is empty.
 
-       > Found 1 clusters in hypercube 161.
-       > Found 1 clusters in hypercube 162.
-    Cube_163 is empty.
+    Cube_161 is empty.
 
-    Cube_164 is empty.
+    Cube_162 is empty.
 
+       > Found 1 clusters in hypercube 163.
+       > Found 1 clusters in hypercube 164.
     Cube_165 is empty.
 
     Cube_166 is empty.
 
-    Cube_167 is empty.
-
-    Cube_168 is empty.
-
+       > Found 1 clusters in hypercube 167.
+       > Found 1 clusters in hypercube 168.
     Cube_169 is empty.
 
     Cube_170 is empty.
 
-    Cube_171 is empty.
-
-    Cube_172 is empty.
-
+       > Found 1 clusters in hypercube 171.
+       > Found 1 clusters in hypercube 172.
        > Found 1 clusters in hypercube 173.
-    Cube_174 is empty.
-
+       > Found 1 clusters in hypercube 174.
     Cube_175 is empty.
 
     Cube_176 is empty.
 
-       > Found 1 clusters in hypercube 177.
-       > Found 1 clusters in hypercube 178.
+    Cube_177 is empty.
+
+    Cube_178 is empty.
+
     Cube_179 is empty.
 
-    Cube_180 is empty.
-
-    Cube_181 is empty.
-
-    Cube_182 is empty.
-
+       > Found 1 clusters in hypercube 180.
+       > Found 1 clusters in hypercube 181.
+       > Found 1 clusters in hypercube 182.
     Cube_183 is empty.
 
-       > Found 1 clusters in hypercube 184.
-       > Found 1 clusters in hypercube 185.
+    Cube_184 is empty.
+
+    Cube_185 is empty.
+
     Cube_186 is empty.
 
-    Cube_187 is empty.
-
-    Cube_188 is empty.
-
-    Cube_189 is empty.
-
+       > Found 1 clusters in hypercube 187.
+       > Found 1 clusters in hypercube 188.
+       > Found 1 clusters in hypercube 189.
     Cube_190 is empty.
 
     Cube_191 is empty.
@@ -409,15 +392,18 @@ This digits example shows two ways of customizing the tooltips options in the HT
     Cube_194 is empty.
 
        > Found 1 clusters in hypercube 195.
-       > Found 1 clusters in hypercube 196.
+    Cube_196 is empty.
+
     Cube_197 is empty.
 
     Cube_198 is empty.
 
     Cube_199 is empty.
 
-       > Found 1 clusters in hypercube 200.
-       > Found 1 clusters in hypercube 201.
+    Cube_200 is empty.
+
+    Cube_201 is empty.
+
     Cube_202 is empty.
 
     Cube_203 is empty.
@@ -436,84 +422,67 @@ This digits example shows two ways of customizing the tooltips options in the HT
 
     Cube_210 is empty.
 
-    Cube_211 is empty.
-
-    Cube_212 is empty.
-
+       > Found 1 clusters in hypercube 211.
+       > Found 1 clusters in hypercube 212.
     Cube_213 is empty.
 
     Cube_214 is empty.
 
-       > Found 1 clusters in hypercube 215.
-       > Found 1 clusters in hypercube 216.
+    Cube_215 is empty.
+
+    Cube_216 is empty.
+
        > Found 1 clusters in hypercube 217.
        > Found 1 clusters in hypercube 218.
-    Cube_219 is empty.
-
-    Cube_220 is empty.
-
+       > Found 1 clusters in hypercube 219.
+       > Found 1 clusters in hypercube 220.
        > Found 1 clusters in hypercube 221.
     Cube_222 is empty.
 
     Cube_223 is empty.
 
-    Cube_224 is empty.
-
-    Cube_225 is empty.
-
-    Cube_226 is empty.
-
+       > Found 1 clusters in hypercube 224.
+       > Found 1 clusters in hypercube 225.
+       > Found 1 clusters in hypercube 226.
     Cube_227 is empty.
 
-    Cube_228 is empty.
-
-    Cube_229 is empty.
-
-    Cube_230 is empty.
-
-    Cube_231 is empty.
-
-    Cube_232 is empty.
-
-    Cube_233 is empty.
-
+       > Found 1 clusters in hypercube 228.
+       > Found 1 clusters in hypercube 229.
+       > Found 1 clusters in hypercube 230.
+       > Found 1 clusters in hypercube 231.
+       > Found 1 clusters in hypercube 232.
+       > Found 1 clusters in hypercube 233.
     Cube_234 is empty.
 
     Cube_235 is empty.
 
-       > Found 1 clusters in hypercube 236.
-    Cube_237 is empty.
+    Cube_236 is empty.
 
-    Cube_238 is empty.
-
-    Cube_239 is empty.
-
+       > Found 1 clusters in hypercube 237.
+       > Found 1 clusters in hypercube 238.
+       > Found 1 clusters in hypercube 239.
     Cube_240 is empty.
 
-       > Found 1 clusters in hypercube 241.
+    Cube_241 is empty.
+
     Cube_242 is empty.
 
     Cube_243 is empty.
 
-    Cube_244 is empty.
-
+       > Found 1 clusters in hypercube 244.
        > Found 1 clusters in hypercube 245.
        > Found 1 clusters in hypercube 246.
        > Found 1 clusters in hypercube 247.
-    Cube_248 is empty.
-
+       > Found 1 clusters in hypercube 248.
     Cube_249 is empty.
 
     Cube_250 is empty.
 
-    Cube_251 is empty.
-
-    Cube_252 is empty.
-
+       > Found 1 clusters in hypercube 251.
+       > Found 1 clusters in hypercube 252.
     Cube_253 is empty.
 
-    Cube_254 is empty.
-
+       > Found 1 clusters in hypercube 254.
        > Found 1 clusters in hypercube 255.
        > Found 1 clusters in hypercube 256.
        > Found 1 clusters in hypercube 257.
@@ -521,12 +490,11 @@ This digits example shows two ways of customizing the tooltips options in the HT
 
     Cube_259 is empty.
 
-       > Found 1 clusters in hypercube 260.
+    Cube_260 is empty.
+
        > Found 1 clusters in hypercube 261.
-    Cube_262 is empty.
-
-    Cube_263 is empty.
-
+       > Found 1 clusters in hypercube 262.
+       > Found 1 clusters in hypercube 263.
        > Found 1 clusters in hypercube 264.
     Cube_265 is empty.
 
@@ -538,15 +506,15 @@ This digits example shows two ways of customizing the tooltips options in the HT
 
     Cube_269 is empty.
 
-       > Found 1 clusters in hypercube 270.
-       > Found 1 clusters in hypercube 271.
-       > Found 1 clusters in hypercube 272.
-    Cube_273 is empty.
+    Cube_270 is empty.
 
-    Cube_274 is empty.
+    Cube_271 is empty.
 
-    Cube_275 is empty.
+    Cube_272 is empty.
 
+       > Found 1 clusters in hypercube 273.
+       > Found 1 clusters in hypercube 274.
+       > Found 1 clusters in hypercube 275.
     Cube_276 is empty.
 
     Cube_277 is empty.
@@ -555,35 +523,39 @@ This digits example shows two ways of customizing the tooltips options in the HT
 
     Cube_279 is empty.
 
-       > Found 1 clusters in hypercube 280.
-       > Found 1 clusters in hypercube 281.
-       > Found 1 clusters in hypercube 282.
-    Cube_283 is empty.
+    Cube_280 is empty.
 
+    Cube_281 is empty.
+
+    Cube_282 is empty.
+
+       > Found 1 clusters in hypercube 283.
     Cube_284 is empty.
 
-       > Found 1 clusters in hypercube 285.
-       > Found 1 clusters in hypercube 286.
+    Cube_285 is empty.
+
+    Cube_286 is empty.
+
     Cube_287 is empty.
 
     Cube_288 is empty.
 
-       > Found 1 clusters in hypercube 289.
-    Cube_290 is empty.
+    Cube_289 is empty.
 
+       > Found 1 clusters in hypercube 290.
     Cube_291 is empty.
 
     Cube_292 is empty.
 
     Cube_293 is empty.
 
-    Cube_294 is empty.
-
-    Cube_295 is empty.
-
+       > Found 1 clusters in hypercube 294.
+       > Found 1 clusters in hypercube 295.
        > Found 1 clusters in hypercube 296.
-       > Found 1 clusters in hypercube 297.
-       > Found 1 clusters in hypercube 298.
+    Cube_297 is empty.
+
+    Cube_298 is empty.
+
     Cube_299 is empty.
 
     Cube_300 is empty.
@@ -594,7 +566,8 @@ This digits example shows two ways of customizing the tooltips options in the HT
 
     Cube_303 is empty.
 
-       > Found 1 clusters in hypercube 304.
+    Cube_304 is empty.
+
     Cube_305 is empty.
 
     Cube_306 is empty.
@@ -614,19 +587,16 @@ This digits example shows two ways of customizing the tooltips options in the HT
 
        > Found 1 clusters in hypercube 315.
        > Found 1 clusters in hypercube 316.
-       > Found 1 clusters in hypercube 317.
+    Cube_317 is empty.
+
     Cube_318 is empty.
 
     Cube_319 is empty.
 
-    Cube_320 is empty.
-
-    Cube_321 is empty.
-
-    Cube_322 is empty.
-
-    Cube_323 is empty.
-
+       > Found 1 clusters in hypercube 320.
+       > Found 1 clusters in hypercube 321.
+       > Found 1 clusters in hypercube 322.
+       > Found 1 clusters in hypercube 323.
     Cube_324 is empty.
 
     Cube_325 is empty.
@@ -639,24 +609,21 @@ This digits example shows two ways of customizing the tooltips options in the HT
 
     Cube_329 is empty.
 
-    Cube_330 is empty.
-
+       > Found 1 clusters in hypercube 330.
        > Found 1 clusters in hypercube 331.
        > Found 1 clusters in hypercube 332.
-       > Found 1 clusters in hypercube 333.
+    Cube_333 is empty.
+
     Cube_334 is empty.
 
-    Cube_335 is empty.
-
-    Cube_336 is empty.
-
-    Cube_337 is empty.
-
-    Cube_338 is empty.
-
+       > Found 1 clusters in hypercube 335.
+       > Found 1 clusters in hypercube 336.
+       > Found 1 clusters in hypercube 337.
+       > Found 1 clusters in hypercube 338.
     Cube_339 is empty.
 
-       > Found 1 clusters in hypercube 340.
+    Cube_340 is empty.
+
     Cube_341 is empty.
 
     Cube_342 is empty.
@@ -667,12 +634,10 @@ This digits example shows two ways of customizing the tooltips options in the HT
 
     Cube_345 is empty.
 
-    Cube_346 is empty.
-
+       > Found 1 clusters in hypercube 346.
        > Found 1 clusters in hypercube 347.
        > Found 1 clusters in hypercube 348.
-    Cube_349 is empty.
-
+       > Found 1 clusters in hypercube 349.
     Cube_350 is empty.
 
     Cube_351 is empty.
@@ -683,8 +648,7 @@ This digits example shows two ways of customizing the tooltips options in the HT
 
     Cube_354 is empty.
 
-    Cube_355 is empty.
-
+       > Found 1 clusters in hypercube 355.
     Cube_356 is empty.
 
     Cube_357 is empty.
@@ -701,12 +665,9 @@ This digits example shows two ways of customizing the tooltips options in the HT
 
     Cube_363 is empty.
 
-    Cube_364 is empty.
-
-    Cube_365 is empty.
-
-    Cube_366 is empty.
-
+       > Found 1 clusters in hypercube 364.
+       > Found 1 clusters in hypercube 365.
+       > Found 1 clusters in hypercube 366.
     Cube_367 is empty.
 
     Cube_368 is empty.
@@ -717,10 +678,8 @@ This digits example shows two ways of customizing the tooltips options in the HT
 
     Cube_371 is empty.
 
-    Cube_372 is empty.
-
-    Cube_373 is empty.
-
+       > Found 1 clusters in hypercube 372.
+       > Found 1 clusters in hypercube 373.
     Cube_374 is empty.
 
     Cube_375 is empty.
@@ -735,33 +694,28 @@ This digits example shows two ways of customizing the tooltips options in the HT
 
     Cube_380 is empty.
 
-       > Found 1 clusters in hypercube 381.
+    Cube_381 is empty.
+
        > Found 1 clusters in hypercube 382.
        > Found 1 clusters in hypercube 383.
-    Cube_384 is empty.
-
-    Cube_385 is empty.
-
-    Cube_386 is empty.
-
+       > Found 1 clusters in hypercube 384.
+       > Found 1 clusters in hypercube 385.
+       > Found 1 clusters in hypercube 386.
     Cube_387 is empty.
 
-       > Found 1 clusters in hypercube 388.
+    Cube_388 is empty.
+
        > Found 1 clusters in hypercube 389.
        > Found 1 clusters in hypercube 390.
-       > Found 1 clusters in hypercube 391.
+    Cube_391 is empty.
+
     Cube_392 is empty.
 
-    Cube_393 is empty.
-
-    Cube_394 is empty.
-
-    Cube_395 is empty.
-
-    Cube_396 is empty.
-
-    Cube_397 is empty.
-
+       > Found 1 clusters in hypercube 393.
+       > Found 1 clusters in hypercube 394.
+       > Found 1 clusters in hypercube 395.
+       > Found 1 clusters in hypercube 396.
+       > Found 1 clusters in hypercube 397.
     Cube_398 is empty.
 
     Cube_399 is empty.
@@ -772,97 +726,14 @@ This digits example shows two ways of customizing the tooltips options in the HT
 
     Cube_402 is empty.
 
-       > Found 1 clusters in hypercube 403.
+    Cube_403 is empty.
+
        > Found 1 clusters in hypercube 404.
        > Found 1 clusters in hypercube 405.
-       > Found 1 clusters in hypercube 406.
-    Cube_407 is empty.
-
-    Cube_408 is empty.
-
-    Cube_409 is empty.
-
-    Cube_410 is empty.
-
-    Cube_411 is empty.
-
-       > Found 1 clusters in hypercube 412.
-       > Found 1 clusters in hypercube 413.
-    Cube_414 is empty.
-
-    Cube_415 is empty.
-
-    Cube_416 is empty.
-
-    Cube_417 is empty.
-
-       > Found 1 clusters in hypercube 418.
-       > Found 1 clusters in hypercube 419.
-       > Found 1 clusters in hypercube 420.
-    Cube_421 is empty.
-
-    Cube_422 is empty.
-
-       > Found 1 clusters in hypercube 423.
-    Cube_424 is empty.
-
-    Cube_425 is empty.
-
-       > Found 1 clusters in hypercube 426.
-       > Found 1 clusters in hypercube 427.
-    Cube_428 is empty.
-
-    Cube_429 is empty.
-
-       > Found 1 clusters in hypercube 430.
-       > Found 1 clusters in hypercube 431.
-    Cube_432 is empty.
-
-       > Found 1 clusters in hypercube 433.
-       > Found 1 clusters in hypercube 434.
-       > Found 1 clusters in hypercube 435.
-       > Found 1 clusters in hypercube 436.
-       > Found 1 clusters in hypercube 437.
-    Cube_438 is empty.
-
-    Cube_439 is empty.
-
-    Cube_440 is empty.
-
-       > Found 1 clusters in hypercube 441.
-    Cube_442 is empty.
-
-    Cube_443 is empty.
-
-    Cube_444 is empty.
-
-    Cube_445 is empty.
-
-       > Found 1 clusters in hypercube 446.
-       > Found 1 clusters in hypercube 447.
-       > Found 1 clusters in hypercube 448.
-       > Found 1 clusters in hypercube 449.
-    Cube_450 is empty.
-
-    Cube_451 is empty.
-
-       > Found 1 clusters in hypercube 452.
-    Cube_453 is empty.
-
-    Cube_454 is empty.
-
-       > Found 1 clusters in hypercube 455.
-       > Found 1 clusters in hypercube 456.
-    Cube_457 is empty.
-
-    Cube_458 is empty.
-
-    Cube_459 is empty.
-
-    Cube_460 is empty.
+    Cube_406 is empty.
 
 
-    Created 296 edges and 140 nodes in 0:00:00.196013.
+    Created 370 edges and 161 nodes in 0:00:00.212416.
     Output graph examples to html
     Wrote visualization to: output/digits_custom_tooltips.html
     Wrote visualization to: output/digits_ylabel_tooltips.html
@@ -942,7 +813,7 @@ This digits example shows two ways of customizing the tooltips options in the HT
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  12.870 seconds)
+   **Total running time of the script:** ( 0 minutes  13.309 seconds)
 
 
 .. _sphx_glr_download_generated_gallery_plot_digits.py:

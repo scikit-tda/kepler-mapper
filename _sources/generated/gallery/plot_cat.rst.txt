@@ -56,7 +56,7 @@ This example generates a Mapper built from a point-cloud sampled from a 3D model
        > Found 1 clusters in hypercube 13.
        > Found 1 clusters in hypercube 14.
 
-    Created 19 edges and 20 nodes in 0:00:00.125082.
+    Created 19 edges and 20 nodes in 0:00:00.120449.
     Wrote visualization to: output/cat.html
 
 
@@ -95,7 +95,7 @@ This example generates a Mapper built from a point-cloud sampled from a 3D model
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.530 seconds)
+   **Total running time of the script:** ( 0 minutes  0.593 seconds)
 
 
 .. _sphx_glr_download_generated_gallery_plot_cat.py:

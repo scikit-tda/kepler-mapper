@@ -1,4 +1,10 @@
-Alpha
+1.4
+	More flexible visualization coloring (PR 190)
+	Better support for sparse matrices (PR 189)
+	Better support for precomputed distance matrices (PR 184)
+
+1.3
+	A series of releases to support JOSS submission
 
 1.2.1 (In progress)
 	Allow sparse matrices in `map` function (PR #163)

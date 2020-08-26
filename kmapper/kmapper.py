@@ -500,15 +500,12 @@ class KeplerMapper(object):
         # we consider clustering or skipping it.
         cluster_params = clusterer.get_params()
 
-        if precomputed:
-            min_cluster_samples = 2
-        else:
-            min_cluster_samples = cluster_params.get(
-                "n_clusters",
-                cluster_params.get(
-                    "min_cluster_size", cluster_params.get("min_samples", 1)
-                ),
-            )
+        min_cluster_samples = cluster_params.get(
+            "n_clusters",
+            cluster_params.get(
+                "min_cluster_size", cluster_params.get("min_samples", 2)
+            ),
+        )
 
         if self.verbose > 1:
             print(

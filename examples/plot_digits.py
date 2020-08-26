@@ -3,7 +3,7 @@
 Digits Dataset
 ================
 
-This digits example shows two ways of customizing the tooltips options in the HTML visualization. It generates the visualization with tooltips set as the y-label, or number of the image. The second generated result uses the actual image in the tooltips. 
+This digits example shows two ways of customizing the tooltips options in the HTML visualization. It generates the visualization with tooltips set as the y-label, or number of the image. The second generated result uses the actual image in the tooltips.
 
 `Visualization with y-label tooltip <../../_static/digits_ylabel_tooltips.html>`_
 
@@ -63,7 +63,7 @@ print("Output graph examples to html" )
 mapper.visualize(graph,
                  title="Handwritten digits Mapper",
                  path_html="output/digits_custom_tooltips.html",
-                 color_function=labels,
+                 color_values=labels,
                  custom_tooltips=tooltip_s)
 # Tooltips with the target y-labels for every cluster member
 mapper.visualize(graph,

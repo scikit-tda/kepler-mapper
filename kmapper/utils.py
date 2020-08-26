@@ -20,3 +20,8 @@ def rename_kwargs(func_name, kwargs, aliases):
             warnings.warn('{} is deprecated; use {}'.format(alias, new),
                           DeprecationWarning)
             kwargs[new] = kwargs.pop(alias)
+
+def _test_raised_deprecation_warning(w):
+    assert issubclass(w[-1].category, DeprecationWarning)
+    assert "deprecated" in str(w[-1].message)
+    w.pop()

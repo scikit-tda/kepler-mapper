@@ -1,4 +1,4 @@
-""" 
+"""
 
 Tests to ensure the plotly data preparation functions work as intended.
 
@@ -7,6 +7,7 @@ import pytest
 
 import json
 import numpy as np
+from sklearn.datasets import make_circles
 
 from kmapper import KeplerMapper
 from kmapper.plotlyviz import (
@@ -17,8 +18,11 @@ from kmapper.plotlyviz import (
     plotly_graph,
     format_meta,
     _to_html_format,
+    scomplex_to_graph,
 )
+from kmapper.utils import _test_raised_deprecation_warning
 
+import warnings
 
 @pytest.fixture
 def sc():
@@ -71,3 +75,36 @@ def test_to_html_format():
     res = _to_html_format("a\nb\n\n\\n\n")
     assert "\n" not in res
     assert "<br>" in res
+
+def test_color_function_deprecated_replaced():
+    km = KeplerMapper()
+    X, labels = make_circles(1000, random_state=0)
+    lens = km.fit_transform(X, projection=[0])
+    color_values = lens[:, 0]
+    sc = km.map(lens, X)
+    X_names=[]
+    lens_names=[]
+    custom_tooltips = np.array(["customized_%s" % (l) for l in labels])
+
+    with warnings.catch_warnings(record=True) as w:
+        # Cause all warnings to always be triggered.
+        warnings.simplefilter("always")
+
+        # TODO: plotlyviz.plotlyviz
+
+        # plotlyviz.get_mapper_graph
+        json_graph, mapper_summary, colorf_distribution = get_mapper_graph(sc, color_function=color_values)
+        _test_raised_deprecation_warning(w)
+
+        # plotlyviz.scomplex_to_graph
+        _ = scomplex_to_graph(
+            simplicial_complex=sc,
+            color_function=color_values,
+            X=X,
+            X_names=X_names,
+            lens=lens,
+            lens_names=lens_names,
+            custom_tooltips=custom_tooltips,
+            colorscale=default_colorscale,
+        )
+        _test_raised_deprecation_warning(w)

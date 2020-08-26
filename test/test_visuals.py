@@ -15,9 +15,10 @@ from kmapper.visuals import (
     format_mapper_data,
     _map_val2color,
     build_histogram,
+    graph_data_distribution,
     _node_color_function,
 )
-
+from kmapper.utils import _test_raised_deprecation_warning
 import warnings
 
 
@@ -164,19 +165,49 @@ class TestVisualHelpers:
         fmt = format_meta(graph, cm)
         assert fmt["custom_meta"] == cm
 
-    def test_color_function_deprecated_replaced(self):
+    def test_color_function_deprecated_replaced(self, default_colorscale, jinja_env):
         mapper = KeplerMapper()
         data, labels = make_circles(1000, random_state=0)
         lens = mapper.fit_transform(data, projection=[0])
         graph = mapper.map(lens, data)
 
+        color_values = lens[:, 0]
+        inverse_X = data
+        projected_X = lens
+        projected_X_names = ["projected_%s" % (i) for i in range(projected_X.shape[1])]
+        inverse_X_names = ["inverse_%s" % (i) for i in range(inverse_X.shape[1])]
+        custom_tooltips = np.array(["customized_%s" % (l) for l in labels])
+
+
+
+
+
         # https://docs.python.org/3/library/warnings.html#testing-warnings
         with warnings.catch_warnings(record=True) as w:
             # Cause all warnings to always be triggered.
             warnings.simplefilter("always")
+
+            # kmapper.visualize
             html = mapper.visualize(graph, color_function=lens)
-            assert issubclass(w[-1].category, DeprecationWarning)
-            assert "deprecated" in str(w[-1].message)
+            _test_raised_deprecation_warning(w)
+
+            # visuals.format_mapper_data
+            graph_data = format_mapper_data(
+                graph=graph,
+                color_function=color_values,
+                X=inverse_X,
+                X_names=inverse_X_names,
+                lens=projected_X,
+                lens_names=projected_X_names,
+                custom_tooltips=custom_tooltips,
+                env=jinja_env,
+            )
+            _test_raised_deprecation_warning(w)
+
+            # visuals.graph_data_distribution
+            histogram = graph_data_distribution(graph, color_function=lens, colorscale=default_colorscale)
+            _test_raised_deprecation_warning(w)
+
 
 
 

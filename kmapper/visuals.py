@@ -5,7 +5,7 @@ from sklearn import preprocessing
 import json
 from collections import defaultdict
 from ast import literal_eval
-
+from .utils import deprecated_alias
 
 colorscale_default = [
     [0.0, "rgb(68, 1, 84)"],  # Viridis
@@ -232,7 +232,7 @@ def format_meta(graph, custom_meta=None, color_function_name=None):
 
     return mapper_summary
 
-
+@deprecated_alias(color_function='color_values')
 def format_mapper_data(
         graph, color_values, X, X_names, lens, lens_names, custom_tooltips, env, nbins=10, colorscale=None,
 ):
@@ -309,6 +309,7 @@ def build_histogram(data, colorscale=None, nbins=10):
     return histogram
 
 
+@deprecated_alias(color_function='color_values')
 def graph_data_distribution(graph, color_values, colorscale, nbins=10):
 
     node_averages = []

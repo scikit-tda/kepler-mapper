@@ -1,4 +1,5 @@
 from __future__ import division
+from .utils import deprecated_alias
 
 import numpy as np
 
@@ -56,7 +57,7 @@ def mpl_to_plotly(cmap, n_entries):
         # pl_colorscale.append([round(k*h, 2), f'rgb({C[0]}, {C[1]}, {C[2]})']) # Python 3.6+
     return pl_colorscale
 
-
+@deprecated_alias(color_function='color_values')
 def plotlyviz(
     scomplex,
     colorscale=None,
@@ -209,7 +210,7 @@ def plotlyviz(
 
     return result
 
-
+@deprecated_alias(color_function='color_values')
 def scomplex_to_graph(
     simplicial_complex,
     color_values,
@@ -252,7 +253,7 @@ def scomplex_to_graph(
 
     return json_dict
 
-
+@deprecated_alias(color_function='color_values')
 def get_mapper_graph(
     simplicial_complex,
     color_values=None,

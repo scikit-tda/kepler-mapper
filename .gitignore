@@ -58,3 +58,6 @@ dist
 .vscode
 .ipynb_checkpoints
 _modules
+.tox/
+.python-version
+

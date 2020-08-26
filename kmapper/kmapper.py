@@ -747,7 +747,6 @@ class KeplerMapper(object):
         # Find the module absolute path and locate templates
         module_root = os.path.join(os.path.dirname(__file__), "templates")
         env = Environment(loader=FileSystemLoader(module_root))
-        # Color function is a vector of colors?
         color_values = init_color_values(graph, color_values)
 
         if X_names is None:

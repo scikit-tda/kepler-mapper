@@ -19,15 +19,15 @@ def draw_matplotlib(g, ax=None, fig=None, layout="kk"):
 
     ax: matplotlib Axes object
         A matplotlib axes object to plot graph on. If none, then use ``plt.gca()``
-    
+
     fig: matplotlib Figure object
         A matplotlib Figure object to plot graph on. If none, then use ``plt.figure()``
 
     layout: string
-        Key for which of NetworkX's layout functions. 
-        Key options implemented are: 
+        Key for which of NetworkX's layout functions.
+        Key options implemented are:
         ::
-        
+
             >>> "kk": nx.kamada_kawai_layout,
             >>> "spring": nx.spring_layout,
             >>> "bi": nx.bipartite_layout,
@@ -41,6 +41,13 @@ def draw_matplotlib(g, ax=None, fig=None, layout="kk"):
 
     """
     import networkx as nx
+    import os
+    # https://stackoverflow.com/a/50089385/5917194
+    import matplotlib as mpl
+    if os.environ.get('DISPLAY','') == '':
+        print('no display found. Using non-interactive Agg backend')
+        mpl.use('Agg')
+        
     import matplotlib.pyplot as plt
 
     fig = fig if fig else plt.figure()

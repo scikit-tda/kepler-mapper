@@ -20,4 +20,4 @@ simplicial_complex = mapper.map(projected_data, X=data,
 mapper.visualize(simplicial_complex, path_html="keplermapper-makecircles-distmean.html",
                  custom_meta={"Data:": "datasets.make_circles(n_samples=5000, noise=0.05, factor=0.3)"},
                  custom_tooltips=labels,
-                 color_function=labels)
+                 color_values=labels)

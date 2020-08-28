@@ -18,13 +18,14 @@ from scipy.sparse import issparse, hstack
 from .cover import Cover
 from .nerve import GraphNerve
 from .visuals import (
-    init_color_function,
+    init_color_values,
     format_meta,
     format_mapper_data,
     build_histogram,
     graph_data_distribution,
     colorscale_default,
 )
+from .utils import deprecated_alias
 
 __all__ = [
     "KeplerMapper",
@@ -601,17 +602,18 @@ class KeplerMapper(object):
         return deduped_nodes
 
     def _summary(self, graph, time):
-        # TODO: this summary is dependant on the type of Nerve being built.
+        # TODO: this summary is dependent on the type of Nerve being built.
         links = graph["links"]
         nodes = graph["nodes"]
         nr_links = sum(len(v) for k, v in links.items())
 
         print("\nCreated %s edges and %s nodes in %s." % (nr_links, len(nodes), time))
 
+    @deprecated_alias(color_function='color_values')
     def visualize(
         self,
         graph,
-        color_function=None,
+        color_values=None,
         colorscale=None,
         custom_tooltips=None,
         custom_meta=None,
@@ -633,6 +635,10 @@ class KeplerMapper(object):
             Simplicial complex output from the `map` method.
 
         color_function : list or 1d array
+            .. deprecated:: 1.4.1
+               Use `color_values` instead.
+
+        color_values : list or 1d array
             A 1d vector with length equal to number of data points used to build Mapper. Each value should correspond to a value for each data point and color of node is computed as the average value for members in a node.
 
         colorscale : list
@@ -693,17 +699,17 @@ class KeplerMapper(object):
         >>>                  "Cluster": "HBSCAN()"}
         >>> )
 
-        >>> # Custom coloring function based on your 1d lens
+        >>> # Custom coloring data based on your 1d lens
         >>> html = mapper.visualize(
         >>>     graph,
-        >>>     color_function=lens
+        >>>     color_values=lens
         >>> )
 
-        >>> # Custom coloring function based on the first variable
+        >>> # Custom coloring data based on the first variable
         >>> cf = mapper.project(X, projection=[0])
         >>> html = mapper.visualize(
         >>>     graph,
-        >>>     color_function=cf
+        >>>     color_values=cf
         >>> )
 
         >>> # Customizing the tooltips with binary target variables
@@ -741,8 +747,7 @@ class KeplerMapper(object):
         # Find the module absolute path and locate templates
         module_root = os.path.join(os.path.dirname(__file__), "templates")
         env = Environment(loader=FileSystemLoader(module_root))
-        # Color function is a vector of colors?
-        color_function = init_color_function(graph, color_function)
+        color_values = init_color_values(graph, color_values)
 
         if X_names is None:
             X_names = []
@@ -752,7 +757,7 @@ class KeplerMapper(object):
 
         mapper_data = format_mapper_data(
             graph,
-            color_function,
+            color_values,
             X,
             X_names,
             lens,
@@ -763,7 +768,7 @@ class KeplerMapper(object):
             colorscale=colorscale,
         )
 
-        histogram = graph_data_distribution(graph, color_function, colorscale)
+        histogram = graph_data_distribution(graph, color_values, colorscale)
 
         mapper_summary = format_meta(graph, custom_meta)
 

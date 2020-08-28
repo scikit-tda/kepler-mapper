@@ -5,7 +5,7 @@ from sklearn import preprocessing
 import json
 from collections import defaultdict
 from ast import literal_eval
-
+from .utils import deprecated_alias
 
 colorscale_default = [
     [0.0, "rgb(68, 1, 84)"],  # Viridis
@@ -184,24 +184,24 @@ def _map_val2color(val, vmin, vmax, colorscale=None):
     return "rgb" + str(tuple(val_color_0255))
 
 
-def init_color_function(graph, color_function=None):
-    # If no color_function provided we color by row order in data set
+def init_color_values(graph, color_values=None):
+    # If no color_values provided we color by row order in data set
     # Reshaping to 2-D array is required for sklearn 0.19
-    n_samples = np.max([i for s in graph["nodes"].values() for i in s]) + 1
-    if color_function is None:
-        color_function = np.arange(n_samples).reshape(-1, 1)
+    if color_values is None:
+        n_samples = np.max([i for s in graph["nodes"].values() for i in s]) + 1
+        color_values = np.arange(n_samples).reshape(-1, 1)
     else:
-        color_function = color_function.reshape(-1, 1)
+        color_values = color_values.reshape(-1, 1)
 
-    color_function = color_function.astype(np.float64)
+    color_values = color_values.astype(np.float64)
     # MinMax Scaling to be friendly to non-scaled input.
     scaler = preprocessing.MinMaxScaler()
-    color_function = scaler.fit_transform(color_function).ravel()
+    color_values = scaler.fit_transform(color_values).ravel()
 
     # "Scaler might have floating point issues, 1.0000...0002". Force max and min
-    color_function[color_function > 1] = 1
-    color_function[color_function < 0] = 0
-    return color_function
+    color_values[color_values > 1] = 1
+    color_values[color_values < 0] = 0
+    return color_values
 
 
 def format_meta(graph, custom_meta=None, color_function_name=None):
@@ -232,9 +232,9 @@ def format_meta(graph, custom_meta=None, color_function_name=None):
 
     return mapper_summary
 
-
+@deprecated_alias(color_function='color_values')
 def format_mapper_data(
-        graph, color_function, X, X_names, lens, lens_names, custom_tooltips, env, nbins=10, colorscale=None,
+        graph, color_values, X, X_names, lens, lens_names, custom_tooltips, env, nbins=10, colorscale=None,
 ):
     if colorscale is None:
         colorscale = colorscale_default
@@ -244,7 +244,7 @@ def format_mapper_data(
     node_id_to_num = {}
     for i, (node_id, member_ids) in enumerate(graph["nodes"].items()):
         node_id_to_num[node_id] = i
-        c = _color_function(member_ids, color_function)
+        c = _node_color_function(member_ids, color_values)
         t = _type_node()
         s = _size_node(member_ids)
         tt = _format_tooltip(
@@ -255,7 +255,7 @@ def format_mapper_data(
             X_names,
             lens,
             lens_names,
-            color_function,
+            color_values,
             colorscale,
             node_id,
             nbins,
@@ -284,7 +284,7 @@ def format_mapper_data(
 
 
 def build_histogram(data, colorscale=None, nbins=10):
-    """ Build histogram of data based on values of color_function
+    """ Build histogram of data based on values of color_values
     """
     if colorscale is None:
         colorscale = colorscale_default
@@ -309,11 +309,12 @@ def build_histogram(data, colorscale=None, nbins=10):
     return histogram
 
 
-def graph_data_distribution(graph, color_function, colorscale, nbins=10):
+@deprecated_alias(color_function='color_values')
+def graph_data_distribution(graph, color_values, colorscale, nbins=10):
 
     node_averages = []
     for node_id, member_ids in graph["nodes"].items():
-        member_colors = color_function[member_ids]
+        member_colors = color_values[member_ids]
         node_averages.append(np.mean(member_colors))
 
     histogram = build_histogram(node_averages, colorscale=colorscale, nbins=nbins)
@@ -425,7 +426,7 @@ def _tooltip_components(
     X_names,
     lens,
     lens_names,
-    color_function,
+    color_values,
     node_ID,
     colorscale,
     nbins=10,
@@ -434,7 +435,7 @@ def _tooltip_components(
     cluster_stats = _format_cluster_statistics(member_ids, X, X_names)
 
     member_histogram = build_histogram(
-        color_function[member_ids], colorscale=colorscale, nbins=nbins
+        color_values[member_ids], colorscale=colorscale, nbins=nbins
     )
 
     return projection_stats, cluster_stats, member_histogram
@@ -448,7 +449,7 @@ def _format_tooltip(
     X_names,
     lens,
     lens_names,
-    color_function,
+    color_values,
     colorscale,
     node_ID,
     nbins,
@@ -469,7 +470,7 @@ def _format_tooltip(
         X_names,
         lens,
         lens_names,
-        color_function,
+        color_values,
         node_ID,
         colorscale,
         nbins,
@@ -487,8 +488,8 @@ def _format_tooltip(
     return tooltip
 
 
-def _color_function(member_ids, color_function):
-    return np.mean(color_function[member_ids])
+def _node_color_function(member_ids, color_values):
+    return np.mean(color_values[member_ids])
 
 
 def _size_node(member_ids):

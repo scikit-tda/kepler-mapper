@@ -10,13 +10,16 @@ from kmapper import KeplerMapper
 
 from kmapper import visuals
 from kmapper.visuals import (
-    init_color_function,
+    init_color_values,
     format_meta,
     format_mapper_data,
     _map_val2color,
     build_histogram,
-    _color_function,
+    graph_data_distribution,
+    _node_color_function,
 )
+from kmapper.utils import _test_raised_deprecation_warning
+import warnings
 
 
 from jinja2 import Environment, FileSystemLoader
@@ -88,52 +91,52 @@ def default_colorscale():
 
 
 class TestVisualHelpers:
-    def test_color_function_type(self):
+    def test_color_values_type(self):
         nodes = {"a": [1, 2, 3], "b": [4, 5, 6]}
         graph = {"nodes": nodes}
 
-        color_function = init_color_function(graph)
+        color_values = init_color_values(graph)
 
-        assert type(color_function) == np.ndarray
-        assert min(color_function) == 0
-        assert max(color_function) == 1
+        assert type(color_values) == np.ndarray
+        assert min(color_values) == 0
+        assert max(color_values) == 1
 
-    def test_color_function_scaled(self):
+    def test_color_values_scaled(self):
         nodes = {"a": [1, 2, 3], "b": [4, 5, 6]}
         graph = {"nodes": nodes}
 
         cf = np.array([6, 5, 4, 3, 2, 1])
-        color_function = init_color_function(graph, cf)
+        color_values = init_color_values(graph, cf)
 
-        # np.testing.assert_almost_equal(min(color_function), 0)
+        # np.testing.assert_almost_equal(min(color_values), 0)
         # np.testing.assert_almost_equal(
-        #     max(color_function), 1
+        #     max(color_values), 1
         # ), "Scaler might have floating point issues, 1.0000...0002"
 
         # build_histogram in visuals.py assumes/needs this
-        assert min(color_function) == 0
-        assert max(color_function) == 1
+        assert min(color_values) == 0
+        assert max(color_values) == 1
 
     def test_color_hist_matches_nodes(self):
         """ The histogram colors dont seem to match the node colors, this should confirm the colors will match and we need to look at the javascript instead.
         """
 
-        color_function = np.array([0.55] * 10 + [0.0] * 10)
+        color_values = np.array([0.55] * 10 + [0.0] * 10)
         member_ids = [1, 2, 3, 4, 5, 6]
-        hist = build_histogram(color_function[member_ids])
-        c = round(_color_function(member_ids, color_function), 2)
+        hist = build_histogram(color_values[member_ids])
+        c = round(_node_color_function(member_ids, color_values), 2)
         single_bar = [bar for bar in hist if bar["perc"] == 100.0]
 
         assert len(single_bar) == 1
         assert _map_val2color(c, 0.0, 1.0) == single_bar[0]["color"]
 
-    def test_color_function_size(self):
+    def test_color_values_size(self):
         nodes = {"a": [1, 2, 3], "b": [4, 5, 6, 7, 8, 9]}
         graph = {"nodes": nodes}
 
-        color_function = init_color_function(graph)
+        color_values = init_color_values(graph)
 
-        assert len(color_function) == len(nodes["a"]) + len(nodes["b"]) + 1
+        assert len(color_values) == len(nodes["a"]) + len(nodes["b"]) + 1
 
     def test_format_meta(self):
         mapper = KeplerMapper()
@@ -162,13 +165,59 @@ class TestVisualHelpers:
         fmt = format_meta(graph, cm)
         assert fmt["custom_meta"] == cm
 
+    def test_color_function_deprecated_replaced(self, default_colorscale, jinja_env):
+        mapper = KeplerMapper()
+        data, labels = make_circles(1000, random_state=0)
+        lens = mapper.fit_transform(data, projection=[0])
+        graph = mapper.map(lens, data)
+
+        color_values = lens[:, 0]
+        inverse_X = data
+        projected_X = lens
+        projected_X_names = ["projected_%s" % (i) for i in range(projected_X.shape[1])]
+        inverse_X_names = ["inverse_%s" % (i) for i in range(inverse_X.shape[1])]
+        custom_tooltips = np.array(["customized_%s" % (l) for l in labels])
+
+
+
+
+
+        # https://docs.python.org/3/library/warnings.html#testing-warnings
+        with warnings.catch_warnings(record=True) as w:
+            # Cause all warnings to always be triggered.
+            warnings.simplefilter("always")
+
+            # kmapper.visualize
+            html = mapper.visualize(graph, color_function=lens)
+            _test_raised_deprecation_warning(w)
+
+            # visuals.format_mapper_data
+            graph_data = format_mapper_data(
+                graph=graph,
+                color_function=color_values,
+                X=inverse_X,
+                X_names=inverse_X_names,
+                lens=projected_X,
+                lens_names=projected_X_names,
+                custom_tooltips=custom_tooltips,
+                env=jinja_env,
+            )
+            _test_raised_deprecation_warning(w)
+
+            # visuals.graph_data_distribution
+            histogram = graph_data_distribution(graph, color_function=lens, colorscale=default_colorscale)
+            _test_raised_deprecation_warning(w)
+
+
+
+
     def test_format_mapper_data(self, jinja_env):
         mapper = KeplerMapper()
         data, labels = make_circles(1000, random_state=0)
         lens = mapper.fit_transform(data, projection=[0])
         graph = mapper.map(lens, data)
 
-        color_function = lens[:, 0]
+        color_values = lens[:, 0]
         inverse_X = data
         projected_X = lens
         projected_X_names = ["projected_%s" % (i) for i in range(projected_X.shape[1])]
@@ -177,7 +226,7 @@ class TestVisualHelpers:
 
         graph_data = format_mapper_data(
             graph,
-            color_function,
+            color_values,
             inverse_X,
             inverse_X_names,
             projected_X,

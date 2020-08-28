@@ -1,13 +1,14 @@
 from __future__ import division
+from .utils import deprecated_alias
 
 import numpy as np
 
 from .visuals import (
-    init_color_function,
+    init_color_values,
     _size_node,
     _format_projection_statistics,
     _format_cluster_statistics,
-    _color_function,
+    _node_color_function,
     format_meta,
     _to_html_format,
     _map_val2color,
@@ -56,13 +57,13 @@ def mpl_to_plotly(cmap, n_entries):
         # pl_colorscale.append([round(k*h, 2), f'rgb({C[0]}, {C[1]}, {C[2]})']) # Python 3.6+
     return pl_colorscale
 
-
+@deprecated_alias(color_function='color_values')
 def plotlyviz(
     scomplex,
     colorscale=None,
     title="Kepler Mapper",
     graph_layout="kk",
-    color_function=None,
+    color_values=None,
     color_function_name=None,
     dashboard=False,
     graph_data=False,
@@ -87,11 +88,11 @@ def plotlyviz(
         Visualizations and dashboards for kmapper graphs using Plotly. This method is suitable for use in Jupyter notebooks.
 
 
-        The generated FigureWidget can be updated (by performing a restyle or relayout). For example, let us add a title 
+        The generated FigureWidget can be updated (by performing a restyle or relayout). For example, let us add a title
         to the colorbar (the name of the color function, if any),
         and set the title font size. To perform these updates faster, Plotly 3.+ provides a context manager that batches up all data and layout updates:
 
-        To display more info on the generated kmapper-graph, define two more FigureWidget(s):  
+        To display more info on the generated kmapper-graph, define two more FigureWidget(s):
         the global node distribution figure, and a dummy figure
         that displays info on the  algorithms involved in getting the graph from data, as well as  sklearn  class instances.
 
@@ -105,14 +106,14 @@ def plotlyviz(
 
         scomplex: dict
             Simplicial complex is the output from the KeplerMapper `map` method.
-    
+
         title: str
             Title of output graphic
 
-        graph_layout: igraph layout; 
+        graph_layout: igraph layout;
             recommended 'kk' (kamada-kawai) or 'fr' (fruchterman-reingold)
-        
-        colorscale: 
+
+        colorscale:
              Plotly colorscale(colormap) to color graph nodes
 
         dashboard: bool, default is False
@@ -132,12 +133,12 @@ def plotlyviz(
         left: int, default is 10,
         bottom: int, default is 35,
         summary_height: int, default is 300,
-        summary_width: int, default is 600, 
+        summary_width: int, default is 600,
         summary_left: int, default is 20,
         summary_right: int, default is 20,
         hist_left: int, default is 25,
         hist_right: int, default is 25,
-        member_textbox_width: int, default is 800, 
+        member_textbox_width: int, default is 800,
         filename: str, default is None
             if filename is given, the graphic will be saved to that file.
 
@@ -155,7 +156,7 @@ def plotlyviz(
     kmgraph, mapper_summary, n_color_distribution = get_mapper_graph(
         scomplex,
         colorscale=colorscale,
-        color_function=color_function,
+        color_values=color_values,
         color_function_name=color_function_name,
     )
 
@@ -209,10 +210,10 @@ def plotlyviz(
 
     return result
 
-
+@deprecated_alias(color_function='color_values')
 def scomplex_to_graph(
     simplicial_complex,
-    color_function,
+    color_values,
     X,
     X_names,
     lens,
@@ -226,13 +227,13 @@ def scomplex_to_graph(
     for i, (node_id, member_ids) in enumerate(simplicial_complex["nodes"].items()):
         node_id_to_num[node_id] = i
         projection_stats, cluster_stats, member_histogram = _tooltip_components(
-            member_ids, X, X_names, lens, lens_names, color_function, i, colorscale
+            member_ids, X, X_names, lens, lens_names, color_values, i, colorscale
         )
         n = {
             "id": i,
             "name": node_id,
             "member_ids": member_ids,
-            "color": _color_function(member_ids, color_function),
+            "color": _node_color_function(member_ids, color_values),
             "size": _size_node(member_ids),
             "cluster": cluster_stats,
             "distribution": member_histogram,
@@ -252,10 +253,10 @@ def scomplex_to_graph(
 
     return json_dict
 
-
+@deprecated_alias(color_function='color_values')
 def get_mapper_graph(
     simplicial_complex,
-    color_function=None,
+    color_values=None,
     color_function_name=None,
     colorscale=None,
     custom_tooltips=None,
@@ -271,7 +272,7 @@ def get_mapper_graph(
     ----------
     simplicial_complex : dict
         Simplicial complex is the output from the KeplerMapper `map` method.
-    
+
     Returns
     -------
     the graph dictionary in a json representation, the mapper summary
@@ -292,7 +293,7 @@ def get_mapper_graph(
             "A mapper graph should have more than 0 nodes. This might be because your clustering algorithm might be too sensitive and be classifying all points as noise."
         )
 
-    color_function = init_color_function(simplicial_complex, color_function)
+    color_values = init_color_values(simplicial_complex, color_values)
 
     if X_names is None:
         X_names = []
@@ -302,7 +303,7 @@ def get_mapper_graph(
 
     json_graph = scomplex_to_graph(
         simplicial_complex,
-        color_function,
+        color_values,
         X,
         X_names,
         lens,
@@ -311,7 +312,7 @@ def get_mapper_graph(
         colorscale=colorscale,
     )
     colorf_distribution = graph_data_distribution(
-        simplicial_complex, color_function, colorscale
+        simplicial_complex, color_values, colorscale
     )
     mapper_summary = format_meta(
         simplicial_complex,
@@ -441,9 +442,9 @@ def plot_layout(
 
     Parameters
     ----------
-    width, height: integers 
+    width, height: integers
         setting  width and height of plot window
-    bgcolor: string, 
+    bgcolor: string,
         rgba or hex color code for the background color
     annotation_text: string
         meta data to be displayed
@@ -498,7 +499,7 @@ def node_hist_fig(
     y_gridcolor="white",
 ):
     """Define the plotly plot representing the node histogram
-    
+
     Parameters
     ----------
     node_color_distribution: list of dicts describing the build_histogram
@@ -597,7 +598,7 @@ def hovering_widgets(
 ):
     """Defines the widgets that display the distribution of each node on hover
         and the members of each nodes
-    
+
     Parameters
     ----------
     kmgraph: the kepler-mapper graph dict returned by `get_mapper_graph()``

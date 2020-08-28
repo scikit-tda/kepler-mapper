@@ -1,7 +1,11 @@
-kmapper.adapter
+﻿kmapper.adapter
 ===============
 
 .. automodule:: kmapper.adapter
+
+   
+   
+   
 
    
    
@@ -21,3 +25,6 @@ kmapper.adapter
    
    
    
+
+
+

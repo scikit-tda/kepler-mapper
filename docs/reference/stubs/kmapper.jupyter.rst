@@ -1,7 +1,11 @@
-kmapper.jupyter
+﻿kmapper.jupyter
 ===============
 
 .. automodule:: kmapper.jupyter
+
+   
+   
+   
 
    
    
@@ -20,3 +24,6 @@ kmapper.jupyter
    
    
    
+
+
+

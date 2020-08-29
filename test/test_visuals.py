@@ -165,7 +165,7 @@ class TestVisualHelpers:
         fmt = format_meta(graph, cm)
         assert fmt["custom_meta"] == cm
 
-    def test_color_function_deprecated_replaced(self, default_colorscale, jinja_env):
+    def test_color_function_deprecated_replaced(self, default_colorscale):
         mapper = KeplerMapper()
         data, labels = make_circles(1000, random_state=0)
         lens = mapper.fit_transform(data, projection=[0])
@@ -200,7 +200,6 @@ class TestVisualHelpers:
                 lens=projected_X,
                 lens_names=projected_X_names,
                 custom_tooltips=custom_tooltips,
-                env=jinja_env,
             )
             _test_raised_deprecation_warning(w)
 
@@ -211,7 +210,7 @@ class TestVisualHelpers:
 
 
 
-    def test_format_mapper_data(self, jinja_env):
+    def test_format_mapper_data(self):
         mapper = KeplerMapper()
         data, labels = make_circles(1000, random_state=0)
         lens = mapper.fit_transform(data, projection=[0])
@@ -232,7 +231,6 @@ class TestVisualHelpers:
             projected_X,
             projected_X_names,
             custom_tooltips,
-            jinja_env,
         )
         # print(graph_data)
         # Dump to json so we can easily tell what's in it.

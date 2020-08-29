@@ -1,6 +1,8 @@
-<h2>Cluster Details <span style="font-size:0.7em">(node id: {{ node_id }})</span></h2>
+{% import 'histogram.html' as histogram %}
+{% macro build(node_tooltip_data) %}
+<h2>Cluster Details <span style="font-size:0.7em">(node id: {{ node_tooltip_data.node_id }})</span></h2>
 
-{% include 'histogram.html' %}
+{{ histogram.build(node_tooltip_data.dist_label, node_tooltip_data.histogram) }}
 
 <!-- Projection Statistics -->
 {% if projection_stats %}
@@ -14,7 +16,7 @@
     <th style="width:50px;"><small>Max</small></th>
     <th style="width:50px;"><small>Min</small></th></tr>
 
-    {% for projection in projection_stats %}
+    {% for projection in node_tooltip_data.projection_stats %}
 
         <tr><td>{{ projection['name'] }} </td>
         <td><small>{{ projection['mean'] }}</small></td>
@@ -29,19 +31,19 @@
 
 
 <!-- Cluster Statistics -->
-{% if cluster_stats %}
+{% if node_tooltip_data.cluster_stats %}
     <hr><br/>
 
     <!-- <h3>Cluster Statistics</h3> -->
 
-    {% if cluster_stats['above']|length > 0 %}
+    {% if node_tooltip_data.cluster_stats['above']|length > 0 %}
         <h3>Above Average</h3>
-        
+
         <table><tr><th>Feature</th>
         <th style="width:50px;"><small>Mean</small></th>
         <th style="width:50px;"><small>STD</small></th></tr>
 
-        {% for stat in cluster_stats['above'] %}
+        {% for stat in node_tooltip_data.cluster_stats['above'] %}
             <tr><td>{{ stat['feature'] }}</td><td><small> {{ stat['mean'] }}</small></td>
             <td class="std"><small>{{ stat['std'] }}x</small></td></tr>
         {% endfor %}
@@ -49,7 +51,7 @@
         </table>
     {% endif %}
 
-    {% if cluster_stats['below']|length > 0 %}
+    {% if node_tooltip_data.cluster_stats['below']|length > 0 %}
         <h3>Below Average</h3>
         <table><tr><th>Feature</th>
         <th style="width:50px;"><small>Mean</small></th>
@@ -65,7 +67,7 @@
 
 
     <h3>Size</h3>
-        <p>{{ cluster_stats['size'] }}</p>
+        <p>{{ node_tooltip_data.cluster_stats['size'] }}</p>
 
 
 {% endif %}
@@ -78,10 +80,11 @@
 <hr> <br/>
 
 <h3>Members</h3>
-{% for tooltip in custom_tooltips %}
+{% for tooltip in node_tooltip_data.custom_tooltips %}
 {{ tooltip }}
 {% endfor %}
 
 
 <br><br>
 <hr><br>
+{% endmacro %}

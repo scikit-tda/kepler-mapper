@@ -17,8 +17,17 @@
 
   <!-- Storage of data so D3 can access it later. This is in <body> so Chrome doesn't wholesale move all head content to body. -->
   <div id="json_graph" data-graph='{{ mapper_data|tojson|safe }}' style="display:none"></div>
-  <div id="json_colorscale" data-colorscale='{{ colorscale|tojson|safe }}'
-  style="display:none"></div>
+  <div id="json_colorscale" data-colorscale='{{ colorscale|tojson|safe }}' style="display:none"></div>
+
+  {% import 'cluster_tooltip.html' as cluster_tooltip -%}
+  <div id='node_tooltips' style='display:none'>
+  {% for node_data in mapper_data.nodes %}
+  	{% set node_tooltip_data = node_data.tooltip %}
+  	<div id='node_tooltip_data-{{ node_tooltip_data.node_id }}'>
+  	{{ cluster_tooltip.build(node_tooltip_data) }}
+  	</div>
+  {% endfor %}
+  </div>
 
   <div id="canvas">
       <!-- Graph will go in here -->
@@ -43,16 +52,16 @@
 
     <div id="helptip">
         <div id="helptip_content" class="pane_content">
-            {% include 'help.html' %} 
+            {% include 'help.html' %}
         </div>
       </div>
 
     <div id="meta">
       <div id="meta_content" class="pane_content">
-        {% include 'summary_data.html' %} 
+        {% include 'summary_data.html' %}
       </div>
     </div>
-    
+
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>

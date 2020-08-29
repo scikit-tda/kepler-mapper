@@ -6,6 +6,8 @@ import json
 from collections import defaultdict
 from ast import literal_eval
 from .utils import deprecated_alias
+import os
+from jinja2 import Environment, FileSystemLoader, Template
 
 colorscale_default = [
     [0.0, "rgb(68, 1, 84)"],  # Viridis
@@ -234,7 +236,7 @@ def format_meta(graph, custom_meta=None, color_function_name=None):
 
 @deprecated_alias(color_function='color_values')
 def format_mapper_data(
-        graph, color_values, X, X_names, lens, lens_names, custom_tooltips, env, nbins=10, colorscale=None,
+        graph, color_values, X, X_names, lens, lens_names, custom_tooltips, nbins=10, colorscale=None,
 ):
     if colorscale is None:
         colorscale = colorscale_default
@@ -248,7 +250,6 @@ def format_mapper_data(
         t = _type_node()
         s = _size_node(member_ids)
         tt = _format_tooltip(
-            env,
             member_ids,
             custom_tooltips,
             X,
@@ -442,7 +443,6 @@ def _tooltip_components(
 
 
 def _format_tooltip(
-    env,
     member_ids,
     custom_tooltips,
     X,
@@ -476,17 +476,50 @@ def _format_tooltip(
         nbins,
     )
 
-    tooltip = env.get_template("cluster_tooltip.html").render(
-        projection_stats=projection_stats,
-        cluster_stats=cluster_stats,
-        custom_tooltips=custom_tooltips,
+    tooltip_data = {
+        'projection_stats': projection_stats,
+        'cluster_stats': cluster_stats,
+        'custom_tooltips': custom_tooltips,
+        'histogram': histogram,
+        'dist_label': "Member",
+        'node_id': node_ID,
+    }
+
+    return tooltip_data
+
+def render_d3_vis(
+    title,
+    mapper_summary,
+    histogram,
+    mapper_data,
+    colorscale
+    ):
+    # Find the module absolute path and locate templates
+    module_root = os.path.join(os.path.dirname(__file__), "templates")
+    env = Environment(loader=FileSystemLoader(module_root))
+
+    # Find the absolute module path and the static files
+    js_path = os.path.join(os.path.dirname(__file__), "static", "kmapper.js")
+    with open(js_path, "r") as f:
+        js_text = f.read()
+
+    css_path = os.path.join(os.path.dirname(__file__), "static", "style.css")
+    with open(css_path, "r") as f:
+        css_text = f.read()
+
+    # Render the Jinja template, filling fields as appropriate
+    html = env.get_template("base.html").render(
+        title=title,
+        mapper_summary=mapper_summary,
         histogram=histogram,
-        dist_label="Member",
-        node_id=node_ID,
+        dist_label="Node",
+        mapper_data=mapper_data,
+        colorscale=colorscale,
+        js_text=js_text,
+        css_text=css_text,
     )
 
-    return tooltip
-
+    return html
 
 def _node_color_function(member_ids, color_values):
     return np.mean(color_values[member_ids])

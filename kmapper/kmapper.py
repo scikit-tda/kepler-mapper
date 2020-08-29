@@ -8,7 +8,6 @@ import os
 import sys
 import warnings
 
-from jinja2 import Environment, FileSystemLoader, Template
 import numpy as np
 from sklearn import cluster, preprocessing, manifold, decomposition
 from sklearn.model_selection import StratifiedKFold, KFold
@@ -24,6 +23,7 @@ from .visuals import (
     build_histogram,
     graph_data_distribution,
     colorscale_default,
+    render_d3_vis
 )
 from .utils import deprecated_alias
 
@@ -740,9 +740,6 @@ class KeplerMapper(object):
                 "Visualize requires a mapper with more than 0 nodes. \nIt is possible that the constructed mapper could have been constructed with bad parameters. This can occasionally happens when using the default clustering algorithm. Try changing `eps` or `min_samples` in the DBSCAN clustering algorithm."
             )
 
-        # Find the module absolute path and locate templates
-        module_root = os.path.join(os.path.dirname(__file__), "templates")
-        env = Environment(loader=FileSystemLoader(module_root))
         color_values = init_color_values(graph, color_values)
 
         if X_names is None:
@@ -759,7 +756,6 @@ class KeplerMapper(object):
             lens,
             lens_names,
             custom_tooltips,
-            env,
             nbins,
             colorscale=colorscale,
         )
@@ -768,34 +764,20 @@ class KeplerMapper(object):
 
         mapper_summary = format_meta(graph, custom_meta)
 
-        # Find the absolute module path and the static files
-        js_path = os.path.join(os.path.dirname(__file__), "static", "kmapper.js")
-        with open(js_path, "r") as f:
-            js_text = f.read()
-
-        css_path = os.path.join(os.path.dirname(__file__), "static", "style.css")
-        with open(css_path, "r") as f:
-            css_text = f.read()
-
-        # Render the Jinja template, filling fields as appropriate
-        template = env.get_template("base.html").render(
-            title=title,
-            mapper_summary=mapper_summary,
-            histogram=histogram,
-            dist_label="Node",
-            mapper_data=mapper_data,
-            colorscale=colorscale,
-            js_text=js_text,
-            css_text=css_text,
-        )
+        html = render_d3_vis(
+            title,
+            mapper_summary,
+            histogram,
+            mapper_data,
+            colorscale)
 
         if save_file:
             with open(path_html, "wb") as outfile:
                 if self.verbose > 0:
                     print("Wrote visualization to: %s" % (path_html))
-                outfile.write(template.encode("utf-8"))
+                outfile.write(html.encode("utf-8"))
 
-        return template
+        return html
 
     def data_from_cluster_id(self, cluster_id, graph, data):
         """Returns the original data of each cluster member for a given cluster ID

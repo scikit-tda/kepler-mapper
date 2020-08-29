@@ -1,3 +1,5 @@
+{% import 'histogram.html' as histogram_builder -%}
+
 <h2>Mapper Summary</h2>
 
 <hr><br>
@@ -16,7 +18,7 @@
 
 <h3>Unique Samples</h3><p> {{ mapper_summary.n_unique }}</p>
 
-{% include 'histogram.html' %}
+{{ histogram_builder.build(dist_label, histogram) }}
 
 
 <hr><br>

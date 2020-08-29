@@ -51,10 +51,10 @@ var g = svg.append("g");
 
 /**
  * Side panes
- * 
- * 
- * 
- * 
+ *
+ *
+ *
+ *
  */
 
 // Show/Hide Functionality
@@ -77,21 +77,21 @@ var toggle_pane = function(content, content_id, tag){
 }
 
 d3.select("#tooltip_control").on("click", function() {
-  toggle_pane(tooltip_content, 
-              d3.select("#tooltip_content"), 
+  toggle_pane(tooltip_content,
+              d3.select("#tooltip_content"),
               d3.select("#tooltip_tag")[0][0]);
 
 });
 
 d3.select("#meta_control").on("click", function() {
-  toggle_pane(meta_content, 
+  toggle_pane(meta_content,
               d3.select("#meta_content"),
               d3.select("#meta_tag")[0][0])
 
 });
 
 d3.select("#help_control").on("click", function() {
-  toggle_pane(helptip_content, 
+  toggle_pane(helptip_content,
               d3.select("#helptip_content"),
               d3.select("#helptip_tag")[0][0])
 });
@@ -99,10 +99,10 @@ d3.select("#help_control").on("click", function() {
 
 
 /**
- * 
+ *
  * Set up color scale
- * 
- * 
+ *
+ *
  */
 
 var colorscale = JSON.parse(document.getElementById("json_colorscale").dataset.colorscale);
@@ -115,14 +115,14 @@ var color = d3.scale.linear()
 
 
 /**
- *  Graph setup 
- * 
- * 
+ *  Graph setup
+ *
+ *
  */
 
 var graph = JSON.parse(document.getElementById("json_graph").dataset.graph);
 
-              
+
 // Force settings
 var force = d3.layout.force()
             .linkDistance(5)
@@ -205,7 +205,7 @@ var circle = node.append("path")
 //.style("filter", "url(#drop-shadow)");
 
 
-// Format all text 
+// Format all text
 var text = g.selectAll(".text")
   .data(graph.nodes)
   .enter().append("text")
@@ -228,17 +228,19 @@ if (text_center) {
 
 /**
  * Mouse Interactivity
- * 
- * 
- * 
- * 
- * 
+ *
+ *
+ *
+ *
+ *
  */
 
 node.on("mouseover", function(d) {
   // Change node details
   set_highlight(d);
-  d3.select("#tooltip_content").html(d.tooltip + "<br/>");
+  d3.select("#tooltip_content").html(
+    d3.select("#node_tooltip_data-" + d.tooltip.node_id).html()
+  );
 }).on("mousedown", function(d) {
   // TODO: This seems to only stop the one particular node from moving?
 

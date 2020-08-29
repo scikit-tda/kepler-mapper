@@ -624,7 +624,6 @@ class KeplerMapper(object):
         X_names=None,
         lens=None,
         lens_names=None,
-        show_tooltips=True,
         nbins=10,
     ):
         """Generate a visualization of the simplicial complex mapper output. Turns the complex dictionary into a HTML/D3.js visualization
@@ -667,9 +666,6 @@ class KeplerMapper(object):
 
         lens_name: list of strings
             Names of each variable in `lens` to be displayed. In None, then display names by index.
-
-        show_tooltips: bool, default is True.
-            If false, completely disable tooltips. This is useful when using output in space-tight pages or will display node data in custom ways.
 
         nbins: int, default is 10
             Number of bins shown in histogram of tooltip color distributions.
@@ -791,7 +787,6 @@ class KeplerMapper(object):
             colorscale=colorscale,
             js_text=js_text,
             css_text=css_text,
-            show_tooltips=True,
         )
 
         if save_file:

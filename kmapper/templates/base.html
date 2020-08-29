@@ -31,6 +31,26 @@
 
   <div id="canvas">
       <!-- Graph will go in here -->
+      <svg>
+        <defs>
+          <filter id="drop-shadow-glow" filterUnits="userSpaceOnUse" width="250%" height="250%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur-out"/>
+              <feColorMatrix in="blur-out" type="hueRotate" values="0" result="color-out"/>
+              <feOffset in="color-out" dx="0" dy="0" result="the-shadow"/>
+              <feComponentTransfer type="linear" slope="0.2" result="shadow-opacity"/>
+              <feBlend in="SourceGraphic" in2="the-shadow" mode="normal"/>
+          </filter>
+          <filter id="drop-shadow-pulse" filterUnits="userSpaceOnUse" width="250%" height="250%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur-out">
+                  <animate attributeName="stdDeviation" from="0" to="100" dur="1.5s" repeatCount="indefinite" />
+              </feGaussianBlur>
+              <feColorMatrix in="blur-out" type="hueRotate" values="0" result="color-out"/>
+              <feOffset in="color-out" dx="0" dy="0" result="the-shadow"/>
+              <feComponentTransfer type="linear" slope="0.2" result="shadow-opacity"/>
+              <feBlend in="SourceGraphic" in2="the-shadow" mode="normal"/>
+          </filter>
+        </defs>
+      </svg>
   </div>
 
   <!-- Seperate canvas and panes so we can overlay elements -->

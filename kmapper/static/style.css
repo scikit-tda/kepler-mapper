@@ -152,7 +152,7 @@ a:hover {
 }
 
 /* Chrome only: */
-@media all and (-webkit-min-device-pixel-ratio:0) and (min-resolution: .001dpcm) { 
+@media all and (-webkit-min-device-pixel-ratio:0) and (min-resolution: .001dpcm) {
   .pane_content {
     width: 314px;
     padding-right: 10px;
@@ -261,4 +261,8 @@ td, th {
 
 td {
   border-bottom: 1px solid #111;
+}
+
+.highlight {
+  filter: url(#drop-shadow-pulse);
 }

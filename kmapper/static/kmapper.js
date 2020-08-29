@@ -7,7 +7,7 @@ var w = width;
 var h = height;
 var padding = 40;
 
-var focus_node = null, highlight_node = null;
+var focus_node = null;
 var text_center = false;
 var outline = false;
 
@@ -17,8 +17,6 @@ var size = d3.scale.pow().exponent(1)
            .range([8,24]);
 
 // Variety of variable inits
-var highlight_color = "blue";
-var highlight_trans = 0.1;
 var default_node_color = "#ccc";
 var default_node_color = "rgba(160,160,160, 0.5)";
 var default_link_color = "rgba(160,160,160, 0.5)";
@@ -42,7 +40,7 @@ if (outline) {
 
 
 // We draw the graph in SVG
-var svg = d3.select("#canvas").append("svg")
+var svg = d3.select("#canvas svg")
           .attr("width", width)
           .attr("height", height);
 
@@ -122,13 +120,25 @@ var color = d3.scale.linear()
 
 var graph = JSON.parse(document.getElementById("json_graph").dataset.graph);
 
-
 // Force settings
 var force = d3.layout.force()
             .linkDistance(5)
             .gravity(0.2)
             .charge(-1200)
             .size([w,h]);
+
+var dragging = false;
+
+var drag = force.drag()
+  .on("dragstart", function(d){
+    svg.style('cursor','grabbing');
+    d.fixed = true;
+    dragging = true;
+  })
+  .on('dragend', function(d){
+    dragging = false;
+  })
+  ;
 
 force
   .nodes(graph.nodes)
@@ -147,7 +157,8 @@ var node = g.selectAll(".node")
             .data(graph.nodes)
             .enter().append("g")
               .attr("class", "node")
-              .call(force.drag);
+              .attr("id", function(d){ return "node-" + d.name })
+              .call(drag);
 
 // Double clicking on a node will center on it.
 node.on("dblclick.zoom", function(d) { d3.event.stopPropagation();
@@ -156,40 +167,6 @@ node.on("dblclick.zoom", function(d) { d3.event.stopPropagation();
   zoom.translate([dcx,dcy]);
   g.attr("transform", "translate("+ dcx + "," + dcy  + ")scale(" + zoom.scale() + ")");
 });
-
-
-
-
-// Drop-shadow Filter
-var svg = d3.select("svg");
-var defs = svg.append("defs");
-var dropShadowFilter = defs.append('svg:filter')
-  .attr('id', 'drop-shadow')
-  .attr('filterUnits', "userSpaceOnUse")
-  .attr('width', '250%')
-  .attr('height', '250%');
-dropShadowFilter.append('svg:feGaussianBlur')
-  .attr('in', 'SourceGraphic')
-  .attr('stdDeviation', 12)
-  .attr('result', 'blur-out');
-dropShadowFilter.append('svg:feColorMatrix')
-  .attr('in', 'blur-out')
-  .attr('type', 'hueRotate')
-  .attr('values', 0)
-  .attr('result', 'color-out');
-dropShadowFilter.append('svg:feOffset')
-  .attr('in', 'color-out')
-  .attr('dx', 0)
-  .attr('dy', 0)
-  .attr('result', 'the-shadow');
-dropShadowFilter.append('svg:feComponentTransfer')
-  .attr('type', 'linear')
-  .attr('slope', 0.2)
-  .attr('result', 'shadow-opacity');
-dropShadowFilter.append('svg:feBlend')
-  .attr('in', 'SourceGraphic')
-  .attr('in2', 'the-shadow')
-  .attr('mode', 'normal');
 
 // Draw circles
 var circle = node.append("path")
@@ -202,7 +179,6 @@ var circle = node.append("path")
     console.log("becomes color ", color(d.color));
     return color(d.color);
   });
-//.style("filter", "url(#drop-shadow)");
 
 
 // Format all text
@@ -234,45 +210,100 @@ if (text_center) {
  *
  *
  */
+function d3_layout_forceMouseover(d) {
+  d.fixed |= 4;
+  d.px = d.x, d.py = d.y;
+}
+function d3_layout_forceMouseout(d) {
+  d.fixed &= ~4;
+}
+var focus_via_click = false;
 
-node.on("mouseover", function(d) {
+node.on("mouseover.focus", function(d) {
   // Change node details
-  set_highlight(d);
-  d3.select("#tooltip_content").html(
-    d3.select("#node_tooltip_data-" + d.tooltip.node_id).html()
-  );
-}).on("mousedown", function(d) {
-  // TODO: This seems to only stop the one particular node from moving?
-
-  d3.event.stopPropagation();
-  focus_node = d;
-  if (highlight_node === null) {
-    set_highlight(d)
+  d3_layout_forceMouseover(d);
+  if (d3.event.buttons == 0){
+    set_cursor('pointer');
+    if (!focus_via_click) {
+      set_focus_node(d);
+    }
   }
-}).on("mouseout", function(d) {
-  exit_highlight();
+})
+.on("mouseout.focus", function(d) {
+  d3_layout_forceMouseout(d);
+  if (d3.event.buttons == 0){
+    set_cursor('move');
+    if (!focus_via_click) {
+        set_focus_node(null);
+    }
+  }
+})
+.on('mousedown.focus', function(d){
+    d3.event.stopPropagation();
+    if (focus_node != d.name) {
+        //switch click focus
+        set_focus_via_click(d);
+    } else if (!focus_via_click) {
+        //d already selected but not via click; set click true
+        focus_via_click = true;
+    }
+})
+;
+
+d3.select(window).on("mouseup.focus", function(){
+    if (focus_node != null) {
+        set_cursor('pointer');
+    }
+    if (focus_node == null) {
+        set_cursor('move');
+    }
 });
 
-d3.select(window).on("mouseup", function() {
-  if (focus_node!==null){
-    focus_node = null;
-  }
-  if (highlight_node === null) {
-    exit_highlight();
-  }
-});
+svg.on('mousedown.focus', function(e){
+    set_focus_via_click(null);
+})
 
 // Node highlighting logic
-function exit_highlight(){
-  highlight_node = null;
-  if (focus_node===null){
-    svg.style("cursor","move");
-  }
+
+function set_focus_via_click(d) {
+    focus_via_click = (d != null ? true : false);
+    set_focus_node(d);
 }
 
-function set_highlight(d){
-  svg.style("cursor","pointer");
-  if (focus_node!==null) d = focus_node;
+function set_focus_node(d){
+  if (d == null) {
+    focus_node = null;
+    set_cursor('move');
+    d3.select("#tooltip_content").html('');
+    exit_highlight();
+  } else if (d.name != focus_node) {
+    exit_highlight(focus_node);
+    focus_node = d.name;
+    set_highlight(focus_node);
+    set_cursor('pointer');
+    d3.select("#tooltip_content").html(d3.select("#node_tooltip_data-" + d.tooltip.node_id).html());
+  }
+  // else, it's already the focus node, so do nothing...
+}
+
+function set_highlight(node_id) {
+    d3.select('#node-' + node_id + ' .circle').classed('highlight', true);
+    d3.select('#node-' + node_id).classed('highlight', true);
+}
+
+function exit_highlight(node_id) {
+   if (!node_id) {
+       d3.selectAll('.node .circle').classed('highlight', false);
+       d3.selectAll('.node').classed('highlight', false);
+   } else {
+       d3.select('#node-' + node_id + ' .circle').classed('highlight', false);
+       d3.select('#node-' + node_id).classed('highlight', false);
+   }
+}
+function set_cursor(state) {
+    if (!dragging) {
+        svg.style('cursor', state);
+    }
 }
 
 
@@ -333,51 +364,54 @@ function isNumber(n) {
 }
 
 // Key press events
-window.addEventListener("keydown", function (event) {
-if (event.defaultPrevented) {
-  return; // Do nothing if the event was already processed
-}
+d3.select(window).on("keydown", function () {
+  if (d3.event.defaultPrevented) {
+    return; // Do nothing if the event was already processed
+  }
 
-
-switch (event.key) {
-  case "f":
-    console.log("Freeze graph")
-    break;
-  case "s":
-    // Do something for "s" key press.
-    node.style("filter", "url(#drop-shadow)");
-    break;
-  case "c":
-    // Do something for "s" key press.
-    node.style("filter", null);
-    break;
-  case "p":
-    // Turn to print mode, white backgrounds
-    d3.select("body").attr('id', null).attr('id', "print")
-    break;
-  case "d":
-    // Do something for "d" key press.
-    d3.select("body").attr('id', null).attr('id', "display")
-    break;
-  case "z":
-    force.gravity(0.0)
-         .charge(0.0);
-    resize();
-    break
-  case "m":
-    force.gravity(0.07)
-         .charge(-1);
-    resize();
-    break
-  case "e":
-    force.gravity(0.4)
-         .charge(-600);
-
-    resize();
-    break
-  default:
-    return; // Quit when this doesn't handle the key event.
-}
-// Cancel the default action to avoid it being handled twice
-event.preventDefault();
+  if (!d3.event.ctrlKey && !d3.event.altKey && !d3.event.metaKey) {
+    switch (d3.event.key) {
+      case "f": // freeze all
+        node.datum(function(d){ d.fixed = true; return d; });
+        break;
+      case "x": // unfreeze all
+        node.datum(function(d){ d.fixed = false; return d; });
+        break
+      case "s":
+        // Glow
+        node.style("filter", "url(#drop-shadow-glow)");
+        break;
+      case "c":
+        // Remove glow
+        node.style("filter", null);
+        break;
+      case "p":
+        // Turn to print mode, white backgrounds
+        d3.select("body").attr('id', null).attr('id', "print")
+        break;
+      case "d":
+        // Do something for "d" key press.
+        d3.select("body").attr('id', null).attr('id', "display")
+        break;
+      case "z":
+        force.gravity(0.0)
+             .charge(0.0);
+        resize();
+        break
+      case "m":
+        force.gravity(0.07)
+             .charge(-1);
+        resize();
+        break
+      case "e":
+        force.gravity(0.4)
+             .charge(-600);
+        resize();
+        break
+      default:
+        return; // Quit when this doesn't handle the key event.
+    }
+  d3.event.preventDefault();
+  }
+  // Cancel the default action to avoid it being handled twice
 }, true);

@@ -583,7 +583,7 @@ class KeplerMapper(object):
             deduped_items[frozenset(items)].append(node_id)
 
         deduped_nodes = {
-            "|".join(node_id_list): list(frozen_items)
+            "-".join(node_id_list): list(frozen_items)
             for frozen_items, node_id_list in deduped_items.items()
         }
 

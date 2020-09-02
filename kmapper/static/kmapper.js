@@ -210,6 +210,10 @@ if (text_center) {
  *
  *
  */
+// https://bl.ocks.org/mbostock/3750558
+// IIRC I copied this from the source for what d3 force layout normally does
+// on dragStart and dragEnd.
+// Sets (unsets) the third bit to 1 if doing a mouseover (mouseout).
 function d3_layout_forceMouseover(d) {
   d.fixed |= 4;
   d.px = d.x, d.py = d.y;

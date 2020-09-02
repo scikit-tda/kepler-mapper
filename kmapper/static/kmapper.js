@@ -175,8 +175,6 @@ var circle = node.append("path")
     .type(function(d) { return d.type; }))
   .attr("class", "circle")
   .style(tocolor, function(d) {
-    console.log("Node color:", d.color);
-    console.log("becomes color ", color(d.color));
     return color(d.color);
   });
 

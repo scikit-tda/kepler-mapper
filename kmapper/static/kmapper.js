@@ -29,7 +29,16 @@ var max_base_node_size = 36;
 var min_zoom = 0.1;
 var max_zoom = 7;
 var zoom = d3.behavior.zoom().scaleExtent([min_zoom,max_zoom]);
-
+var svg, g;
+var force;
+var link, node;
+var drag;
+var dragging = false;
+var circle;
+var text;
+var focus_via_click = false;
+var nodes = [];
+var links = [];
 
 var tocolor = "fill";
 var towhite = "stroke";
@@ -38,25 +47,12 @@ if (outline) {
   towhite = "fill";
 }
 
-
-// We draw the graph in SVG
-var svg = d3.select("#canvas svg")
-          .attr("width", width)
-          .attr("height", height);
-
-svg.style("cursor","move");
-var g = svg.append("g");
-
 /**
  * Side panes
- *
- *
- *
- *
  */
 
 // Show/Hide Functionality
-var toggle_pane = function(content, content_id, tag){
+function toggle_pane(content, content_id, tag) {
   var active = content.active ? false : true;
 
   if (active){
@@ -94,15 +90,12 @@ d3.select("#help_control").on("click", function() {
               d3.select("#helptip_tag")[0][0])
 });
 
-
-
 /**
  *
  * Set up color scale
  *
  *
  */
-
 var colorscale = JSON.parse(document.getElementById("json_colorscale").dataset.colorscale);
 var domain = colorscale.map((x)=>x[0])
 var palette = colorscale.map((x)=>x[1])
@@ -111,165 +104,120 @@ var color = d3.scale.linear()
   .domain(domain)
   .range(palette);
 
-
-/**
- *  Graph setup
- *
- *
- */
-
 var graph = JSON.parse(document.getElementById("json_graph").dataset.graph);
 
-// Force settings
-var force = d3.layout.force()
-            .linkDistance(5)
-            .gravity(0.2)
-            .charge(-1200)
-            .size([w,h]);
+/*
+* one-time setups, like SVG and force init
+*/
+function init() {
+  // We draw the graph in SVG
+  svg = d3.select("#canvas svg")
+          .attr("width", width)
+          .attr("height", height)
+          .style("cursor","move")
+          .call(zoom)
+          .on('mousedown.focus', function(e){
+            set_focus_via_click(null);
+          })
 
-var dragging = false;
+  g = svg.append("g");
 
-var drag = force.drag()
-  .on("dragstart", function(d){
-    svg.style('cursor','grabbing');
-    d.fixed = true;
-    dragging = true;
-  })
-  .on('dragend', function(d){
-    dragging = false;
-  })
-  ;
+  link = g.selectAll(".link")
+  node = g.selectAll(".node")
+  text = g.selectAll(".text")
 
-force
-  .nodes(graph.nodes)
-  .links(graph.links)
-  .start();
+  force = d3.layout.force()
+    .nodes(nodes)
+    .links(links)
+    .linkDistance(5)
+    .gravity(0.2)
+    .charge(-1200)
+    .size([w,h])
+    .on('tick', tick);
 
-var link = g.selectAll(".link")
-            .data(graph.links)
-            .enter().append("line")
-              .attr("class", "link")
-              .style("stroke-width", function(d) { return d.w * nominal_stroke; })
-              .style("stroke-width", function(d) { return d.w * nominal_stroke; })
+  drag = force.drag()
+              .on("dragstart", function(d){
+                svg.style('cursor','grabbing');
+                d.fixed = true;
+                dragging = true;
+              })
+              .on('dragend', function(d){
+                dragging = false;
+              });
 
+  resize();
+  d3.select(window).on("resize", resize);
 
-var node = g.selectAll(".node")
-            .data(graph.nodes)
-            .enter().append("g")
-              .attr("class", "node")
-              .attr("id", function(d){ return "node-" + d.name })
-              .call(drag);
-
-// Double clicking on a node will center on it.
-node.on("dblclick.zoom", function(d) { d3.event.stopPropagation();
-  var dcx = (window.innerWidth/2-d.x*zoom.scale());
-  var dcy = (window.innerHeight/2-d.y*zoom.scale());
-  zoom.translate([dcx,dcy]);
-  g.attr("transform", "translate("+ dcx + "," + dcy  + ")scale(" + zoom.scale() + ")");
-});
-
-// Draw circles
-var circle = node.append("path")
-  .attr("d", d3.svg.symbol()
-    .size(function(d) { return d.size * 50; })
-    .type(function(d) { return d.type; }))
-  .attr("class", "circle")
-  .style(tocolor, function(d) {
-    return color(d.color);
-  });
-
-
-// Format all text
-var text = g.selectAll(".text")
-  .data(graph.nodes)
-  .enter().append("text")
-    .attr("dy", ".35em")
-    .style("font-family", "Roboto")
-    .style("font-weight", "400")
-    .style("color", "#2C3E50")
-    .style("font-size", nominal_text_size + "px");
-
-
-
-if (text_center) {
-  text.text(function(d) { return d.id; })
-    .style("text-anchor", "middle");
-} else {
-  text.attr("dx", function(d) {return (size(d.size)||nominal_base_node_size);})
-    .text(function(d) { return '\u2002'+d.id; });
-}
-
-
-/**
- * Mouse Interactivity
- *
- *
- *
- *
- *
- */
-// https://bl.ocks.org/mbostock/3750558
-// IIRC I copied this from the source for what d3 force layout normally does
-// on dragStart and dragEnd.
-// Sets (unsets) the third bit to 1 if doing a mouseover (mouseout).
-function d3_layout_forceMouseover(d) {
-  d.fixed |= 4;
-  d.px = d.x, d.py = d.y;
-}
-function d3_layout_forceMouseout(d) {
-  d.fixed &= ~4;
-}
-var focus_via_click = false;
-
-node.on("mouseover.focus", function(d) {
-  // Change node details
-  d3_layout_forceMouseover(d);
-  if (d3.event.buttons == 0){
-    set_cursor('pointer');
-    if (!focus_via_click) {
-      set_focus_node(d);
-    }
-  }
-})
-.on("mouseout.focus", function(d) {
-  d3_layout_forceMouseout(d);
-  if (d3.event.buttons == 0){
-    set_cursor('move');
-    if (!focus_via_click) {
-        set_focus_node(null);
-    }
-  }
-})
-.on('mousedown.focus', function(d){
-    d3.event.stopPropagation();
-    if (focus_node != d.name) {
-        //switch click focus
-        set_focus_via_click(d);
-    } else if (!focus_via_click) {
-        //d already selected but not via click; set click true
-        focus_via_click = true;
-    }
-})
-;
-
-d3.select(window).on("mouseup.focus", function(){
+  d3.select(window).on("mouseup.focus", function(){
     if (focus_node != null) {
-        set_cursor('pointer');
+      set_cursor('pointer');
     }
     if (focus_node == null) {
-        set_cursor('move');
+      set_cursor('move');
     }
-});
+  });
 
-svg.on('mousedown.focus', function(e){
-    set_focus_via_click(null);
-})
+  // Zoom logic
+  zoom.on("zoom", function() {
+    var stroke = nominal_stroke;
+    var base_radius = nominal_base_node_size;
+    if (nominal_base_node_size*zoom.scale()>max_base_node_size) {
+      base_radius = max_base_node_size/zoom.scale();
+    }
 
-// Node highlighting logic
+    circle.attr("d", d3.svg.symbol()
+      .size(function(d) { return d.size * 50; })
+      .type(function(d) { return d.type; }))
+
+    if (!text_center) text.attr("dx", function(d) {
+      return (size(d.size)*base_radius/nominal_base_node_size||base_radius);
+    });
+
+    var text_size = nominal_text_size;
+    if (nominal_text_size*zoom.scale()>max_text_size) {
+      text_size = max_text_size/zoom.scale();
+    }
+    text.style("font-size",text_size + "px");
+
+    g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+  });
+}
+
+function tick() {
+  node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+      .attr("cx", function(d) { return d.x; })
+      .attr("cy", function(d) { return d.y; })
+
+  text.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+  link.attr("x1", function(d) { return d.source.x; })
+      .attr("y1", function(d) { return d.source.y; })
+      .attr("x2", function(d) { return d.target.x; })
+      .attr("y2", function(d) { return d.target.y; });
+}
+
+/*
+* Resizing window and redraws
+*/
+function resize() {
+  var width = document.getElementById("canvas").offsetWidth;
+  var height = document.getElementById("canvas").offsetHeight;
+
+  svg.attr("width", width)
+     .attr("height", height);
+
+  force.size([
+      force.size()[0]+(width-w)/zoom.scale(),
+      force.size()[1]+(height-h)/zoom.scale()
+    ]).resume();
+
+  w = width;
+  h = height;
+}
 
 function set_focus_via_click(d) {
-    focus_via_click = (d != null ? true : false);
-    set_focus_node(d);
+  focus_via_click = (d != null ? true : false);
+  set_focus_node(d);
 }
 
 function set_focus_node(d){
@@ -289,77 +237,148 @@ function set_focus_node(d){
 }
 
 function set_highlight(node_id) {
-    d3.select('#node-' + node_id + ' .circle').classed('highlight', true);
-    d3.select('#node-' + node_id).classed('highlight', true);
+  d3.select('#node-' + node_id + ' .circle').classed('highlight', true);
+  d3.select('#node-' + node_id).classed('highlight', true);
 }
 
 function exit_highlight(node_id) {
-   if (!node_id) {
-       d3.selectAll('.node .circle').classed('highlight', false);
-       d3.selectAll('.node').classed('highlight', false);
-   } else {
-       d3.select('#node-' + node_id + ' .circle').classed('highlight', false);
-       d3.select('#node-' + node_id).classed('highlight', false);
-   }
+  if (!node_id) {
+     d3.selectAll('.node .circle').classed('highlight', false);
+     d3.selectAll('.node').classed('highlight', false);
+  } else {
+     d3.select('#node-' + node_id + ' .circle').classed('highlight', false);
+     d3.select('#node-' + node_id).classed('highlight', false);
+  }
 }
+
 function set_cursor(state) {
-    if (!dragging) {
-        svg.style('cursor', state);
+  if (!dragging) {
+    svg.style('cursor', state);
+  }
+}
+
+// https://bl.ocks.org/mbostock/3750558
+// IIRC I copied this from the source for what d3 force layout normally does
+// on dragStart and dragEnd.
+// Sets (unsets) the third bit to 1 if doing a mouseover (mouseout).
+function d3_layout_forceMouseover(d) {
+  d.fixed |= 4;
+  d.px = d.x, d.py = d.y;
+}
+function d3_layout_forceMouseout(d) {
+  d.fixed &= ~4;
+}
+
+// Double clicking on a node will center on it.
+function node_dblclick(d) {
+  d3.event.stopPropagation();
+  var dcx = ( window.innerWidth/2 - d.x * zoom.scale() );
+  var dcy = ( window.innerHeight/2 - d.y * zoom.scale() );
+  zoom.translate([dcx, dcy]);
+  g.attr("transform", "translate("+ dcx + "," + dcy  + ")scale(" + zoom.scale() + ")");
+}
+
+function node_mouseover(d) {
+  // Change node details
+  d3_layout_forceMouseover(d);
+  if (d3.event.buttons == 0){
+    set_cursor('pointer');
+    if (!focus_via_click) {
+      set_focus_node(d);
     }
+  }
 }
 
-
-// Zoom logic
-zoom.on("zoom", function() {
-  var stroke = nominal_stroke;
-  var base_radius = nominal_base_node_size;
-  if (nominal_base_node_size*zoom.scale()>max_base_node_size) {
-    base_radius = max_base_node_size/zoom.scale();}
-  circle.attr("d", d3.svg.symbol()
-    .size(function(d) { return d.size * 50; })
-    .type(function(d) { return d.type; }))
-  if (!text_center) text.attr("dx", function(d) {
-    return (size(d.size)*base_radius/nominal_base_node_size||base_radius); });
-
-  var text_size = nominal_text_size;
-  if (nominal_text_size*zoom.scale()>max_text_size) {
-    text_size = max_text_size/zoom.scale(); }
-  text.style("font-size",text_size + "px");
-
-  g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-});
-
-svg.call(zoom);
-resize();
-d3.select(window).on("resize", resize);
-
-// Animation per tick
-force.on("tick", function() {
-  node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-  text.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-  link.attr("x1", function(d) { return d.source.x; })
-    .attr("y1", function(d) { return d.source.y; })
-    .attr("x2", function(d) { return d.target.x; })
-    .attr("y2", function(d) { return d.target.y; });
-  node.attr("cx", function(d) { return d.x; })
-    .attr("cy", function(d) { return d.y; });
-});
-
-
-
-// Resizing window and redraws
-function resize() {
-  var width = window.innerWidth, height = window.innerHeight;
-  var width = document.getElementById("canvas").offsetWidth;
-  var height = document.getElementById("canvas").offsetHeight;
-  svg.attr("width", width).attr("height", height);
-
-  force.size([force.size()[0]+(width-w)/zoom.scale(),
-              force.size()[1]+(height-h)/zoom.scale()]).resume();
-  w = width;
-  h = height;
+function node_mouseout(d) {
+  d3_layout_forceMouseout(d);
+  if (d3.event.buttons == 0){
+    set_cursor('move');
+    if (!focus_via_click) {
+        set_focus_node(null);
+    }
+  }
 }
 
+function node_mousedown(d) {
+  d3.event.stopPropagation();
+  if (focus_node != d.name) {
+      //switch click focus
+      set_focus_via_click(d);
+  } else if (!focus_via_click) {
+      //d already selected but not via click; set click true
+      focus_via_click = true;
+  }
+}
+
+function start() {
+  // shallow copy to enable restarting,
+  // because calling force.start() mutates the links (replaces indeces with refs)
+  nodes = graph.nodes.map(n => Object.assign({}, n));
+  links = graph.links.map(l => Object.assign({}, l));
+
+  force
+    .nodes(nodes)
+    .links(links);
+
+  link = link.data(links);
+  link.enter().append("line")
+        .attr("class", "link")
+        .style("stroke-width", function(d) { return d.w * nominal_stroke; })
+        .style("stroke-width", function(d) { return d.w * nominal_stroke; });
+  link.exit().remove()
+
+  node = node.data(nodes);
+
+  node.enter().append("g")
+        .attr("class", "node")
+        .attr("id", function(d){ return "node-" + d.name })
+        .call(drag);
+  node.exit().remove()
+
+  // Draw circles
+  circle = node.append("path")
+    .attr("d", d3.svg.symbol()
+      .size(function(d) { return d.size * 50; })
+      .type(function(d) { return d.type; }))
+    .attr("class", "circle")
+    .style(tocolor, function(d) { return color(d.color); });
+
+  // bind after circle appends
+  node.on("mouseover.focus", node_mouseover)
+      .on("mouseout.focus", node_mouseout)
+      .on('mousedown.focus', node_mousedown)
+      .on("dblclick.zoom", node_dblclick)
+
+  // Format all text
+  text = text.data(nodes);
+  text.enter().append("text")
+      .attr("dy", ".35em")
+      .style("font-family", "Roboto")
+      .style("font-weight", "400")
+      .style("color", "#2C3E50")
+      .style("font-size", nominal_text_size + "px");
+  text.exit().remove();
+
+  if (text_center) {
+    text.text(function(d) { return d.id; })
+        .style("text-anchor", "middle");
+  } else {
+    text.attr("dx", function(d) { return ( size(d.size) || nominal_base_node_size ); })
+        .text(function(d) { return '\u2002' + d.id; });
+  }
+
+  force.start();
+}
+
+init();
+start();
+
+function restart() {
+  // node.remove()
+  // link.remove()
+  focus_via_click = false;
+  start()
+}
 
 function isNumber(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);

@@ -51,10 +51,24 @@
         <td>f</td>
         <td><small>Freeze layout</small></td>
     </tr>
-    
+
     <tr>
         <td>x</td>
         <td><small>Unfreeze all nodes</small></td>
     </tr>
 
 </table>
+
+<div class="">
+  <div class="">
+    <button type="button" id="download-config" name="download-config">Save config</button>
+  </div>
+
+  <div>
+    <label for="config-file-loader">Choose config file to load</label>
+    <input type="file" id="config-file-loader" name="config-file-loader" accept="application/json">
+  </div>
+  <div>
+    <button id='load-config' disabled>Load</button>
+  </div>
+</div>

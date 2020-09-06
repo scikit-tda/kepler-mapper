@@ -397,6 +397,7 @@ d3.select(window).on("keydown", function () {
         break;
       case "x": // unfreeze all
         node.datum(function(d){ d.fixed = false; return d; });
+        force.resume()
         break
       case "s":
         // Glow
@@ -436,3 +437,60 @@ d3.select(window).on("keydown", function () {
   }
   // Cancel the default action to avoid it being handled twice
 }, true);
+
+/*
+* Save and load config
+*
+*/
+
+// save config
+document.getElementById('download-config').addEventListener('click', function(){
+  let config = {}
+  node.data().forEach(node => {
+      let config_node = {}
+      config_node['fixed'] = 'fixed' in node && !!node['fixed']
+      config_node['x'] = config_node['px'] = node['x']
+      config_node['y'] = config_node['py'] = node['y']
+      config[node['name']] = config_node
+    })
+
+  //JSON.stringify(config,undefined,2)
+
+  // https://stackoverflow.com/a/45594892
+  var fileName = 'kmapper-config.json';
+
+  // Create a blob of the data. Blob is native JS api
+  var fileToSave = new Blob([JSON.stringify(config)], {
+      type: 'application/json',
+      name: fileName
+  });
+
+  // function from FileSaver.js
+  saveAs(fileToSave, fileName);
+})
+
+// load config
+var config_file_loader = document.getElementById('config-file-loader');
+
+config_file_loader.addEventListener('change', function(){
+  document.getElementById('load-config').disabled = ( config_file_loader.files.length === 0 )
+})
+
+document.getElementById('load-config').addEventListener('click', function(){
+  const config_file = config_file_loader.files[0];
+  const fr = new FileReader();
+  fr.onload = function(e) {
+    var config = JSON.parse(e.target.result);
+    load_config(config);
+
+  }
+  fr.readAsText(config_file)
+})
+function load_config(config){
+  node = node.datum(function(d, i){
+    let load_node_config = config[d['name']]
+    d = Object.assign(d, load_node_config);
+    return d;
+  })
+  force.resume()
+}

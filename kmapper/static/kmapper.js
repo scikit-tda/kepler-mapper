@@ -12,7 +12,7 @@ var text_center = false;
 var outline = false;
 
 // Size for zooming
-var size = d3.scale.pow().exponent(1)
+var size = d3.scalePow().exponent(1)
            .domain([1,100])
            .range([8,24]);
 
@@ -28,9 +28,9 @@ var max_stroke = 4.5;
 var max_base_node_size = 36;
 var min_zoom = 0.1;
 var max_zoom = 7;
-var zoom = d3.behavior.zoom().scaleExtent([min_zoom,max_zoom]);
+var zoom;
 var svg, g;
-var force;
+var simulation;
 var link, node;
 var drag;
 var dragging = false;
@@ -55,12 +55,12 @@ if (outline) {
 function toggle_pane(content, content_id, tag) {
   var active = content.active ? false : true;
 
-  if (active){
-    content_id.style("display", "unset");
-    tag.textContent = "[-]";
-  } else{
+  if (active) {
+    content_id.style("display", "block");
+    tag.node().textContent = "[-]";
+  } else {
     content_id.style("display", "none");
-    tag.textContent = "[+]";
+    tag.node().textContent = "[+]";
   }
 
   // TODO: This is probably not the best way to find the correct height.
@@ -70,24 +70,24 @@ function toggle_pane(content, content_id, tag) {
   content.active = active;
 }
 
-d3.select("#tooltip_control").on("click", function() {
+d3.select("#tooltip_control").on("click", function(e) {
   toggle_pane(tooltip_content,
               d3.select("#tooltip_content"),
-              d3.select("#tooltip_tag")[0][0]);
+              d3.select("#tooltip_tag"))
 
 });
 
-d3.select("#meta_control").on("click", function() {
+d3.select("#meta_control").on("click", function(e) {
   toggle_pane(meta_content,
               d3.select("#meta_content"),
-              d3.select("#meta_tag")[0][0])
+              d3.select("#meta_tag"))
 
 });
 
-d3.select("#help_control").on("click", function() {
+d3.select("#help_control").on("click", function(e) {
   toggle_pane(helptip_content,
               d3.select("#helptip_content"),
-              d3.select("#helptip_tag")[0][0])
+              d3.select("#helptip_tag"))
 });
 
 /**
@@ -100,7 +100,7 @@ var colorscale = JSON.parse(document.getElementById("json_colorscale").dataset.c
 var domain = colorscale.map((x)=>x[0])
 var palette = colorscale.map((x)=>x[1])
 
-var color = d3.scale.linear()
+var color = d3.scaleLinear()
   .domain(domain)
   .range(palette);
 
@@ -110,45 +110,64 @@ var graph = JSON.parse(document.getElementById("json_graph").dataset.graph);
 * one-time setups, like SVG and force init
 */
 function init() {
+
+  zoom = d3.zoom()
+    .scaleExtent([min_zoom, max_zoom])
+    .on('zoom', zoomed)
+
   // We draw the graph in SVG
   svg = d3.select("#canvas svg")
           .attr("width", width)
           .attr("height", height)
           .style("cursor","move")
           .call(zoom)
-          .on('mousedown.focus', function(e){
-            set_focus_via_click(null);
-          })
+          .on('dblclick.zoom', null); // prevent default zoom-in on dblclick
 
-  g = svg.append("g");
+  svg.on('click.focus', function(e){
+    set_focus_via_click(null);
+  });
+
+
+
+  g = svg.append("g")
 
   link = g.selectAll(".link")
   node = g.selectAll(".node")
   text = g.selectAll(".text")
 
-  force = d3.layout.force()
-    .nodes(nodes)
-    .links(links)
-    .linkDistance(5)
-    .gravity(0.2)
-    .charge(-1200)
-    .size([w,h])
-    .on('tick', tick);
+  simulation = d3.forceSimulation()
+    .force('charge', d3.forceManyBody().strength(-1200))
+    .force('center', d3.forceCenter(width / 2, height / 2))
+    .force('link', d3.forceLink().distance(5))
+    .force('x', d3.forceX()) // not sure what this does...
+    .force('y', d3.forceY())
+    .on('tick', ticked)
 
-  drag = force.drag()
-              .on("dragstart", function(d){
-                svg.style('cursor','grabbing');
-                d.fixed = true;
-                dragging = true;
-              })
-              .on('dragend', function(d){
-                dragging = false;
-              });
+  drag = d3.drag()
+    .on("start", function(e, d){
+      svg.style('cursor','grabbing');
+      if (!e.active) {
+        simulation.alphaTarget(0.3).restart()
+      }
+      d.fx = d.x
+      d.fy = d.y
+      dragging = true;
+    })
+    .on('drag', function(e, d){
+      d.fx = e.x
+      d.fy = e.y
+    })
+    .on('end', function(e, d){
+      if (!e.active) {
+        simulation.alphaTarget(0)
+      }
+      dragging = false;
+    });
 
   resize();
   d3.select(window).on("resize", resize);
 
-  d3.select(window).on("mouseup.focus", function(){
+  d3.select(window).on("mouseup.focus", function(e){
     if (focus_node != null) {
       set_cursor('pointer');
     }
@@ -156,39 +175,66 @@ function init() {
       set_cursor('move');
     }
   });
-
-  // Zoom logic
-  zoom.on("zoom", function() {
-    var stroke = nominal_stroke;
-    var base_radius = nominal_base_node_size;
-    if (nominal_base_node_size*zoom.scale()>max_base_node_size) {
-      base_radius = max_base_node_size/zoom.scale();
-    }
-
-    circle.attr("d", d3.svg.symbol()
-      .size(function(d) { return d.size * 50; })
-      .type(function(d) { return d.type; }))
-
-    if (!text_center) text.attr("dx", function(d) {
-      return (size(d.size)*base_radius/nominal_base_node_size||base_radius);
-    });
-
-    var text_size = nominal_text_size;
-    if (nominal_text_size*zoom.scale()>max_text_size) {
-      text_size = max_text_size/zoom.scale();
-    }
-    text.style("font-size",text_size + "px");
-
-    g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-  });
 }
 
-function tick() {
+function start() {
+  // shallow copy to enable restarting,
+  // because otherwise, starting the force simulation mutates the links (replaces indeces with refs)
+  nodes = graph.nodes.map(n => Object.assign({}, n));
+  links = graph.links.map(l => Object.assign({}, l));
+
+  // draw links first so that they appear behind nodes
+  link = link
+    .data(links)
+    .join("line")
+      .attr("class", "link")
+      .style("stroke-width", function(d) { return d.w * nominal_stroke; })
+      .style("stroke-width", function(d) { return d.w * nominal_stroke; });
+
+  node = node
+    .data(nodes, d => d.name)
+    .join(enter => enter.append("g")
+      .attr("class", "node")
+      .attr("id", function(d){ return "node-" + d.name })
+      // append circles...
+      .append("path")
+        .attr("d", d3.symbol()
+                    .size(function(d) { return d.size * 50; })
+                    .type(d3.symbolCircle))
+        .attr("class", "circle")
+        .style(tocolor, function(d) { return color(d.color); })
+        .on("mouseover.focus", node_mouseover)
+        .on("mouseout.focus", node_mouseout)
+        .on('mousedown.focus', node_mousedown)
+        .on("dblclick.zoom", node_dblclick)
+        .on('click.zoom', node_click)
+        .call(drag));
+
+  simulation.nodes(nodes);
+  simulation.force('link').links(links);
+  simulation.alpha(1).restart()
+}
+
+init();
+start();
+
+function restart() {
+  // nodes = []
+  // links = []
+  // node.remove()
+  // link.remove()
+  focus_via_click = false;
+  start()
+}
+
+function zoomed({transform}){
+  g.attr('transform', transform)
+}
+
+function ticked() {
   node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
       .attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; })
-
-  text.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 
   link.attr("x1", function(d) { return d.source.x; })
       .attr("y1", function(d) { return d.source.y; })
@@ -206,10 +252,8 @@ function resize() {
   svg.attr("width", width)
      .attr("height", height);
 
-  force.size([
-      force.size()[0]+(width-w)/zoom.scale(),
-      force.size()[1]+(height-h)/zoom.scale()
-    ]).resume();
+  simulation.force('center', d3.forceCenter(width / 2, height / 2));
+  simulation.alpha(.3).restart();
 
   w = width;
   h = height;
@@ -257,31 +301,29 @@ function set_cursor(state) {
   }
 }
 
-// https://bl.ocks.org/mbostock/3750558
-// IIRC I copied this from the source for what d3 force layout normally does
-// on dragStart and dragEnd.
-// Sets (unsets) the third bit to 1 if doing a mouseover (mouseout).
-function d3_layout_forceMouseover(d) {
-  d.fixed |= 4;
-  d.px = d.x, d.py = d.y;
+function node_is_fixed(d){
+  return d.hasOwnProperty('fx') || d.hasOwnProperty('fy')
 }
-function d3_layout_forceMouseout(d) {
-  d.fixed &= ~4;
+
+function node_click(e, d) {
+  e.stopPropagation()
+  // to prevent the svg click.focus listener from unsetting the focus node...
 }
 
 // Double clicking on a node will center on it.
-function node_dblclick(d) {
-  d3.event.stopPropagation();
-  var dcx = ( window.innerWidth/2 - d.x * zoom.scale() );
-  var dcy = ( window.innerHeight/2 - d.y * zoom.scale() );
-  zoom.translate([dcx, dcy]);
-  g.attr("transform", "translate("+ dcx + "," + dcy  + ")scale(" + zoom.scale() + ")");
+function node_dblclick(e, d) {
+  e.stopPropagation();
+  svg.transition().duration(250).call(zoom.translateTo, d.x, d.y);
 }
 
-function node_mouseover(d) {
-  // Change node details
-  d3_layout_forceMouseover(d);
-  if (d3.event.buttons == 0){
+function node_mouseover(e, d) {
+  d.was_fixed = d.hasOwnProperty('fx') || d.hasOwnProperty('fy')
+  if (!d.was_fixed){
+    d.fx = d.x;
+    d.fy = d.y;
+  }
+
+  if (e.buttons == 0){
     set_cursor('pointer');
     if (!focus_via_click) {
       set_focus_node(d);
@@ -289,9 +331,12 @@ function node_mouseover(d) {
   }
 }
 
-function node_mouseout(d) {
-  d3_layout_forceMouseout(d);
-  if (d3.event.buttons == 0){
+function node_mouseout(e, d) {
+  if (!d.was_fixed){
+      delete d.fx
+      delete d.fy
+  }
+  if (e.buttons == 0){
     set_cursor('move');
     if (!focus_via_click) {
         set_focus_node(null);
@@ -299,8 +344,8 @@ function node_mouseout(d) {
   }
 }
 
-function node_mousedown(d) {
-  d3.event.stopPropagation();
+function node_mousedown(e, d) {
+  e.stopPropagation();
   if (focus_node != d.name) {
       //switch click focus
       set_focus_via_click(d);
@@ -310,94 +355,34 @@ function node_mousedown(d) {
   }
 }
 
-function start() {
-  // shallow copy to enable restarting,
-  // because calling force.start() mutates the links (replaces indeces with refs)
-  nodes = graph.nodes.map(n => Object.assign({}, n));
-  links = graph.links.map(l => Object.assign({}, l));
 
-  force
-    .nodes(nodes)
-    .links(links);
-
-  link = link.data(links);
-  link.enter().append("line")
-        .attr("class", "link")
-        .style("stroke-width", function(d) { return d.w * nominal_stroke; })
-        .style("stroke-width", function(d) { return d.w * nominal_stroke; });
-  link.exit().remove()
-
-  node = node.data(nodes);
-
-  node.enter().append("g")
-        .attr("class", "node")
-        .attr("id", function(d){ return "node-" + d.name })
-        .call(drag);
-  node.exit().remove()
-
-  // Draw circles
-  circle = node.append("path")
-    .attr("d", d3.svg.symbol()
-      .size(function(d) { return d.size * 50; })
-      .type(function(d) { return d.type; }))
-    .attr("class", "circle")
-    .style(tocolor, function(d) { return color(d.color); });
-
-  // bind after circle appends
-  node.on("mouseover.focus", node_mouseover)
-      .on("mouseout.focus", node_mouseout)
-      .on('mousedown.focus', node_mousedown)
-      .on("dblclick.zoom", node_dblclick)
-
-  // Format all text
-  text = text.data(nodes);
-  text.enter().append("text")
-      .attr("dy", ".35em")
-      .style("font-family", "Roboto")
-      .style("font-weight", "400")
-      .style("color", "#2C3E50")
-      .style("font-size", nominal_text_size + "px");
-  text.exit().remove();
-
-  if (text_center) {
-    text.text(function(d) { return d.id; })
-        .style("text-anchor", "middle");
-  } else {
-    text.attr("dx", function(d) { return ( size(d.size) || nominal_base_node_size ); })
-        .text(function(d) { return '\u2002' + d.id; });
-  }
-
-  force.start();
-}
-
-init();
-start();
-
-function restart() {
-  // node.remove()
-  // link.remove()
-  focus_via_click = false;
-  start()
-}
 
 function isNumber(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
 // Key press events
-d3.select(window).on("keydown", function () {
-  if (d3.event.defaultPrevented) {
+d3.select(window).on("keydown", function (event) {
+  if (event.defaultPrevented) {
     return; // Do nothing if the event was already processed
   }
 
-  if (!d3.event.ctrlKey && !d3.event.altKey && !d3.event.metaKey) {
-    switch (d3.event.key) {
+  if (!event.ctrlKey && !event.altKey && !event.metaKey) {
+    switch (event.key) {
       case "f": // freeze all
-        node.datum(function(d){ d.fixed = true; return d; });
+        node.datum(function(d){
+          d.fx = d.x;
+          d.fy = d.y;
+          return d
+        });
         break;
       case "x": // unfreeze all
-        node.datum(function(d){ d.fixed = false; return d; });
-        force.resume()
+        node.datum(function(d){
+          delete d.fy
+          delete d.fx
+          return d;
+        });
+        simulation.restart()
         break
       case "s":
         // Glow
@@ -412,28 +397,34 @@ d3.select(window).on("keydown", function () {
         d3.select("body").attr('id', null).attr('id', "print")
         break;
       case "d":
-        // Do something for "d" key press.
+        // "Display" mode (dark background)
         d3.select("body").attr('id', null).attr('id', "display")
         break;
       case "z":
-        force.gravity(0.0)
-             .charge(0.0);
-        resize();
+        // turn off gravity (??)
+        simulation
+          .force('charge', d3.forceManyBody().strength(0))
+          .alphaTarget(.3)
+          .restart()
         break
       case "m":
-        force.gravity(0.07)
-             .charge(-1);
-        resize();
+        // spacious layout
+        simulation
+          .force('charge', d3.forceManyBody().strength(-1200))
+          .alphaTarget(.3)
+          .restart()
         break
       case "e":
-        force.gravity(0.4)
-             .charge(-600);
-        resize();
+        // tight layout
+        simulation
+          .force('charge', d3.forceManyBody().strength(-60))
+          .alphaTarget(.3)
+          .restart()
         break
       default:
         return; // Quit when this doesn't handle the key event.
     }
-  d3.event.preventDefault();
+  event.preventDefault();
   }
   // Cancel the default action to avoid it being handled twice
 }, true);
@@ -444,13 +435,18 @@ d3.select(window).on("keydown", function () {
 */
 
 // save config
-document.getElementById('download-config').addEventListener('click', function(){
+document.getElementById('download-config').addEventListener('click', function(e){
   let config = {}
   node.data().forEach(node => {
       let config_node = {}
-      config_node['fixed'] = 'fixed' in node && !!node['fixed']
-      config_node['x'] = config_node['px'] = node['x']
-      config_node['y'] = config_node['py'] = node['y']
+
+      if ( node.hasOwnProperty('fx') && node.hasOwnProperty('fy') ) {
+        config_node['fx'] = config_node['x'] = node['fx']
+        config_node['fy'] = config_node['y'] = node['fy']
+      } else {
+        config_node['x'] = node['x']
+        config_node['y'] = node['y']
+      }
       config[node['name']] = config_node
     })
 
@@ -482,7 +478,6 @@ document.getElementById('load-config').addEventListener('click', function(){
   fr.onload = function(e) {
     var config = JSON.parse(e.target.result);
     load_config(config);
-
   }
   fr.readAsText(config_file)
 })
@@ -490,7 +485,13 @@ function load_config(config){
   node = node.datum(function(d, i){
     let load_node_config = config[d['name']]
     d = Object.assign(d, load_node_config);
+    if ( d.hasOwnProperty('fx') && !load_node_config.hasOwnProperty('fx') ) {
+      delete d['fx']
+    }
+    if ( d.hasOwnProperty('fy') && !load_node_config.hasOwnProperty('fy') ) {
+      delete d['fy']
+    }
     return d;
   })
-  force.resume()
+  simulation.restart()
 }

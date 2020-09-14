@@ -105,8 +105,8 @@ class TestVisualHelpers:
         nodes = {"a": [1, 2, 3], "b": [4, 5, 6]}
         graph = {"nodes": nodes}
 
-        cf = np.array([6, 5, 4, 3, 2, 1])
-        color_values = init_color_values(graph, cf)
+        cv = np.array([6, 5, 4, 3, 2, 1])
+        color_values = init_color_values(graph, cv)
 
         # np.testing.assert_almost_equal(min(color_values), 0)
         # np.testing.assert_almost_equal(
@@ -116,6 +116,16 @@ class TestVisualHelpers:
         # build_histogram in visuals.py assumes/needs this
         assert min(color_values) == 0
         assert max(color_values) == 1
+
+    def test_color_values_many_columns(self):
+        nodes = {"a": [1, 2, 3], "b": [4, 5, 6]}
+        graph = {"nodes": nodes}
+
+        cv1 = np.array([6, 5, 4, 3, 2, 1])
+        cv2 = np.array([1, 2, 3, 4, 5, 6])
+        cv = np.column_stack([cv1, cv2])
+        color_values = init_color_values(graph, cv)
+        assert color_values.shape[1] == 2
 
     def test_color_hist_matches_nodes(self):
         """ The histogram colors dont seem to match the node colors, this should confirm the colors will match and we need to look at the javascript instead.

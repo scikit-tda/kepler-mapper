@@ -186,26 +186,16 @@ def _map_val2color(val, vmin, vmax, colorscale=None):
     return "rgb" + str(tuple(val_color_0255))
 
 
-def init_color_values(graph, color_values=None):
-    """Init the color_values array
-
-    If no color_values passed, then returns a 1d array of color values based
-    on the row number, scaled to be between 0 and 1.
-
-    All vector of color values are scaled to be between 0 and 1.
+def scale_color_values(color_values):
+    """Scale all columns in the color_values array to be between 0 and 1.
 
     Parameters
     ----------
     color_values: 1d list or 2d array
         A 1d vector of one color value for each datapoint. If a 2d array,
-        one row for each datapoint in the graph, and each column represents a 
+        one row for each datapoint in the graph, and each column represents a
         color_value for a given point.
     """
-    if color_values is None:
-        # If no color_values provided we color by row order in data set
-        n_samples = np.max([i for s in graph["nodes"].values() for i in s]) + 1
-        color_values = np.arange(n_samples)
-
     if color_values.ndim == 1:
         # Reshaping to 2-D array is required for sklearn 0.19
         color_values = color_values.reshape(-1, 1)
@@ -215,14 +205,14 @@ def init_color_values(graph, color_values=None):
     scaler = preprocessing.MinMaxScaler()
     color_values = scaler.fit_transform(color_values)
 
-    if color_values.shape[1] == 1:
-        color_values = color_values.ravel()
-
     # "Scaler might have floating point issues, 1.0000...0002". Force max and min
     color_values[color_values > 1] = 1
     color_values[color_values < 0] = 0
-    return color_values
 
+    if color_values.shape[1] == 1:
+        color_values = color_values.ravel()
+
+    return color_values
 
 def format_meta(graph, custom_meta=None, color_function_name=None):
     n = [l for l in graph["nodes"].values()]

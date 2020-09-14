@@ -17,7 +17,7 @@ from scipy.sparse import issparse, hstack
 from .cover import Cover
 from .nerve import GraphNerve
 from .visuals import (
-    init_color_values,
+    scale_color_values,
     format_meta,
     format_mapper_data,
     build_histogram,
@@ -614,6 +614,7 @@ class KeplerMapper(object):
         self,
         graph,
         color_values=None,
+        color_function_name=None,
         colorscale=None,
         custom_tooltips=None,
         custom_meta=None,
@@ -638,7 +639,17 @@ class KeplerMapper(object):
                Use `color_values` instead.
 
         color_values : list or 1d array
-            A 1d vector with length equal to number of data points used to build Mapper. Each value should correspond to a value for each data point and color of node is computed as the average value for members in a node.
+            An array of 1d vectors with length equal to number of data points
+            used to build Mapper. Each value should correspond to a value for
+            each data point and color of node is computed as the average value
+            for members in a node.
+
+            If no color_values passed, then colors are based on the row position
+            of the data points.
+
+        color_function_name : String or list
+            A descriptor of the functions used to generate `color_values`. If set, must be equal to the number of columns in color_values.
+            Also, if set, must be equal to the number of vectors in `color_values`.``
 
         colorscale : list
             Specify the colorscale to use. See visuals.colorscale_default.
@@ -740,7 +751,35 @@ class KeplerMapper(object):
                 "Visualize requires a mapper with more than 0 nodes. \nIt is possible that the constructed mapper could have been constructed with bad parameters. This can occasionally happens when using the default clustering algorithm. Try changing `eps` or `min_samples` in the DBSCAN clustering algorithm."
             )
 
-        color_values = init_color_values(graph, color_values)
+        # <validate color values>
+        #   test whether we have a color_function_names for each color_value vector
+        if color_values is not None and color_function_name is not None:
+            # num color_value vectors
+            if color_values.ndim == 1:
+                num_color_value_vectors = 1
+            else:
+                num_color_value_vectors = color_values.shape[1]
+
+            #num color_function_namess
+            if isinstance(color_function_name, str):
+                color_function_name = [color_function_name]
+            num_color_function_names = len(color_function_name)
+
+            if num_color_value_vectors != num_color_function_names:
+                raise Exception('{} `color_function_names` values found, but {} columns found in color_values. Must be equal.'.format(num_color_function_names, num_color_value_vectors))
+
+        if color_values is None:
+            if color_function_name is not None:
+                raise Exception('Parameter `color_function_name` was set, while `color_values` was not. Refusing to proceed.')
+        # </validate color values>
+
+        if color_values is None:
+            # If no color_values provided we color by row order in data set
+            n_samples = np.max([i for s in graph["nodes"].values() for i in s]) + 1
+            color_values = np.arange(n_samples)
+            color_function_name = ['Row number']
+
+        color_values = scale_color_values(color_values)
 
         if X_names is None:
             X_names = []

@@ -10,7 +10,7 @@ from kmapper import KeplerMapper
 
 from kmapper import visuals
 from kmapper.visuals import (
-    init_color_values,
+    scale_color_values,
     format_meta,
     format_mapper_data,
     _map_val2color,
@@ -95,7 +95,9 @@ class TestVisualHelpers:
         nodes = {"a": [1, 2, 3], "b": [4, 5, 6]}
         graph = {"nodes": nodes}
 
-        color_values = init_color_values(graph)
+        n_samples = np.max([i for s in graph["nodes"].values() for i in s]) + 1
+        color_values = np.arange(n_samples)
+        color_values = scale_color_values(color_values)
 
         assert type(color_values) == np.ndarray
         assert min(color_values) == 0
@@ -106,7 +108,7 @@ class TestVisualHelpers:
         graph = {"nodes": nodes}
 
         cv = np.array([6, 5, 4, 3, 2, 1])
-        color_values = init_color_values(graph, cv)
+        color_values = scale_color_values(cv)
 
         # np.testing.assert_almost_equal(min(color_values), 0)
         # np.testing.assert_almost_equal(
@@ -118,14 +120,39 @@ class TestVisualHelpers:
         assert max(color_values) == 1
 
     def test_color_values_many_columns(self):
-        nodes = {"a": [1, 2, 3], "b": [4, 5, 6]}
-        graph = {"nodes": nodes}
-
         cv1 = np.array([6, 5, 4, 3, 2, 1])
         cv2 = np.array([1, 2, 3, 4, 5, 6])
         cv = np.column_stack([cv1, cv2])
-        color_values = init_color_values(graph, cv)
+        color_values = scale_color_values(cv)
         assert color_values.shape[1] == 2
+
+    def test_color_function_names_unequal_exception(self):
+        mapper = KeplerMapper()
+        data, labels = make_circles(1000, random_state=0)
+        lens = mapper.fit_transform(data, projection=[0])
+        graph = mapper.map(lens, data)
+        color_values = lens[:, 0]
+
+        cv1 = np.array(lens)
+        cv2 = np.flip(cv1)
+        cv = np.column_stack([cv1, cv2])
+        with pytest.raises(Exception) as excinfo:
+            mapper.visualize(graph, color_values=cv, color_function_name='hotdog')
+        assert "Must be equal" in str(excinfo.value)
+
+        with pytest.raises(Exception) as excinfo:
+            color_values = mapper.visualize(graph, color_values=cv, color_function_name=['hotdog','hotdog','hotdiggitydog'])
+        assert "Must be equal" in str(excinfo.value)
+
+    def test_no_color_values_yes_color_function_exception(self):
+        mapper = KeplerMapper()
+        data, labels = make_circles(1000, random_state=0)
+        lens = mapper.fit_transform(data, projection=[0])
+        graph = mapper.map(lens, data)
+
+        with pytest.raises(Exception) as excinfo:
+            color_values = mapper.visualize(graph, color_values=None, color_function_name=['hotdog','hotdog','hotdiggitydog'])
+        assert "Refusing to proceed" in str(excinfo.value)
 
     def test_color_hist_matches_nodes(self):
         """ The histogram colors dont seem to match the node colors, this should confirm the colors will match and we need to look at the javascript instead.
@@ -144,7 +171,9 @@ class TestVisualHelpers:
         nodes = {"a": [1, 2, 3], "b": [4, 5, 6, 7, 8, 9]}
         graph = {"nodes": nodes}
 
-        color_values = init_color_values(graph)
+        n_samples = np.max([i for s in graph["nodes"].values() for i in s]) + 1
+        color_values = np.arange(n_samples)
+        color_values = scale_color_values(color_values)
 
         assert len(color_values) == len(nodes["a"]) + len(nodes["b"]) + 1
 

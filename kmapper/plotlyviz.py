@@ -4,7 +4,7 @@ from .utils import deprecated_alias
 import numpy as np
 
 from .visuals import (
-    init_color_values,
+    scale_color_values,
     _size_node,
     _format_projection_statistics,
     _format_cluster_statistics,
@@ -293,7 +293,13 @@ def get_mapper_graph(
             "A mapper graph should have more than 0 nodes. This might be because your clustering algorithm might be too sensitive and be classifying all points as noise."
         )
 
-    color_values = init_color_values(simplicial_complex, color_values)
+    if color_values is None:
+        # If no color_values provided we color by row order in data set
+        n_samples = np.max([i for s in simplicial_complex["nodes"].values() for i in s]) + 1
+        color_values = np.arange(n_samples)
+        color_function_name = ['Row number']
+
+    color_values = scale_color_values(color_values)
 
     if X_names is None:
         X_names = []

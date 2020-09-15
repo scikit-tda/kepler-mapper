@@ -157,10 +157,12 @@ class TestVisualHelpers:
             custom_tooltips=None,
             )
         # pytest.set_trace()
-        assert len(graph_data['nodes'][0]['color']) == 2
-        assert np.array(graph_data['nodes'][0]['tooltip']['histogram']).shape[0] == 2
-        np.testing.assert_almost_equal(np.array([.2, .8]), graph_data['nodes'][0]['color'])
-        np.testing.assert_almost_equal(np.array([.8, .2]), graph_data['nodes'][1]['color'])
+        nodes = { node['name']:node for node in graph_data['nodes'] }
+        assert len(nodes['a']['color']) == 2
+        assert np.array(nodes['a']['tooltip']['histogram']).shape[0] == 2
+        # pytest.set_trace()
+        np.testing.assert_almost_equal(np.array([.2, .8]), nodes['a']['color'])
+        np.testing.assert_almost_equal(np.array([.8, .2]), nodes['b']['color'])
 
 
     def test_color_function_names_unequal_exception(self):

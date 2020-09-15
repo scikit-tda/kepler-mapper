@@ -742,50 +742,38 @@ class KeplerMapper(object):
         if colorscale is None:
             colorscale = colorscale_default
 
-        # TODO:
-        #   - Make color functions more intuitive. How do they even work?
-        #   - Allow multiple color functions that can be toggled on and off.
+        if X_names is None:
+            X_names = []
+
+        if lens_names is None:
+            lens_names = []
 
         if not len(graph["nodes"]) > 0:
             raise Exception(
                 "Visualize requires a mapper with more than 0 nodes. \nIt is possible that the constructed mapper could have been constructed with bad parameters. This can occasionally happens when using the default clustering algorithm. Try changing `eps` or `min_samples` in the DBSCAN clustering algorithm."
             )
 
-        # <validate color values>
-        #   test whether we have a color_function_names for each color_value vector
+        if isinstance(color_function_name, str):
+            color_function_name = [color_function_name]
+
+        # test whether we have a color_function_names for each color_value vector
         if color_values is not None and color_function_name is not None:
-            # num color_value vectors
-            if color_values.ndim == 1:
-                num_color_value_vectors = 1
-            else:
-                num_color_value_vectors = color_values.shape[1]
-
-            #num color_function_namess
-            if isinstance(color_function_name, str):
-                color_function_name = [color_function_name]
+            num_color_value_vectors = color_values.shape[1]
             num_color_function_names = len(color_function_name)
-
             if num_color_value_vectors != num_color_function_names:
                 raise Exception('{} `color_function_names` values found, but {} columns found in color_values. Must be equal.'.format(num_color_function_names, num_color_value_vectors))
 
         if color_values is None:
             if color_function_name is not None:
                 raise Exception('Parameter `color_function_name` was set, while `color_values` was not. Refusing to proceed.')
-        # </validate color values>
 
+        # If no color_values provided we color by row order in data set
         if color_values is None:
-            # If no color_values provided we color by row order in data set
             n_samples = np.max([i for s in graph["nodes"].values() for i in s]) + 1
             color_values = np.arange(n_samples)
             color_function_name = ['Row number']
 
         color_values = scale_color_values(color_values)
-
-        if X_names is None:
-            X_names = []
-
-        if lens_names is None:
-            lens_names = []
 
         mapper_data = format_mapper_data(
             graph,
@@ -800,6 +788,9 @@ class KeplerMapper(object):
         )
 
         histogram = graph_data_distribution(graph, color_values, colorscale)
+        
+        if np.array(histogram).ndim == 1:
+            histogram = [histogram]
 
         mapper_summary = format_meta(graph, custom_meta)
 

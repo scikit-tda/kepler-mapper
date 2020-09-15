@@ -222,6 +222,10 @@ def scomplex_to_graph(
     colorscale,
 ):
 
+    color_values = np.array(color_values)
+    if color_values.ndim == 1:
+        color_values = color_values.reshape(-1, 1)
+
     json_dict = {"nodes": [], "links": []}
     node_id_to_num = {}
     for i, (node_id, member_ids) in enumerate(simplicial_complex["nodes"].items()):
@@ -229,11 +233,14 @@ def scomplex_to_graph(
         projection_stats, cluster_stats, member_histogram = _tooltip_components(
             member_ids, X, X_names, lens, lens_names, color_values, i, colorscale
         )
+        node_color = _node_color_function(member_ids, color_values)
+        if isinstance(node_color, np.ndarray):
+            node_color = node_color.tolist()
         n = {
             "id": i,
             "name": node_id,
             "member_ids": member_ids,
-            "color": _node_color_function(member_ids, color_values),
+            "color": node_color,
             "size": _size_node(member_ids),
             "cluster": cluster_stats,
             "distribution": member_histogram,

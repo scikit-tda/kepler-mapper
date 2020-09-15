@@ -196,6 +196,7 @@ def scale_color_values(color_values):
         one row for each datapoint in the graph, and each column represents a
         color_value for a given point.
     """
+    color_values = np.array(color_values)
     if color_values.ndim == 1:
         # Reshaping to 2-D array is required for sklearn 0.19
         color_values = color_values.reshape(-1, 1)
@@ -244,17 +245,39 @@ def format_meta(graph, custom_meta=None, color_function_name=None):
 
 @deprecated_alias(color_function='color_values')
 def format_mapper_data(
-        graph, color_values, X, X_names, lens, lens_names, custom_tooltips, nbins=10, colorscale=None,
+    graph,
+    color_values,
+    X,
+    X_names,
+    lens,
+    lens_names,
+    custom_tooltips,
+    nbins=10,
+    colorscale=None,
 ):
+    """
+    Parameters
+    ----------
+    color_values: 1d or 2d array
+        Should have one column for each vector of datapoint color values
+    """
     if colorscale is None:
         colorscale = colorscale_default
 
-    # import pdb; pdb.set_trace()
+    color_values = np.array(color_values)
+    if color_values.ndim == 1:
+        color_values = color_values.reshape(-1, 1)
+
     json_dict = {"nodes": [], "links": []}
     node_id_to_num = {}
     for i, (node_id, member_ids) in enumerate(graph["nodes"].items()):
         node_id_to_num[node_id] = i
-        c = _node_color_function(member_ids, color_values)
+
+        node_color = _node_color_function(member_ids, color_values)
+        if np.array(node_color).ndim == 0:
+            node_color = [node_color]
+        if isinstance(node_color, np.ndarray):
+            node_color = node_color.tolist()
         t = _type_node()
         s = _size_node(member_ids)
         tt = _format_tooltip(
@@ -273,12 +296,11 @@ def format_mapper_data(
         n = {
             "id": "",
             "name": node_id,
-            "color": c,
-            "type": _type_node(),
+            "color": node_color,
+            "type": t,
             "size": s,
             "tooltip": tt,
         }
-
         json_dict["nodes"].append(n)
     for i, (node_id, linked_node_ids) in enumerate(graph["links"].items()):
         for linked_node_id in linked_node_ids:
@@ -323,11 +345,17 @@ def graph_data_distribution(graph, color_values, colorscale, nbins=10):
 
     node_averages = []
     for node_id, member_ids in graph["nodes"].items():
-        member_colors = color_values[member_ids]
-        node_averages.append(np.mean(member_colors))
+        node_color = _node_color_function(member_ids, color_values)
+        node_averages.append(node_color)
 
-    histogram = build_histogram(node_averages, colorscale=colorscale, nbins=nbins)
-
+    node_averages = np.array(node_averages)
+    if node_averages.ndim > 1:
+        histogram = []
+        for node_averages_column in node_averages.T:
+            _histogram = build_histogram(node_averages_column, colorscale=colorscale, nbins=nbins)
+            histogram.append(_histogram)
+    else:
+        histogram = build_histogram(node_averages, colorscale=colorscale, nbins=nbins)
     return histogram
 
 
@@ -443,9 +471,12 @@ def _tooltip_components(
     projection_stats = _format_projection_statistics(member_ids, lens, lens_names)
     cluster_stats = _format_cluster_statistics(member_ids, X, X_names)
 
-    member_histogram = build_histogram(
-        color_values[member_ids], colorscale=colorscale, nbins=nbins
-    )
+    member_histogram = []
+    for color_values_vector in color_values.T:
+        _member_histogram = build_histogram(
+            color_values_vector[member_ids], colorscale=colorscale, nbins=nbins
+        )
+        member_histogram.append(_member_histogram)
 
     return projection_stats, cluster_stats, member_histogram
 
@@ -530,7 +561,7 @@ def render_d3_vis(
     return html
 
 def _node_color_function(member_ids, color_values):
-    return np.mean(color_values[member_ids])
+    return np.mean(color_values[member_ids], axis=0)
 
 
 def _size_node(member_ids):

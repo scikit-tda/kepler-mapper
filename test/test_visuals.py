@@ -126,6 +126,43 @@ class TestVisualHelpers:
         color_values = scale_color_values(cv)
         assert color_values.shape[1] == 2
 
+    def test_node_averages_multiple_color_value_vectors(self):
+        nodes = {"a": [0, 1, 2], "b": [3, 4, 5]}
+        graph = {"nodes": nodes, "links": {}}
+
+        n_samples = np.max([i for s in graph["nodes"].values() for i in s]) + 1
+        color_values_1 = np.arange(n_samples)
+        color_values_2 = np.flip(color_values_1)
+        color_values = np.column_stack((color_values_1, color_values_2))
+        color_values = scale_color_values(color_values)
+
+        # (Pdb) color_values
+        # array([[0. , 1. ],
+        #        [0.2, 0.8],
+        #        [0.4, 0.6],
+        #        [0.6, 0.4],
+        #        [0.8, 0.2],
+        #        [1. , 0. ]])
+
+        X = np.arange(n_samples).reshape(-1,1)
+        lens = np.copy(X)
+
+        graph_data = format_mapper_data(
+            graph=graph,
+            color_values=color_values,
+            X=None,
+            X_names=[],
+            lens=lens,
+            lens_names=[],
+            custom_tooltips=None,
+            )
+        # pytest.set_trace()
+        assert len(graph_data['nodes'][0]['color']) == 2
+        assert np.array(graph_data['nodes'][0]['tooltip']['histogram']).shape[0] == 2
+        np.testing.assert_almost_equal(np.array([.2, .8]), graph_data['nodes'][0]['color'])
+        np.testing.assert_almost_equal(np.array([.8, .2]), graph_data['nodes'][1]['color'])
+
+
     def test_color_function_names_unequal_exception(self):
         mapper = KeplerMapper()
         data, labels = make_circles(1000, random_state=0)

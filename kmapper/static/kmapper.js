@@ -244,7 +244,7 @@ function start() {
         .on("mouseover.focus", node_mouseover)
         .on("mouseout.focus", node_mouseout)
         .on('mousedown.focus', node_mousedown)
-        .on("dblclick.zoom", node_dblclick)
+        .on("dblclick.zoom", unfreeze_node)
         .on('click.zoom', node_click)
         .call(drag));
 
@@ -360,8 +360,7 @@ function node_click(e, d) {
   // to prevent the svg click.focus listener from unsetting the focus node...
 }
 
-// Double clicking on a node will center on it.
-function node_dblclick(e, d) {
+function center_on_node(e, d) {
   e.stopPropagation();
   svg.transition().duration(250).call(zoom.translateTo, d.x, d.y);
 }
@@ -411,6 +410,18 @@ function isNumber(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
+function unfreeze_node(d){
+  delete d.fy
+  delete d.fx
+  return d
+}
+
+function freeze_node(d){
+  d.fx = d.x;
+  d.fy = d.y;
+  return d
+}
+
 // Key press events
 d3.select(window).on("keydown", function (event) {
   if (event.defaultPrevented) {
@@ -420,18 +431,10 @@ d3.select(window).on("keydown", function (event) {
   if (!event.ctrlKey && !event.altKey && !event.metaKey) {
     switch (event.key) {
       case "f": // freeze all
-        node.datum(function(d){
-          d.fx = d.x;
-          d.fy = d.y;
-          return d
-        });
+        node.datum(freeze_node);
         break;
       case "x": // unfreeze all
-        node.datum(function(d){
-          delete d.fy
-          delete d.fx
-          return d;
-        });
+        node.datum(unfreeze_node);
         simulation.restart()
         break
       case "s":

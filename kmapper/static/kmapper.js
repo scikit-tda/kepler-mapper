@@ -7,6 +7,7 @@ var w = width;
 var h = height;
 var padding = 40;
 
+var focus_node_id = null;
 var focus_node = null;
 var text_center = false;
 var outline = false;
@@ -90,6 +91,10 @@ d3.select("#help_control").on("click", function(e) {
               d3.select("#helptip_tag"))
 });
 
+d3.select('#select-color-function').on('input', function(e){
+  set_color_function(parseInt(e.target.value))
+})
+
 /**
  *
  * Set up color scale
@@ -105,6 +110,8 @@ var color = d3.scaleLinear()
   .range(palette);
 
 var graph = JSON.parse(document.getElementById("json_graph").dataset.graph);
+var summary = JSON.parse(document.getElementById("json_summary").dataset.summary);
+var summary_histogram = JSON.parse(document.getElementById("json_summary_histogram").dataset.summary);
 
 /*
 * one-time setups, like SVG and force init
@@ -126,8 +133,6 @@ function init() {
   svg.on('click.focus', function(e){
     set_focus_via_click(null);
   });
-
-
 
   g = svg.append("g")
 
@@ -168,16 +173,50 @@ function init() {
   d3.select(window).on("resize", resize);
 
   d3.select(window).on("mouseup.focus", function(e){
-    if (focus_node != null) {
-      set_cursor('pointer');
-    }
     if (focus_node == null) {
       set_cursor('move');
+    } else {
+      set_cursor('pointer');
     }
   });
 }
 
+function set_histogram(selection, data){
+  selection.selectAll('.bin')
+    .data(data)
+    .join(
+      enter => enter.append('div')
+        .attr('class', 'bin')
+        .call(enter => enter.append('div')
+          .text(d => d.perc + '%'))
+      ,
+      update => update
+        .call(update => update.select('div')
+          .text(d => d.perc + '%'))
+    )
+    .style('height', (d) => (d.height || 1) + 'px')
+    .style('background', (d) => d.color);
+}
+
+function set_meta_content_histogram(color_function_index){
+  set_histogram(d3.select('#meta_content .histogram'), summary_histogram[color_function_index])
+}
+
+var current_color_function_index = 0;
+function set_color_function(index){
+  current_color_function_index = index;
+  set_meta_content_histogram(index)
+  node.style(tocolor, function(d) { return color(d.color[index]); })
+  if (focus_node != null){
+    set_focus_node_histogram(focus_node)
+  }
+}
 function start() {
+
+  /*
+  * Force-related things
+  *
+  */
   // shallow copy to enable restarting,
   // because otherwise, starting the force simulation mutates the links (replaces indeces with refs)
   nodes = graph.nodes.map(n => Object.assign({}, n));
@@ -202,7 +241,6 @@ function start() {
                     .size(function(d) { return d.size * 50; })
                     .type(d3.symbolCircle))
         .attr("class", "circle")
-        .style(tocolor, function(d) { return color(d.color); })
         .on("mouseover.focus", node_mouseover)
         .on("mouseout.focus", node_mouseout)
         .on('mousedown.focus', node_mousedown)
@@ -213,6 +251,8 @@ function start() {
   simulation.nodes(nodes);
   simulation.force('link').links(links);
   simulation.alpha(1).restart()
+
+  set_color_function(0)
 }
 
 init();
@@ -270,22 +310,32 @@ function set_focus_node(d){
     set_cursor('move');
     d3.select("#tooltip_content").html('');
     exit_highlight();
-  } else if (d.name != focus_node) {
+  } else if (focus_node == null || d.name != focus_node.name) {
     exit_highlight(focus_node);
-    focus_node = d.name;
+    focus_node = d;
     set_highlight(focus_node);
     set_cursor('pointer');
-    d3.select("#tooltip_content").html(d3.select("#node_tooltip_data-" + d.tooltip.node_id).html());
+    d3.select("#tooltip_content").html(d3.select("#node_tooltip_data-" + focus_node.tooltip.node_id).html());
+    set_focus_node_histogram(d)
   }
   // else, it's already the focus node, so do nothing...
 }
 
-function set_highlight(node_id) {
+function set_focus_node_histogram(d){
+  set_histogram(d3.select('#tooltip_content .histogram'), d.tooltip.histogram[current_color_function_index])
+}
+
+function set_highlight(node) {
+  let node_id = node.name;
   d3.select('#node-' + node_id + ' .circle').classed('highlight', true);
   d3.select('#node-' + node_id).classed('highlight', true);
 }
 
-function exit_highlight(node_id) {
+function exit_highlight(node) {
+  let node_id = false;
+  if (node) {
+    node_id = node.name
+  }
   if (!node_id) {
      d3.selectAll('.node .circle').classed('highlight', false);
      d3.selectAll('.node').classed('highlight', false);
@@ -346,7 +396,7 @@ function node_mouseout(e, d) {
 
 function node_mousedown(e, d) {
   e.stopPropagation();
-  if (focus_node != d.name) {
+  if (focus_node.name != d.name) {
       //switch click focus
       set_focus_via_click(d);
   } else if (!focus_via_click) {
@@ -428,6 +478,8 @@ d3.select(window).on("keydown", function (event) {
   }
   // Cancel the default action to avoid it being handled twice
 }, true);
+
+
 
 /*
 * Save and load config

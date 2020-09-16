@@ -788,11 +788,8 @@ class KeplerMapper(object):
         )
 
         histogram = graph_data_distribution(graph, color_values, colorscale)
-        
-        if np.array(histogram).ndim == 1:
-            histogram = [histogram]
 
-        mapper_summary = format_meta(graph, custom_meta)
+        mapper_summary = format_meta(graph, custom_meta, color_function_name=color_function_name)
 
         html = render_d3_vis(
             title,

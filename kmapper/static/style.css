@@ -189,14 +189,14 @@ a:hover {
   outline: 1px solid slategrey;
 }
 
-#histogram {
+.histogram {
   display: block;
   height: 100px;
   padding-top: 50px;
   clear: both;
 }
 
-#display #histogram {
+#display .histogram {
   opacity: 0.68;
 }
 
@@ -218,7 +218,7 @@ a:hover {
   -o-transform: rotate(-90deg);
 }
 
-#histogram:hover {
+.histogram:hover {
   opacity: 1.;
 }
 

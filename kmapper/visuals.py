@@ -254,6 +254,7 @@ def format_mapper_data(
     custom_tooltips,
     nbins=10,
     colorscale=None,
+    color_function_name=None
 ):
     """
     Parameters
@@ -546,10 +547,26 @@ def render_d3_vis(
     with open(css_path, "r") as f:
         css_text = f.read()
 
+    if np.array(histogram).ndim == 1:
+        histogram = [histogram]
+
+    color_function_names = mapper_summary['custom_meta'].pop('color_function', None)
+    if isinstance(color_function_names, str):
+        color_function_names = [color_function_name]
+
+    if color_function_names is None:
+        raise Exception('''`color_function` required but not found in mapper_summary `custom_meta`''')
+
+    number_of_histograms = np.array(histogram).shape[0]
+    number_of_color_function_names = np.array(color_function_names).shape[0]
+    if number_of_histograms != number_of_color_function_names:
+        raise Exception('Number of histograms ({}) does not equal number of color_function_names ({})'.format(number_of_histograms, number_of_color_function_names))
+
     # Render the Jinja template, filling fields as appropriate
     html = env.get_template("base.html").render(
         title=title,
         mapper_summary=mapper_summary,
+        color_function_names=color_function_names,
         histogram=histogram,
         dist_label="Node",
         mapper_data=mapper_data,

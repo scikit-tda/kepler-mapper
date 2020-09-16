@@ -119,7 +119,7 @@ class TestVisualHelpers:
         assert min(color_values) == 0
         assert max(color_values) == 1
 
-    def test_color_values_many_columns(self):
+    def test_scale_color_values_many_columns(self):
         cv1 = np.array([6, 5, 4, 3, 2, 1])
         cv2 = np.array([1, 2, 3, 4, 5, 6])
         cv = np.column_stack([cv1, cv2])
@@ -243,6 +243,19 @@ class TestVisualHelpers:
         fmt = format_meta(graph, cm)
         assert fmt["custom_meta"] == cm
 
+    def test_visualize_multiple_color_functions(self):
+        """ convenience test for generating a vis with multiple color_values"""
+        mapper = KeplerMapper()
+        data, labels = make_circles(1000, random_state=0)
+        lens = mapper.fit_transform(data, projection=[0])
+        graph = mapper.map(lens, data)
+        color_values = lens[:, 0]
+
+        cv1 = np.array(lens)
+        cv2 = np.flip(cv1)
+        cv = np.column_stack([cv1, cv2])
+        color_values = mapper.visualize(graph, color_values=cv, color_function_name=['hotdog','hotdiggitydog'])
+
     def test_color_function_deprecated_replaced(self, default_colorscale):
         mapper = KeplerMapper()
         data, labels = make_circles(1000, random_state=0)
@@ -266,7 +279,7 @@ class TestVisualHelpers:
             warnings.simplefilter("always")
 
             # kmapper.visualize
-            html = mapper.visualize(graph, color_function=lens)
+            html = mapper.visualize(graph, color_function=lens, color_function_name='lens[:, 0]')
             _test_raised_deprecation_warning(w)
 
             # visuals.format_mapper_data

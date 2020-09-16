@@ -2,16 +2,16 @@
 <div id="toolbar">
     <div id="tooltip_control" class="tool_item">
         <h3>
-        <a href="#"><small id="tooltip_tag">[+]</small></a> 
-        Cluster Details  
+        <a href="#"><small id="tooltip_tag">[+]</small></a>
+        Cluster Details
         </h3>
-    </div>  
-    
+    </div>
+
     <div id="meta_control" class="tool_item">
         <h3>
-        <a href="#"><small id="meta_tag">[+]</small></a> 
-        Mapper Summary 
-        </h3> 
+        <a href="#"><small id="meta_tag">[+]</small></a>
+        Mapper Summary
+        </h3>
     </div>
 
     <div id="help_control" class="tool_item">
@@ -20,5 +20,18 @@
         Help
         </h3>
     </div>
+
+    {% if color_function_names|length > 1 %}
+    <div id="color_function_control" class="tool_item">
+        <h3>Color Function
+          <select class="" id='select-color-function' name="color_function">
+          {% for color_function_name in color_function_names %}
+            <option value="{{ loop.index0 }}">{{color_function_name}}</option>
+          {% endfor %}
+          </select>
+        </h3>
+      </div>
+    </div>
+    {% endif %}
 
 </div>

@@ -18,6 +18,8 @@
   <!-- Storage of data so D3 can access it later. This is in <body> so Chrome doesn't wholesale move all head content to body. -->
   <div id="json_graph" data-graph='{{ mapper_data|tojson|safe }}' style="display:none"></div>
   <div id="json_colorscale" data-colorscale='{{ colorscale|tojson|safe }}' style="display:none"></div>
+  <div id="json_summary" data-summary='{{ mapper_summary|tojson|safe }}' style="display:none"></div>
+  <div id="json_summary_histogram" data-summary='{{ histogram|tojson|safe }}' style="display:none"></div>
 
   {% import 'cluster_tooltip.html' as cluster_tooltip -%}
   <div id='node_tooltips' style='display:none'>

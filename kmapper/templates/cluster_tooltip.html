@@ -1,8 +1,15 @@
-{% import 'histogram.html' as histogram %}
 {% macro build(node_tooltip_data) %}
 <h2>Cluster Details <span style="font-size:0.7em">(node id: {{ node_tooltip_data.node_id }})</span></h2>
 
-{{ histogram.build(node_tooltip_data.dist_label, node_tooltip_data.histogram) }}
+<!-- histogram -->
+<hr><br/>
+
+<h3>{{ node_tooltip_data.dist_label }} Distribution</h3>
+
+<div class="histogram"></div>
+
+<br><br>
+<!-- /histogram -->
 
 <!-- Projection Statistics -->
 {% if projection_stats %}

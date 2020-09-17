@@ -15,21 +15,13 @@
 
 <body id="display">
 
-  <!-- Storage of data so D3 can access it later. This is in <body> so Chrome doesn't wholesale move all head content to body. -->
-  <div id="json_graph" data-graph='{{ mapper_data|tojson|safe }}' style="display:none"></div>
-  <div id="json_colorscale" data-colorscale='{{ colorscale|tojson|safe }}' style="display:none"></div>
-  <div id="json_summary" data-summary='{{ mapper_summary|tojson|safe }}' style="display:none"></div>
-  <div id="json_summary_histogram" data-summary='{{ histogram|tojson|safe }}' style="display:none"></div>
-
-  {% import 'cluster_tooltip.html' as cluster_tooltip -%}
-  <div id='node_tooltips' style='display:none'>
-  {% for node_data in mapper_data.nodes %}
-  	{% set node_tooltip_data = node_data.tooltip %}
-  	<div id='node_tooltip_data-{{ node_tooltip_data.node_id }}'>
-  	{{ cluster_tooltip.build(node_tooltip_data) }}
-  	</div>
-  {% endfor %}
-  </div>
+  <!-- Variables used later -->
+  <script>
+    const graph = {{ mapper_data|tojson|safe }};
+    const colorscale = {{ colorscale|tojson|safe }};
+    const summary = {{ mapper_summary|tojson|safe }};
+    const summary_histogram = {{ histogram|tojson|safe }};
+  </script>
 
   <div id="canvas">
       <!-- Graph will go in here -->
@@ -68,7 +60,12 @@
     <!-- Panes for each of the tips -->
     <div id="tooltip">
       <div id="tooltip_content" class="pane_content">
-        Hover over a node to see attributes about it.
+        <div id='tooltip_content_no_focus_node'>
+          Hover over a node to see attributes about it.
+        </div>
+        <div id='tooltip_content_focus_node' style='display:none'>
+        {% include 'cluster_tooltip.html' %}
+        </div>
       </div>
     </div>
 

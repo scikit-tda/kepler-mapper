@@ -1,97 +1,91 @@
-{% macro build(node_tooltip_data) %}
-<h2>Cluster Details <span style="font-size:0.7em">(node id: {{ node_tooltip_data.node_id }})</span></h2>
+<div>
+  <div class='actions'>
+    <h2>Actions
+      <button class='center-on-node'>Center viewport</button>
+    </h2>
+  </div>
 
-<!-- histogram -->
-<hr><br/>
+  <div class='details'>
+    <h2>Cluster Details <span style="font-size:0.7em">(node id: <span class='node_id'></span>)</span></h2>
 
-<h3>{{ node_tooltip_data.dist_label }} Distribution</h3>
+    <!-- histogram -->
+    <div class='histogram-wrapper'>
+      <hr><br/>
 
-<div class="histogram"></div>
+      <h3><span class='distribution_label'></span> Distribution</h3>
 
-<br><br>
-<!-- /histogram -->
+      <div class="histogram"></div>
 
-<!-- Projection Statistics -->
-{% if node_tooltip_data.projection_stats %}
+      <br><br>
+    </div>
+    <!-- /histogram -->
 
-<hr><br/>
+    <!-- Projection Statistics -->
+    <div class='projection_stats' style='display:none'>
 
-<h3>Projection Statistics</h3>
+      <hr><br/>
 
-<table>
-    <tr><th>Lens</th><th style="width:50px;"> <small>Mean</small></th>
-    <th style="width:50px;"><small>Max</small></th>
-    <th style="width:50px;"><small>Min</small></th></tr>
+      <h3>Projection Statistics</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Lens</th>
+            <th style="width:50px;"><small>Mean</small></th>
+            <th style="width:50px;"><small>Max</small></th>
+            <th style="width:50px;"><small>Min</small></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
 
-    {% for projection in node_tooltip_data.projection_stats %}
+    <!-- Cluster Statistics -->
+    <div class='cluster_stats'>
+        <hr><br/>
 
-        <tr><td>{{ projection['name'] }} </td>
-        <td><small>{{ projection['mean'] }}</small></td>
-        <td><small> {{ projection['max'] }}</small></td>
-        <td><small>{{ projection['min'] }}</small></td></tr>
+        <h3>Cluster Statistics</h3>
+        <div class='above-wrapper'>
+            <h3>Above Average</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Feature</th>
+                  <th style="width:50px;"><small>Mean</small></th>
+                  <th style="width:50px;"><small>STD</small></th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+        </div>
 
-    {% endfor %}
+        <div class='below-wrapper'>
+            <h3>Below Average</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Feature</th>
+                  <th style="width:50px;"><small>Mean</small></th>
+                  <th style="width:50px;"><small>STD</small></th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+        </div>
 
-</table>
+        <h3>Size</h3>
+        <p class='cluster-size'></p>
+    </div>
 
-{% endif %}
+    <!-- Membership information -->
+    <div class='membership-information'>
+      <hr> <br/>
 
+      <h3>Members</h3>
+      <div class='list-of-members'></div>
 
-<!-- Cluster Statistics -->
-{% if node_tooltip_data.cluster_stats %}
-    <hr><br/>
-
-    <!-- <h3>Cluster Statistics</h3> -->
-
-    {% if node_tooltip_data.cluster_stats['above']|length > 0 %}
-        <h3>Above Average</h3>
-
-        <table><tr><th>Feature</th>
-        <th style="width:50px;"><small>Mean</small></th>
-        <th style="width:50px;"><small>STD</small></th></tr>
-
-        {% for stat in node_tooltip_data.cluster_stats['above'] %}
-            <tr><td>{{ stat['feature'] }}</td><td><small> {{ stat['mean'] }}</small></td>
-            <td class="std"><small>{{ stat['std'] }}x</small></td></tr>
-        {% endfor %}
-
-        </table>
-    {% endif %}
-
-    {% if node_tooltip_data.cluster_stats['below']|length > 0 %}
-        <h3>Below Average</h3>
-        <table><tr><th>Feature</th>
-        <th style="width:50px;"><small>Mean</small></th>
-        <th style="width:50px;"><small>STD</small></th></tr>
-
-        {% for stat in cluster_stats['below'] %}
-            <tr><td>{{ stat['feature'] }}</td><td><small>{{ stat['mean'] }}</small></td>
-            <td class="std"><small>{{ stat['std'] }}x</small></td></tr>
-        {% endfor %}
-
-        </table>
-    {% endif %}
-
-
-    <h3>Size</h3>
-        <p>{{ node_tooltip_data.cluster_stats['size'] }}</p>
-
-
-{% endif %}
-
-
-<!-- Membership information -->
-
-
-
-<hr> <br/>
-
-<h3>Members</h3>
-{% for tooltip in node_tooltip_data.custom_tooltips %}
-{{ tooltip }}
-{% endfor %}
-
-
-<br><br>
-<hr><br>
-{% endmacro %}
+      <br><br>
+      <hr><br>
+    </div>
+    <!-- /membership information -->
+  </div>
+</div>

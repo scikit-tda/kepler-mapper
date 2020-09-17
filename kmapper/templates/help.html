@@ -3,7 +3,7 @@
 
 <ul>
 <li>Click on a node to lock focus on that node. The node with the current focus will pulse. Click off of a node to release the lock.</li>
-<li>Dragging a node will fix its position on the screen. Double-click a fixed-position node to unfreeze it.</li> 
+<li>Dragging a node will fix its position on the screen. Double-click a fixed-position node to unfreeze it.</li>
 </ul>
 
 <table>
@@ -59,16 +59,14 @@
 
 </table>
 
-<div class="">
-  <div class="">
+<div class="control-wrapper">
+  <div class="control-row">
     <button type="button" id="download-config" name="download-config">Save config</button>
   </div>
 
-  <div>
+  <div class="control-row">
     <label for="config-file-loader">Choose config file to load</label>
     <input type="file" id="config-file-loader" name="config-file-loader" accept="application/json">
-  </div>
-  <div>
     <button id='load-config' disabled>Load</button>
   </div>
 </div>

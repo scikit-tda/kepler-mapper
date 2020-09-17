@@ -156,11 +156,11 @@ class TestVisualHelpers:
             lens_names=[],
             custom_tooltips=None,
             )
-        # pytest.set_trace()
+
         nodes = { node['name']:node for node in graph_data['nodes'] }
         assert len(nodes['a']['color']) == 2
         assert np.array(nodes['a']['tooltip']['histogram']).shape[0] == 2
-        # pytest.set_trace()
+
         np.testing.assert_almost_equal(np.array([.2, .8]), nodes['a']['color'])
         np.testing.assert_almost_equal(np.array([.8, .2]), nodes['b']['color'])
 
@@ -254,7 +254,21 @@ class TestVisualHelpers:
         cv1 = np.array(lens)
         cv2 = np.flip(cv1)
         cv = np.column_stack([cv1, cv2])
-        color_values = mapper.visualize(graph, color_values=cv, color_function_name=['hotdog','hotdiggitydog'])
+        mapper.visualize(graph, color_values=cv, color_function_name=['hotdog','hotdiggitydog'])
+
+    def test_visualize_graph_with_cluster_stats_above_below(self):
+        mapper = KeplerMapper()
+        X = np.ones((1000, 3))
+        ids = np.random.choice(20, 1000)
+        X[ids, 0] = 10
+        lens = mapper.fit_transform(X, projection=[0])
+        graph = mapper.map(lens, X)
+        output = mapper.visualize(
+            graph,
+            X=X,
+            lens=X
+        )
+        # then, visually inspect mapper_visualization_output.html
 
     def test_color_function_deprecated_replaced(self, default_colorscale):
         mapper = KeplerMapper()
@@ -268,10 +282,6 @@ class TestVisualHelpers:
         projected_X_names = ["projected_%s" % (i) for i in range(projected_X.shape[1])]
         inverse_X_names = ["inverse_%s" % (i) for i in range(inverse_X.shape[1])]
         custom_tooltips = np.array(["customized_%s" % (l) for l in labels])
-
-
-
-
 
         # https://docs.python.org/3/library/warnings.html#testing-warnings
         with warnings.catch_warnings(record=True) as w:

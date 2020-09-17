@@ -101,17 +101,13 @@ d3.select('#select-color-function').on('input', function(e){
  *
  *
  */
-var colorscale = JSON.parse(document.getElementById("json_colorscale").dataset.colorscale);
+// var colorscale defined in base.html
 var domain = colorscale.map((x)=>x[0])
 var palette = colorscale.map((x)=>x[1])
 
 var color = d3.scaleLinear()
   .domain(domain)
   .range(palette);
-
-var graph = JSON.parse(document.getElementById("json_graph").dataset.graph);
-var summary = JSON.parse(document.getElementById("json_summary").dataset.summary);
-var summary_histogram = JSON.parse(document.getElementById("json_summary_histogram").dataset.summary);
 
 /*
 * one-time setups, like SVG and force init
@@ -244,8 +240,9 @@ function start() {
         .on("mouseover.focus", node_mouseover)
         .on("mouseout.focus", node_mouseout)
         .on('mousedown.focus', node_mousedown)
-        .on("dblclick.zoom", unfreeze_node)
+        .on("dblclick.freeze", (e, d) => unfreeze_node(d) )
         .on('click.zoom', node_click)
+        .on('center_viewport', center_on_node)
         .call(drag));
 
   simulation.nodes(nodes);
@@ -304,22 +301,116 @@ function set_focus_via_click(d) {
   set_focus_node(d);
 }
 
+function do_above_below_stats(wrapper, data) {
+  let column_order = ['feature', 'mean', 'std'];
+  wrapper.select('tbody')
+    .selectAll('tr')
+    .data(data, d => d)
+    .join(enter => {
+        let tr = enter.append('tr')
+        tr.append('td')
+        tr.append('td').style('font-size', 'smaller')
+        tr.append('td').style('font-size', 'smaller').attr('class', 'std')
+        return tr
+        })
+    .selectAll('td')
+    .text( (d, i) => d[column_order[i]] )
+  if (data.length > 0) {
+    wrapper.style('display', 'block')
+  } else {
+    wrapper.style('display', 'none')
+  }
+}
+
+function do_projection_stats(wrapper, data) {
+  let column_order = ['name', 'mean', 'min', 'max'];
+  wrapper.select('tbody').selectAll('tr')
+    .data(data, d => d)
+    .join(enter => {
+      let tr = enter.append('tr')
+      tr.append('td')
+      tr.append('td').style('font-size', 'smaller')
+      tr.append('td').style('font-size', 'smaller')
+      tr.append('td').style('font-size', 'smaller')
+      return tr;
+    })
+    .selectAll('td')
+    .text( (d, i) => d[column_order[i]] );
+  if (data.length > 0) {
+    wrapper.style('display', 'block')
+  } else {
+    wrapper.style('display', 'none')
+  }
+}
+
+let focus_node_tooltip_select = d3.select('#tooltip_content_focus_node');
+let tooltip_content_no_focus_node = d3.select('#tooltip_content_no_focus_node')
+let projection_stats_select = focus_node_tooltip_select.select('.projection_stats');
+let cluster_stats_select = focus_node_tooltip_select.select('.cluster_stats');
+let above_wrapper = cluster_stats_select.select('.above-wrapper');
+let below_wrapper = cluster_stats_select.select('.below-wrapper');
+let list_of_members = focus_node_tooltip_select.select('.membership-information .list-of-members');
+
 function set_focus_node(d){
   if (d == null) {
     focus_node = null;
     set_cursor('move');
-    d3.select("#tooltip_content").html('');
+    tooltip_content_no_focus_node.style('display', 'block');
+    focus_node_tooltip_select.style('display', 'none')
     exit_highlight();
   } else if (focus_node == null || d.name != focus_node.name) {
     exit_highlight(focus_node);
     focus_node = d;
     set_highlight(focus_node);
     set_cursor('pointer');
-    d3.select("#tooltip_content").html(d3.select("#node_tooltip_data-" + focus_node.tooltip.node_id).html());
+
+    tooltip_content_no_focus_node.style('display', 'none');
+
+    focus_node_tooltip_select.select('button.center-on-node').node().dataset.nodeId = d.tooltip.node_id;
+    focus_node_tooltip_select.select('.node_id').text(d.tooltip.node_id)
+    focus_node_tooltip_select.select('.distribution_label').text(d.tooltip.dist_label)
+
+    // histogram
+    set_focus_node_histogram(d)
+
+    // projection statistics
+    let projection_stats = d.tooltip.projection_stats;
+    do_projection_stats(projection_stats_select, projection_stats)
+
+    // cluster statistics
+    let cluster_stats = d.tooltip.cluster_stats;
+    if (cluster_stats) {
+
+      do_above_below_stats(above_wrapper, cluster_stats.above);
+
+      do_above_below_stats(below_wrapper, cluster_stats.below);
+
+      cluster_stats_select.select('.cluster-size').text(cluster_stats.size)
+
+      cluster_stats_select.style('display', 'block')
+    } else {
+      cluster_stats_select.style('display', 'none')
+    }
+
+    // membership information
+    list_of_members.selectAll('span')
+      .data(d.tooltip.custom_tooltips, d => d)
+      .join('span')
+        .text(d => d)
+        .style('display', 'inline-block')
+        .style('padding', '0 3px')
+
+    focus_node_tooltip_select.style('display', 'block');
+
     set_focus_node_histogram(d)
   }
   // else, it's already the focus node, so do nothing...
 }
+
+d3.select('#tooltip .center-on-node').on('click', function(e){
+  // d3.select('#node-' + focus_node.name + ' .circle').dispatch('center_viewport')
+  d3.select('#node-' + e.target.dataset.nodeId + ' .circle').dispatch('center_viewport')
+})
 
 function set_focus_node_histogram(d){
   set_histogram(d3.select('#tooltip_content .histogram'), d.tooltip.histogram[current_color_function_index])
@@ -343,6 +434,10 @@ function exit_highlight(node) {
      d3.select('#node-' + node_id + ' .circle').classed('highlight', false);
      d3.select('#node-' + node_id).classed('highlight', false);
   }
+
+  do_projection_stats(projection_stats_select, [])
+  do_above_below_stats(above_wrapper, [])
+  do_above_below_stats(below_wrapper, [])
 }
 
 function set_cursor(state) {
@@ -361,7 +456,6 @@ function node_click(e, d) {
 }
 
 function center_on_node(e, d) {
-  e.stopPropagation();
   svg.transition().duration(250).call(zoom.translateTo, d.x, d.y);
 }
 
@@ -435,7 +529,7 @@ d3.select(window).on("keydown", function (event) {
         break;
       case "x": // unfreeze all
         node.datum(unfreeze_node);
-        simulation.restart()
+        simulation.alphaTarget(.3).restart()
         break
       case "s":
         // Glow

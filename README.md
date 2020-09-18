@@ -22,7 +22,7 @@ KeplerMapper can make use of Scikit-Learn API compatible cluster and scaling alg
 
 KeplerMapper requires:
 
-  - Python (>= 2.7 or >= 3.5)
+  - Python (>= 3.6)
   - NumPy
   - Scikit-learn
 

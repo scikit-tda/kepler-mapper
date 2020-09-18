@@ -527,7 +527,7 @@ def _format_tooltip(
 
     return tooltip_data
 
-def render_d3_vis(
+def _render_d3_vis(
     title,
     mapper_summary,
     histogram,
@@ -555,7 +555,7 @@ def render_d3_vis(
         color_function_names = [color_function_name]
 
     if color_function_names is None:
-        raise Exception('''`color_function` required but not found in mapper_summary `custom_meta`''')
+        raise Exception('`color_function` required but not found in mapper_summary `custom_meta`, make sure that `color_function_name` was passed to `format_meta()`')
 
     number_of_histograms = np.array(histogram).shape[0]
     number_of_color_function_names = np.array(color_function_names).shape[0]

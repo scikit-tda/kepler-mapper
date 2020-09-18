@@ -23,7 +23,7 @@ from .visuals import (
     build_histogram,
     graph_data_distribution,
     colorscale_default,
-    render_d3_vis
+    _render_d3_vis
 )
 from .utils import deprecated_alias
 
@@ -791,7 +791,7 @@ class KeplerMapper(object):
 
         mapper_summary = format_meta(graph, custom_meta, color_function_name=color_function_name)
 
-        html = render_d3_vis(
+        html = _render_d3_vis(
             title,
             mapper_summary,
             histogram,

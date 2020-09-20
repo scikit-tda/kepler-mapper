@@ -183,7 +183,7 @@ class TestVisualHelpers:
             color_values = mapper.visualize(graph, color_values=cv, color_function_name=['hotdog','hotdog','hotdiggitydog'])
         assert "Must be equal" in str(excinfo.value)
 
-    def test_no_color_values_yes_color_function_exception(self):
+    def test_no_color_values_many_color_function_exception(self):
         mapper = KeplerMapper()
         data, labels = make_circles(1000, random_state=0)
         lens = mapper.fit_transform(data, projection=[0])
@@ -192,6 +192,19 @@ class TestVisualHelpers:
         with pytest.raises(Exception) as excinfo:
             color_values = mapper.visualize(graph, color_values=None, color_function_name=['hotdog','hotdog','hotdiggitydog'])
         assert "Refusing to proceed" in str(excinfo.value)
+
+    def test_no_color_values_one_color_function_no_exception_yes_warning(self):
+        mapper = KeplerMapper()
+        data, labels = make_circles(1000, random_state=0)
+        lens = mapper.fit_transform(data, projection=[0])
+        graph = mapper.map(lens, data)
+
+        with warnings.catch_warnings(record=True) as w:
+            # Cause all warnings to always be triggered.
+            warnings.simplefilter("always")
+
+            color_values = mapper.visualize(graph, color_values=None, color_function_name=['hotdog'])
+        assert "unexpected" in str(w[-1].message)
 
     def test_color_hist_matches_nodes(self):
         """ The histogram colors dont seem to match the node colors, this should confirm the colors will match and we need to look at the javascript instead.

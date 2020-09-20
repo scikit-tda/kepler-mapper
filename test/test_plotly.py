@@ -16,7 +16,6 @@ from kmapper.plotlyviz import (
     get_mapper_graph,
     _map_val2color,
     plotly_graph,
-    _format_meta,
     scomplex_to_graph,
 )
 from kmapper.utils import _test_raised_deprecation_warning
@@ -60,6 +59,7 @@ def test_color_function_deprecated_replaced():
     X, labels = make_circles(1000, random_state=0)
     lens = km.fit_transform(X, projection=[0])
     color_values = lens[:, 0]
+    node_color_function = 'mean'
     sc = km.map(lens, X)
     X_names=[]
     lens_names=[]
@@ -72,13 +72,14 @@ def test_color_function_deprecated_replaced():
         # TODO: plotlyviz.plotlyviz
 
         # plotlyviz.get_mapper_graph
-        json_graph, mapper_summary, colorf_distribution = get_mapper_graph(sc, color_function=color_values)
+        json_graph, mapper_summary, colorf_distribution = get_mapper_graph(sc, color_function=color_values, node_color_function=node_color_function)
         _test_raised_deprecation_warning(w)
 
         # plotlyviz.scomplex_to_graph
         _ = scomplex_to_graph(
             simplicial_complex=sc,
             color_function=color_values,
+            node_color_function=node_color_function,
             X=X,
             X_names=X_names,
             lens=lens,

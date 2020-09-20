@@ -215,7 +215,7 @@ def _scale_color_values(color_values):
 
     return color_values
 
-def _format_meta(graph, color_function_name, custom_meta=None):
+def _format_meta(graph, color_function_name, node_color_function, custom_meta=None):
     n = [l for l in graph["nodes"].values()]
     n_unique = len(set([i for s in n for i in s]))
 
@@ -233,6 +233,7 @@ def _format_meta(graph, color_function_name, custom_meta=None):
     mapper_summary = {
         "custom_meta": custom_meta,
         "color_function_name": color_function_name,
+        "node_color_function": node_color_function,
         "n_nodes": len(graph["nodes"]),
         "n_edges": sum([len(l) for l in graph["links"].values()]),
         "n_total": sum([len(l) for l in graph["nodes"].values()]),
@@ -245,6 +246,7 @@ def _format_meta(graph, color_function_name, custom_meta=None):
 def _format_mapper_data(
     graph,
     color_values,
+    node_color_function,
     X,
     X_names,
     lens,
@@ -271,7 +273,7 @@ def _format_mapper_data(
     for i, (node_id, member_ids) in enumerate(graph["nodes"].items()):
         node_id_to_num[node_id] = i
 
-        node_color = _node_color_function(member_ids, color_values)
+        node_color = _node_color_function(member_ids, color_values, node_color_function)
         if np.array(node_color).ndim == 0:
             node_color = [node_color]
         if isinstance(node_color, np.ndarray):
@@ -339,11 +341,11 @@ def _build_histogram(data, colorscale=None, nbins=10):
 
 
 @deprecated_alias(color_function='color_values')
-def _graph_data_distribution(graph, color_values, colorscale, nbins=10):
+def _graph_data_distribution(graph, color_values, node_color_function, colorscale, nbins=10):
 
     node_averages = []
     for node_id, member_ids in graph["nodes"].items():
-        node_color = _node_color_function(member_ids, color_values)
+        node_color = _node_color_function(member_ids, color_values, node_color_function)
         node_averages.append(node_color)
 
     node_averages = np.array(node_averages)
@@ -561,8 +563,8 @@ def _render_d3_vis(
 
     return html
 
-def _node_color_function(member_ids, color_values):
-    return np.mean(color_values[member_ids], axis=0)
+def _node_color_function(member_ids, color_values, function_name='mean'):
+    return getattr(np, function_name)(color_values[member_ids], axis=0)
 
 
 def _size_node(member_ids):

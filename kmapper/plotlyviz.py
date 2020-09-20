@@ -65,6 +65,7 @@ def plotlyviz(
     graph_layout="kk",
     color_values=None,
     color_function_name=None,
+    node_color_function='mean',
     dashboard=False,
     graph_data=False,
     factor_size=3,
@@ -158,6 +159,7 @@ def plotlyviz(
         colorscale=colorscale,
         color_values=color_values,
         color_function_name=color_function_name,
+        node_color_function=node_color_function
     )
 
     annotation = get_kmgraph_meta(mapper_summary)
@@ -220,6 +222,7 @@ def scomplex_to_graph(
     lens_names,
     custom_tooltips,
     colorscale,
+    node_color_function='mean',
 ):
 
     color_values = np.array(color_values)
@@ -233,7 +236,7 @@ def scomplex_to_graph(
         projection_stats, cluster_stats, member_histogram = _tooltip_components(
             member_ids, X, X_names, lens, lens_names, color_values, i, colorscale
         )
-        node_color = _node_color_function(member_ids, color_values)
+        node_color = _node_color_function(member_ids, color_values, node_color_function)
         if isinstance(node_color, np.ndarray):
             node_color = node_color.tolist()
         n = {
@@ -265,6 +268,7 @@ def get_mapper_graph(
     simplicial_complex,
     color_values=None,
     color_function_name=None,
+    node_color_function='mean',
     colorscale=None,
     custom_tooltips=None,
     custom_meta=None,
@@ -323,13 +327,15 @@ def get_mapper_graph(
         lens_names,
         custom_tooltips,
         colorscale=colorscale,
+        node_color_function=node_color_function
     )
     colorf_distribution = _graph_data_distribution(
-        simplicial_complex, color_values, colorscale
+        simplicial_complex, color_values, node_color_function, colorscale
     )
     mapper_summary = _format_meta(
         simplicial_complex,
         color_function_name=color_function_name,
+        node_color_function=node_color_function,
         custom_meta=custom_meta,
     )
 

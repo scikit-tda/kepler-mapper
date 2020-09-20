@@ -150,6 +150,7 @@ class TestVisualHelpers:
         graph_data = _format_mapper_data(
             graph=graph,
             color_values=color_values,
+            node_color_function='mean',
             X=None,
             X_names=[],
             lens=lens,
@@ -207,7 +208,9 @@ class TestVisualHelpers:
         assert "unexpected" in str(w[-1].message)
 
     def test_color_hist_matches_nodes(self):
-        """ The histogram colors dont seem to match the node colors, this should confirm the colors will match and we need to look at the javascript instead.
+        """ The histogram colors dont seem to match the node colors,
+            this should confirm the colors will match and we need to look at the
+            javascript instead.
         """
 
         color_values = np.array([0.55] * 10 + [0.0] * 10)
@@ -218,6 +221,14 @@ class TestVisualHelpers:
 
         assert len(single_bar) == 1
         assert _map_val2color(c, 0.0, 1.0) == single_bar[0]["color"]
+
+    def test_node_color_function_works(self):
+        color_values = np.arange(20)
+        member_ids = np.arange(color_values.shape[0])
+        assert _node_color_function(member_ids, color_values, 'mean') == np.mean(color_values) == 9.5
+        assert _node_color_function(member_ids, color_values, 'median') == np.median(color_values) == 9.5
+        assert _node_color_function(member_ids, color_values, 'max') == np.max(color_values) == 19
+        assert _node_color_function(member_ids, color_values, 'min') == np.min(color_values) == 0
 
     def test_color_values_size(self):
         nodes = {"a": [1, 2, 3], "b": [4, 5, 6, 7, 8, 9]}
@@ -253,17 +264,26 @@ class TestVisualHelpers:
         lens = mapper.fit_transform(data, projection=[0])
         graph = mapper.map(lens, data)
         color_function_name = ['Row number']
+        node_color_function = 'mean'
 
         cm = "My custom_meta"
-        fmt = _format_meta(graph, color_function_name, cm)
+        fmt = _format_meta(graph, color_function_name, node_color_function, cm)
         assert fmt["custom_meta"] == cm
 
     def test_format_meta(self, sc):
-        mapper_summary = _format_meta(sc, "foo", "Nada custom meta")
+        mapper_summary = _format_meta(sc, "foo", "bar", "Nada custom meta")
         assert mapper_summary["custom_meta"] == "Nada custom meta"
         assert (
             mapper_summary["n_total"] <= 300 and mapper_summary["n_total"] >= 200
         ), "Some points become repeated in multiple nodes."
+
+    def test_node_color_function_must_be_np_function(self, sc):
+        mapper = KeplerMapper()
+
+        with pytest.raises(AttributeError, match=r".*must be a function available on `numpy` class.*"):
+            mapper.visualize(sc, node_color_function=['yinz'])
+
+
 
     def test_to_html_format(self):
         res = _to_html_format("a\nb\n\n\\n\n")
@@ -304,6 +324,7 @@ class TestVisualHelpers:
         graph = mapper.map(lens, data)
 
         color_values = lens[:, 0]
+        node_color_function = 'mean'
         inverse_X = data
         projected_X = lens
         projected_X_names = ["projected_%s" % (i) for i in range(projected_X.shape[1])]
@@ -323,6 +344,7 @@ class TestVisualHelpers:
             graph_data = _format_mapper_data(
                 graph=graph,
                 color_function=color_values,
+                node_color_function=node_color_function,
                 X=inverse_X,
                 X_names=inverse_X_names,
                 lens=projected_X,
@@ -332,7 +354,7 @@ class TestVisualHelpers:
             _test_raised_deprecation_warning(w)
 
             # visuals._graph_data_distribution
-            histogram = _graph_data_distribution(graph, color_function=lens, colorscale=default_colorscale)
+            histogram = _graph_data_distribution(graph, color_function=lens, node_color_function=node_color_function, colorscale=default_colorscale)
             _test_raised_deprecation_warning(w)
 
 
@@ -345,6 +367,7 @@ class TestVisualHelpers:
         graph = mapper.map(lens, data)
 
         color_values = lens[:, 0]
+        node_color_function = 'mean'
         inverse_X = data
         projected_X = lens
         projected_X_names = ["projected_%s" % (i) for i in range(projected_X.shape[1])]
@@ -354,6 +377,7 @@ class TestVisualHelpers:
         graph_data = _format_mapper_data(
             graph,
             color_values,
+            node_color_function,
             inverse_X,
             inverse_X_names,
             projected_X,

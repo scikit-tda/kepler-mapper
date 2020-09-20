@@ -742,7 +742,6 @@ class KeplerMapper(object):
         if colorscale is None:
             colorscale = colorscale_default
 
-
         if X_names is None:
             X_names = []
 
@@ -759,33 +758,30 @@ class KeplerMapper(object):
         elif isinstance(color_function_name, str):
             color_function_name = [color_function_name]
 
-        if color_values is not None:
-            color_values = np.array(color_values)
-            # test whether we have a color_function_names for each color_value vector
-            num_color_value_vectors = color_values.shape[1]
-            num_color_function_names = len(color_function_name)
-            if num_color_value_vectors != num_color_function_names:
-                raise Exception('{} `color_function_names` values found, but {} columns found in color_values. Must be equal.'.format(num_color_function_names, num_color_value_vectors))
-        else:
-            if len(color_function_name):
-                # `color_values` was None.
-                #
-                # It's okay if `color_values` was None while `color_function_name` was passed,
-                # as long as there's only one entry for `color_function_name`.
-                # If this is the case, then that will be used to name the default
-                # value for `color_values` set below. If the single entry
-                # was a string, then it would have been wrapped in an array above.
-                if len(color_function_name) > 1:
-                    raise Exception('More than one `color_function_name` was set, while `color_values` was not set. If `color_values` was not set, then only one `color_function_name` can be passed. Refusing to proceed.')
-                else:
-                    warnings.warn('`color_function_name` was set, while no `color_values` were passed. Default color_values will be computed based on row order, and the passed `color_function_name` will be set as their label.')
-
-        # If no color_values provided we color by row order in data set
         if color_values is None:
+            # We generate default `color_values` based on data row order
             n_samples = np.max([i for s in graph["nodes"].values() for i in s]) + 1
             color_values = np.arange(n_samples)
             if not len(color_function_name):
                 color_function_name = ['Row number']
+            else:
+                # `color_function_name` was not None, while `color_values` was None
+                #
+                # This is okay, as long as there's only one entry for `color_function_name`.
+                # If this is the case, then that will be used to name the default
+                # `color_values` based on row order. But we will raise a warning.
+
+                if len(color_function_name) == 1:
+                    warnings.warn('`color_function_name` was set -- however, no `color_values` were passed, so default color_values were computed based on row order, and the passed `color_function_name` will be set as their label. This may be unexpected.')
+                else:
+                    raise Exception('More than one `color_function_name` was set, while `color_values` was not set. If `color_values` was not set, then only one `color_function_name` can be passed. Refusing to proceed.')
+        else:
+            color_values = np.array(color_values)
+            # test whether we have a color_function_name for each color_value vector
+            num_color_value_vectors = color_values.shape[1]
+            num_color_function_names = len(color_function_name)
+            if num_color_value_vectors != num_color_function_names:
+                raise Exception('{} `color_function_names` values found, but {} columns found in color_values. Must be equal.'.format(num_color_function_names, num_color_value_vectors))
 
         color_values = scale_color_values(color_values)
 

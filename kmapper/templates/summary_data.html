@@ -16,15 +16,9 @@
 
 <h3>Unique Samples</h3><p> {{ mapper_summary.n_unique }}</p>
 
-{% if color_function_names|length > 1 %}
-  <h3>Color functions</h3><p>
-    {{ color_function_names|join(', ')}}
-  </p>
-{% else %}
-  <h3>Color function</h3><p>
-    {{ color_function_names[0] }}
-  </p>
-{% endif %}
+<h3>Color function{% if mapper_summary.color_function_name|length > 1 %}s{% endif %}</h3><p>
+  {{ mapper_summary.color_function_name|join(', ')}}
+</p>
 
 <!-- histogram -->
 <hr><br/>

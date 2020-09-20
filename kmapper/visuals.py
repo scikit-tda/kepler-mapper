@@ -186,7 +186,7 @@ def _map_val2color(val, vmin, vmax, colorscale=None):
     return "rgb" + str(tuple(val_color_0255))
 
 
-def scale_color_values(color_values):
+def _scale_color_values(color_values):
     """Scale all columns in the color_values array to be between 0 and 1.
 
     Parameters
@@ -215,7 +215,7 @@ def scale_color_values(color_values):
 
     return color_values
 
-def format_meta(graph, custom_meta=None, color_function_name=None):
+def _format_meta(graph, color_function_name, custom_meta=None):
     n = [l for l in graph["nodes"].values()]
     n_unique = len(set([i for s in n for i in s]))
 
@@ -230,11 +230,9 @@ def format_meta(graph, custom_meta=None, color_function_name=None):
             projection = custom_meta["projection"]
             custom_meta["projection"] = _to_html_format(projection)
 
-        if color_function_name is not None:
-            custom_meta["color_function"] = color_function_name
-
     mapper_summary = {
         "custom_meta": custom_meta,
+        "color_function_name": color_function_name,
         "n_nodes": len(graph["nodes"]),
         "n_edges": sum([len(l) for l in graph["links"].values()]),
         "n_total": sum([len(l) for l in graph["nodes"].values()]),
@@ -244,7 +242,7 @@ def format_meta(graph, custom_meta=None, color_function_name=None):
     return mapper_summary
 
 @deprecated_alias(color_function='color_values')
-def format_mapper_data(
+def _format_mapper_data(
     graph,
     color_values,
     X,
@@ -254,7 +252,6 @@ def format_mapper_data(
     custom_tooltips,
     nbins=10,
     colorscale=None,
-    color_function_name=None
 ):
     """
     Parameters
@@ -315,13 +312,13 @@ def format_mapper_data(
     return json_dict
 
 
-def build_histogram(data, colorscale=None, nbins=10):
+def _build_histogram(data, colorscale=None, nbins=10):
     """ Build histogram of data based on values of color_values
     """
     if colorscale is None:
         colorscale = colorscale_default
 
-    # TODO: we should weave this method of handling colors into the normal build_histogram and combine both functions
+    # TODO: we should weave this method of handling colors into the normal _build_histogram and combine both functions
     colorscale = _colors_to_rgb(colorscale)
 
     h_min, h_max = 0, 1
@@ -342,7 +339,7 @@ def build_histogram(data, colorscale=None, nbins=10):
 
 
 @deprecated_alias(color_function='color_values')
-def graph_data_distribution(graph, color_values, colorscale, nbins=10):
+def _graph_data_distribution(graph, color_values, colorscale, nbins=10):
 
     node_averages = []
     for node_id, member_ids in graph["nodes"].items():
@@ -353,10 +350,10 @@ def graph_data_distribution(graph, color_values, colorscale, nbins=10):
     if node_averages.ndim > 1:
         histogram = []
         for node_averages_column in node_averages.T:
-            _histogram = build_histogram(node_averages_column, colorscale=colorscale, nbins=nbins)
+            _histogram = _build_histogram(node_averages_column, colorscale=colorscale, nbins=nbins)
             histogram.append(_histogram)
     else:
-        histogram = build_histogram(node_averages, colorscale=colorscale, nbins=nbins)
+        histogram = _build_histogram(node_averages, colorscale=colorscale, nbins=nbins)
     return histogram
 
 
@@ -474,7 +471,7 @@ def _tooltip_components(
 
     member_histogram = []
     for color_values_vector in color_values.T:
-        _member_histogram = build_histogram(
+        _member_histogram = _build_histogram(
             color_values_vector[member_ids], colorscale=colorscale, nbins=nbins
         )
         member_histogram.append(_member_histogram)
@@ -550,23 +547,10 @@ def _render_d3_vis(
     if np.array(histogram).ndim == 1:
         histogram = [histogram]
 
-    color_function_names = mapper_summary['custom_meta'].pop('color_function', None)
-    if isinstance(color_function_names, str):
-        color_function_names = [color_function_name]
-
-    if color_function_names is None:
-        raise Exception('`color_function` required but not found in mapper_summary `custom_meta`, make sure that `color_function_name` was passed to `format_meta()`')
-
-    number_of_histograms = np.array(histogram).shape[0]
-    number_of_color_function_names = np.array(color_function_names).shape[0]
-    if number_of_histograms != number_of_color_function_names:
-        raise Exception('Number of histograms ({}) does not equal number of color_function_names ({})'.format(number_of_histograms, number_of_color_function_names))
-
     # Render the Jinja template, filling fields as appropriate
     html = env.get_template("base.html").render(
         title=title,
         mapper_summary=mapper_summary,
-        color_function_names=color_function_names,
         histogram=histogram,
         dist_label="Node",
         mapper_data=mapper_data,

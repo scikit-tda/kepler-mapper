@@ -4,16 +4,16 @@ from .utils import deprecated_alias
 import numpy as np
 
 from .visuals import (
-    scale_color_values,
+    _scale_color_values,
     _size_node,
     _format_projection_statistics,
     _format_cluster_statistics,
     _node_color_function,
-    format_meta,
+    _format_meta,
     _to_html_format,
     _map_val2color,
-    graph_data_distribution,
-    build_histogram,
+    _graph_data_distribution,
+    _build_histogram,
     _tooltip_components,
 )
 
@@ -306,7 +306,7 @@ def get_mapper_graph(
         color_values = np.arange(n_samples)
         color_function_name = ['Row number']
 
-    color_values = scale_color_values(color_values)
+    color_values = _scale_color_values(color_values)
 
     if X_names is None:
         X_names = []
@@ -324,10 +324,10 @@ def get_mapper_graph(
         custom_tooltips,
         colorscale=colorscale,
     )
-    colorf_distribution = graph_data_distribution(
+    colorf_distribution = _graph_data_distribution(
         simplicial_complex, color_values, colorscale
     )
-    mapper_summary = format_meta(
+    mapper_summary = _format_meta(
         simplicial_complex,
         color_function_name=color_function_name,
         custom_meta=custom_meta,
@@ -515,7 +515,7 @@ def node_hist_fig(
 
     Parameters
     ----------
-    node_color_distribution: list of dicts describing the build_histogram
+    node_color_distribution: list of dicts describing the _build_histogram
     width, height: integers -  width and height of the histogram FigureWidget
     left, top, right, bottom: ints; number of pixels around the FigureWidget
     bgcolor: rgb of hex color code for the figure background color

@@ -10,13 +10,14 @@ from kmapper import KeplerMapper
 
 from kmapper import visuals
 from kmapper.visuals import (
-    scale_color_values,
-    format_meta,
-    format_mapper_data,
+    _scale_color_values,
+    _format_meta,
+    _format_mapper_data,
     _map_val2color,
-    build_histogram,
-    graph_data_distribution,
+    _build_histogram,
+    _graph_data_distribution,
     _node_color_function,
+    _to_html_format,
 )
 from kmapper.utils import _test_raised_deprecation_warning
 import warnings
@@ -89,7 +90,6 @@ def default_colorscale():
     ]
     return colorscale
 
-
 class TestVisualHelpers:
     def test_color_values_type(self):
         nodes = {"a": [1, 2, 3], "b": [4, 5, 6]}
@@ -97,7 +97,7 @@ class TestVisualHelpers:
 
         n_samples = np.max([i for s in graph["nodes"].values() for i in s]) + 1
         color_values = np.arange(n_samples)
-        color_values = scale_color_values(color_values)
+        color_values = _scale_color_values(color_values)
 
         assert type(color_values) == np.ndarray
         assert min(color_values) == 0
@@ -108,22 +108,22 @@ class TestVisualHelpers:
         graph = {"nodes": nodes}
 
         cv = np.array([6, 5, 4, 3, 2, 1])
-        color_values = scale_color_values(cv)
+        color_values = _scale_color_values(cv)
 
         # np.testing.assert_almost_equal(min(color_values), 0)
         # np.testing.assert_almost_equal(
         #     max(color_values), 1
         # ), "Scaler might have floating point issues, 1.0000...0002"
 
-        # build_histogram in visuals.py assumes/needs this
+        # _build_histogram in visuals.py assumes/needs this
         assert min(color_values) == 0
         assert max(color_values) == 1
 
-    def test_scale_color_values_many_columns(self):
+    def test__scale_color_values_many_columns(self):
         cv1 = np.array([6, 5, 4, 3, 2, 1])
         cv2 = np.array([1, 2, 3, 4, 5, 6])
         cv = np.column_stack([cv1, cv2])
-        color_values = scale_color_values(cv)
+        color_values = _scale_color_values(cv)
         assert color_values.shape[1] == 2
 
     def test_node_averages_multiple_color_value_vectors(self):
@@ -134,7 +134,7 @@ class TestVisualHelpers:
         color_values_1 = np.arange(n_samples)
         color_values_2 = np.flip(color_values_1)
         color_values = np.column_stack((color_values_1, color_values_2))
-        color_values = scale_color_values(color_values)
+        color_values = _scale_color_values(color_values)
 
         # (Pdb) color_values
         # array([[0. , 1. ],
@@ -147,7 +147,7 @@ class TestVisualHelpers:
         X = np.arange(n_samples).reshape(-1,1)
         lens = np.copy(X)
 
-        graph_data = format_mapper_data(
+        graph_data = _format_mapper_data(
             graph=graph,
             color_values=color_values,
             X=None,
@@ -212,7 +212,7 @@ class TestVisualHelpers:
 
         color_values = np.array([0.55] * 10 + [0.0] * 10)
         member_ids = [1, 2, 3, 4, 5, 6]
-        hist = build_histogram(color_values[member_ids])
+        hist = _build_histogram(color_values[member_ids])
         c = round(_node_color_function(member_ids, color_values), 2)
         single_bar = [bar for bar in hist if bar["perc"] == 100.0]
 
@@ -225,7 +225,7 @@ class TestVisualHelpers:
 
         n_samples = np.max([i for s in graph["nodes"].values() for i in s]) + 1
         color_values = np.arange(n_samples)
-        color_values = scale_color_values(color_values)
+        color_values = _scale_color_values(color_values)
 
         assert len(color_values) == len(nodes["a"]) + len(nodes["b"]) + 1
 
@@ -234,8 +234,9 @@ class TestVisualHelpers:
         data = np.random.rand(1000, 10)
         lens = mapper.fit_transform(data, projection=[0])
         graph = mapper.map(lens, data)
+        color_function_name = ['Row number']
 
-        fmt = format_meta(graph)
+        fmt = _format_meta(graph, color_function_name)
         assert fmt["n_nodes"] == len(graph["nodes"])
 
         assert "n_edges" in fmt.keys()
@@ -251,10 +252,23 @@ class TestVisualHelpers:
         data = np.random.rand(1000, 10)
         lens = mapper.fit_transform(data, projection=[0])
         graph = mapper.map(lens, data)
+        color_function_name = ['Row number']
 
         cm = "My custom_meta"
-        fmt = format_meta(graph, cm)
+        fmt = _format_meta(graph, color_function_name, cm)
         assert fmt["custom_meta"] == cm
+
+    def test_format_meta(self, sc):
+        mapper_summary = _format_meta(sc, "foo", "Nada custom meta")
+        assert mapper_summary["custom_meta"] == "Nada custom meta"
+        assert (
+            mapper_summary["n_total"] <= 300 and mapper_summary["n_total"] >= 200
+        ), "Some points become repeated in multiple nodes."
+
+    def test_to_html_format(self):
+        res = _to_html_format("a\nb\n\n\\n\n")
+        assert "\n" not in res
+        assert "<br>" in res
 
     def test_visualize_multiple_color_functions(self):
         """ convenience test for generating a vis with multiple color_values"""
@@ -305,8 +319,8 @@ class TestVisualHelpers:
             html = mapper.visualize(graph, color_function=lens, color_function_name='lens[:, 0]')
             _test_raised_deprecation_warning(w)
 
-            # visuals.format_mapper_data
-            graph_data = format_mapper_data(
+            # visuals._format_mapper_data
+            graph_data = _format_mapper_data(
                 graph=graph,
                 color_function=color_values,
                 X=inverse_X,
@@ -317,14 +331,14 @@ class TestVisualHelpers:
             )
             _test_raised_deprecation_warning(w)
 
-            # visuals.graph_data_distribution
-            histogram = graph_data_distribution(graph, color_function=lens, colorscale=default_colorscale)
+            # visuals._graph_data_distribution
+            histogram = _graph_data_distribution(graph, color_function=lens, colorscale=default_colorscale)
             _test_raised_deprecation_warning(w)
 
 
 
 
-    def test_format_mapper_data(self):
+    def test__format_mapper_data(self):
         mapper = KeplerMapper()
         data, labels = make_circles(1000, random_state=0)
         lens = mapper.fit_transform(data, projection=[0])
@@ -337,7 +351,7 @@ class TestVisualHelpers:
         inverse_X_names = ["inverse_%s" % (i) for i in range(inverse_X.shape[1])]
         custom_tooltips = np.array(["customized_%s" % (l) for l in labels])
 
-        graph_data = format_mapper_data(
+        graph_data = _format_mapper_data(
             graph,
             color_values,
             inverse_X,
@@ -360,7 +374,7 @@ class TestVisualHelpers:
 
     def test_histogram(self):
         data = np.random.random((100, 1))
-        hist = visuals.build_histogram(data)
+        hist = visuals._build_histogram(data)
         assert isinstance(hist, list)
         assert isinstance(hist[0], dict)
         assert len(hist) == 10

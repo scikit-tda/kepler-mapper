@@ -17,11 +17,11 @@ from scipy.sparse import issparse, hstack
 from .cover import Cover
 from .nerve import GraphNerve
 from .visuals import (
-    scale_color_values,
-    format_meta,
-    format_mapper_data,
-    build_histogram,
-    graph_data_distribution,
+    _scale_color_values,
+    _format_meta,
+    _format_mapper_data,
+    _build_histogram,
+    _graph_data_distribution,
     colorscale_default,
     _render_d3_vis
 )
@@ -783,9 +783,9 @@ class KeplerMapper(object):
             if num_color_value_vectors != num_color_function_names:
                 raise Exception('{} `color_function_names` values found, but {} columns found in color_values. Must be equal.'.format(num_color_function_names, num_color_value_vectors))
 
-        color_values = scale_color_values(color_values)
+        color_values = _scale_color_values(color_values)
 
-        mapper_data = format_mapper_data(
+        mapper_data = _format_mapper_data(
             graph,
             color_values,
             X,
@@ -797,9 +797,9 @@ class KeplerMapper(object):
             colorscale=colorscale,
         )
 
-        histogram = graph_data_distribution(graph, color_values, colorscale)
+        histogram = _graph_data_distribution(graph, color_values, colorscale)
 
-        mapper_summary = format_meta(graph, custom_meta, color_function_name=color_function_name)
+        mapper_summary = _format_meta(graph, color_function_name, custom_meta)
 
         html = _render_d3_vis(
             title,

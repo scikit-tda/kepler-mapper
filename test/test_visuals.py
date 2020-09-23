@@ -290,6 +290,15 @@ class TestVisualHelpers:
         assert "\n" not in res
         assert "<br>" in res
 
+    def test_visualize_one_color_function(self):
+        mapper = KeplerMapper()
+        data, labels = make_circles(1000, random_state=0)
+        lens = mapper.fit_transform(data, projection=[0])
+        graph = mapper.map(lens, data)
+        color_values = lens[:, 0]
+
+        mapper.visualize(graph, color_values=color_values, color_function_name=['hotdog'])
+
     def test_visualize_multiple_color_functions(self):
         """ convenience test for generating a vis with multiple color_values"""
         mapper = KeplerMapper()

@@ -789,7 +789,10 @@ class KeplerMapper(object):
         else:
             color_values = np.array(color_values)
             # test whether we have a color_function_name for each color_value vector
-            num_color_value_vectors = color_values.shape[1]
+            if color_values.ndim == 1:
+                num_color_value_vectors = 1
+            else:
+                num_color_value_vectors = color_values.shape[1]
             num_color_function_names = len(color_function_name)
             if num_color_value_vectors != num_color_function_names:
                 raise Exception('{} `color_function_names` values found, but {} columns found in color_values. Must be equal.'.format(num_color_function_names, num_color_value_vectors))

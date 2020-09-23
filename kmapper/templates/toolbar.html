@@ -21,12 +21,12 @@
         </h3>
     </div>
 
-    {% if color_function_names|length > 1 %}
+    {% if mapper_summary.color_function_name|length > 1 %}
     <div id="color_function_control" class="tool_item">
         <h3>Color Function
           <select class="" id='select-color-function' name="color_function">
-          {% for color_function_name in color_function_names %}
-            <option value="{{ loop.index0 }}">{{color_function_name}}</option>
+          {% for _color_function_name in mapper_summary.color_function_name %}
+            <option value="{{ loop.index0 }}">{{_color_function_name}}</option>
           {% endfor %}
           </select>
         </h3>

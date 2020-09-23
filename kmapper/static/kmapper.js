@@ -92,7 +92,12 @@ d3.select("#help_control").on("click", function(e) {
 });
 
 d3.select('#select-color-function').on('input', function(e){
-  set_color_function(parseInt(e.target.value))
+  color_function_index = parseInt(e.target.value);
+  update_color_functions()
+})
+d3.select('#select-node-color-function').on('input', function(e){
+  node_color_function_index = parseInt(e.target.value);
+  update_color_functions()
 })
 
 /**
@@ -194,19 +199,35 @@ function set_histogram(selection, data){
     .style('background', (d) => d.color);
 }
 
-function set_meta_content_histogram(color_function_index){
-  set_histogram(d3.select('#meta_content .histogram'), summary_histogram[color_function_index])
+
+
+var color_function_index = 0;
+var node_color_function_index = 0;
+
+function reset_color_functions(){
+  color_function_index = 0;
+  node_color_function_index = 0;
+  update_color_functions()
 }
 
-var current_color_function_index = 0;
-function set_color_function(index){
-  current_color_function_index = index;
-  set_meta_content_histogram(index)
-  node.style(tocolor, function(d) { return color(d.color[index]); })
+function update_color_functions(){
+  // update_meta_content_histogram
+  set_histogram(d3.select('#meta_content .histogram'), summary_histogram[node_color_function_index][color_function_index])
+
+  // update node colors
+  node.style(tocolor, function(d) { return color(d.color[node_color_function_index][color_function_index]); })
+
+  // update focus node display, if focus_node
   if (focus_node != null){
     set_focus_node_histogram(focus_node)
   }
 }
+
+function update_meta_content_histogram(){
+
+}
+
+
 function start() {
 
   /*
@@ -249,7 +270,7 @@ function start() {
   simulation.force('link').links(links);
   simulation.alpha(1).restart()
 
-  set_color_function(0)
+  reset_color_functions()
 }
 
 init();
@@ -413,7 +434,7 @@ d3.select('#tooltip .center-on-node').on('click', function(e){
 })
 
 function set_focus_node_histogram(d){
-  set_histogram(d3.select('#tooltip_content .histogram'), d.tooltip.histogram[current_color_function_index])
+  set_histogram(d3.select('#tooltip_content .histogram'), d.tooltip.histogram[color_function_index])
 }
 
 function set_highlight(node) {

@@ -159,11 +159,11 @@ class TestVisualHelpers:
             )
 
         nodes = { node['name']:node for node in graph_data['nodes'] }
-        assert len(nodes['a']['color']) == 2
+        assert len(nodes['a']['color'][0]) == 2
         assert np.array(nodes['a']['tooltip']['histogram']).shape[0] == 2
 
-        np.testing.assert_almost_equal(np.array([.2, .8]), nodes['a']['color'])
-        np.testing.assert_almost_equal(np.array([.8, .2]), nodes['b']['color'])
+        np.testing.assert_almost_equal(np.array([.2, .8]), nodes['a']['color'][0])
+        np.testing.assert_almost_equal(np.array([.8, .2]), nodes['b']['color'][0])
 
 
     def test_color_function_names_unequal_exception(self):
@@ -311,6 +311,28 @@ class TestVisualHelpers:
         cv2 = np.flip(cv1)
         cv = np.column_stack([cv1, cv2])
         mapper.visualize(graph, color_values=cv, color_function_name=['hotdog','hotdiggitydog'])
+
+    def test_visualize_multiple_node_color_functions(self):
+        """ convenience test for generating a vis with multiple node_color_values but 1d color_values"""
+        mapper = KeplerMapper()
+        data, labels = make_circles(1000, random_state=0)
+        lens = mapper.fit_transform(data, projection=[0])
+        graph = mapper.map(lens, data)
+        color_values = lens[:, 0]
+        mapper.visualize(graph, color_values = color_values, color_function_name='hotdog', node_color_function=['mean','std', 'median', 'max'])
+
+    def test_visualize_multiple_color_function_and_node_color_functions(self):
+        """ convenience test for generating a vis with multiple color_values _and_ multiple node_color_values"""
+        mapper = KeplerMapper()
+        data, labels = make_circles(1000, random_state=0)
+        lens = mapper.fit_transform(data, projection=[0])
+        graph = mapper.map(lens, data)
+        color_values = lens[:, 0]
+
+        cv1 = np.array(lens)
+        cv2 = np.flip(cv1)
+        cv = np.column_stack([cv1, cv2])
+        mapper.visualize(graph, color_values=cv, node_color_function=['mean','std'], color_function_name=['hotdog','hotdiggitydog'])
 
     def test_visualize_graph_with_cluster_stats_above_below(self):
         mapper = KeplerMapper()

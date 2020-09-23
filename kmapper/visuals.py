@@ -7,7 +7,7 @@ from collections import defaultdict
 from ast import literal_eval
 from .utils import deprecated_alias
 import os
-from jinja2 import Environment, FileSystemLoader, Template
+from jinja2 import Environment, FileSystemLoader, Template, StrictUndefined
 
 colorscale_default = [
     [0.0, "rgb(68, 1, 84)"],  # Viridis
@@ -260,9 +260,15 @@ def _format_mapper_data(
     ----------
     color_values: 1d or 2d array
         Should have one column for each vector of datapoint color values
+
+    node_color_function: string or 1d array
+        a single string or a 1d array of string names of np function(s) to use to calcaulate node color
     """
     if colorscale is None:
         colorscale = colorscale_default
+
+    if isinstance(node_color_function, str):
+        node_color_function = [node_color_function]
 
     color_values = np.array(color_values)
     if color_values.ndim == 1:
@@ -273,11 +279,15 @@ def _format_mapper_data(
     for i, (node_id, member_ids) in enumerate(graph["nodes"].items()):
         node_id_to_num[node_id] = i
 
-        node_color = _node_color_function(member_ids, color_values, node_color_function)
-        if np.array(node_color).ndim == 0:
-            node_color = [node_color]
-        if isinstance(node_color, np.ndarray):
-            node_color = node_color.tolist()
+        node_color = []
+        for _node_color_function_name in node_color_function:
+            _node_color = _node_color_function(member_ids, color_values, _node_color_function_name)
+            if np.array(_node_color).ndim == 0:
+                _node_color = [_node_color]
+            if isinstance(_node_color, np.ndarray):
+                _node_color = _node_color.tolist()
+            node_color.append(_node_color)
+
         t = _type_node()
         s = _size_node(member_ids)
         tt = _format_tooltip(
@@ -535,7 +545,7 @@ def _render_d3_vis(
     ):
     # Find the module absolute path and locate templates
     module_root = os.path.join(os.path.dirname(__file__), "templates")
-    env = Environment(loader=FileSystemLoader(module_root))
+    env = Environment(loader=FileSystemLoader(module_root), undefined=StrictUndefined)
 
     # Find the absolute module path and the static files
     js_path = os.path.join(os.path.dirname(__file__), "static", "kmapper.js")

@@ -652,9 +652,12 @@ class KeplerMapper(object):
             A descriptor of the functions used to generate `color_values`. If set, must be equal to the number of columns in color_values.
             Also, if set, must be equal to the number of vectors in `color_values`.``
 
-        node_color_function : String, default is 'mean'
+        node_color_function : String or 1d array, default is 'mean'
             Used color determine the color of the nodes. Will be applied column-wise to color_values.
             Must be a function available on numpy class object -- e.g., 'mean' => np.mean().
+
+            If array, then 1d array of strings of np function names
+
             See `visuals.py:_node_color_function()`
 
         colorscale : list
@@ -764,10 +767,14 @@ class KeplerMapper(object):
         elif isinstance(color_function_name, str):
             color_function_name = [color_function_name]
 
-        try:
-            getattr(np, node_color_function)
-        except TypeError as e:
-            raise AttributeError('Invalid `node_color_function` {}, must be a function available on `numpy` class.'.format(node_color_function)) from e
+        if isinstance(node_color_function, str):
+            node_color_function = [node_color_function]
+
+        for _node_color_function_name in node_color_function:
+            try:
+                getattr(np, _node_color_function_name)
+            except AttributeError as e:
+                raise AttributeError('Invalid `node_color_function` {}, must be a function available on `numpy` class.'.format(_node_color_function_name)) from e
 
         if color_values is None:
             # We generate default `color_values` based on data row order
@@ -812,7 +819,15 @@ class KeplerMapper(object):
             colorscale=colorscale,
         )
 
-        histogram = _graph_data_distribution(graph, color_values, node_color_function, colorscale)
+        histogram = []
+        for _node_color_function_name in node_color_function:
+            _histogram = _graph_data_distribution(graph, color_values, _node_color_function_name, colorscale)
+            if np.array(_histogram).ndim == 1:
+                _histogram = [ _histogram ] # javascript will expect the histogram
+                                            # array to be indexed for the number of
+                                            # node_color_functions first, and second
+                                            # for the number of color_functions
+            histogram.append(_histogram)
 
         mapper_summary = _format_meta(graph, color_function_name, node_color_function, custom_meta)
 

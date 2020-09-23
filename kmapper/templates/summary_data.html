@@ -20,7 +20,7 @@
   {{ mapper_summary.color_function_name|join(', ')}}
 </p>
 
-<h3>Node Color Function</h3><p> {{ mapper_summary.node_color_function }}</p>
+<h3>Node Color Function{% if mapper_summary.node_color_function|length > 1 %}s{% endif %}</h3><p> {{ mapper_summary.node_color_function | join(', ')}}</p>
 
 
 <!-- histogram -->

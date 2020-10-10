@@ -1,3 +1,6 @@
+1.4.1
+	New CI/CD pipeline
+
 1.4
 	More flexible visualization coloring (PR 190)
 	Better support for sparse matrices (PR 189)

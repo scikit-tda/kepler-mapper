@@ -12,7 +12,6 @@ author = u'Hendrik Jacob van Veen and Nathaniel Saul'
 version = __version__
 release = __version__
 
-
 html_static_path = ["../examples/output"]
 
 extensions.append('sphinx_gallery.gen_gallery')
@@ -27,31 +26,6 @@ sphinx_gallery_conf = {
      'abort_on_example_error': True,
      'plot_gallery': True
 }
-
-# examples_dirs = ['../examples', '../tutorials']
-# gallery_dirs = ['auto_examples', 'tutorials']
-# image_scrapers = ('matplotlib',)
-
-# sphinx_gallery_conf = {
-#     # 'backreferences_dir': 'gen_modules/backreferences',
-#     # 'doc_module': ('sphinx_gallery', 'numpy'),
-#     # 'reference_url': {
-#     #     'sphinx_gallery': None,
-#     #     },
-#     'examples_dirs': examples_dirs,
-#     'gallery_dirs': gallery_dirs,
-#     'image_scrapers': image_scrapers,
-# }
-
-
-
-
-
-
-
-
-
-
 
 html_theme_options.update({
   # Google Analytics info

@@ -417,7 +417,7 @@ function set_focus_node(d){
     list_of_members.selectAll('span')
       .data(d.tooltip.custom_tooltips, d => d)
       .join('span')
-        .text(d => d)
+        .html(d => d)
         .style('display', 'inline-block')
         .style('padding', '0 3px')
 

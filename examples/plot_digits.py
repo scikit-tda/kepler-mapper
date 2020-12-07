@@ -22,9 +22,9 @@ from sklearn import datasets
 import kmapper as km
 
 try:
-    from scipy.misc import imsave, toimage
+    import png
 except ImportError as e:
-    print("imsave requires you to install pillow. Run `pip install pillow` and then try again.")
+    print("This example requires pypng. Run `pip install pypng` and then try again.")
     sys.exit()
 
 
@@ -34,14 +34,13 @@ data, labels = datasets.load_digits().data, datasets.load_digits().target
 # Create images for a custom tooltip array
 tooltip_s = []
 for image_data in data:
-    output = io.BytesIO()
-    img = toimage(image_data.reshape((8, 8)))  # Data was a flat row of 64 "pixels".
-    img.save(output, format="PNG")
-    contents = output.getvalue()
-    img_encoded = base64.b64encode(contents)
-    img_tag = """<img src="data:image/png;base64,{}">""".format(img_encoded.decode('utf-8'))
-    tooltip_s.append(img_tag)
-    output.close()
+    with io.BytesIO() as output:
+        img = png.from_array(image_data.reshape((8, 8)).astype(int), 'L;5')
+        img.write(output)
+        contents = output.getvalue()
+        img_encoded = base64.b64encode(contents)
+        img_tag = """<img src="data:image/png;base64,{}">""".format(img_encoded.decode('utf-8'))
+        tooltip_s.append(img_tag)
 
 tooltip_s = np.array(tooltip_s)  # need to make sure to feed it as a NumPy array, not a list
 
@@ -64,6 +63,7 @@ mapper.visualize(graph,
                  title="Handwritten digits Mapper",
                  path_html="output/digits_custom_tooltips.html",
                  color_values=labels,
+                 color_function_name='labels',
                  custom_tooltips=tooltip_s)
 # Tooltips with the target y-labels for every cluster member
 mapper.visualize(graph,

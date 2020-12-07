@@ -19,24 +19,29 @@ import matplotlib.pyplot as plt
 import numpy as np
 import sklearn
 from sklearn import datasets
+from sklearn.preprocessing import MinMaxScaler
 import kmapper as km
 
 try:
-    import png
+    from PIL import Image
 except ImportError as e:
-    print("This example requires pypng. Run `pip install pypng` and then try again.")
+    print("This example requires Pillow. Run `pip install pillow` and then try again.")
     sys.exit()
 
 
 # Load digits dat
 data, labels = datasets.load_digits().data, datasets.load_digits().target
 
+# Raw data is (0, 16), so scale to 8 bits (pillow can't handle 4-bit greyscale PNG depth)
+scaler = MinMaxScaler(feature_range=(0, 255))
+data = scaler.fit_transform(data).astype(np.uint8)
+
 # Create images for a custom tooltip array
 tooltip_s = []
 for image_data in data:
     with io.BytesIO() as output:
-        img = png.from_array(image_data.reshape((8, 8)).astype(int), 'L;5')
-        img.write(output)
+        img = Image.fromarray(image_data.reshape((8, 8)), 'L')
+        img.save(output, 'PNG')
         contents = output.getvalue()
         img_encoded = base64.b64encode(contents)
         img_tag = """<img src="data:image/png;base64,{}">""".format(img_encoded.decode('utf-8'))

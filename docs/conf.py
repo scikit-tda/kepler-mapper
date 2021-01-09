@@ -14,18 +14,18 @@ release = __version__
 
 html_static_path = ["../examples/output"]
 
-extensions.append('sphinx_gallery.gen_gallery')
+# extensions.append('sphinx_gallery.gen_gallery')
 
 import pathlib
 path = pathlib.Path.cwd()
 example_dir = path.parent.joinpath('examples')
-sphinx_gallery_conf = {
-     'examples_dirs': example_dir,   # path to your example scripts
-     'gallery_dirs': path.joinpath('generated', 'gallery'),  # path where to save gallery generated examples
-     'image_scrapers': ('matplotlib',),
-     'abort_on_example_error': True,
-     'plot_gallery': True
-}
+# sphinx_gallery_conf = {
+#      'examples_dirs': example_dir,   # path to your example scripts
+#      'gallery_dirs': path.joinpath('generated', 'gallery'),  # path where to save gallery generated examples
+#      'image_scrapers': ('matplotlib',),
+#      'abort_on_example_error': True,
+#      'plot_gallery': True
+# }
 
 html_theme_options.update({
   # Google Analytics info

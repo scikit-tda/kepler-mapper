@@ -39,3 +39,9 @@ html_theme_options.update({
 
 html_short_title = project
 htmlhelp_basename = 'KeplerMapperdoc'
+
+autodoc_default_options = {
+    'members': True
+}
+
+autodoc_member_order = 'groupwise'

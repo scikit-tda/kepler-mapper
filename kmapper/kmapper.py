@@ -747,6 +747,36 @@ class KeplerMapper(object):
         >>>     )
         >>> )
 
+        >>> # Using multiple datapoint color functions
+        >>> # Uses a two-dimensional lens, so two `color_function_name`s are required
+        >>> lens = np.c_[isolation_forest_lens, l2_norm_lens]
+        >>> html = mapper.visualize(
+        >>>     graph,
+        >>>     path_html="breast-cancer-multiple-color-functions.html",
+        >>>     title="Wisconsin Breast Cancer Dataset",
+        >>>     color_values=lens,
+        >>>     color_function_name=['Isolation Forest', 'L2-norm']
+        >>> )
+
+        >>> # Using multiple node color functions
+        >>> html = mapper.visualize(
+        >>>     graph,
+        >>>     path_html="breast-cancer-multiple-color-functions.html",
+        >>>     title="Wisconsin Breast Cancer Dataset",
+        >>>     node_color_function=['mean', 'std', 'median', 'max']
+        >>> )
+
+        >>> # Combining both multiple datapoint color functions and multiple node color functions
+        >>> lens = np.c_[isolation_forest_lens, l2_norm_lens]
+        >>> html = mapper.visualize(
+        >>>     graph,
+        >>>     path_html="breast-cancer-multiple-color-functions.html",
+        >>>     title="Wisconsin Breast Cancer Dataset",
+        >>>     color_values=lens,
+        >>>     color_function_name=['Isolation Forest', 'L2-norm']
+        >>>     node_color_function=['mean', 'std', 'median', 'max']
+        >>> )
+
         """
         if colorscale is None:
             colorscale = colorscale_default

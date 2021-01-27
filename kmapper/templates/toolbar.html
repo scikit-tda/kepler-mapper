@@ -24,7 +24,7 @@
     {% if mapper_summary.color_function_name|length > 1 %}
     <div id="color_function_control" class="tool_item">
       <h3>Color Function
-        <select class="" id='select-color-function' name="color_function">
+        <select class="btn" id='select-color-function' name="color_function">
         {% for _color_function_name in mapper_summary.color_function_name %}
           <option value="{{ loop.index0 }}">{{_color_function_name}}</option>
         {% endfor %}
@@ -36,7 +36,7 @@
     {% if mapper_summary.node_color_function|length > 1 %}
     <div id="node_color_function_control" class="tool_item">
       <h3>Node Color Function
-        <select class="" id='select-node-color-function' name="node_color_function">
+        <select class="btn" id='select-node-color-function' name="node_color_function">
         {% for _node_color_function_name in mapper_summary.node_color_function %}
           <option value="{{ loop.index0 }}">{{_node_color_function_name}}</option>
         {% endfor %}

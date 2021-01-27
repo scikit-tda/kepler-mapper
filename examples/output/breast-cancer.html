@@ -281,6 +281,48 @@ td {
 .control-row {
   padding: 5px 0px;
 }
+
+.btn {
+  display: inline-block;
+  padding: 0.35em 1.2em;
+  border: 0.1em solid #FFFFFF;
+  margin: 0 0.3em 0.3em 0;
+  border-radius: 0.12em;
+  box-sizing: border-box;
+  text-decoration: none;
+  background-color: transparent;
+  font-weight: 300;
+  color: #FFFFFF;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.btn:hover {
+  color: #000000;
+  background-color: #FFFFFF;
+}
+
+.btn:disabled {
+  color: #FFFFFF;
+  opacity: .35;
+}
+
+select.btn {
+  padding: 0 1.2em;
+}
+
+label {
+  display: inline-block;
+  margin-bottom: .5rem;
+}
+
+#config-file-loader {
+  margin-bottom: .5em;
+}
+
+.btn:not(:disabled):not(.disabled) {
+    cursor: pointer;
+}
 </style>
 
 </head>
@@ -365,9 +407,10 @@ td {
         <div id='tooltip_content_focus_node' style='display:none'>
         <div>
   <div class='actions'>
-    <h2>Actions
-      <button class='center-on-node'>Center viewport</button>
-    </h2>
+    <h3>Actions</h3>
+    <p>
+      <button class='btn center-on-node'>Center viewport on node</button>
+    </p>
   </div>
 
   <div class='details'>
@@ -523,13 +566,13 @@ td {
 
 <div class="control-wrapper">
   <div class="control-row">
-    <button type="button" id="download-config" name="download-config">Save config</button>
+    <button class='btn' type="button" id="download-config" name="download-config">Save config</button>
   </div>
 
   <div class="control-row">
-    <label for="config-file-loader">Choose config file to load</label>
+    <label for="config-file-loader">Load config file</label>
     <input type="file" id="config-file-loader" name="config-file-loader" accept="application/json">
-    <button id='load-config' disabled>Load</button>
+    <button class='btn' id='load-config' disabled>Load</button>
   </div>
 </div>
         </div>

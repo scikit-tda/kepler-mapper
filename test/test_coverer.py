@@ -76,6 +76,22 @@ class TestCoverBasic:
         for i in (1, 2, 3, 4):
             assert data[i] in entries[1]
 
+    def test_find_1d(self, CoverClass):
+        data = np.array([[0,0.2], [1,0.5], [2,0.7]])
+        cover = CoverClass(n_cubes=2, limits=[[0,1]])
+        cover.fit(data)
+        assert cover.find(np.array([0.2])) == [0]
+        assert cover.find(np.array([0.6])) == [0,1]
+        assert cover.find(np.array([-1])) == []
+
+    def test_find_2d(self, CoverClass):
+        data = np.array([[0,0.2,0.3], [1,0.5,0.4], [2,0.7,0.9]])
+        cover = CoverClass(n_cubes=2, limits=[[0,1],[0,1]])
+        cover.fit(data)
+        assert cover.find(np.array([0.2,0.2])) == [0]
+        assert cover.find(np.array([0.6,0.7])) == [0,1,2,3]
+        assert cover.find(np.array([-1])) == []
+    
     def test_complete_pipeline(self, CoverClass):
         # TODO: add a mock that asserts the cover was called appropriately.. or test number of cubes etc.
         data, _ = datasets.make_circles()

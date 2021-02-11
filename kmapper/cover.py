@@ -259,7 +259,7 @@ class Cover:
         Returns
         =========
         hypercubes: list of array-like
-            list of entries in each hypercobe in `data`.
+            list of entries in each hypercube in `data`.
 
         """
 
@@ -276,6 +276,27 @@ class Cover:
         self.fit(data)
         return self.transform(data)
 
+    def find(self, data_point):
+        """ Finds the hypercubes that contain the given data point.
+
+        Parameters
+        ===========
+
+        data_point: array-like
+            The data point to locate.
+
+        Returns
+        =========
+        cube_ids: list of int
+            list of hypercube indices, empty if the data point is outside the cover.
+
+        """
+        cube_ids = []
+        for i, center in enumerate(self.centers_):
+            lower_bounds, upper_bounds = center - self.radius_, center + self.radius_
+            if np.all(data_point >= lower_bounds) and np.all(data_point <= upper_bounds):
+                cube_ids.append(i)
+        return cube_ids
 
 class CubicalCover(Cover):
     """

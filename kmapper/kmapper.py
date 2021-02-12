@@ -639,24 +639,34 @@ class KeplerMapper(object):
             .. deprecated:: 1.4.1
                Use `color_values` instead.
 
-        color_values : list or 1d array
-            An array of 1d vectors with length equal to number of data points
-            used to build Mapper. Each value should correspond to a value for
-            each data point and color of node is computed as the average value
-            for members in a node.
+        color_values : list or 1d array, or list of 1d arrays
+            color_values are sets (1d arrays) of values -- for each set, there should be
+            one color value for each datapoint.
 
-            If no color_values passed, then colors are based on the row position
-            of the data points.
+            These color values are used to compute the color value of a _node_ by applying `node_color_function` to
+            the color values of each point within the node. The distribution of color_values for a given
+            node can also be viewed in the visualization under the node details pane.
+
+            A list of sets of color values (a list of 1d arrays) can be passed.
+            If this is the case, then the visualization will have a toggle button
+            for switching the visualization's currently active set of color values.
+
+            If no color_values passed, then the data points' row positions are used as
+            the set of color values.
 
         color_function_name : String or list
-            A descriptor of the functions used to generate `color_values`. If set, must be equal to the number of columns in color_values.
-            Also, if set, must be equal to the number of vectors in `color_values`.``
+            A descriptor of the functions used to generate `color_values`.
+            Will be used as labels in the visualization.
+            If set, must be equal to the number of columns in color_values.
 
         node_color_function : String or 1d array, default is 'mean'
-            Used color determine the color of the nodes. Will be applied column-wise to color_values.
+            Applied to the color_values of data points within a node to determine the color of the nodes.
+            Will be applied column-wise to color_values.
             Must be a function available on numpy class object -- e.g., 'mean' => np.mean().
 
-            If array, then 1d array of strings of np function names
+            If array, then 1d array of strings of np function names. Each node_color_function
+            will be applied to each set of color_values (full permutation), and a toggle button will allow
+            switching between the current active node_color_function for the visualization.
 
             See `visuals.py:_node_color_function()`
 
@@ -670,7 +680,7 @@ class KeplerMapper(object):
             Render (key, value) in the Mapper Summary pane.
 
         custom_tooltip: list or array like
-            Value to display for each entry in the node. The cluster data pane will display entry for all values in the node. Default is index of data.
+            Value to display for each entry in the node. The cluster data pane will display entries for all values in the node. Default is index of data.
 
         save_file: bool, default is True
             Save file to `path_html`.

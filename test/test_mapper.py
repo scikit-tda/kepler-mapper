@@ -75,6 +75,24 @@ class TestDataAccess:
         mems = mapper.data_from_cluster_id("new node", graph, data)
         np.testing.assert_array_equal(mems, np.array([]))
 
+    def test_clusters_from_cover(self):
+        mapper = KeplerMapper(verbose=1)
+        data = np.random.rand(100, 2)
+
+        graph = mapper.map(data)
+        cube_ids = mapper.cover.find(data[0])
+        mems = mapper.clusters_from_cover(cube_ids, graph)
+        assert len(mems) > 0
+        for cluster_id, cluster_members in mems.items():
+            np.testing.assert_array_equal(cluster_members, graph["nodes"][cluster_id])
+
+    def test_no_clusters_from_cover(self):
+        mapper = KeplerMapper(verbose=1)
+        data = np.random.rand(100, 2)
+
+        graph = mapper.map(data)
+        mems = mapper.clusters_from_cover([999], graph)
+        assert len(mems) == 0
 
 class TestMap:
     def test_simplices(self):
@@ -94,6 +112,22 @@ class TestMap:
         edges = [n for n in graph["simplices"] if len(n) == 2]
         assert len(nodes) == 3
         assert len(edges) == 3
+
+    def test_nodes(self):
+        mapper = KeplerMapper()
+
+        X = np.random.rand(100, 2)
+        lens = mapper.fit_transform(X)
+        graph = mapper.map(
+            lens,
+            X=X,
+            cover=Cover(n_cubes=3, perc_overlap=0.75),
+            clusterer=cluster.DBSCAN(metric="euclidean", min_samples=3),
+        )
+        assert len(graph["nodes"]) == 3
+        for i, cluster_id in enumerate(graph["nodes"]):
+            # verify cluster ID format
+            assert cluster_id == "cube{}_cluster0".format(i)
 
     def test_precomputed(self):
         mapper = KeplerMapper()

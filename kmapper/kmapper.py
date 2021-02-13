@@ -951,6 +951,29 @@ class KeplerMapper(object):
         else:
             return np.array([])
 
+    def clusters_from_cover(self, cube_ids, graph):
+        """Returns the clusters and their members from the subset of the cover spanned by the given cube_ids
+  
+          Parameters
+          ----------
+          cube_ids : list of int
+              List of hypercube indices.
+          graph : dict
+              The resulting dictionary after applying map().
+  
+          Returns
+          -------
+          clusters : dict
+              cluster membership indexed by cluster ID (subset of `graph["nodes"]`).
+  
+        """
+        clusters = {}
+        cluster_id_prefixes = tuple(["cube"+str(i)+"_" for i in cube_ids])
+        for cluster_id, cluster_members in graph["nodes"].items():
+            if cluster_id.startswith(cluster_id_prefixes):
+                clusters[cluster_id] = cluster_members
+        return clusters
+
     def _process_projection_tuple(self, projection):
         # Detect if projection is a tuple (for prediction functions)
         # TODO: multi-label models

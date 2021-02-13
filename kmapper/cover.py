@@ -243,9 +243,9 @@ class Cover:
 
         return hypercube
 
-    def transform(self, data, centers=None):
-        """Find entries of all hypercubes. If `centers=None`, then use `self.centers_` as computed in `self.fit`.
-
+    def transform(self, data, centers=None, return_centers=False):
+        """ Find entries of all hypercubes. If `centers=None`, then use `self.centers_` as computed in `self.fit`.
+            
             Empty hypercubes are removed from the result
 
         Parameters
@@ -255,12 +255,15 @@ class Cover:
             Data to find in entries in cube. Warning: first column must be index column.
         centers: list of array-like
             Center points for all cubes as returned by `self.fit`. Default is to use `self.centers_`.
+        return_centers: boolean
+            Whether to also return the kept center IDs.
 
         Returns
         =========
         hypercubes: list of array-like
             list of entries in each hypercube in `data`.
-
+        center_ids: array-like
+            list of center IDs kept.
         """
 
         centers = centers or self.centers_
@@ -269,30 +272,38 @@ class Cover:
         ]
 
         # Clean out any empty cubes (common in high dimensions)
-        hypercubes = [cube for cube in hypercubes if len(cube)]
-        return hypercubes
+        trimmed_hypercubes = [cube for cube in hypercubes if len(cube)]
+        if return_centers:
+            trimmed_cube_ids = np.array([i for i, cube in enumerate(hypercubes) if len(cube)])
+            return trimmed_hypercubes, trimmed_cube_ids
+        else:
+            return trimmed_hypercubes
 
     def fit_transform(self, data):
         self.fit(data)
         return self.transform(data)
 
-    def find(self, data_point):
-        """Finds the hypercubes that contain the given data point.
+    def find(self, data_point, centers=None):
+        """ Finds the hypercubes that contain the given data point.
+            If `centers=None`, then use `self.centers_` as computed in `self.fit`.
 
         Parameters
         ===========
 
         data_point: array-like
             The data point to locate.
+        centers: list of array-like
+            Center points for all cubes as returned by `self.fit`. Default is to use `self.centers_`.
 
         Returns
         =========
         cube_ids: list of int
-            list of hypercube indices, empty if the data point is outside the cover.
+            list of hypercube indices (w.r.t. `self.fit`), empty if the data point is outside the cover.
 
         """
         cube_ids = []
-        for i, center in enumerate(self.centers_):
+        centers = centers or self.centers_
+        for i, center in enumerate(centers):
             lower_bounds, upper_bounds = center - self.radius_, center + self.radius_
             if np.all(data_point >= lower_bounds) and np.all(
                 data_point <= upper_bounds

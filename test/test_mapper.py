@@ -74,24 +74,54 @@ class TestDataAccess:
         mems = mapper.data_from_cluster_id("new node", graph, data)
         np.testing.assert_array_equal(mems, np.array([]))
 
-    def test_clusters_from_cover(self):
+    def test_find_nodes(self):
         mapper = KeplerMapper(verbose=1)
         data = np.random.rand(100, 2)
 
         graph = mapper.map(data)
-        cube_ids = mapper.cover.find(data[0])
-        mems = mapper.clusters_from_cover(cube_ids, graph)
+        # pick a data point that exists in the graph
+        _, members = list(graph["nodes"].items())[-1]
+        data_point = data[members[-1]]
+
+        cube_ids = mapper.cover.find(data_point)
+        mems = mapper.find_nodes(cube_ids, graph, mapper.cover, data)
         assert len(mems) > 0
         for cluster_id, cluster_members in mems.items():
             np.testing.assert_array_equal(cluster_members, graph["nodes"][cluster_id])
 
-    def test_no_clusters_from_cover(self):
+    def test_node_not_found(self):
         mapper = KeplerMapper(verbose=1)
         data = np.random.rand(100, 2)
 
         graph = mapper.map(data)
-        mems = mapper.clusters_from_cover([999], graph)
+        mems = mapper.find_nodes([999], graph, mapper.cover, data)
         assert len(mems) == 0
+
+    def test_nearest_nodes_1(self):
+        mapper = KeplerMapper(verbose=1)
+        data = np.random.rand(100, 2)
+
+        graph = mapper.map(data)
+        nn = neighbors.NearestNeighbors(n_neighbors=1)
+        expected_id, members = list(graph["nodes"].items())[-1]
+        newdata = data[members[-1]]
+        node_ids = mapper.nearest_nodes(newdata, newdata, graph, mapper.cover, data, data, nn)
+        assert all(node_ids == [expected_id]), node_ids
+
+    def test_nearest_nodes_2(self):
+        mapper = KeplerMapper(verbose=1)
+        data = np.random.rand(100, 2)
+
+        graph = mapper.map(data)
+        nn = neighbors.NearestNeighbors(n_neighbors=1)
+        expected_clusters = [(cluster_id, members) for cluster_id, members in graph['nodes'].items()][:2]
+        cluster_id1 = expected_clusters[0][0]
+        cluster_id2 = expected_clusters[1][0]
+        newdata1 = data[expected_clusters[0][1][-1]]
+        newdata2 = data[expected_clusters[1][1][-1]]
+        newdata = np.vstack([newdata1, newdata2])
+        node_ids = mapper.nearest_nodes(newdata, newdata, graph, mapper.cover, data, data, nn)
+        assert all(node_ids == [cluster_id1, cluster_id2]), node_ids
 
 class TestMap:
     def test_simplices(self):

@@ -951,7 +951,7 @@ class KeplerMapper(object):
         else:
             return np.array([])
 
-    def clusters_from_cover(self, cube_ids, graph):
+    def find_nodes(self, cube_ids, graph, cover, lens):
         """Returns the clusters and their members from the subset of the cover spanned by the given cube_ids
   
           Parameters
@@ -960,19 +960,80 @@ class KeplerMapper(object):
               List of hypercube indices.
           graph : dict
               The resulting dictionary after applying map().
-  
+          cover : kmapper.Cover
+              The cover used to build `graph`.
+          lens: Numpy Array
+              Lower dimensional representation of data.
+
           Returns
           -------
-          clusters : dict
+          nodes : dict
               cluster membership indexed by cluster ID (subset of `graph["nodes"]`).
   
         """
+        lens_ids = np.array([x for x in range(lens.shape[0])])
+        lens = np.c_[lens_ids, lens]
+        _, cube_id_mapping = cover.transform(lens, return_centers=True)
+
+        transformed_cube_ids = np.concatenate([np.flatnonzero(cube_id_mapping==cube_id) for cube_id in cube_ids])
+
         clusters = {}
-        cluster_id_prefixes = tuple(["cube"+str(i)+"_" for i in cube_ids])
+        cluster_id_prefixes = tuple(["cube"+str(i)+"_" for i in transformed_cube_ids])
         for cluster_id, cluster_members in graph["nodes"].items():
             if cluster_id.startswith(cluster_id_prefixes):
                 clusters[cluster_id] = cluster_members
         return clusters
+
+    def nearest_nodes(self, newlens, newdata, graph, cover, lens, data, nn):
+        """Returns the nodes nearest to the `newdata` using the given NearestNeighbors algorithm
+  
+          Parameters
+          ----------
+          newdata : Numpy array
+              New dataset. Accepts both 1-D and 2-D array.
+          graph : dict
+              The resulting dictionary after applying map().
+          cover : kmapper.Cover
+              The cover used to build `graph`.
+          data : Numpy array
+              Original dataset.
+          lens: Numpy Array
+              Lower dimensional representation of data.
+          nn : NearestNeighbors
+              Scikit-learn NearestNeighbors instance to use.
+  
+          Returns
+          -------
+          node_ids : numpy array
+              Node IDs.
+  
+        """
+        if newlens.shape[0] != newdata.shape[0]:
+            raise Exception("newlens and newdata must have the same number of rows.")
+
+        if len(newdata.shape) == 1:
+            newlens = newlens[np.newaxis]
+            newdata = newdata[np.newaxis]
+
+        cube_ids = np.concatenate([cover.find(row) for row in newlens])
+        if len(cube_ids) == 0:
+            return np.empty((0,))
+
+        nodes = self.find_nodes(cube_ids, graph, cover, lens)
+        if len(nodes) == 0:
+            return np.empty((0,))
+
+        nn_data = []
+        nn_cluster_ids = []
+        for cluster_id, cluster_members in nodes.items():
+            cluster_data = data[cluster_members]
+            nn_data.append(cluster_data)
+            nn_cluster_ids.append([cluster_id]*len(cluster_data))
+        nn_data = np.vstack(nn_data)
+        nn_cluster_ids = np.concatenate(nn_cluster_ids)
+        nn.fit(nn_data)
+        nn_ids = nn.kneighbors(newdata, return_distance=False)
+        return np.unique(nn_cluster_ids[nn_ids])
 
     def _process_projection_tuple(self, projection):
         # Detect if projection is a tuple (for prediction functions)

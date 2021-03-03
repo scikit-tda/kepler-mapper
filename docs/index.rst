@@ -31,23 +31,57 @@ Install KeplerMapper with pip:
 Citations
 =======================
 
-Hendrik Jacob van Veen, and Nathaniel Saul. (2017, November 17).
-MLWave/kepler-mapper: 186f (Version 1.0.1). Zenodo.
-http://doi.org/10.5281/zenodo.1054444
+To credit KeplerMapper in your work, please cite both the `JOSS paper`_
+and the `Zenodo archive`_. The former provides a high level description
+of the package, and the latter points to a permanent record of all KeplerMapper versions
+(we encourage you to cite the specific version you used).
 
+.. _JOSS paper: https://doi.org/10.21105/joss.01315
+.. _Zenodo archive: https://doi.org/10.5281/zenodo.1002377
 
+Example citations (for KeplerMapper 1.4.1):
 
-Bibtex entry:
+    van Veen et al., (2019). Kepler Mapper: A flexible Python implementation of the Mapper algorithm.
+    Journal of Open Source Software, 4(42), 1315, https://doi.org/10.21105/joss.01315
 
+    Hendrik Jacob van Veen, Nathaniel Saul, David Eargle, & Sam W. Mangham.
+    (2019, October 14). Kepler Mapper: A flexible Python implementation of the Mapper algorithm (Version 1.4.1).
+    Zenodo. http://doi.org/10.5281/zenodo.4077395
+
+Bibtex entry for JOSS article:
 
 ::
 
-    @MISC {KeplerMapper2019,
-        author       = "Hendrik Jacob van Veen and Nathaniel Saul",
-        title        = "KeplerMapper",
-        howpublished = "http://doi.org/10.5281/zenodo.1054444",
-        month        = "Jan",
-        year         = "2019"
+  @article{KeplerMapper_JOSS,
+      doi = {10.21105/joss.01315},
+      url = {https://doi.org/10.21105/joss.01315},
+      year = {2019},
+      publisher = {The Open Journal},
+      volume = {4},
+      number = {42},
+      pages = {1315},
+      author = {Hendrik Jacob van Veen and Nathaniel Saul and David Eargle and Sam W. Mangham},
+      title = {Kepler Mapper: A flexible Python implementation of the Mapper algorithm.},
+      journal = {Journal of Open Source Software}
+      }
+
+Bibtex entry for the Zenodo archive, version 1.4.1:
+
+::
+
+    @software{KeplerMapper_v1.4.1-Zenodo,
+      author       = {Hendrik Jacob van Veen and
+                      Nathaniel Saul and
+                      Eargle, David and
+                      Sam W. Mangham},
+      title        = {{Kepler Mapper: A flexible Python implementation of
+                       the Mapper algorithm}},
+      month        = oct,
+      year         = 2020,
+      publisher    = {Zenodo},
+      version      = {1.4.1},
+      doi          = {10.5281/zenodo.4077395},
+      url          = {https://doi.org/10.5281/zenodo.4077395}
     }
 
 

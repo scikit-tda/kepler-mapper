@@ -12,3 +12,4 @@ backup_docs
 dist/
 test/
 generated
+reference/stubs

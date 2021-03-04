@@ -101,6 +101,7 @@ To contribute please fork the project make your changes and submit a pull reques
 
     theory
     started
+    examples
     applications
     reference/index
 

@@ -11,7 +11,7 @@ This example generates a Mapper built from a point-cloud sampled from a 3D model
 
 
 """
-
+# sphinx_gallery_thumbnail_path = '../examples/horse/horse-reference.png'
 import matplotlib.pyplot as plt
 import numpy as np
 import sklearn
@@ -38,4 +38,3 @@ mapper.visualize(graph,
 
 km.drawing.draw_matplotlib(graph)
 plt.show()
-

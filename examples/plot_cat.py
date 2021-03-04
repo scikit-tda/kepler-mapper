@@ -1,4 +1,4 @@
-""" 
+"""
 
 3D Cat Data
 ============
@@ -10,7 +10,7 @@ This example generates a Mapper built from a point-cloud sampled from a 3D model
 
 
 """
-
+# sphinx_gallery_thumbnail_path = '../examples/cat/cat-reference-viz.png'
 
 import numpy as np
 import sklearn

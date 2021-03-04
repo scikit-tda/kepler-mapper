@@ -14,6 +14,9 @@ release = __version__
 
 html_static_path = ["../examples/output"]
 
+templates_path = ['_templates']
+exclude_patterns.append('_templates')
+
 # extensions.append('sphinx_gallery.gen_gallery')
 
 import pathlib

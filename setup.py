@@ -19,7 +19,7 @@ setup(name='kmapper',
       version=verstr,
       description='Python implementation of Mapper algorithm for Topological Data Analysis.',
       long_description=long_description,
-      long_description_content_type="text/markdown",	
+      long_description_content_type="text/markdown",
       author='HJ van Veen, Nathaniel Saul',
       author_email='info@mlwave.com, nat@saulgill.com',
       url='http://kepler-mapper.scikit-tda.org',
@@ -33,18 +33,19 @@ setup(name='kmapper',
           'matplotlib',
           'python-igraph',
           'plotly',
-          'ipywidgets'   
+          'ipywidgets'
         ],
         'docs': [ # `pip install -e ".[docs]"``
           'sktda_docs_config',
           'pandas',
-
+          'sphinx-gallery',
+          
           # for building docs for plotlyviz stuff
           'networkx',
           'matplotlib',
           'python-igraph',
           'plotly',
-          'ipywidgets'   
+          'ipywidgets'
         ]
       },
       install_requires=[

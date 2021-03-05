@@ -541,7 +541,8 @@ def _render_d3_vis(
     mapper_summary,
     histogram,
     mapper_data,
-    colorscale
+    colorscale,
+    include_searchbar
     ):
     # Find the module absolute path and locate templates
     module_root = os.path.join(os.path.dirname(__file__), "templates")
@@ -578,6 +579,7 @@ def _render_d3_vis(
         colorscale=colorscale,
         js_text=js_text,
         css_text=css_text,
+        include_searchbar=include_searchbar
     )
 
     return html

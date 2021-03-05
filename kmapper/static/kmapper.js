@@ -1,5 +1,7 @@
 // Height and width settings
-var canvas_height = window.innerHeight - 5;
+var page_height = window.innerHeight - 5;
+var header_height = document.getElementById('header').offsetHeight;
+var canvas_height = page_height - header_height;
 document.getElementById("canvas").style.height = canvas_height + "px";
 var width = document.getElementById("canvas").offsetWidth;
 var height = document.getElementById("canvas").offsetHeight;
@@ -215,7 +217,9 @@ function update_color_functions(){
   set_histogram(d3.select('#meta_content .histogram'), summary_histogram[node_color_function_index][color_function_index])
 
   // update node colors
-  node.style(tocolor, function(d) { return color(d.color[node_color_function_index][color_function_index]); })
+  node.style(tocolor, function(d) {
+    return color(d.color[node_color_function_index][color_function_index]);
+  })
 
   // update focus node display, if focus_node
   if (focus_node != null){
@@ -227,6 +231,16 @@ function update_meta_content_histogram(){
 
 }
 
+function draw_circle_size(d) {
+  return (d3.symbol()
+    .size(function(d) {
+      if (!d.size_modifier) {
+          d.size_modifier = 1;
+      }
+      return d.size * 50 * d.size_modifier;
+    })
+    .type(d3.symbolCircle))(d)
+}
 
 function start() {
 
@@ -254,9 +268,7 @@ function start() {
       .attr("id", function(d){ return "node-" + d.name })
       // append circles...
       .append("path")
-        .attr("d", d3.symbol()
-                    .size(function(d) { return d.size * 50; })
-                    .type(d3.symbolCircle))
+        .attr("d", draw_circle_size )
         .attr("class", "circle")
         .on("mouseover.focus", node_mouseover)
         .on("mouseout.focus", node_mouseout)
@@ -537,10 +549,82 @@ function freeze_node(d){
   return d
 }
 
+// search functionality
+d3.select('#searchbar')
+  .on('submit', function(event){
+      /*
+      * Searchbar functionality
+      *
+      * Permits AND, OR, and EXACT functionality
+      *
+      */
+      event.preventDefault();
+      // always running this will clear search results on a submit with an empty query
+      node.datum(d => { d.size_modifier = 1; return d });
+      node.style('filter', null)
+
+      node.datum(d => {
+        let to_lower = tooltip => String(tooltip).toLowerCase();
+        d.tooltip.custom_tooltips_lowercase = d.tooltip.custom_tooltips.map(to_lower)
+        return d
+      });
+
+      let search_query = d3.select(this).select('input').property('value').toLowerCase();
+      if (search_query) {
+          let search_mode = d3.select(this).select('input[name="search_mode"]:checked').property('value');
+
+          let node_ratio_fn = (d, i) => {
+            matches = d.tooltip.custom_tooltips_lowercase.map(map_fn)
+            let how_many = matches.filter(x=>x).length;
+            let out_of = d.tooltip.cluster_stats.size;
+            let ratio = how_many / out_of;
+            d.size_modifier = ratio * 100;
+          }
+
+          let map_fn;
+          let node_each_fn;
+          switch (search_mode) {
+            case 'and':
+              search_query = search_query.split(' ');
+              map_fn = tooltip => {
+                return search_query.every(query_word => { return tooltip.includes( query_word ) })
+              }
+              node.each(node_ratio_fn)
+              break;
+            case 'or':
+              search_query = search_query.split(' ');
+              map_fn = tooltip => {
+                return search_query.some(query_word => { return tooltip.includes( query_word ) })
+              }
+              node.each(node_ratio_fn)
+              break;
+            case 'exact':
+              node.filter((d,i) => {
+                  matches = d.tooltip.custom_tooltips_lowercase.map(tooltip => tooltip == search_query)
+                  return matches.some(e => e);
+              })
+              .style("filter", "url(#drop-shadow-glow)");
+              break;
+            default:
+              console.error(`search mode ${search_mode} unknown`);
+              return;
+          }
+
+      }
+      node.attr("d", draw_circle_size )
+
+  })
+
 // Key press events
+let searchbar = d3.select('#searchbar input');
+
 d3.select(window).on("keydown", function (event) {
   if (event.defaultPrevented) {
     return; // Do nothing if the event was already processed
+  }
+
+  if (searchbar.size() && searchbar.node().matches(':focus')){
+      return; // let them use the search bar.
   }
 
   if (!event.ctrlKey && !event.altKey && !event.metaKey) {

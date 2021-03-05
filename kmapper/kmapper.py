@@ -627,6 +627,7 @@ class KeplerMapper(object):
         lens=None,
         lens_names=None,
         nbins=10,
+        include_searchbar=False
     ):
         """Generate a visualization of the simplicial complex mapper output. Turns the complex dictionary into a HTML/D3.js visualization
 
@@ -699,6 +700,23 @@ class KeplerMapper(object):
 
         nbins: int, default is 10
             Number of bins shown in histogram of tooltip color distributions.
+
+        include_searchbar: bool, default False
+            Whether to include a search bar at the top of the visualization.
+
+            The search functionality performs permits AND, OR, and EXACT
+            methods, all against lowercased tooltips.
+
+            * AND: the search query is split by whitespace. A data point's custom tooltip must
+              match _each_ of the query terms in order to match overall. The size of a node
+              is drawn as a ratio of how many of its datapoints match.
+            * OR: the search query is split by whitespace. A data point's custom tooltip must
+              match _any_ of the query terms in order to match overall. The size of a node
+              is drawn as a ratio of how many of its datapoints match.
+            * EXACT: A data point's custom tooltip must exactly match the query. Any nodes
+              with a matching datapoint are set to glow.
+
+            To reset any search-induced visual alterations, submit an empty search query.
 
         Returns
         --------
@@ -876,7 +894,8 @@ class KeplerMapper(object):
             mapper_summary,
             histogram,
             mapper_data,
-            colorscale)
+            colorscale,
+            include_searchbar)
 
         if save_file:
             with open(path_html, "wb") as outfile:

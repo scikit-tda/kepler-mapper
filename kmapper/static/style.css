@@ -13,17 +13,17 @@ body {
 }
 
 #logo {
-  position: absolute;
-  right: 00px;
-  top: 0px;
-  width: 90px;
-  height: 90px;
-  z-index: 999999;
+  width:  85px;
+  height: 85px;
 }
 
 #display {
   color: #95A5A6;
   background: #212121;
+}
+
+#header {
+  background: #111111;
 }
 
 #print {
@@ -79,71 +79,64 @@ a {
   text-decoration: none;
 }
 
-#panes {
-    /* background: #e24d4d; */
-  /* position: absolute; */
-  /* height: 100%; */
-  /* width: 100%; */
-  /* display: block; */
-  /* z-index: 9999; */
+.pane {
+  position: relative;
+}
+
+.pane-left {
+  float: left;
+}
+
+.pane-right {
+  float: right;
 }
 
 a:hover {
   color: #2ecc71;
 }
 
-#header {
-  height: 35px;
-  /* padding-top: 20px; */
-  padding:10px;
-  padding-left:20px;
-  position: relative;
+.banner {
+  /* height: 35px; */
+  padding: 10px 0px;
 }
 
-#display #header, #display #toolbar {
-  background: #111111;
-  box-shadow: 0px 0px 4px #000;
-}
 
-#print #header, #print #toolbar {
+#print #header {
   background: #FFF;
 }
 
 
 #canvas {
-  position: absolute;
-  height: 100%;
   width: 100%;
-  display: block;
 }
 
+#svg {
+  position: absolute;
+}
 
 #toolbar {
-  position: relative;
-  padding-top: 10px;
-  padding-bottom: 10px;
-
+  padding-top: 5px;
+  margin-bottom: 5px;
   width: 100%;
-  overflow: auto;
 }
 
-/* #display #toolbar {
-  background: #111111;
+#display #toolbar {
 }
 
-#print #toolbar {
-  background: #FFF;
-} */
+#display .banner {
+  border-top: 1px solid #000;
+}
+
+.inline-block {
+  display: inline-block;
+}
 
 .tool_item {
-  padding-left: 20px;
-  position: relative;
-  float: left;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .pane_content {
-  position: relative;
-  float: left;
   width: 300px;
   height:100%;
   padding: 20px;
@@ -151,17 +144,8 @@ a:hover {
   display: none;
 }
 
-/* Chrome only: */
-@media all and (-webkit-min-device-pixel-ratio:0) and (min-resolution: .001dpcm) {
-  .pane_content {
-    width: 314px;
-    padding-right: 10px;
-  }
-}
-
-
-#helptip_content {
-  float:right;
+.pane {
+  z-index: 1;
 }
 
 #display .pane_content {
@@ -170,10 +154,6 @@ a:hover {
 
 #print .pane_content{
   background: #FFF;
-}
-
-#meta_content {
-  float:right;
 }
 
 #meta_content::-webkit-scrollbar, #tooltip_content::-webkit-scrollbar {
@@ -296,7 +276,19 @@ td {
   opacity: .35;
 }
 
-select.btn {
+#print .btn {
+  color: #000;
+  border-color: #000
+}
+
+#print .btn:hover {
+  color: #FFFFFF;
+  background-color: #000000
+}
+
+#print .btn:disabled {}
+
+#toolbar .btn {
   padding: 0 1.2em;
 }
 
@@ -311,4 +303,40 @@ label {
 
 .btn:not(:disabled):not(.disabled) {
     cursor: pointer;
+}
+
+.wrap {
+  display: flex;
+}
+
+.wrap-header div:last-child {
+  margin-left: auto;
+}
+
+.wrap-end {
+  justify-content: flex-end;
+}
+
+.wrap-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.wrap-logo .logo {
+  margin: auto;
+}
+
+.wrap-header {
+  /* padding: 5px 10px; */
+  padding: 5px 5px 5px 10px;
+  justify-content: space-between;
+}
+
+#display .wrap-header {
+  box-shadow: 0px 0px 4px #000;
+}
+
+.toolbar-container {
+  margin-left: -10px;
 }

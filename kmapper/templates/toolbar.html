@@ -1,5 +1,5 @@
 
-<div id="toolbar">
+<div id="toolbar" class='wrap'>
     <div id="tooltip_control" class="tool_item">
         <h3>
         <a href="#"><small id="tooltip_tag">[+]</small></a>
@@ -42,6 +42,26 @@
         {% endfor %}
         </select>
       </h3>
+    </div>
+    {% endif %}
+
+    {% if include_searchbar %}
+    <div id='searchbar' class='tool_item'>
+      <form>
+        <input type='search'>
+        <button class='btn' type='submit'>Search</button>
+        <div class="inline-block">
+          <div class="inline-block">
+            <input type="radio" name="search_mode" id='search-mode-or'    value="or" checked><label for="search-mode-or">OR</label>
+          </div>
+          <div class="inline-block">
+            <input type="radio" name="search_mode" id='search-mode-and'   value="and"><label for="search-mode-and">AND</label>
+          </div>
+          <div class="inline-block">
+            <input type="radio" name="search_mode" id='search-mode-exact' value="exact"><label for="search-mode-exact">Exact</label>
+          </div>
+        </div>
+      </form>
     </div>
     {% endif %}
 

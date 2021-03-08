@@ -26,6 +26,11 @@ All of the below changes apply to kmapper's D3 html visualization.
     - Multiple node color functions can be specified, and toggled between interactively in the display.
 - The toolbar display now uses css flexbox, which avoids overlap-problems on smaller viewports.
 
+#### Kmapper
+
+- change several visualize-related functions to be private
+- only support python >= 3.6
+
 ### 1.4.1
 - New CI/CD pipeline
 

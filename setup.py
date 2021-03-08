@@ -38,7 +38,8 @@ setup(name='kmapper',
         'docs': [ # `pip install -e ".[docs]"``
           'sktda_docs_config',
           'pandas',
-
+          'sphinx-gallery',
+          
           # for building docs for plotlyviz stuff
           'networkx',
           'matplotlib',

@@ -26,10 +26,13 @@ For an interactive exploration of lens for the breast cancer, see the `Choosing 
 # sphinx_gallery_thumbnail_path = '../examples/breast-cancer/breast-cancer-d3.png'
 
 import sys
+
 try:
     import pandas as pd
 except ImportError as e:
-    print("pandas is required for this example. Please install with `pip install pandas` and then try again.")
+    print(
+        "pandas is required for this example. Please install with `pip install pandas` and then try again."
+    )
     sys.exit()
 
 import numpy as np
@@ -58,19 +61,23 @@ lens2 = mapper.fit_transform(X, projection="l2norm")
 lens = np.c_[lens1, lens2]
 
 # Create the simplicial complex
-graph = mapper.map(lens,
-                   X,
-                   cover=km.Cover(n_cubes=15, perc_overlap=0.4),
-                   clusterer=sklearn.cluster.KMeans(n_clusters=2,
-                                                    random_state=1618033))
+graph = mapper.map(
+    lens,
+    X,
+    cover=km.Cover(n_cubes=15, perc_overlap=0.4),
+    clusterer=sklearn.cluster.KMeans(n_clusters=2, random_state=1618033),
+)
 
 # Visualization
-mapper.visualize(graph,
-                 path_html="output/breast-cancer.html",
-                 title="Wisconsin Breast Cancer Dataset",
-                 custom_tooltips=y)
+mapper.visualize(
+    graph,
+    path_html="output/breast-cancer.html",
+    title="Wisconsin Breast Cancer Dataset",
+    custom_tooltips=y,
+)
 
 
 import matplotlib.pyplot as plt
+
 km.draw_matplotlib(graph)
 plt.show()

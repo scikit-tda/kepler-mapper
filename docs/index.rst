@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-|DOI| |PyPI version| |Downloads|
-|Build Status| |Codecov|
+|PyPI version| |Downloads| |Build Status|
+|Codecov| |DOI zenodo| |DOI JOSS| 
 
 Kepler Mapper
 ----------------
@@ -93,6 +93,7 @@ We welcome contributions of all shapes and sizes. There are lots of opportunitie
 
 To contribute please fork the project make your changes and submit a pull request. We will do our best to work through any issues with you and get your code merged into the main branch.
 
+.. include:: ../README.rst
 
 .. toctree::
     :hidden:
@@ -133,5 +134,7 @@ To contribute please fork the project make your changes and submit a pull reques
    :target: https://travis-ci.org/scikit-tda/kepler-mapper
 .. |Codecov| image:: https://codecov.io/gh/scikit-tda/kepler-mapper/branch/master/graph/badge.svg
    :target: https://codecov.io/gh/scikit-tda/kepler-mapper
-.. |DOI| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.1054444.svg
-   :target: https://doi.org/10.5281/zenodo.1054444
+.. |DOI JOSS| image:: https://joss.theoj.org/papers/10.21105/joss.01315/status.svg
+   :target: https://doi.org/10.21105/joss.01315
+.. |DOI zenodo| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.1002377.svg
+   :target: https://doi.org/10.5281/zenodo.1002377

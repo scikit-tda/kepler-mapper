@@ -1,0 +1,125 @@
+## Release log
+
+### 2.0.0
+
+#### Visualization
+
+All of the below changes apply to kepler mapper's D3 html visualization.
+
+- added searchbar functionality (see documentation for `include_searchbar` in `kmapper.visualize()`)
+- Upgraded d3 from v3 to v6 -- one huge benefit of the new d3-force library is that it is [deterministic](https://
+  twitter.com/mbostock/status/725124754701717504?lang=en), so a given graph will always render the same visually, across browsers and reloads.
+- once a node is dragged, it stays ("freezes") where it was dragged
+- focus "locks" on a node: -- once a node is in focus, focus is not lost if another node is moused-over.
+  Focus is released if (1) another node is clicked on, or (2) if the user clicks on the blank canvas
+- added the ability to freeze (and unfreeze) all nodes with keystrokes f and x,
+- The focus node visually "pulses" in the display
+- Added the ability to "save" the positioning of all nodes in the display. Saves to a .json file.
+  Node positioning can be re-loaded via providing the json save file.
+- Multiple `color_values` arrays can be passed, and switched between live in the display.
+- The node color function can be specified, as a string, to any function available on the numpy base class (e.g.,
+  'mean', 'median', 'max', 'min'. (Before, the only available function was `np.mean`.
+
+### 1.4.1
+- New CI/CD pipeline
+
+### 1.4
+- More flexible visualization coloring (PR 190)
+- Better support for sparse matrices (PR 189)
+- Better support for precomputed distance matrices (PR 184)
+
+### 1.3.x
+- A series of releases to support JOSS submission
+
+### 1.3.0 (October 12, 2019)
+- JOSS Release -- final revision
+- Allow sparse matrices in `map` function (PR #163)
+- Use sphinx-gallery for documentation examples (#164)
+- Removed mutable arguments (#165)
+
+### 1.2.0 (Feb 18, 2019)
+- New implementation of the cover API makes it consistent with the literature (your % overlap will probably have to be decreased when updating).
+- New documentation website (kepler-mapper.scikit-tda.org).
+
+### 1.1.6 (Nov 8, 2018)
+- Plotly visualization interface.
+- Networkx adapter
+- Bug fixes
+- Scikit-tda integration
+
+### 1.1.2
+- Bug fix, setup.py did not include static directory so installation visualizations did not work when installed from pypi.
+- Add Jupyter notebook support
+
+### 1.1
+- Massive visualization upgrades
+- Separation of HTML, JS, CSS, and Python code
+- New nerves and covers API
+- Documentation site
+
+### 1.0.1
+- Convert versioning scheme to major.minor.micro
+- Restructure library to be compatible with PyPi installation
+- Minor bug fixes
+- Include preliminary unit test suite
+- Refactor, extract helper classes and helper functions
+
+
+## Release log - Pre-alpha
+
+### v00009
+
+### v00008
+
+### v00007
+- Add L2^Norm Lens
+- Add Winsconsin Breast Cancer Data Anomaly Detection Example
+- Fixed bug: k-means with set number of clusters higher than min_cluster_samples
+- Add self.inverse_X for new future feature: transforming on unseen data.
+
+### v00006
+- Removed link_local functionality
+- Halved the number of edges drawn (no two-way edges)
+- Added support for clustering on the inverse image
+- Refactored code (see updated documentation)
+- Added code comments
+- Added feature to use reducers/manifold learning/dimensions and stat functions
+- Added 7 projections/lenses from statistics
+
+### v00005
+- Made Python 3 compatible
+- Ability to turn off title, meta and tooltips
+- Ability to set the window height and width of HTML output
+- Added basic support for another color function: average signal
+- De-emphasized link_local functionality, since its current implementation is no good.
+
+### v00004
+- Added dimensionality reduction
+- Added "digits" case study
+- changed fit to fit_transform and return of data
+- added tooltips
+- added support for custom tooltips
+
+### v00003
+- Refactored dimension index to use a list of arbitrary dimensions
+- Improved verbosity
+- Added levels of verbosity
+- Decreased number of code lines by using a single approach
+- Added sample to explain local linkage True vs. False
+- Added side-view for animal point-cloud data
+- Added a gallery in the example directory
+
+### v00002
+- Added a multi-dimensional mode: use all dimensions.
+- Added case study: 3D point cloud data for animals
+- Added case study: Make circles
+- Added advanced parameters for graph layout settings. Should probably be sliders on the .html page itself.
+- Improved documentation
+- Added disclaimer
+- Added todo
+- Added release log
+
+### v00001
+- Wrote class
+- Wrote documentation
+- Added license

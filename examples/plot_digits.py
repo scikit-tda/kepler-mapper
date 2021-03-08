@@ -11,6 +11,8 @@ This digits example shows two ways of customizing the tooltips options in the HT
 
 """
 
+# sphinx_gallery_thumbnail_path = '../examples/digits/digits-tsne-custom-tooltip-mnist.png'
+
 import io
 import sys
 import base64
@@ -29,7 +31,7 @@ except ImportError as e:
     sys.exit()
 
 
-# Load digits dat
+# Load digits data
 data, labels = datasets.load_digits().data, datasets.load_digits().target
 
 # Raw data is (0, 16), so scale to 8 bits (pillow can't handle 4-bit greyscale PNG depth)

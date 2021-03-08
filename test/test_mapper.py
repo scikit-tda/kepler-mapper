@@ -16,8 +16,7 @@ from sklearn import neighbors
 
 
 class TestLogging:
-    """ Simple tests that confirm map completes at each logging level
-    """
+    """Simple tests that confirm map completes at each logging level"""
 
     def test_runs_with_logging_0(self, capsys):
         mapper = KeplerMapper(verbose=0)
@@ -191,8 +190,8 @@ class TestMap:
         assert len(deduped_nodes) < len(nodes)
         assert len(deduped_nodes) == 4
         assert (
-            "cube1_cluster1|cube2_cluster0" in deduped_nodes
-            or "cube2_cluster0|cube1_cluster1" in deduped_nodes
+            "cube1_cluster1-cube2_cluster0" in deduped_nodes
+            or "cube2_cluster0-cube1_cluster1" in deduped_nodes
         )
 
     def test_precomputed_with_knn_lens(self):
@@ -424,4 +423,3 @@ class TestLens:
         data = sparse.random(100, 10, random_state=100101)
         lens = mapper.fit_transform(data)
         mapping = mapper.map(lens, data)
-

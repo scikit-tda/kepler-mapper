@@ -1,27 +1,26 @@
 import IPython
 
 
-
 def display(path_html="mapper_visualization_output.html"):
-    """ Displays a html file inside a Jupyter Notebook output cell.
-        
-        .. note::
-        
-            Must run ``KeplerMapper.visualize`` first to generate html. This function will then render that output from a file saved to disk.
-    
+    """Displays a html file inside a Jupyter Notebook output cell.
+
         .. note::
 
-            Thanks to `smartinsightsfromdata <https://github.com/smartinsightsfromdata>`_ for the `github issue 10 <https://github.com/MLWave/kepler-mapper/issues/10>`_ that suggested this method. 
+            Must run ``KeplerMapper.visualize`` first to generate html. This function will then render that output from a file saved to disk.
+
+        .. note::
+
+            Thanks to `smartinsightsfromdata <https://github.com/smartinsightsfromdata>`_ for the `github issue 10 <https://github.com/MLWave/kepler-mapper/issues/10>`_ that suggested this method.
 
     Parameters
     ============
 
     path_html : str
-        Path to html. Use file name for file inside current working 
+        Path to html. Use file name for file inside current working
         directory. Use ``file://`` browser url-format for path to local file.
         Use ``https://`` urls for externally hosted resources.
 
-        
+
 
 
     Examples

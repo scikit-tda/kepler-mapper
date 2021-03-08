@@ -6,7 +6,7 @@
 
 
 def to_networkx(graph):
-    """ Convert a Mapper 1-complex to a networkx graph.
+    """Convert a Mapper 1-complex to a networkx graph.
 
     Parameters
     -----------

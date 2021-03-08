@@ -10,7 +10,9 @@ This digits example shows two ways of customizing the tooltips options in the HT
 `Visualization with custom tooltips <../../_static/digits_custom_tooltips.html>`_
 
 """
-# sphinx_gallery_thumbnail_path = '../examples/digits/digits-tsne-custom-tooltip.png'
+
+# sphinx_gallery_thumbnail_path = '../examples/digits/digits-tsne-custom-tooltip-mnist.png'
+
 import io
 import sys
 import base64
@@ -29,7 +31,7 @@ except ImportError as e:
     sys.exit()
 
 
-# Load digits dat
+# Load digits data
 data, labels = datasets.load_digits().data, datasets.load_digits().target
 
 # Raw data is (0, 16), so scale to 8 bits (pillow can't handle 4-bit greyscale PNG depth)
@@ -69,11 +71,12 @@ graph = mapper.map(
 # Create the visualizations (increased the graph_gravity for a tighter graph-look.)
 print("Output graph examples to html")
 # Tooltips with image data for every cluster member
-vis_1 = mapper.visualize(
+mapper.visualize(
     graph,
     title="Handwritten digits Mapper",
     path_html="output/digits_custom_tooltips.html",
     color_values=labels,
+    color_function_name="labels",
     custom_tooltips=tooltip_s,
 )
 # Tooltips with the target y-labels for every cluster member

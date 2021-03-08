@@ -10,13 +10,14 @@ from kmapper import KeplerMapper
 
 from kmapper import visuals
 from kmapper.visuals import (
-    init_color_values,
-    format_meta,
-    format_mapper_data,
+    _scale_color_values,
+    _format_meta,
+    _format_mapper_data,
     _map_val2color,
-    build_histogram,
-    graph_data_distribution,
+    _build_histogram,
+    _graph_data_distribution,
     _node_color_function,
+    _to_html_format,
 )
 from kmapper.utils import _test_raised_deprecation_warning
 import warnings
@@ -95,7 +96,9 @@ class TestVisualHelpers:
         nodes = {"a": [1, 2, 3], "b": [4, 5, 6]}
         graph = {"nodes": nodes}
 
-        color_values = init_color_values(graph)
+        n_samples = np.max([i for s in graph["nodes"].values() for i in s]) + 1
+        color_values = np.arange(n_samples)
+        color_values = _scale_color_values(color_values)
 
         assert type(color_values) == np.ndarray
         assert min(color_values) == 0
@@ -105,36 +108,161 @@ class TestVisualHelpers:
         nodes = {"a": [1, 2, 3], "b": [4, 5, 6]}
         graph = {"nodes": nodes}
 
-        cf = np.array([6, 5, 4, 3, 2, 1])
-        color_values = init_color_values(graph, cf)
+        cv = np.array([6, 5, 4, 3, 2, 1])
+        color_values = _scale_color_values(cv)
 
         # np.testing.assert_almost_equal(min(color_values), 0)
         # np.testing.assert_almost_equal(
         #     max(color_values), 1
         # ), "Scaler might have floating point issues, 1.0000...0002"
 
-        # build_histogram in visuals.py assumes/needs this
+        # _build_histogram in visuals.py assumes/needs this
         assert min(color_values) == 0
         assert max(color_values) == 1
 
+    def test__scale_color_values_many_columns(self):
+        cv1 = np.array([6, 5, 4, 3, 2, 1])
+        cv2 = np.array([1, 2, 3, 4, 5, 6])
+        cv = np.column_stack([cv1, cv2])
+        color_values = _scale_color_values(cv)
+        assert color_values.shape[1] == 2
+
+    def test_node_averages_multiple_color_value_vectors(self):
+        nodes = {"a": [0, 1, 2], "b": [3, 4, 5]}
+        graph = {"nodes": nodes, "links": {}}
+
+        n_samples = np.max([i for s in graph["nodes"].values() for i in s]) + 1
+        color_values_1 = np.arange(n_samples)
+        color_values_2 = np.flip(color_values_1)
+        color_values = np.column_stack((color_values_1, color_values_2))
+        color_values = _scale_color_values(color_values)
+
+        # (Pdb) color_values
+        # array([[0. , 1. ],
+        #        [0.2, 0.8],
+        #        [0.4, 0.6],
+        #        [0.6, 0.4],
+        #        [0.8, 0.2],
+        #        [1. , 0. ]])
+
+        X = np.arange(n_samples).reshape(-1, 1)
+        lens = np.copy(X)
+
+        graph_data = _format_mapper_data(
+            graph=graph,
+            color_values=color_values,
+            node_color_function="mean",
+            X=None,
+            X_names=[],
+            lens=lens,
+            lens_names=[],
+            custom_tooltips=None,
+        )
+
+        nodes = {node["name"]: node for node in graph_data["nodes"]}
+        assert len(nodes["a"]["color"][0]) == 2
+        assert np.array(nodes["a"]["tooltip"]["histogram"]).shape[0] == 2
+
+        np.testing.assert_almost_equal(np.array([0.2, 0.8]), nodes["a"]["color"][0])
+        np.testing.assert_almost_equal(np.array([0.8, 0.2]), nodes["b"]["color"][0])
+
+    def test_color_function_names_unequal_exception(self):
+        mapper = KeplerMapper()
+        data, labels = make_circles(1000, random_state=0)
+        lens = mapper.fit_transform(data, projection=[0])
+        graph = mapper.map(lens, data)
+        color_values = lens[:, 0]
+
+        cv1 = np.array(lens)
+        cv2 = np.flip(cv1)
+        cv = np.column_stack([cv1, cv2])
+        with pytest.raises(Exception) as excinfo:
+            mapper.visualize(graph, color_values=cv, color_function_name="hotdog")
+        assert "Must be equal" in str(excinfo.value)
+
+        with pytest.raises(Exception) as excinfo:
+            color_values = mapper.visualize(
+                graph,
+                color_values=cv,
+                color_function_name=["hotdog", "hotdog", "hotdiggitydog"],
+            )
+        assert "Must be equal" in str(excinfo.value)
+
+    def test_no_color_values_many_color_function_exception(self):
+        mapper = KeplerMapper()
+        data, labels = make_circles(1000, random_state=0)
+        lens = mapper.fit_transform(data, projection=[0])
+        graph = mapper.map(lens, data)
+
+        with pytest.raises(Exception) as excinfo:
+            color_values = mapper.visualize(
+                graph,
+                color_values=None,
+                color_function_name=["hotdog", "hotdog", "hotdiggitydog"],
+            )
+        assert "Refusing to proceed" in str(excinfo.value)
+
+    def test_no_color_values_one_color_function_no_exception_yes_warning(self):
+        mapper = KeplerMapper()
+        data, labels = make_circles(1000, random_state=0)
+        lens = mapper.fit_transform(data, projection=[0])
+        graph = mapper.map(lens, data)
+
+        with warnings.catch_warnings(record=True) as w:
+            # Cause all warnings to always be triggered.
+            warnings.simplefilter("always")
+
+            color_values = mapper.visualize(
+                graph, color_values=None, color_function_name=["hotdog"]
+            )
+        assert "unexpected" in str(w[-1].message)
+
     def test_color_hist_matches_nodes(self):
-        """ The histogram colors dont seem to match the node colors, this should confirm the colors will match and we need to look at the javascript instead.
+        """The histogram colors dont seem to match the node colors,
+        this should confirm the colors will match and we need to look at the
+        javascript instead.
         """
 
         color_values = np.array([0.55] * 10 + [0.0] * 10)
         member_ids = [1, 2, 3, 4, 5, 6]
-        hist = build_histogram(color_values[member_ids])
+        hist = _build_histogram(color_values[member_ids])
         c = round(_node_color_function(member_ids, color_values), 2)
         single_bar = [bar for bar in hist if bar["perc"] == 100.0]
 
         assert len(single_bar) == 1
         assert _map_val2color(c, 0.0, 1.0) == single_bar[0]["color"]
 
+    def test_node_color_function_works(self):
+        color_values = np.arange(20)
+        member_ids = np.arange(color_values.shape[0])
+        assert (
+            _node_color_function(member_ids, color_values, "mean")
+            == np.mean(color_values)
+            == 9.5
+        )
+        assert (
+            _node_color_function(member_ids, color_values, "median")
+            == np.median(color_values)
+            == 9.5
+        )
+        assert (
+            _node_color_function(member_ids, color_values, "max")
+            == np.max(color_values)
+            == 19
+        )
+        assert (
+            _node_color_function(member_ids, color_values, "min")
+            == np.min(color_values)
+            == 0
+        )
+
     def test_color_values_size(self):
         nodes = {"a": [1, 2, 3], "b": [4, 5, 6, 7, 8, 9]}
         graph = {"nodes": nodes}
 
-        color_values = init_color_values(graph)
+        n_samples = np.max([i for s in graph["nodes"].values() for i in s]) + 1
+        color_values = np.arange(n_samples)
+        color_values = _scale_color_values(color_values)
 
         assert len(color_values) == len(nodes["a"]) + len(nodes["b"]) + 1
 
@@ -143,8 +271,9 @@ class TestVisualHelpers:
         data = np.random.rand(1000, 10)
         lens = mapper.fit_transform(data, projection=[0])
         graph = mapper.map(lens, data)
+        color_function_name = ["Row number"]
 
-        fmt = format_meta(graph)
+        fmt = _format_meta(graph, color_function_name)
         assert fmt["n_nodes"] == len(graph["nodes"])
 
         assert "n_edges" in fmt.keys()
@@ -160,27 +289,133 @@ class TestVisualHelpers:
         data = np.random.rand(1000, 10)
         lens = mapper.fit_transform(data, projection=[0])
         graph = mapper.map(lens, data)
+        color_function_name = ["Row number"]
+        node_color_function = "mean"
 
         cm = "My custom_meta"
-        fmt = format_meta(graph, cm)
+        fmt = _format_meta(graph, color_function_name, node_color_function, cm)
         assert fmt["custom_meta"] == cm
 
-    def test_color_function_deprecated_replaced(self, default_colorscale, jinja_env):
+    def test_format_meta(self, sc):
+        mapper_summary = _format_meta(sc, "foo", "bar", "Nada custom meta")
+        assert mapper_summary["custom_meta"] == "Nada custom meta"
+        assert (
+            mapper_summary["n_total"] <= 300 and mapper_summary["n_total"] >= 200
+        ), "Some points become repeated in multiple nodes."
+
+    def test_node_color_function_must_be_np_function(self, sc):
+        mapper = KeplerMapper()
+
+        with pytest.raises(
+            AttributeError, match=r".*must be a function available on `numpy` class.*"
+        ):
+            mapper.visualize(sc, node_color_function=["yinz"])
+
+    def test_to_html_format(self):
+        res = _to_html_format("a\nb\n\n\\n\n")
+        assert "\n" not in res
+        assert "<br>" in res
+
+    def test_visualize_one_color_function(self):
+        mapper = KeplerMapper()
+        data, labels = make_circles(1000, random_state=0)
+        lens = mapper.fit_transform(data, projection=[0])
+        graph = mapper.map(lens, data)
+        color_values = lens[:, 0]
+
+        mapper.visualize(
+            graph, color_values=color_values, color_function_name=["hotdog"]
+        )
+
+    def test_visualize_multiple_color_functions(self):
+        """ convenience test for generating a vis with multiple color_values"""
+        mapper = KeplerMapper()
+        data, labels = make_circles(1000, random_state=0)
+        lens = mapper.fit_transform(data, projection=[0])
+        graph = mapper.map(lens, data)
+        color_values = lens[:, 0]
+
+        cv1 = np.array(lens)
+        cv2 = np.flip(cv1)
+        cv = np.column_stack([cv1, cv2])
+        mapper.visualize(
+            graph, color_values=cv, color_function_name=["hotdog", "hotdiggitydog"]
+        )
+
+    def test_visualize_multiple_node_color_functions(self):
+        """ convenience test for generating a vis with multiple node_color_values but 1d color_values"""
+        mapper = KeplerMapper()
+        data, labels = make_circles(1000, random_state=0)
+        lens = mapper.fit_transform(data, projection=[0])
+        graph = mapper.map(lens, data)
+        color_values = lens[:, 0]
+        mapper.visualize(
+            graph,
+            color_values=color_values,
+            color_function_name="hotdog",
+            node_color_function=["mean", "std", "median", "max"],
+        )
+
+    def test_visualize_multiple_color_function_and_node_color_functions(self):
+        """ convenience test for generating a vis with multiple color_values _and_ multiple node_color_values"""
+        mapper = KeplerMapper()
+        data, labels = make_circles(1000, random_state=0)
+        lens = mapper.fit_transform(data, projection=[0])
+        graph = mapper.map(lens, data)
+        color_values = lens[:, 0]
+
+        cv1 = np.array(lens)
+        cv2 = np.flip(cv1)
+        cv = np.column_stack([cv1, cv2])
+        mapper.visualize(
+            graph,
+            color_values=cv,
+            node_color_function=["mean", "std"],
+            color_function_name=["hotdog", "hotdiggitydog"],
+        )
+
+    def test_visualize_search_bar(self):
+        """ convenience test for generating a vis with a search bar (and also with multiple color_values _and_ multiple node_color_values)"""
+        mapper = KeplerMapper()
+        data, labels = make_circles(1000, random_state=0)
+        lens = mapper.fit_transform(data, projection=[0])
+        graph = mapper.map(lens, data)
+        color_values = lens[:, 0]
+
+        cv1 = np.array(lens)
+        cv2 = np.flip(cv1)
+        cv = np.column_stack([cv1, cv2])
+        mapper.visualize(
+            graph,
+            color_values=cv,
+            node_color_function=["mean", "std"],
+            color_function_name=["hotdog", "hotdiggitydog"],
+            include_searchbar=True,
+        )
+
+    def test_visualize_graph_with_cluster_stats_above_below(self):
+        mapper = KeplerMapper()
+        X = np.ones((1000, 3))
+        ids = np.random.choice(20, 1000)
+        X[ids, 0] = 10
+        lens = mapper.fit_transform(X, projection=[0])
+        graph = mapper.map(lens, X)
+        output = mapper.visualize(graph, X=X, lens=X)
+        # then, visually inspect mapper_visualization_output.html
+
+    def test_color_function_deprecated_replaced(self, default_colorscale):
         mapper = KeplerMapper()
         data, labels = make_circles(1000, random_state=0)
         lens = mapper.fit_transform(data, projection=[0])
         graph = mapper.map(lens, data)
 
         color_values = lens[:, 0]
+        node_color_function = "mean"
         inverse_X = data
         projected_X = lens
         projected_X_names = ["projected_%s" % (i) for i in range(projected_X.shape[1])]
         inverse_X_names = ["inverse_%s" % (i) for i in range(inverse_X.shape[1])]
         custom_tooltips = np.array(["customized_%s" % (l) for l in labels])
-
-
-
-
 
         # https://docs.python.org/3/library/warnings.html#testing-warnings
         with warnings.catch_warnings(record=True) as w:
@@ -188,51 +423,56 @@ class TestVisualHelpers:
             warnings.simplefilter("always")
 
             # kmapper.visualize
-            html = mapper.visualize(graph, color_function=lens)
+            html = mapper.visualize(
+                graph, color_function=lens, color_function_name="lens[:, 0]"
+            )
             _test_raised_deprecation_warning(w)
 
-            # visuals.format_mapper_data
-            graph_data = format_mapper_data(
+            # visuals._format_mapper_data
+            graph_data = _format_mapper_data(
                 graph=graph,
                 color_function=color_values,
+                node_color_function=node_color_function,
                 X=inverse_X,
                 X_names=inverse_X_names,
                 lens=projected_X,
                 lens_names=projected_X_names,
                 custom_tooltips=custom_tooltips,
-                env=jinja_env,
             )
             _test_raised_deprecation_warning(w)
 
-            # visuals.graph_data_distribution
-            histogram = graph_data_distribution(graph, color_function=lens, colorscale=default_colorscale)
+            # visuals._graph_data_distribution
+            histogram = _graph_data_distribution(
+                graph,
+                color_function=lens,
+                node_color_function=node_color_function,
+                colorscale=default_colorscale,
+            )
             _test_raised_deprecation_warning(w)
 
-
-
-
-    def test_format_mapper_data(self, jinja_env):
+    def test__format_mapper_data(self):
         mapper = KeplerMapper()
         data, labels = make_circles(1000, random_state=0)
         lens = mapper.fit_transform(data, projection=[0])
         graph = mapper.map(lens, data)
 
         color_values = lens[:, 0]
+        node_color_function = "mean"
         inverse_X = data
         projected_X = lens
         projected_X_names = ["projected_%s" % (i) for i in range(projected_X.shape[1])]
         inverse_X_names = ["inverse_%s" % (i) for i in range(inverse_X.shape[1])]
         custom_tooltips = np.array(["customized_%s" % (l) for l in labels])
 
-        graph_data = format_mapper_data(
+        graph_data = _format_mapper_data(
             graph,
             color_values,
+            node_color_function,
             inverse_X,
             inverse_X_names,
             projected_X,
             projected_X_names,
             custom_tooltips,
-            jinja_env,
         )
         # print(graph_data)
         # Dump to json so we can easily tell what's in it.
@@ -248,7 +488,7 @@ class TestVisualHelpers:
 
     def test_histogram(self):
         data = np.random.random((100, 1))
-        hist = visuals.build_histogram(data)
+        hist = visuals._build_histogram(data)
         assert isinstance(hist, list)
         assert isinstance(hist[0], dict)
         assert len(hist) == 10
@@ -284,7 +524,9 @@ class TestVisualHelpers:
         X = scipy.sparse.random(1000, 3, density=1.0, format="coo")
         ids = np.random.choice(20, 1000)
 
-        with pytest.raises(ValueError, match=r".*sparse matrix format must be csr or csc.*"):
+        with pytest.raises(
+            ValueError, match=r".*sparse matrix format must be csr or csc.*"
+        ):
             cluster_data = visuals._format_cluster_statistics(ids, X, ["a", "b", "c"])
 
     def test_cluster_stats_above(self):
@@ -332,8 +574,7 @@ class TestVisualizeIntegration:
             mapper.visualize(graph)
 
     def test_visualize_standalone_same(self, tmpdir):
-        """ ensure that the visualization is not dependent on the actual mapper object.
-        """
+        """ensure that the visualization is not dependent on the actual mapper object."""
         mapper = KeplerMapper()
 
         file = tmpdir.join("output.html")

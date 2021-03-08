@@ -4,7 +4,6 @@ import kmapper as km
 from kmapper import draw_matplotlib
 
 
-
 @pytest.fixture
 def mapper():
     mapper = km.KeplerMapper(verbose=0)

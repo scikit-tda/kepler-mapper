@@ -1,87 +1,92 @@
-<h2>Cluster Details <span style="font-size:0.7em">(node id: {{ node_id }})</span></h2>
+<div>
+  <div class='actions'>
+    <h3>Actions</h3>
+    <p>
+      <button class='btn center-on-node'>Center viewport on node</button>
+    </p>
+  </div>
 
-{% include 'histogram.html' %}
+  <div class='details'>
+    <h2>Cluster Details <span style="font-size:0.7em">(node id: <span class='node_id'></span>)</span></h2>
 
-<!-- Projection Statistics -->
-{% if projection_stats %}
+    <!-- histogram -->
+    <div class='histogram-wrapper'>
+      <hr><br/>
 
-<hr><br/>
+      <h3><span class='distribution_label'></span> Distribution</h3>
 
-<h3>Projection Statistics</h3>
+      <div class="histogram"></div>
 
-<table>
-    <tr><th>Lens</th><th style="width:50px;"> <small>Mean</small></th>
-    <th style="width:50px;"><small>Max</small></th>
-    <th style="width:50px;"><small>Min</small></th></tr>
+      <br><br>
+    </div>
+    <!-- /histogram -->
 
-    {% for projection in projection_stats %}
+    <!-- Projection Statistics -->
+    <div class='projection_stats' style='display:none'>
 
-        <tr><td>{{ projection['name'] }} </td>
-        <td><small>{{ projection['mean'] }}</small></td>
-        <td><small> {{ projection['max'] }}</small></td>
-        <td><small>{{ projection['min'] }}</small></td></tr>
+      <hr><br/>
 
-    {% endfor %}
+      <h3>Projection Statistics</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Lens</th>
+            <th style="width:50px;"><small>Mean</small></th>
+            <th style="width:50px;"><small>Max</small></th>
+            <th style="width:50px;"><small>Min</small></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
 
-</table>
+    <!-- Cluster Statistics -->
+    <div class='cluster_stats'>
+        <hr><br/>
 
-{% endif %}
+        <h3>Cluster Statistics</h3>
+        <div class='above-wrapper'>
+            <h3>Above Average</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Feature</th>
+                  <th style="width:50px;"><small>Mean</small></th>
+                  <th style="width:50px;"><small>STD</small></th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+        </div>
 
+        <div class='below-wrapper'>
+            <h3>Below Average</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Feature</th>
+                  <th style="width:50px;"><small>Mean</small></th>
+                  <th style="width:50px;"><small>STD</small></th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+        </div>
 
-<!-- Cluster Statistics -->
-{% if cluster_stats %}
-    <hr><br/>
+        <h3>Size</h3>
+        <p class='cluster-size'></p>
+    </div>
 
-    <!-- <h3>Cluster Statistics</h3> -->
+    <!-- Membership information -->
+    <div class='membership-information'>
+      <hr> <br/>
 
-    {% if cluster_stats['above']|length > 0 %}
-        <h3>Above Average</h3>
-        
-        <table><tr><th>Feature</th>
-        <th style="width:50px;"><small>Mean</small></th>
-        <th style="width:50px;"><small>STD</small></th></tr>
+      <h3>Members</h3>
+      <div class='list-of-members'></div>
 
-        {% for stat in cluster_stats['above'] %}
-            <tr><td>{{ stat['feature'] }}</td><td><small> {{ stat['mean'] }}</small></td>
-            <td class="std"><small>{{ stat['std'] }}x</small></td></tr>
-        {% endfor %}
-
-        </table>
-    {% endif %}
-
-    {% if cluster_stats['below']|length > 0 %}
-        <h3>Below Average</h3>
-        <table><tr><th>Feature</th>
-        <th style="width:50px;"><small>Mean</small></th>
-        <th style="width:50px;"><small>STD</small></th></tr>
-
-        {% for stat in cluster_stats['below'] %}
-            <tr><td>{{ stat['feature'] }}</td><td><small>{{ stat['mean'] }}</small></td>
-            <td class="std"><small>{{ stat['std'] }}x</small></td></tr>
-        {% endfor %}
-
-        </table>
-    {% endif %}
-
-
-    <h3>Size</h3>
-        <p>{{ cluster_stats['size'] }}</p>
-
-
-{% endif %}
-
-
-<!-- Membership information -->
-
-
-
-<hr> <br/>
-
-<h3>Members</h3>
-{% for tooltip in custom_tooltips %}
-{{ tooltip }}
-{% endfor %}
-
-
-<br><br>
-<hr><br>
+      <br><br>
+      <hr><br>
+    </div>
+    <!-- /membership information -->
+  </div>
+</div>

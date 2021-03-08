@@ -8,6 +8,7 @@ import numpy as np
 
 __all__ = ["draw_matplotlib"]
 
+
 def draw_matplotlib(g, ax=None, fig=None, layout="kk"):
     """Draw the graph using NetworkX drawing functionality.
 
@@ -42,12 +43,14 @@ def draw_matplotlib(g, ax=None, fig=None, layout="kk"):
     """
     import networkx as nx
     import os
+
     # https://stackoverflow.com/a/50089385/5917194
     import matplotlib as mpl
-    if os.environ.get('DISPLAY','') == '':
-        print('no display found. Using non-interactive Agg backend')
-        mpl.use('Agg')
-        
+
+    if os.environ.get("DISPLAY", "") == "":
+        print("no display found. Using non-interactive Agg backend")
+        mpl.use("Agg")
+
     import matplotlib.pyplot as plt
 
     fig = fig if fig else plt.figure()
@@ -75,7 +78,7 @@ def draw_matplotlib(g, ax=None, fig=None, layout="kk"):
         "spring": nx.spring_layout,
         "bi": nx.bipartite_layout,
         "circ": nx.circular_layout,
-        "spect": nx.spectral_layout
+        "spect": nx.spectral_layout,
     }
 
     pos = layouts[layout](g)

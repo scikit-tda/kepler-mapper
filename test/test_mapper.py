@@ -16,8 +16,7 @@ from sklearn import neighbors
 
 
 class TestLogging:
-    """ Simple tests that confirm map completes at each logging level
-    """
+    """Simple tests that confirm map completes at each logging level"""
 
     def test_runs_with_logging_0(self, capsys):
         mapper = KeplerMapper(verbose=0)

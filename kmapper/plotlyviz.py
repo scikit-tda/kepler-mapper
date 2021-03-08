@@ -57,7 +57,8 @@ def mpl_to_plotly(cmap, n_entries):
         # pl_colorscale.append([round(k*h, 2), f'rgb({C[0]}, {C[1]}, {C[2]})']) # Python 3.6+
     return pl_colorscale
 
-@deprecated_alias(color_function='color_values')
+
+@deprecated_alias(color_function="color_values")
 def plotlyviz(
     scomplex,
     colorscale=None,
@@ -65,7 +66,7 @@ def plotlyviz(
     graph_layout="kk",
     color_values=None,
     color_function_name=None,
-    node_color_function='mean',
+    node_color_function="mean",
     dashboard=False,
     graph_data=False,
     factor_size=3,
@@ -86,68 +87,68 @@ def plotlyviz(
     filename=None,
 ):
     """
-        Visualizations and dashboards for kmapper graphs using Plotly. This method is suitable for use in Jupyter notebooks.
+    Visualizations and dashboards for kmapper graphs using Plotly. This method is suitable for use in Jupyter notebooks.
 
 
-        The generated FigureWidget can be updated (by performing a restyle or relayout). For example, let us add a title
-        to the colorbar (the name of the color function, if any),
-        and set the title font size. To perform these updates faster, Plotly 3.+ provides a context manager that batches up all data and layout updates:
+    The generated FigureWidget can be updated (by performing a restyle or relayout). For example, let us add a title
+    to the colorbar (the name of the color function, if any),
+    and set the title font size. To perform these updates faster, Plotly 3.+ provides a context manager that batches up all data and layout updates:
 
-        To display more info on the generated kmapper-graph, define two more FigureWidget(s):
-        the global node distribution figure, and a dummy figure
-        that displays info on the  algorithms involved in getting the graph from data, as well as  sklearn  class instances.
+    To display more info on the generated kmapper-graph, define two more FigureWidget(s):
+    the global node distribution figure, and a dummy figure
+    that displays info on the  algorithms involved in getting the graph from data, as well as  sklearn  class instances.
 
-        A FigureWidget has event listeners for hovering, clicking or selecting. Using the first one for `fw_graph`
-        we   define, via the function `hovering_widgets()`, widgets that display the node distribution, when the node is hovered over, and two textboxes for the cluster size and the member ids/labels of the hovered node members.
-
-
-
-        Parameters
-        -----------
-
-        scomplex: dict
-            Simplicial complex is the output from the KeplerMapper `map` method.
-
-        title: str
-            Title of output graphic
-
-        graph_layout: igraph layout;
-            recommended 'kk' (kamada-kawai) or 'fr' (fruchterman-reingold)
-
-        colorscale:
-             Plotly colorscale(colormap) to color graph nodes
-
-        dashboard: bool, default is False
-            If true, display complete dashboard of node information
-
-        graph_data: bool, default is False
-            If true, display graph metadata
-
-        factor_size: double, default is 3
-            a factor for the node size
-
-        edge_linewidth : double, default is 1.5
-        node_linecolor: color str, default is "rgb(200,200,200)"
-        width: int, default is 600,
-        height: int, default is 500,
-        bgcolor: color str, default is "rgba(240, 240, 240, 0.95)",
-        left: int, default is 10,
-        bottom: int, default is 35,
-        summary_height: int, default is 300,
-        summary_width: int, default is 600,
-        summary_left: int, default is 20,
-        summary_right: int, default is 20,
-        hist_left: int, default is 25,
-        hist_right: int, default is 25,
-        member_textbox_width: int, default is 800,
-        filename: str, default is None
-            if filename is given, the graphic will be saved to that file.
+    A FigureWidget has event listeners for hovering, clicking or selecting. Using the first one for `fw_graph`
+    we   define, via the function `hovering_widgets()`, widgets that display the node distribution, when the node is hovered over, and two textboxes for the cluster size and the member ids/labels of the hovered node members.
 
 
-        Returns
-        ---------
-        result: plotly.FigureWidget
-            A FigureWidget that can be shown or editted. See the Plotly Demo notebook for examples of use.
+
+    Parameters
+    -----------
+
+    scomplex: dict
+        Simplicial complex is the output from the KeplerMapper `map` method.
+
+    title: str
+        Title of output graphic
+
+    graph_layout: igraph layout;
+        recommended 'kk' (kamada-kawai) or 'fr' (fruchterman-reingold)
+
+    colorscale:
+         Plotly colorscale(colormap) to color graph nodes
+
+    dashboard: bool, default is False
+        If true, display complete dashboard of node information
+
+    graph_data: bool, default is False
+        If true, display graph metadata
+
+    factor_size: double, default is 3
+        a factor for the node size
+
+    edge_linewidth : double, default is 1.5
+    node_linecolor: color str, default is "rgb(200,200,200)"
+    width: int, default is 600,
+    height: int, default is 500,
+    bgcolor: color str, default is "rgba(240, 240, 240, 0.95)",
+    left: int, default is 10,
+    bottom: int, default is 35,
+    summary_height: int, default is 300,
+    summary_width: int, default is 600,
+    summary_left: int, default is 20,
+    summary_right: int, default is 20,
+    hist_left: int, default is 25,
+    hist_right: int, default is 25,
+    member_textbox_width: int, default is 800,
+    filename: str, default is None
+        if filename is given, the graphic will be saved to that file.
+
+
+    Returns
+    ---------
+    result: plotly.FigureWidget
+        A FigureWidget that can be shown or editted. See the Plotly Demo notebook for examples of use.
 
     """
 
@@ -159,7 +160,7 @@ def plotlyviz(
         colorscale=colorscale,
         color_values=color_values,
         color_function_name=color_function_name,
-        node_color_function=node_color_function
+        node_color_function=node_color_function,
     )
 
     annotation = get_kmgraph_meta(mapper_summary)
@@ -212,7 +213,8 @@ def plotlyviz(
 
     return result
 
-@deprecated_alias(color_function='color_values')
+
+@deprecated_alias(color_function="color_values")
 def scomplex_to_graph(
     simplicial_complex,
     color_values,
@@ -222,7 +224,7 @@ def scomplex_to_graph(
     lens_names,
     custom_tooltips,
     colorscale,
-    node_color_function='mean',
+    node_color_function="mean",
 ):
 
     color_values = np.array(color_values)
@@ -263,12 +265,13 @@ def scomplex_to_graph(
 
     return json_dict
 
-@deprecated_alias(color_function='color_values')
+
+@deprecated_alias(color_function="color_values")
 def get_mapper_graph(
     simplicial_complex,
     color_values=None,
     color_function_name=None,
-    node_color_function='mean',
+    node_color_function="mean",
     colorscale=None,
     custom_tooltips=None,
     custom_meta=None,
@@ -306,9 +309,11 @@ def get_mapper_graph(
 
     if color_values is None:
         # If no color_values provided we color by row order in data set
-        n_samples = np.max([i for s in simplicial_complex["nodes"].values() for i in s]) + 1
+        n_samples = (
+            np.max([i for s in simplicial_complex["nodes"].values() for i in s]) + 1
+        )
         color_values = np.arange(n_samples)
-        color_function_name = ['Row number']
+        color_function_name = ["Row number"]
 
     color_values = _scale_color_values(color_values)
 
@@ -327,7 +332,7 @@ def get_mapper_graph(
         lens_names,
         custom_tooltips,
         colorscale=colorscale,
-        node_color_function=node_color_function
+        node_color_function=node_color_function,
     )
     colorf_distribution = _graph_data_distribution(
         simplicial_complex, color_values, node_color_function, colorscale
@@ -372,7 +377,6 @@ def plotly_graph(
 
     if not colorscale:
         colorscale = default_colorscale
-
 
     # define an igraph.Graph instance of n_nodes
     n_nodes = len(kmgraph["nodes"])
@@ -421,8 +425,7 @@ def plotly_graph(
 
 
 def get_kmgraph_meta(mapper_summary):
-    """ Extract info from mapper summary to be displayed below the graph plot
-    """
+    """Extract info from mapper summary to be displayed below the graph plot"""
     d = mapper_summary["custom_meta"]
     meta = (
         "<b>N_cubes:</b> "
@@ -571,9 +574,9 @@ def summary_fig(
     bgcolor="rgb(240,240,240)",
 ):
     """Define a dummy figure that displays info on the algorithms and
-       sklearn class instances or methods used
+    sklearn class instances or methods used
 
-       Returns a FigureWidget object representing the figure
+    Returns a FigureWidget object representing the figure
     """
     text = _text_mapper_summary(mapper_summary)
 

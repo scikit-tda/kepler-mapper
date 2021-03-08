@@ -83,29 +83,35 @@ mapper.visualize(
 
 
 # Visualization with multiple color functions
-mapper.visualize(graph,
-                 path_html="output/breast-cancer-multiple-color-functions.html",
-                 title="Wisconsin Breast Cancer Dataset",
-                 custom_tooltips=y,
-                 color_values=lens,
-                 color_function_name=['Isolation Forest', 'L2-norm'])
+mapper.visualize(
+    graph,
+    path_html="output/breast-cancer-multiple-color-functions.html",
+    title="Wisconsin Breast Cancer Dataset",
+    custom_tooltips=y,
+    color_values=lens,
+    color_function_name=["Isolation Forest", "L2-norm"],
+)
 
 
 # Visualization with multiple node color functions
-mapper.visualize(graph,
-                 path_html="output/breast-cancer-multiple-node-color-functions.html",
-                 title="Wisconsin Breast Cancer Dataset",
-                 custom_tooltips=y,
-                 node_color_function=['mean', 'std', 'median', 'max'])
+mapper.visualize(
+    graph,
+    path_html="output/breast-cancer-multiple-node-color-functions.html",
+    title="Wisconsin Breast Cancer Dataset",
+    custom_tooltips=y,
+    node_color_function=["mean", "std", "median", "max"],
+)
 
 # Visualization showing both multiple color functions, and also multiple node color functions
-mapper.visualize(graph,
-                 path_html="output/breast-cancer-multiple-color-functions-and-multiple-node-color-functions.html",
-                 title="Wisconsin Breast Cancer Dataset",
-                 custom_tooltips=y,
-                 color_values=lens,
-                 color_function_name=['Isolation Forest', 'L2-norm'],
-                 node_color_function=['mean', 'std', 'median', 'max'])
+mapper.visualize(
+    graph,
+    path_html="output/breast-cancer-multiple-color-functions-and-multiple-node-color-functions.html",
+    title="Wisconsin Breast Cancer Dataset",
+    custom_tooltips=y,
+    color_values=lens,
+    color_function_name=["Isolation Forest", "L2-norm"],
+    node_color_function=["mean", "std", "median", "max"],
+)
 
 
 import matplotlib.pyplot as plt

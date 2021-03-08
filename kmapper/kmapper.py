@@ -23,14 +23,12 @@ from .visuals import (
     _build_histogram,
     _graph_data_distribution,
     colorscale_default,
-    _render_d3_vis
+    _render_d3_vis,
 )
 from .utils import deprecated_alias
 
-__all__ = [
-    "KeplerMapper",
-    "cluster" #expose this to make examples and usage tidier
-]
+# expose "cluster" to make examples and usage tidier
+__all__ = ["KeplerMapper", "cluster"]
 
 
 class KeplerMapper(object):
@@ -162,7 +160,9 @@ class KeplerMapper(object):
 
         # Sae original values off so they can be referenced by later functions in the pipeline
         self.inverse = X
-        scaler = preprocessing.MinMaxScaler() if scaler == "default:MinMaxScaler" else scaler
+        scaler = (
+            preprocessing.MinMaxScaler() if scaler == "default:MinMaxScaler" else scaler
+        )
         self.scaler = scaler
         self.projection = str(projection)
         self.distance_matrix = distance_matrix
@@ -319,7 +319,9 @@ class KeplerMapper(object):
         """
 
         projections = projection
-        scaler = preprocessing.MinMaxScaler() if scaler == "default:MinMaxScaler" else scaler
+        scaler = (
+            preprocessing.MinMaxScaler() if scaler == "default:MinMaxScaler" else scaler
+        )
         scalers = scaler
         distance_matrices = distance_matrix
 
@@ -489,7 +491,7 @@ class KeplerMapper(object):
         ids = np.array([x for x in range(lens.shape[0])])
         lens = np.c_[ids, lens]
         if issparse(X):
-            X = hstack([ids[np.newaxis].T, X], format='csr')
+            X = hstack([ids[np.newaxis].T, X], format="csr")
         else:
             X = np.c_[ids, X]
 
@@ -510,7 +512,9 @@ class KeplerMapper(object):
 
         if self.verbose > 1:
             print(
-                "Minimal points in hypercube before clustering: {}".format(min_cluster_samples)
+                "Minimal points in hypercube before clustering: {}".format(
+                    min_cluster_samples
+                )
             )
 
         # Subdivide the projected data X in intervals/hypercubes with overlap
@@ -540,7 +544,8 @@ class KeplerMapper(object):
                         % (
                             np.unique(
                                 cluster_predictions[cluster_predictions > -1]
-                            ).shape[0], i
+                            ).shape[0],
+                            i,
                         )
                     )
 
@@ -549,7 +554,11 @@ class KeplerMapper(object):
                     if pred != -1 and not np.isnan(pred):
                         cluster_id = "cube{}_cluster{}".format(i, int(pred))
 
-                        nodes[cluster_id] = hypercube[:, 0][cluster_predictions == pred].astype(int).tolist()
+                        nodes[cluster_id] = (
+                            hypercube[:, 0][cluster_predictions == pred]
+                            .astype(int)
+                            .tolist()
+                        )
             elif self.verbose > 1:
                 print("Cube_%s is empty.\n" % (i))
 
@@ -609,13 +618,13 @@ class KeplerMapper(object):
 
         print("\nCreated %s edges and %s nodes in %s." % (nr_links, len(nodes), time))
 
-    @deprecated_alias(color_function='color_values')
+    @deprecated_alias(color_function="color_values")
     def visualize(
         self,
         graph,
         color_values=None,
         color_function_name=None,
-        node_color_function='mean',
+        node_color_function="mean",
         colorscale=None,
         custom_tooltips=None,
         custom_meta=None,
@@ -627,7 +636,7 @@ class KeplerMapper(object):
         lens=None,
         lens_names=None,
         nbins=10,
-        include_searchbar=False
+        include_searchbar=False,
     ):
         """Generate a visualization of the simplicial complex mapper output. Turns the complex dictionary into a HTML/D3.js visualization
 
@@ -832,14 +841,18 @@ class KeplerMapper(object):
             try:
                 getattr(np, _node_color_function_name)
             except AttributeError as e:
-                raise AttributeError('Invalid `node_color_function` {}, must be a function available on `numpy` class.'.format(_node_color_function_name)) from e
+                raise AttributeError(
+                    "Invalid `node_color_function` {}, must be a function available on `numpy` class.".format(
+                        _node_color_function_name
+                    )
+                ) from e
 
         if color_values is None:
             # We generate default `color_values` based on data row order
             n_samples = np.max([i for s in graph["nodes"].values() for i in s]) + 1
             color_values = np.arange(n_samples)
             if not len(color_function_name):
-                color_function_name = ['Row number']
+                color_function_name = ["Row number"]
             else:
                 # `color_function_name` was not None, while `color_values` was None
                 #
@@ -848,9 +861,13 @@ class KeplerMapper(object):
                 # `color_values` based on row order. But we will raise a warning.
 
                 if len(color_function_name) == 1:
-                    warnings.warn('`color_function_name` was set -- however, no `color_values` were passed, so default color_values were computed based on row order, and the passed `color_function_name` will be set as their label. This may be unexpected.')
+                    warnings.warn(
+                        "`color_function_name` was set -- however, no `color_values` were passed, so default color_values were computed based on row order, and the passed `color_function_name` will be set as their label. This may be unexpected."
+                    )
                 else:
-                    raise Exception('More than one `color_function_name` was set, while `color_values` was not set. If `color_values` was not set, then only one `color_function_name` can be passed. Refusing to proceed.')
+                    raise Exception(
+                        "More than one `color_function_name` was set, while `color_values` was not set. If `color_values` was not set, then only one `color_function_name` can be passed. Refusing to proceed."
+                    )
         else:
             color_values = np.array(color_values)
             # test whether we have a color_function_name for each color_value vector
@@ -860,7 +877,11 @@ class KeplerMapper(object):
                 num_color_value_vectors = color_values.shape[1]
             num_color_function_names = len(color_function_name)
             if num_color_value_vectors != num_color_function_names:
-                raise Exception('{} `color_function_names` values found, but {} columns found in color_values. Must be equal.'.format(num_color_function_names, num_color_value_vectors))
+                raise Exception(
+                    "{} `color_function_names` values found, but {} columns found in color_values. Must be equal.".format(
+                        num_color_function_names, num_color_value_vectors
+                    )
+                )
 
         color_values = _scale_color_values(color_values)
 
@@ -879,23 +900,23 @@ class KeplerMapper(object):
 
         histogram = []
         for _node_color_function_name in node_color_function:
-            _histogram = _graph_data_distribution(graph, color_values, _node_color_function_name, colorscale)
+            _histogram = _graph_data_distribution(
+                graph, color_values, _node_color_function_name, colorscale
+            )
             if np.array(_histogram).ndim == 1:
-                _histogram = [ _histogram ] # javascript will expect the histogram
-                                            # array to be indexed for the number of
-                                            # node_color_functions first, and second
-                                            # for the number of color_functions
+                _histogram = [_histogram]  # javascript will expect the histogram
+                # array to be indexed for the number of
+                # node_color_functions first, and second
+                # for the number of color_functions
             histogram.append(_histogram)
 
-        mapper_summary = _format_meta(graph, color_function_name, node_color_function, custom_meta)
+        mapper_summary = _format_meta(
+            graph, color_function_name, node_color_function, custom_meta
+        )
 
         html = _render_d3_vis(
-            title,
-            mapper_summary,
-            histogram,
-            mapper_data,
-            colorscale,
-            include_searchbar)
+            title, mapper_summary, histogram, mapper_data, colorscale, include_searchbar
+        )
 
         if save_file:
             with open(path_html, "wb") as outfile:

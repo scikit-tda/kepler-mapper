@@ -2,6 +2,7 @@ import pytest
 import numpy as np
 from kmapper import KeplerMapper
 
+
 @pytest.fixture
 def sc():
     X = np.random.random((200, 5))

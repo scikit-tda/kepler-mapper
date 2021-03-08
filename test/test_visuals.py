@@ -90,6 +90,7 @@ def default_colorscale():
     ]
     return colorscale
 
+
 class TestVisualHelpers:
     def test_color_values_type(self):
         nodes = {"a": [1, 2, 3], "b": [4, 5, 6]}
@@ -144,27 +145,26 @@ class TestVisualHelpers:
         #        [0.8, 0.2],
         #        [1. , 0. ]])
 
-        X = np.arange(n_samples).reshape(-1,1)
+        X = np.arange(n_samples).reshape(-1, 1)
         lens = np.copy(X)
 
         graph_data = _format_mapper_data(
             graph=graph,
             color_values=color_values,
-            node_color_function='mean',
+            node_color_function="mean",
             X=None,
             X_names=[],
             lens=lens,
             lens_names=[],
             custom_tooltips=None,
-            )
+        )
 
-        nodes = { node['name']:node for node in graph_data['nodes'] }
-        assert len(nodes['a']['color'][0]) == 2
-        assert np.array(nodes['a']['tooltip']['histogram']).shape[0] == 2
+        nodes = {node["name"]: node for node in graph_data["nodes"]}
+        assert len(nodes["a"]["color"][0]) == 2
+        assert np.array(nodes["a"]["tooltip"]["histogram"]).shape[0] == 2
 
-        np.testing.assert_almost_equal(np.array([.2, .8]), nodes['a']['color'][0])
-        np.testing.assert_almost_equal(np.array([.8, .2]), nodes['b']['color'][0])
-
+        np.testing.assert_almost_equal(np.array([0.2, 0.8]), nodes["a"]["color"][0])
+        np.testing.assert_almost_equal(np.array([0.8, 0.2]), nodes["b"]["color"][0])
 
     def test_color_function_names_unequal_exception(self):
         mapper = KeplerMapper()
@@ -177,11 +177,15 @@ class TestVisualHelpers:
         cv2 = np.flip(cv1)
         cv = np.column_stack([cv1, cv2])
         with pytest.raises(Exception) as excinfo:
-            mapper.visualize(graph, color_values=cv, color_function_name='hotdog')
+            mapper.visualize(graph, color_values=cv, color_function_name="hotdog")
         assert "Must be equal" in str(excinfo.value)
 
         with pytest.raises(Exception) as excinfo:
-            color_values = mapper.visualize(graph, color_values=cv, color_function_name=['hotdog','hotdog','hotdiggitydog'])
+            color_values = mapper.visualize(
+                graph,
+                color_values=cv,
+                color_function_name=["hotdog", "hotdog", "hotdiggitydog"],
+            )
         assert "Must be equal" in str(excinfo.value)
 
     def test_no_color_values_many_color_function_exception(self):
@@ -191,7 +195,11 @@ class TestVisualHelpers:
         graph = mapper.map(lens, data)
 
         with pytest.raises(Exception) as excinfo:
-            color_values = mapper.visualize(graph, color_values=None, color_function_name=['hotdog','hotdog','hotdiggitydog'])
+            color_values = mapper.visualize(
+                graph,
+                color_values=None,
+                color_function_name=["hotdog", "hotdog", "hotdiggitydog"],
+            )
         assert "Refusing to proceed" in str(excinfo.value)
 
     def test_no_color_values_one_color_function_no_exception_yes_warning(self):
@@ -204,13 +212,15 @@ class TestVisualHelpers:
             # Cause all warnings to always be triggered.
             warnings.simplefilter("always")
 
-            color_values = mapper.visualize(graph, color_values=None, color_function_name=['hotdog'])
+            color_values = mapper.visualize(
+                graph, color_values=None, color_function_name=["hotdog"]
+            )
         assert "unexpected" in str(w[-1].message)
 
     def test_color_hist_matches_nodes(self):
-        """ The histogram colors dont seem to match the node colors,
-            this should confirm the colors will match and we need to look at the
-            javascript instead.
+        """The histogram colors dont seem to match the node colors,
+        this should confirm the colors will match and we need to look at the
+        javascript instead.
         """
 
         color_values = np.array([0.55] * 10 + [0.0] * 10)
@@ -225,10 +235,26 @@ class TestVisualHelpers:
     def test_node_color_function_works(self):
         color_values = np.arange(20)
         member_ids = np.arange(color_values.shape[0])
-        assert _node_color_function(member_ids, color_values, 'mean') == np.mean(color_values) == 9.5
-        assert _node_color_function(member_ids, color_values, 'median') == np.median(color_values) == 9.5
-        assert _node_color_function(member_ids, color_values, 'max') == np.max(color_values) == 19
-        assert _node_color_function(member_ids, color_values, 'min') == np.min(color_values) == 0
+        assert (
+            _node_color_function(member_ids, color_values, "mean")
+            == np.mean(color_values)
+            == 9.5
+        )
+        assert (
+            _node_color_function(member_ids, color_values, "median")
+            == np.median(color_values)
+            == 9.5
+        )
+        assert (
+            _node_color_function(member_ids, color_values, "max")
+            == np.max(color_values)
+            == 19
+        )
+        assert (
+            _node_color_function(member_ids, color_values, "min")
+            == np.min(color_values)
+            == 0
+        )
 
     def test_color_values_size(self):
         nodes = {"a": [1, 2, 3], "b": [4, 5, 6, 7, 8, 9]}
@@ -245,7 +271,7 @@ class TestVisualHelpers:
         data = np.random.rand(1000, 10)
         lens = mapper.fit_transform(data, projection=[0])
         graph = mapper.map(lens, data)
-        color_function_name = ['Row number']
+        color_function_name = ["Row number"]
 
         fmt = _format_meta(graph, color_function_name)
         assert fmt["n_nodes"] == len(graph["nodes"])
@@ -263,8 +289,8 @@ class TestVisualHelpers:
         data = np.random.rand(1000, 10)
         lens = mapper.fit_transform(data, projection=[0])
         graph = mapper.map(lens, data)
-        color_function_name = ['Row number']
-        node_color_function = 'mean'
+        color_function_name = ["Row number"]
+        node_color_function = "mean"
 
         cm = "My custom_meta"
         fmt = _format_meta(graph, color_function_name, node_color_function, cm)
@@ -280,10 +306,10 @@ class TestVisualHelpers:
     def test_node_color_function_must_be_np_function(self, sc):
         mapper = KeplerMapper()
 
-        with pytest.raises(AttributeError, match=r".*must be a function available on `numpy` class.*"):
-            mapper.visualize(sc, node_color_function=['yinz'])
-
-
+        with pytest.raises(
+            AttributeError, match=r".*must be a function available on `numpy` class.*"
+        ):
+            mapper.visualize(sc, node_color_function=["yinz"])
 
     def test_to_html_format(self):
         res = _to_html_format("a\nb\n\n\\n\n")
@@ -297,7 +323,9 @@ class TestVisualHelpers:
         graph = mapper.map(lens, data)
         color_values = lens[:, 0]
 
-        mapper.visualize(graph, color_values=color_values, color_function_name=['hotdog'])
+        mapper.visualize(
+            graph, color_values=color_values, color_function_name=["hotdog"]
+        )
 
     def test_visualize_multiple_color_functions(self):
         """ convenience test for generating a vis with multiple color_values"""
@@ -310,7 +338,9 @@ class TestVisualHelpers:
         cv1 = np.array(lens)
         cv2 = np.flip(cv1)
         cv = np.column_stack([cv1, cv2])
-        mapper.visualize(graph, color_values=cv, color_function_name=['hotdog','hotdiggitydog'])
+        mapper.visualize(
+            graph, color_values=cv, color_function_name=["hotdog", "hotdiggitydog"]
+        )
 
     def test_visualize_multiple_node_color_functions(self):
         """ convenience test for generating a vis with multiple node_color_values but 1d color_values"""
@@ -319,7 +349,12 @@ class TestVisualHelpers:
         lens = mapper.fit_transform(data, projection=[0])
         graph = mapper.map(lens, data)
         color_values = lens[:, 0]
-        mapper.visualize(graph, color_values = color_values, color_function_name='hotdog', node_color_function=['mean','std', 'median', 'max'])
+        mapper.visualize(
+            graph,
+            color_values=color_values,
+            color_function_name="hotdog",
+            node_color_function=["mean", "std", "median", "max"],
+        )
 
     def test_visualize_multiple_color_function_and_node_color_functions(self):
         """ convenience test for generating a vis with multiple color_values _and_ multiple node_color_values"""
@@ -332,7 +367,12 @@ class TestVisualHelpers:
         cv1 = np.array(lens)
         cv2 = np.flip(cv1)
         cv = np.column_stack([cv1, cv2])
-        mapper.visualize(graph, color_values=cv, node_color_function=['mean','std'], color_function_name=['hotdog','hotdiggitydog'])
+        mapper.visualize(
+            graph,
+            color_values=cv,
+            node_color_function=["mean", "std"],
+            color_function_name=["hotdog", "hotdiggitydog"],
+        )
 
     def test_visualize_search_bar(self):
         """ convenience test for generating a vis with a search bar (and also with multiple color_values _and_ multiple node_color_values)"""
@@ -345,8 +385,13 @@ class TestVisualHelpers:
         cv1 = np.array(lens)
         cv2 = np.flip(cv1)
         cv = np.column_stack([cv1, cv2])
-        mapper.visualize(graph, color_values=cv, node_color_function=['mean','std'], color_function_name=['hotdog','hotdiggitydog'], include_searchbar=True)
-
+        mapper.visualize(
+            graph,
+            color_values=cv,
+            node_color_function=["mean", "std"],
+            color_function_name=["hotdog", "hotdiggitydog"],
+            include_searchbar=True,
+        )
 
     def test_visualize_graph_with_cluster_stats_above_below(self):
         mapper = KeplerMapper()
@@ -355,11 +400,7 @@ class TestVisualHelpers:
         X[ids, 0] = 10
         lens = mapper.fit_transform(X, projection=[0])
         graph = mapper.map(lens, X)
-        output = mapper.visualize(
-            graph,
-            X=X,
-            lens=X
-        )
+        output = mapper.visualize(graph, X=X, lens=X)
         # then, visually inspect mapper_visualization_output.html
 
     def test_color_function_deprecated_replaced(self, default_colorscale):
@@ -369,7 +410,7 @@ class TestVisualHelpers:
         graph = mapper.map(lens, data)
 
         color_values = lens[:, 0]
-        node_color_function = 'mean'
+        node_color_function = "mean"
         inverse_X = data
         projected_X = lens
         projected_X_names = ["projected_%s" % (i) for i in range(projected_X.shape[1])]
@@ -382,7 +423,9 @@ class TestVisualHelpers:
             warnings.simplefilter("always")
 
             # kmapper.visualize
-            html = mapper.visualize(graph, color_function=lens, color_function_name='lens[:, 0]')
+            html = mapper.visualize(
+                graph, color_function=lens, color_function_name="lens[:, 0]"
+            )
             _test_raised_deprecation_warning(w)
 
             # visuals._format_mapper_data
@@ -399,11 +442,13 @@ class TestVisualHelpers:
             _test_raised_deprecation_warning(w)
 
             # visuals._graph_data_distribution
-            histogram = _graph_data_distribution(graph, color_function=lens, node_color_function=node_color_function, colorscale=default_colorscale)
+            histogram = _graph_data_distribution(
+                graph,
+                color_function=lens,
+                node_color_function=node_color_function,
+                colorscale=default_colorscale,
+            )
             _test_raised_deprecation_warning(w)
-
-
-
 
     def test__format_mapper_data(self):
         mapper = KeplerMapper()
@@ -412,7 +457,7 @@ class TestVisualHelpers:
         graph = mapper.map(lens, data)
 
         color_values = lens[:, 0]
-        node_color_function = 'mean'
+        node_color_function = "mean"
         inverse_X = data
         projected_X = lens
         projected_X_names = ["projected_%s" % (i) for i in range(projected_X.shape[1])]
@@ -479,7 +524,9 @@ class TestVisualHelpers:
         X = scipy.sparse.random(1000, 3, density=1.0, format="coo")
         ids = np.random.choice(20, 1000)
 
-        with pytest.raises(ValueError, match=r".*sparse matrix format must be csr or csc.*"):
+        with pytest.raises(
+            ValueError, match=r".*sparse matrix format must be csr or csc.*"
+        ):
             cluster_data = visuals._format_cluster_statistics(ids, X, ["a", "b", "c"])
 
     def test_cluster_stats_above(self):
@@ -527,8 +574,7 @@ class TestVisualizeIntegration:
             mapper.visualize(graph)
 
     def test_visualize_standalone_same(self, tmpdir):
-        """ ensure that the visualization is not dependent on the actual mapper object.
-        """
+        """ensure that the visualization is not dependent on the actual mapper object."""
         mapper = KeplerMapper()
 
         file = tmpdir.join("output.html")

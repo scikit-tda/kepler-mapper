@@ -40,41 +40,50 @@ data = scaler.fit_transform(data).astype(np.uint8)
 tooltip_s = []
 for image_data in data:
     with io.BytesIO() as output:
-        img = Image.fromarray(image_data.reshape((8, 8)), 'L')
-        img.save(output, 'PNG')
+        img = Image.fromarray(image_data.reshape((8, 8)), "L")
+        img.save(output, "PNG")
         contents = output.getvalue()
         img_encoded = base64.b64encode(contents)
-        img_tag = """<img src="data:image/png;base64,{}">""".format(img_encoded.decode('utf-8'))
+        img_tag = """<img src="data:image/png;base64,{}">""".format(
+            img_encoded.decode("utf-8")
+        )
         tooltip_s.append(img_tag)
 
-tooltip_s = np.array(tooltip_s)  # need to make sure to feed it as a NumPy array, not a list
+tooltip_s = np.array(
+    tooltip_s
+)  # need to make sure to feed it as a NumPy array, not a list
 
 # Initialize to use t-SNE with 2 components (reduces data to 2 dimensions). Also note high overlap_percentage.
 mapper = km.KeplerMapper(verbose=2)
 
 # Fit and transform data
-projected_data = mapper.fit_transform(data,
-                                      projection=sklearn.manifold.TSNE())
+projected_data = mapper.fit_transform(data, projection=sklearn.manifold.TSNE())
 
 # Create the graph (we cluster on the projected data and suffer projection loss)
-graph = mapper.map(projected_data,
-                   clusterer=sklearn.cluster.DBSCAN(eps=0.3, min_samples=15),
-                   cover=km.Cover(35, 0.4))
+graph = mapper.map(
+    projected_data,
+    clusterer=sklearn.cluster.DBSCAN(eps=0.3, min_samples=15),
+    cover=km.Cover(35, 0.4),
+)
 
 # Create the visualizations (increased the graph_gravity for a tighter graph-look.)
-print("Output graph examples to html" )
+print("Output graph examples to html")
 # Tooltips with image data for every cluster member
-mapper.visualize(graph,
-                 title="Handwritten digits Mapper",
-                 path_html="output/digits_custom_tooltips.html",
-                 color_values=labels,
-                 color_function_name='labels',
-                 custom_tooltips=tooltip_s)
+mapper.visualize(
+    graph,
+    title="Handwritten digits Mapper",
+    path_html="output/digits_custom_tooltips.html",
+    color_values=labels,
+    color_function_name="labels",
+    custom_tooltips=tooltip_s,
+)
 # Tooltips with the target y-labels for every cluster member
-mapper.visualize(graph,
-                 title="Handwritten digits Mapper",
-                 path_html="output/digits_ylabel_tooltips.html",
-                 custom_tooltips=labels)
+mapper.visualize(
+    graph,
+    title="Handwritten digits Mapper",
+    path_html="output/digits_ylabel_tooltips.html",
+    custom_tooltips=labels,
+)
 
 # Matplotlib examples
 km.draw_matplotlib(graph, layout="spring")

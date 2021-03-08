@@ -38,9 +38,12 @@ def test_kepler_to_graph(sc):
     assert isinstance(mapper_summary, dict)
     assert isinstance(colorf_distribution, list)
 
+
 def test_kepler_to_graph_with_colorscale(sc):
 
-    json_graph, mapper_summary, colorf_distribution = get_mapper_graph(sc, colorscale=default_colorscale)
+    json_graph, mapper_summary, colorf_distribution = get_mapper_graph(
+        sc, colorscale=default_colorscale
+    )
 
     assert json.loads(json.dumps(json_graph)) == json_graph
     assert isinstance(mapper_summary, dict)
@@ -53,16 +56,15 @@ def test_plotly_graph(sc):
     assert isinstance(node_trace, dict)
 
 
-
 def test_color_function_deprecated_replaced():
     km = KeplerMapper()
     X, labels = make_circles(1000, random_state=0)
     lens = km.fit_transform(X, projection=[0])
     color_values = lens[:, 0]
-    node_color_function = 'mean'
+    node_color_function = "mean"
     sc = km.map(lens, X)
-    X_names=[]
-    lens_names=[]
+    X_names = []
+    lens_names = []
     custom_tooltips = np.array(["customized_%s" % (l) for l in labels])
 
     with warnings.catch_warnings(record=True) as w:
@@ -72,7 +74,9 @@ def test_color_function_deprecated_replaced():
         # TODO: plotlyviz.plotlyviz
 
         # plotlyviz.get_mapper_graph
-        json_graph, mapper_summary, colorf_distribution = get_mapper_graph(sc, color_function=color_values, node_color_function=node_color_function)
+        json_graph, mapper_summary, colorf_distribution = get_mapper_graph(
+            sc, color_function=color_values, node_color_function=node_color_function
+        )
         _test_raised_deprecation_warning(w)
 
         # plotlyviz.scomplex_to_graph

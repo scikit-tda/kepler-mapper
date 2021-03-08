@@ -5,9 +5,7 @@ __all__ = ["GraphNerve"]
 
 
 class Nerve:
-    """Base class for implementations of a nerve finder to build a Mapper complex.
-
-    """
+    """Base class for implementations of a nerve finder to build a Mapper complex."""
 
     def __init__(self):
         pass
@@ -17,7 +15,7 @@ class Nerve:
 
 
 class GraphNerve(Nerve):
-    """ Creates the 1-skeleton of the Mapper complex.
+    """Creates the 1-skeleton of the Mapper complex.
 
     Parameters
     -----------
@@ -45,7 +43,7 @@ class GraphNerve(Nerve):
         edges:
             A 1-skeleton of the nerve (intersecting  nodes)
 
-        simplicies: 
+        simplicies:
             Complete list of simplices
 
         """
@@ -68,7 +66,7 @@ class GraphNerve(Nerve):
 
 
 class SimplicialNerve(Nerve):
-    """ Creates the entire Cech complex of the covering defined by the nodes.
+    """Creates the entire Cech complex of the covering defined by the nodes.
 
     Warning: Not implemented yet.
     """

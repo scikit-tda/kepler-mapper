@@ -115,13 +115,10 @@ def colorscale_from_matplotlib_cmap(cmap, ii_off=0, ff_off=0, nbins=10):
     ii = 0 + ii_off
     ff = cmap.N - ff_off
     sk = (cmap.N - ii_off - ff_off) // (nbins + 1)
-    cmap_list = [
-        cmap(el) for el in np.arange(cmap.N)[ii:ff:sk]
-    ]
+    cmap_list = [cmap(el) for el in np.arange(cmap.N)[ii:ff:sk]]
     rgb_strings = [
-        "rgb({}, {}, {})".format(
-            int(255 * el[0]), int(255 * el[1]), int(255 * el[2])
-        ) for el in cmap_list
+        "rgb({}, {}, {})".format(int(255 * el[0]), int(255 * el[1]), int(255 * el[2]))
+        for el in cmap_list
     ]
     if len(cmap_list) != nbins + 1:
         raise ValueError("Failed to build correct size colorscale")
@@ -130,8 +127,8 @@ def colorscale_from_matplotlib_cmap(cmap, ii_off=0, ff_off=0, nbins=10):
 
 
 def _colors_to_rgb(colorscale):
-    """ Ensure that the color scale is formatted in rgb strings.
-        If the colorscale is a hex string, then convert to rgb.
+    """Ensure that the color scale is formatted in rgb strings.
+    If the colorscale is a hex string, then convert to rgb.
     """
     if colorscale[0][1][0] == "#":
         plotly_colors = np.array(colorscale)[:, 1].tolist()
@@ -151,9 +148,9 @@ def _to_html_format(st):
 
 
 def _map_val2color(val, vmin, vmax, colorscale=None):
-    """ Maps a value val in [vmin, vmax] to the corresponding color in
-        the colorscale
-        returns the rgb color code of that color
+    """Maps a value val in [vmin, vmax] to the corresponding color in
+    the colorscale
+    returns the rgb color code of that color
     """
     colorscale = colorscale or colorscale_default
 
@@ -215,6 +212,7 @@ def _scale_color_values(color_values):
 
     return color_values
 
+
 def _format_meta(graph, color_function_name, node_color_function, custom_meta=None):
     n = [l for l in graph["nodes"].values()]
     n_unique = len(set([i for s in n for i in s]))
@@ -242,7 +240,8 @@ def _format_meta(graph, color_function_name, node_color_function, custom_meta=No
 
     return mapper_summary
 
-@deprecated_alias(color_function='color_values')
+
+@deprecated_alias(color_function="color_values")
 def _format_mapper_data(
     graph,
     color_values,
@@ -281,7 +280,9 @@ def _format_mapper_data(
 
         node_color = []
         for _node_color_function_name in node_color_function:
-            _node_color = _node_color_function(member_ids, color_values, _node_color_function_name)
+            _node_color = _node_color_function(
+                member_ids, color_values, _node_color_function_name
+            )
             if np.array(_node_color).ndim == 0:
                 _node_color = [_node_color]
             if isinstance(_node_color, np.ndarray):
@@ -325,8 +326,7 @@ def _format_mapper_data(
 
 
 def _build_histogram(data, colorscale=None, nbins=10):
-    """ Build histogram of data based on values of color_values
-    """
+    """Build histogram of data based on values of color_values"""
     if colorscale is None:
         colorscale = colorscale_default
 
@@ -350,8 +350,10 @@ def _build_histogram(data, colorscale=None, nbins=10):
     return histogram
 
 
-@deprecated_alias(color_function='color_values')
-def _graph_data_distribution(graph, color_values, node_color_function, colorscale, nbins=10):
+@deprecated_alias(color_function="color_values")
+def _graph_data_distribution(
+    graph, color_values, node_color_function, colorscale, nbins=10
+):
 
     node_averages = []
     for node_id, member_ids in graph["nodes"].items():
@@ -362,7 +364,9 @@ def _graph_data_distribution(graph, color_values, node_color_function, colorscal
     if node_averages.ndim > 1:
         histogram = []
         for node_averages_column in node_averages.T:
-            _histogram = _build_histogram(node_averages_column, colorscale=colorscale, nbins=nbins)
+            _histogram = _build_histogram(
+                node_averages_column, colorscale=colorscale, nbins=nbins
+            )
             histogram.append(_histogram)
     else:
         histogram = _build_histogram(node_averages, colorscale=colorscale, nbins=nbins)
@@ -391,16 +395,15 @@ def _format_cluster_statistics(member_ids, X, X_names):
         if scipy.sparse.issparse(X):
             if X.format not in ["csr", "csc"]:
                 raise ValueError(
-                    "sparse matrix format must be csr or csc but found {}".format(X.format))
+                    "sparse matrix format must be csr or csc but found {}".format(
+                        X.format
+                    )
+                )
 
         # wrap cluster_X_mean, X_mean, and X_std in np.array(---).squeeze()
         # to get the same treatment for dense and sparse arrays
-        cluster_X_mean = np.array(
-            np.mean(X[member_ids], axis=0)
-        ).squeeze()
-        X_mean = np.array(
-            np.mean(X, axis=0)
-        ).squeeze()
+        cluster_X_mean = np.array(np.mean(X[member_ids], axis=0)).squeeze()
+        X_mean = np.array(np.mean(X, axis=0)).squeeze()
         X_std = np.array(
             # use StandardScaler as a way to get std for dense or sparse array
             np.sqrt(preprocessing.StandardScaler(with_mean=False).fit(X).var_)
@@ -526,24 +529,20 @@ def _format_tooltip(
     )
 
     tooltip_data = {
-        'projection_stats': projection_stats,
-        'cluster_stats': cluster_stats,
-        'custom_tooltips': custom_tooltips,
-        'histogram': histogram,
-        'dist_label': "Member",
-        'node_id': node_ID,
+        "projection_stats": projection_stats,
+        "cluster_stats": cluster_stats,
+        "custom_tooltips": custom_tooltips,
+        "histogram": histogram,
+        "dist_label": "Member",
+        "node_id": node_ID,
     }
 
     return tooltip_data
 
+
 def _render_d3_vis(
-    title,
-    mapper_summary,
-    histogram,
-    mapper_data,
-    colorscale,
-    include_searchbar
-    ):
+    title, mapper_summary, histogram, mapper_data, colorscale, include_searchbar
+):
     # Find the module absolute path and locate templates
     module_root = os.path.join(os.path.dirname(__file__), "templates")
     env = Environment(loader=FileSystemLoader(module_root), undefined=StrictUndefined)
@@ -565,9 +564,10 @@ def _render_d3_vis(
         def np_encoder(object, **kwargs):
             if isinstance(object, np.generic):
                 return np.asscalar(object)
+
         return json.dumps(obj, default=np_encoder, **kwargs)
 
-    env.policies['json.dumps_function'] = my_dumper
+    env.policies["json.dumps_function"] = my_dumper
 
     # Render the Jinja template, filling fields as appropriate
     html = env.get_template("base.html").render(
@@ -579,12 +579,13 @@ def _render_d3_vis(
         colorscale=colorscale,
         js_text=js_text,
         css_text=css_text,
-        include_searchbar=include_searchbar
+        include_searchbar=include_searchbar,
     )
 
     return html
 
-def _node_color_function(member_ids, color_values, function_name='mean'):
+
+def _node_color_function(member_ids, color_values, function_name="mean"):
     return getattr(np, function_name)(color_values[member_ids], axis=0)
 
 

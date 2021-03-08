@@ -4,21 +4,27 @@
 
 #### Visualization
 
-All of the below changes apply to kepler mapper's D3 html visualization.
+All of the below changes apply to kmapper's D3 html visualization.
 
 - added searchbar functionality (see documentation for `include_searchbar` in `kmapper.visualize()`)
-- Upgraded d3 from v3 to v6 -- one huge benefit of the new d3-force library is that it is [deterministic](https://
+- upgraded d3 from v3 to v6 -- one huge benefit of the new d3-force library is that it is [deterministic](https://
   twitter.com/mbostock/status/725124754701717504?lang=en), so a given graph will always render the same visually, across browsers and reloads.
+- clicking on a node will set it as the "focus node" (the node for which details are shown in the details pane).
+  until the user clicks off of the node. That is to say, click-focus is not lost if another node is moused-over.
+  Click-focus is released if (1) another node is clicked on, or (2) if the user clicks on the blank canvas.
+- hovering over a node will "freeze" it in place until no longer hovering over that node. This makes it easier to
+  grab the node.
+  If no node is currently set as the "focus node" via a click, then hovering over a node will also make it the focus node.
 - once a node is dragged, it stays ("freezes") where it was dragged
-- focus "locks" on a node: -- once a node is in focus, focus is not lost if another node is moused-over.
-  Focus is released if (1) another node is clicked on, or (2) if the user clicks on the blank canvas
 - added the ability to freeze (and unfreeze) all nodes with keystrokes f and x,
-- The focus node visually "pulses" in the display
-- Added the ability to "save" the positioning of all nodes in the display. Saves to a .json file.
+- the focus node visually "pulses" in the display
+- added the ability to "save" the positioning of all nodes in the display. Saves to a .json file.
   Node positioning can be re-loaded via providing the json save file.
-- Multiple `color_values` arrays can be passed, and switched between live in the display.
-- The node color function can be specified, as a string, to any function available on the numpy base class (e.g.,
+- multiple `color_values` arrays can be passed, and switched between interactively in the display.
+- the node color function can be specified, as a string, to any function available on the numpy base class (e.g.,
   'mean', 'median', 'max', 'min'. (Before, the only available function was `np.mean`.
+    - Multiple node color functions can be specified, and toggled between interactively in the display.
+- The toolbar display now uses css flexbox, which avoids overlap-problems on smaller viewports.
 
 ### 1.4.1
 - New CI/CD pipeline

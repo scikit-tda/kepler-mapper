@@ -505,7 +505,7 @@ class KeplerMapper(object):
 
         min_cluster_samples = None
         for parameter in ["n_clusters", "min_cluster_size", "min_samples"]:
-            value = cluster_params.get(parameter):
+            value = cluster_params.get(parameter)
             if value and isintance(value, int):
                 min_cluster_samples = value
                 break

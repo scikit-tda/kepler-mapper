@@ -212,6 +212,14 @@ class TestMap:
 
         graph = mapper.map(lens, X, clusterer=cluster.AffinityPropagation())
 
+    def test_agglomerative_clustering(self):
+        mapper = KeplerMapper()
+
+        X = np.random.rand(100, 2)
+        lens = mapper.fit_transform(X)
+
+        graph = mapper.map(lens, X, clusterer=cluster.AgglomerativeClustering())
+
 
 class TestLens:
     # TODO: most of these tests only accommodate the default option. They need to be extended to incorporate all possible transforms.

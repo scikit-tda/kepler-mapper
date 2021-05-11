@@ -241,14 +241,17 @@ def scomplex_to_graph(
         node_color = _node_color_function(member_ids, color_values, node_color_function)
         if isinstance(node_color, np.ndarray):
             node_color = node_color.tolist()
+        # plotlyviz only supports one set of color values, whereas
+        # `_tooltip_components` supports many. So select first entry
+        # in `node_color` and `member_histogram`
         n = {
             "id": i,
             "name": node_id,
             "member_ids": member_ids,
-            "color": node_color,
+            "color": node_color[0],
             "size": _size_node(member_ids),
             "cluster": cluster_stats,
-            "distribution": member_histogram,
+            "distribution": member_histogram[0],
             "projection": projection_stats,
             "custom_tooltips": custom_tooltips,
         }
@@ -334,9 +337,11 @@ def get_mapper_graph(
         colorscale=colorscale,
         node_color_function=node_color_function,
     )
+
     colorf_distribution = _graph_data_distribution(
         simplicial_complex, color_values, node_color_function, colorscale
     )
+
     mapper_summary = _format_meta(
         simplicial_complex,
         color_function_name=color_function_name,

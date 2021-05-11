@@ -239,9 +239,6 @@ def scomplex_to_graph(
         node_color = _node_color_function(member_ids, color_values, node_color_function)
         if isinstance(node_color, np.ndarray):
             node_color = node_color.tolist()
-        # plotlyviz only supports one set of color values, whereas
-        # `_tooltip_components` supports many. So select first entry
-        # in `node_color` and `member_histogram`
         n = {
             "id": i,
             "name": node_id,

@@ -5,6 +5,8 @@
 ### Fixed
 
 - `min_cluster_samples` now only accepts an int -- now AgglomerativeClustering works (#224)
+- `plotlyviz.scomplex_to_graph` no longer casts `color_values` to a 2d array, and `visuals._tooltip_components` now generates
+  either 1d or 2d `member_histogram` depending on dimensionality of `color_values` (#225)
 
 ## 2.0.0
 

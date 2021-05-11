@@ -484,12 +484,20 @@ def _tooltip_components(
     projection_stats = _format_projection_statistics(member_ids, lens, lens_names)
     cluster_stats = _format_cluster_statistics(member_ids, X, X_names)
 
-    member_histogram = []
-    for color_values_vector in color_values.T:
-        _member_histogram = _build_histogram(
-            color_values_vector[member_ids], colorscale=colorscale, nbins=nbins
+    color_values = np.array(color_values)
+
+    if color_values.ndim == 2:
+        member_histogram = []
+        for color_values_vector in color_values.T:
+            _member_histogram = _build_histogram(
+                color_values_vector[member_ids], colorscale=colorscale, nbins=nbins
+            )
+            member_histogram.append(_member_histogram)
+    else:
+        member_histogram = _build_histogram(
+            color_values[member_ids], colorscale=colorscale, nbins=nbins
         )
-        member_histogram.append(_member_histogram)
+
 
     return projection_stats, cluster_stats, member_histogram
 

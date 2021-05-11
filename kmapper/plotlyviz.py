@@ -228,8 +228,6 @@ def scomplex_to_graph(
 ):
 
     color_values = np.array(color_values)
-    if color_values.ndim == 1:
-        color_values = color_values.reshape(-1, 1)
 
     json_dict = {"nodes": [], "links": []}
     node_id_to_num = {}
@@ -248,10 +246,10 @@ def scomplex_to_graph(
             "id": i,
             "name": node_id,
             "member_ids": member_ids,
-            "color": node_color[0],
+            "color": node_color,
             "size": _size_node(member_ids),
             "cluster": cluster_stats,
-            "distribution": member_histogram[0],
+            "distribution": member_histogram,
             "projection": projection_stats,
             "custom_tooltips": custom_tooltips,
         }

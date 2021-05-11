@@ -17,6 +17,7 @@ from kmapper.plotlyviz import (
     _map_val2color,
     plotly_graph,
     scomplex_to_graph,
+    node_hist_fig
 )
 from kmapper.utils import _test_raised_deprecation_warning
 
@@ -92,3 +93,11 @@ def test_color_function_deprecated_replaced():
             colorscale=default_colorscale,
         )
         _test_raised_deprecation_warning(w)
+
+def test_hovering_widgets_node_hist_fig(sc):
+    kmgraph, mapper_summary, n_color_distribution = get_mapper_graph(
+        sc, colorscale=default_colorscale
+    )
+    fnode = kmgraph["nodes"][0]
+    node_hist_fig(fnode["distribution"])
+    pass

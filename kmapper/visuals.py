@@ -498,7 +498,6 @@ def _tooltip_components(
             color_values[member_ids], colorscale=colorscale, nbins=nbins
         )
 
-
     return projection_stats, cluster_stats, member_histogram
 
 

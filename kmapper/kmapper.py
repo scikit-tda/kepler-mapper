@@ -719,11 +719,11 @@ class KeplerMapper(object):
             methods, all against lowercased tooltips.
 
             * AND: the search query is split by whitespace. A data point's custom tooltip must
-              match _each_ of the query terms in order to match overall. The size of a node
-              is drawn as a ratio of how many of its datapoints match.
+              match _each_ of the query terms in order to match overall. The base size of a node
+              is multiplied by the number of datapoints matching the searchquery.
             * OR: the search query is split by whitespace. A data point's custom tooltip must
-              match _any_ of the query terms in order to match overall. The size of a node
-              is drawn as a ratio of how many of its datapoints match.
+              match _any_ of the query terms in order to match overall. The base size of a node
+              is multiplied by the number of datapoints matching the searchquery.
             * EXACT: A data point's custom tooltip must exactly match the query. Any nodes
               with a matching datapoint are set to glow.
 

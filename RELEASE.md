@@ -8,6 +8,14 @@
 - `plotlyviz.scomplex_to_graph` no longer casts `color_values` to a 2d array, and `visuals._tooltip_components` now generates
   either 1d or 2d `member_histogram` depending on dimensionality of `color_values` (#225)
 
+### Fixed/Changed
+
+- The AND and OR searchbar queries no longer multiplies the base size of a node by the ratio of how many of its items match. Rather,
+  the base size of the node is simply multiplied by how many of its items match the query. With this change, the size of a node
+  during an AND or OR search query again directly reflects the number of items within the node. (#227)
+- The default search mode is now AND -- because that's the expected behavior, because that's how the google works (#227)
+
+
 ## 2.0.0
 
 ### Visualization

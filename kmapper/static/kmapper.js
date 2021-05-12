@@ -576,9 +576,14 @@ d3.select('#searchbar')
           let node_ratio_fn = (d, i) => {
             matches = d.tooltip.custom_tooltips_lowercase.map(map_fn)
             let how_many = matches.filter(x=>x).length;
+
+            // Future optional feature -- size relative to ratio _within-node_
             let out_of = d.tooltip.cluster_stats.size;
             let ratio = how_many / out_of;
-            d.size_modifier = ratio * 100;
+
+            // Node sizes will be overall number of items in the node
+            // number of matching
+            d.size_modifier = how_many;
           }
 
           let map_fn;

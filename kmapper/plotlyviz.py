@@ -239,6 +239,16 @@ def scomplex_to_graph(
         node_color = _node_color_function(member_ids, color_values, node_color_function)
         if isinstance(node_color, np.ndarray):
             node_color = node_color.tolist()
+        
+        node_custom_tooltips=None
+        if custom_tooltips is not None:
+            try:
+                # custom_tooltips may not be an np.array 
+                node_custom_tooltips = custom_tooltips[member_ids]
+            except:
+                raise Warning("Failed to index custom_tooltips")
+                node_custom_tooltips = custom_tooltips    
+        
         n = {
             "id": i,
             "name": node_id,
@@ -248,7 +258,7 @@ def scomplex_to_graph(
             "cluster": cluster_stats,
             "distribution": member_histogram,
             "projection": projection_stats,
-            "custom_tooltips": custom_tooltips,
+            "custom_tooltips": node_custom_tooltips,
         }
 
         json_dict["nodes"].append(n)

@@ -56,42 +56,51 @@ Python code
 
 .. code:: python
 
-    # Import the class
-    import kmapper as km
+  # Import the class
+  import kmapper as km
 
-    # Some sample data
-    from sklearn import datasets
-    data, labels = datasets.make_circles(n_samples=5000, noise=0.03, factor=0.3)
+  # Some sample data
+  from sklearn import datasets
+  data, labels = datasets.make_circles(n_samples=5000, noise=0.03, factor=0.3)
 
-    # Initialize
-    mapper = km.KeplerMapper(verbose=1)
+  # Initialize
+  mapper = km.KeplerMapper(verbose=1)
 
-    # Fit to and transform the data
-    projected_data = mapper.fit_transform(data, projection=[0,1]) # X-Y axis
+  # Fit to and transform the data
+  projected_data = mapper.fit_transform(data, projection=[0,1]) # X-Y axis
 
-    # Create dictionary called 'graph' with nodes, edges and meta-information
-    graph = mapper.map(projected_data, data, nr_cubes=10)
+  # Create a cover with 10 elements
+  cover = km.Cover(n_cubes=10)
 
-    # Visualize it
-    mapper.visualize(graph, path_html="make_circles_keplermapper_output.html",
-                     title="make_circles(n_samples=5000, noise=0.03, factor=0.3)")
+  # Create dictionary called 'graph' with nodes, edges and meta-information
+  graph = mapper.map(projected_data, data, cover=cover)
+
+  # Visualize it
+  mapper.visualize(graph, path_html="make_circles_keplermapper_output.html",
+                   title="make_circles(n_samples=5000, noise=0.03, factor=0.3)")
 
 Console output
 ~~~~~~~~~~~~~~
-
 ::
 
-    ..Projecting data using: [0, 1]
+  KeplerMapper(verbose=1)
+  ..Composing projection pipeline of length 1:
+    Projections: [0, 1]
+    Distance matrices: False
+    Scalers: MinMaxScaler()
+  ..Projecting on data shaped (5000, 2)
 
-    ..Scaling with: MinMaxScaler(copy=True, feature_range=(0, 1))
+  ..Projecting data using: [0, 1]
 
-    Mapping on data shaped (5000L, 2L) using dimensions
+  ..Scaling with: MinMaxScaler()
 
-    Creating 100 hypercubes.
+  Mapping on data shaped (5000, 2) using lens shaped (5000, 2)
 
-    created 86 edges and 57 nodes in 0:00:03.614000.
+  Creating 100 hypercubes.
 
-    Wrote d3.js graph to 'make_circles_keplermapper_output.html'
+  Created 245 edges and 93 nodes in 0:00:00.188720.
+  Wrote visualization to: make_circles_keplermapper_output.html
+
 
 Visualization output
 ~~~~~~~~~~~~~~~~~~~~

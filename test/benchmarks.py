@@ -16,13 +16,13 @@ import time
 
 import numpy as np
 from sklearn import datasets
-from kmapper import KeplerMapper
+from kmapper import Cover, KeplerMapper
 
 
 def profile():
     num_sets = 100
     blob_size = 1000
-    nr_cubes = 10
+    n_cubes = 10
     overlap = 0.2
 
     blob_list = []
@@ -37,7 +37,7 @@ def profile():
 
     for data in blob_list:
         lens = mapper.fit_transform(data)
-        graph = mapper.map(lens, data, nr_cubes=nr_cubes, overlap_perc=overlap)
+        graph = mapper.map(lens, data, cover=Cover(n_cubes=n_cubes, perc_overlap=overlap))
 
     pr.disable()
     s = io.StringIO()
@@ -45,8 +45,8 @@ def profile():
     ps = pstats.Stats(pr, stream=s).strip_dirs().sort_stats(sortby)
     ps.print_stats("kmapper")
     print(
-        "Ran {} blobs of size {} with params (nr_cubes:{}\toverlap:{})".format(
-            num_sets, blob_size, nr_cubes, overlap
+        "Ran {} blobs of size {} with params (n_cubes:{}\toverlap:{})".format(
+            num_sets, blob_size, n_cubes, overlap
         )
     )
     print(s.getvalue())

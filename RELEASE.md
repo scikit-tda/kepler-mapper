@@ -1,5 +1,10 @@
 # Release log
 
+## 2.1.0
+
+### Added
+- ability to live-update the min-intersection threshold for edges on the d3 vis (#231)
+
 ## 2.0.1
 
 ### Fixed

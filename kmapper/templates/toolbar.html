@@ -65,4 +65,15 @@
     </div>
     {% endif %}
 
+    {% if include_min_intersection_selector %}
+    <div id='min_intersction_selector' class="tool_item">
+      <form>
+        <h3>Min Intersection Selector
+        <input type="number" min="1" value="{{ mapper_summary.custom_meta.nerve_min_intersection }}">
+        <button class='btn' type='submit'>Update</button>
+        </h3>
+      </form>
+    </div>
+    {% endif %}
+
 </div>

@@ -548,7 +548,7 @@ def _format_tooltip(
 
 
 def _render_d3_vis(
-    title, mapper_summary, histogram, mapper_data, colorscale, include_searchbar
+    title, mapper_summary, histogram, mapper_data, colorscale, include_searchbar, include_min_intersection_selector
 ):
     # Find the module absolute path and locate templates
     module_root = os.path.join(os.path.dirname(__file__), "templates")
@@ -587,6 +587,7 @@ def _render_d3_vis(
         js_text=js_text,
         css_text=css_text,
         include_searchbar=include_searchbar,
+        include_min_intersection_selector=include_min_intersection_selector
     )
 
     return html

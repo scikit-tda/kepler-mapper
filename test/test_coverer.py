@@ -43,6 +43,7 @@ class TestCoverBasic:
             assert len(entries) >= 2
 
     def test_cubes_overlap(self, CoverClass):
+        """A ten element cover of 20 evenly spaced elements should have adjacent overlap"""
         data = np.arange(40).reshape(20, 2)
 
         cover = CoverClass(n_cubes=10)
@@ -51,11 +52,11 @@ class TestCoverBasic:
         entries = []
         for cube in cubes:
             # turn singleton lists into individual elements
-            res = [i[0] for i in cover.transform_single(data, cube)]
+            res = set(cover.transform_single(data, cube)[:, 0])
             entries.append(res)
 
-        for i, j in zip(range(9), range(1, 10)):
-            assert set(entries[i]).union(set(entries[j]))
+        for s, t in zip(entries, entries[1:]):
+            assert s.intersection(t)
 
     def test_perc_overlap(self, CoverClass):
         """

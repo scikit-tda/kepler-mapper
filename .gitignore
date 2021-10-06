@@ -47,6 +47,7 @@ Temporary Items
 __pycache__
 .cache
 build
+.venv
 venv
 venv2
 *.egg-info

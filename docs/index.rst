@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 |PyPI version| |Downloads| |Build Status|
-|Codecov| |DOI zenodo| |DOI JOSS| 
+|Codecov| |DOI zenodo| |DOI JOSS|
 
 Kepler Mapper
 ----------------
@@ -127,7 +127,7 @@ To contribute please fork the project make your changes and submit a pull reques
     notebooks/self-guessing
 
 
-.. |Downloads| image:: https://pypip.in/download/kmapper/badge.svg
+.. |Downloads| image:: https://img.shields.io/pypi/dm/kmapper
     :target: https://pypi.python.org/pypi/kmapper/
 .. |PyPI version| image:: https://badge.fury.io/py/kmapper.svg
    :target: https://badge.fury.io/py/kmapper

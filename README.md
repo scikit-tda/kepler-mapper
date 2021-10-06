@@ -1,5 +1,5 @@
 [![PyPI version](https://badge.fury.io/py/kmapper.svg)](https://badge.fury.io/py/kmapper)
-[![Downloads](https://pypip.in/download/kmapper/badge.svg)](https://pypi.python.org/pypi/kmapper/)
+[![Downloads](https://img.shields.io/pypi/dm/kmapper)](https://pypi.python.org/pypi/kmapper/)
 [![Build Status](https://travis-ci.org/scikit-tda/kepler-mapper.svg?branch=master)](https://travis-ci.org/scikit-tda/kepler-mapper)
 [![Codecov](https://codecov.io/gh/scikit-tda/kepler-mapper/branch/master/graph/badge.svg)](https://codecov.io/gh/scikit-tda/kepler-mapper)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.01315/status.svg)](https://doi.org/10.21105/joss.01315)

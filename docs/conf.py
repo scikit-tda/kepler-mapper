@@ -51,7 +51,7 @@ html_theme_options.update(
 
 
 def setup(app):
-    app.add_stylesheet("gallery-override.css")
+    app.add_css_file("gallery-override.css")
 
 
 html_short_title = project

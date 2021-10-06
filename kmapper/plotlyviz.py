@@ -390,7 +390,7 @@ def plotly_graph(
     hover_text = [node["name"] for node in kmgraph["nodes"]]
     color_vals = [node["color"] for node in kmgraph["nodes"]]
     node_size = np.array(
-        [factor_size * node["size"] for node in kmgraph["nodes"]], dtype=np.int
+        [factor_size * node["size"] for node in kmgraph["nodes"]], dtype=int
     )
     Xn, Yn, Xe, Ye = _get_plotly_data(links, layt)
 

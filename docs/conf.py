@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
+import time
 
 sys.path.insert(0, os.path.abspath("."))
 from kmapper import __version__
 from sktda_docs_config import *
 
 project = u"KeplerMapper"
-copyright = u"2019, Hendrik Jacob van Veen and Nathaniel Saul"
-author = u"Hendrik Jacob van Veen and Nathaniel Saul"
+copyright = '2019-%s, Hendrik Jacob van Veen, Nathaniel Saul, David Eargle, and Sam Mangham' % time.strftime('%Y')
+author = u"Hendrik Jacob van Veen, Nathaniel Saul, David Eargle, and Sam Mangham"
 
 version = __version__
 release = __version__
@@ -51,7 +52,7 @@ html_theme_options.update(
 
 
 def setup(app):
-    app.add_stylesheet("gallery-override.css")
+    app.add_css_file("gallery-override.css")
 
 
 html_short_title = project

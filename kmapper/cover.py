@@ -188,7 +188,8 @@ class Cover:
         inset = (ranges - inner_range) / 2
 
         # |range| / (2n ( 1 - p))
-        radius = ranges / (2 * (n_cubes) * (1 - perc_overlap))
+        with np.errstate(divide='ignore'):
+            radius = ranges / (2 * (n_cubes) * (1 - perc_overlap))
 
         # centers are fixed w.r.t perc_overlap
         zip_items = list(bounds)  # work around 2.7,3.4 weird behavior

@@ -210,7 +210,7 @@ class TestMap:
         X = np.random.rand(100, 2)
         lens = mapper.fit_transform(X)
 
-        graph = mapper.map(lens, X, clusterer=cluster.AffinityPropagation())
+        graph = mapper.map(lens, X, clusterer=cluster.AffinityPropagation(random_state=0))
 
     def test_agglomerative_clustering(self):
         mapper = KeplerMapper()

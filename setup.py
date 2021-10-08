@@ -49,6 +49,21 @@ setup(
             "python-igraph~=0.9.6",
             "plotly~=5.3.1",
             "ipywidgets~=7.6.5",
+            "ipython~=7.16.1",
+            "nbsphinx~=0.8.7",
+
+            # required for building some jupyter notebooks.
+            # uncomment if rebuilding the notebooks.
+
+            ## Plotly-Demo.ipynb
+            #"cmocean~=2.0",
+            #"kaleido~=0.2.1",
+
+            ## Confidence-Graphs.ipynb
+            # "tensorflow~=2.2.0",
+            # "pillow",
+            # "xgboost",
+            # "scikit-image"
         ],
     },
     install_requires=["scikit-learn", "numpy", "scipy", "Jinja2"],

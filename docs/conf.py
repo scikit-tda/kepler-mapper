@@ -14,7 +14,7 @@ author = u"Hendrik Jacob van Veen, Nathaniel Saul, David Eargle, and Sam Mangham
 version = __version__
 release = __version__
 
-html_static_path = ["../examples/output", "_static"]
+html_static_path = ["../examples/output", "_static", "notebooks/output"]
 
 templates_path = ["_templates"]
 exclude_patterns.append("_templates")
@@ -50,6 +50,16 @@ html_theme_options.update(
     }
 )
 
+# sphinx 4 defaults to mathjax3, but that is not working with the theme right now.
+# manually set mathjax2.
+mathjax_path = "https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+
+nbsphinx_allow_errors = False
+
+# uncomment to rebuild all jupyter notebooks (for testing)
+# Warning, some of the notebooks take a long time to run!
+#
+# nbsphinx_execute = 'always'
 
 def setup(app):
     app.add_css_file("gallery-override.css")

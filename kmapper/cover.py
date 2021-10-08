@@ -38,7 +38,7 @@ class Cover:
 
     limits: Numpy Array (n_dim,2)
         (lower bound, upper bound) for every dimension
-        If a value is set to `np.float('inf')`, the bound will be assumed to be the min/max value of the dimension
+        If a value is set to `float('inf')`, the bound will be assumed to be the min/max value of the dimension
         Also, if `limits == None`, the limits are defined by the maximum and minimum value of the lens for all dimensions.
         i.e. `[[min_1, max_1], [min_2, max_2], [min_3, max_3]]`
 
@@ -108,8 +108,8 @@ class Cover:
             limits_array = np.zeros(self.limits.shape)
             limits_array[:, 0] = np.min(data, axis=0)
             limits_array[:, 1] = np.max(data, axis=0)
-            limits_array[self.limits != np.float("inf")] = 0
-            self.limits[self.limits == np.float("inf")] = 0
+            limits_array[self.limits != float("inf")] = 0
+            self.limits[self.limits == float("inf")] = 0
             bounds_arr = self.limits + limits_array
             """ bounds_arr[i,j] = self.limits[i,j] if self.limits[i,j] == inf
                 bounds_arr[i,j] = max/min(data[i]) if self.limits == inf """
@@ -188,7 +188,8 @@ class Cover:
         inset = (ranges - inner_range) / 2
 
         # |range| / (2n ( 1 - p))
-        radius = ranges / (2 * (n_cubes) * (1 - perc_overlap))
+        with np.errstate(divide='ignore'):
+            radius = ranges / (2 * (n_cubes) * (1 - perc_overlap))
 
         # centers are fixed w.r.t perc_overlap
         zip_items = list(bounds)  # work around 2.7,3.4 weird behavior

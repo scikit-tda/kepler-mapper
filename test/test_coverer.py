@@ -219,7 +219,7 @@ class TestCoverBounds:
         data[:, 0] = np.arange(20, dtype=int)  # Index row
         data[:, 1:3] = data_vals
 
-        limits = np.array([[np.float("inf"), np.float("inf")], [-10, 100]])
+        limits = np.array([[float("inf"), float("inf")], [-10, 100]])
         cover = Cover(n_cubes=10, limits=limits)
         cubes = cover.fit(data)
 

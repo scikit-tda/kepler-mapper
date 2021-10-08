@@ -410,7 +410,9 @@ def _format_cluster_statistics(member_ids, X, X_names):
         ).squeeze()
 
         above_mean = cluster_X_mean > X_mean
-        std_m = np.sqrt((cluster_X_mean - X_mean) ** 2) / X_std
+
+        with np.errstate(divide='ignore'):
+            std_m = np.sqrt((cluster_X_mean - X_mean) ** 2) / X_std
 
         stat_zip = list(
             zip(

@@ -206,12 +206,6 @@ function set_histogram(selection, data){
 var color_function_index = 0;
 var node_color_function_index = 0;
 
-function reset_color_functions(){
-  color_function_index = 0;
-  node_color_function_index = 0;
-  update_color_functions()
-}
-
 function update_color_functions(){
   // update_meta_content_histogram
   set_histogram(d3.select('#meta_content .histogram'), summary_histogram[node_color_function_index][color_function_index])
@@ -282,7 +276,7 @@ function start() {
   simulation.force('link').links(links);
   simulation.alpha(1).restart()
 
-  reset_color_functions()
+  update_color_functions()
 }
 
 init();
@@ -620,6 +614,89 @@ d3.select('#searchbar')
 
   })
 
+
+//https://stackoverflow.com/questions/51319147/map-default-value
+class MapWithDefault extends Map {
+  get(key) {
+    if (!this.has(key)) {
+      this.set(key, this.default())
+    };
+    return super.get(key);
+  }
+
+  constructor(defaultFunction, entries) {
+    super(entries);
+    this.default = defaultFunction;
+  }
+}
+
+d3.select('#min_intersction_selector')
+  .on('submit', function(event){
+    // replicates the logic in kmapper.nerve.GraphNerve.compute
+    event.preventDefault()
+
+    let result = new MapWithDefault(() => []);
+
+    // loop over all combinations of nodes
+    // https://stackoverflow.com/a/43241295/1396649
+    let candidates = []
+    let num_nodes = graph.nodes.length;
+    for (let i = 0; i < num_nodes - 1; i++){
+      for (let j = i + 1; j < num_nodes; j++) {
+        candidates.push([i, j]);
+      }
+    }
+
+    candidates.forEach(function(candidate) {
+      let node1_idx = candidate[0];
+      let node2_idx = candidate[1];
+      let node1 = graph.nodes[node1_idx];
+      let node2 = graph.nodes[node2_idx];
+      let intersection = node1.tooltip.custom_tooltips.filter(x => node2.tooltip.custom_tooltips.includes(x));
+      if (intersection.length >= Number(min_intersction_selector_input.property('value')) ) {
+        result.get(node1_idx).push(node2_idx)
+      }
+    })
+
+    let edges = []
+    result.forEach(function(value, key) {
+      let _edges = value.map(function(end) {
+        return [key, end]
+      })
+      edges.push(_edges);
+    })
+
+    edges = edges.flat().map(function(edge) {
+      return {
+        'source': edge[0],
+        'target': edge[1],
+        'width': 1
+      }
+    })
+
+    graph.links = edges;
+    restart()
+  })
+
+
+// Dynamically size the min_intersection_selector input
+let min_intersction_selector_input = d3.select('#min_intersction_selector input');
+
+min_intersction_selector_input
+  .on('input', function(event){
+    resizeInput.call(this)
+  })
+
+function resizeInput() {
+  this.style.width = ( this.value.length + 3 ) + "ch";
+}
+
+// Only trigger if input is present
+if (min_intersction_selector_input.size()) {
+  resizeInput.call(min_intersction_selector_input.node())
+}
+
+
 // Key press events
 let searchbar = d3.select('#searchbar input');
 
@@ -628,6 +705,7 @@ d3.select(window).on("keydown", function (event) {
     return; // Do nothing if the event was already processed
   }
 
+  // if searchbar is present and has focus
   if (searchbar.size() && searchbar.node().matches(':focus')){
       return; // let them use the search bar.
   }

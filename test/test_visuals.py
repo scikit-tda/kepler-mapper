@@ -393,6 +393,26 @@ class TestVisualHelpers:
             include_searchbar=True,
         )
 
+    def test_visualize_min_intersection_selector(self):
+        """ convenience test for generating a vis with a min_intersection_selector
+        (and also with multiple color_values _and_ multiple node_color_values)"""
+        mapper = KeplerMapper()
+        data, labels = make_circles(1000, random_state=0)
+        lens = mapper.fit_transform(data, projection=[0])
+        graph = mapper.map(lens, data)
+        color_values = lens[:, 0]
+
+        cv1 = np.array(lens)
+        cv2 = np.flip(cv1)
+        cv = np.column_stack([cv1, cv2])
+        mapper.visualize(
+            graph,
+            color_values=cv,
+            node_color_function=["mean", "std"],
+            color_function_name=["hotdog", "hotdiggitydog"],
+            include_min_intersection_selector=True,
+        )
+
     def test_visualize_graph_with_cluster_stats_above_below(self):
         mapper = KeplerMapper()
         X = np.ones((1000, 3))

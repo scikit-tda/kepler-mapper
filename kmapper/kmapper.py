@@ -578,6 +578,7 @@ class KeplerMapper(object):
             "perc_overlap": self.cover.perc_overlap,
             "clusterer": str(clusterer),
             "scaler": str(self.scaler),
+            "nerve_min_intersection": nerve.min_intersection
         }
         graph["meta_nodes"] = meta
 
@@ -639,6 +640,7 @@ class KeplerMapper(object):
         lens_names=None,
         nbins=10,
         include_searchbar=False,
+        include_min_intersection_selector=False
     ):
         """Generate a visualization of the simplicial complex mapper output. Turns the complex dictionary into a HTML/D3.js visualization
 
@@ -728,6 +730,10 @@ class KeplerMapper(object):
               with a matching datapoint are set to glow.
 
             To reset any search-induced visual alterations, submit an empty search query.
+
+        include_min_intersection_selector: bool, default False
+            Whether to include an input to dynamically change the min_intersection
+            for an edge to be drawn.
 
         Returns
         --------
@@ -917,7 +923,7 @@ class KeplerMapper(object):
         )
 
         html = _render_d3_vis(
-            title, mapper_summary, histogram, mapper_data, colorscale, include_searchbar
+            title, mapper_summary, histogram, mapper_data, colorscale, include_searchbar, include_min_intersection_selector
         )
 
         if save_file:

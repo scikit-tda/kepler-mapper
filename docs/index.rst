@@ -7,29 +7,54 @@
 |Codecov| |DOI zenodo| |DOI JOSS|
 
 Kepler Mapper
-----------------
+=============
 
 
     Nature uses as little as possible of anything. - Johannes Kepler
 
-This is a library implementing the Mapper algorithm in Python. KeplerMapper can be used for visualization of high-dimensional data and 3D point cloud data. KeplerMapper can make use of Scikit-Learn API compatible cluster and scaling algorithms. You can find the source code on github at
-`scikit-tda/kepler-mapper <https://github.com/scikit-tda/kepler-mapper>`_.
+This is a library implementing the Mapper algorithm in Python. KeplerMapper can
+be used for visualization of high-dimensional data and 3D point cloud data.
+KeplerMapper can make use of Scikit-Learn API compatible cluster and scaling
+algorithms. You can find the source code on github at
+`scikit-tda/kepler-mapper`_.
 
-KeplerMapper employs approaches based on the MAPPER algorithm (Singh et al.) as first described in the paper "Topological Methods for the Analysis of High Dimensional Data Sets and 3D Object Recognition".
+.. _scikit-tda/kepler-mapper: https://github.com/scikit-tda/kepler-mapper
 
-Setup
-=======================
+KeplerMapper employs approaches based on the MAPPER algorithm (Singh et al.) as
+first described in the paper "Topological Methods for the Analysis of High
+Dimensional Data Sets and 3D Object Recognition".
 
-Install KeplerMapper with pip:
 
-::
+User's Guide
+------------
 
-    pip install kmapper
+These pages explain what KeplerMapper is, illustrate how to use it, and discuss
+and demonstrate applications of it.
 
+.. toctree::
+    :maxdepth: 2
+
+    theory
+    started
+    examples
+    applications
+    tutorials
+    case_studies
+
+
+API Reference
+-------------
+
+These pages link to documentation for specific KeplerMapper classes and functions.
+
+.. toctree::
+    :maxdepth: 3
+
+    reference/index
 
 
 Citations
-=======================
+---------
 
 To credit KeplerMapper in your work, please cite both the `JOSS paper`_
 and the `Zenodo archive`_. The former provides a high level description
@@ -87,44 +112,17 @@ Bibtex entry for the Zenodo archive, version 1.4.1:
 
 
 Contributions
-=======================
+-------------
 
-We welcome contributions of all shapes and sizes. There are lots of opportunities for potential projects, so please get in touch if you would like to help out. Everything from an implementation of your favorite distance, notebooks, examples, and documentation are all equally valuable so please don’t feel you can’t contribute.
+We welcome contributions of all shapes and sizes. There are lots of
+opportunities for potential projects, so please get in touch if you would like
+to help out. Everything from an implementation of your favorite distance,
+notebooks, examples, and documentation are all equally valuable so please don’t
+feel you can’t contribute.
 
-To contribute please fork the project make your changes and submit a pull request. We will do our best to work through any issues with you and get your code merged into the main branch.
+See `the contribution guideline page in the source code repository`__ for more details.
 
-.. include:: ../README.rst
-
-.. toctree::
-    :hidden:
-    :maxdepth: 1
-    :caption: User Guide
-
-    theory
-    started
-    examples
-    applications
-    reference/index
-
-.. toctree::
-    :hidden:
-    :maxdepth: 1
-    :caption: Tutorials
-
-    notebooks/Adapters
-    notebooks/Plotly-Demo
-    notebooks/Cancer-demo
-    notebooks/KeplerMapper-usage-in-Jupyter-Notebook
-
-.. toctree::
-    :hidden:
-    :maxdepth: 1
-    :caption: Advanced Case Studies
-
-    notebooks/KeplerMapper-Newsgroup20-Pipeline
-    notebooks/TOR-XGB-TDA
-    notebooks/Confidence-Graphs
-    notebooks/self-guessing
+__ https://github.com/scikit-tda/kepler-mapper/blob/master/CONTRIBUTING.md
 
 
 .. |Downloads| image:: https://img.shields.io/pypi/dm/kmapper

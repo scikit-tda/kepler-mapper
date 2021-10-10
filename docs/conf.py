@@ -21,7 +21,7 @@ release = __version__
 html_static_path = ["../examples/output", "_static", "notebooks/output"]
 
 html_sidebars = {
-    'index': [ 'searchbox.html', 'githubbox.html', 'localtoc.html' ],
+    # 'index': [ 'searchbox.html', 'githubbox.html', 'localtoc.html' ],
     '**': [ 'searchbox.html', 'githubbox.html', 'globaltoc.html' ],
 }
 

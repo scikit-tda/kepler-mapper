@@ -9,8 +9,11 @@
 Kepler Mapper
 =============
 
+.. epigraph::
 
-    Nature uses as little as possible of anything. - Johannes Kepler
+    Nature uses as little as possible of anything.
+
+    -- Johannes Kepler
 
 This is a library implementing the Mapper algorithm in Python. KeplerMapper can
 be used for visualization of high-dimensional data and 3D point cloud data.
@@ -25,13 +28,17 @@ first described in the paper "Topological Methods for the Analysis of High
 Dimensional Data Sets and 3D Object Recognition".
 
 
-User's Guide
-------------
+.. User's Guide
+.. ------------
+..
+.. These pages explain what KeplerMapper is, illustrate how to use it, and discuss
+.. and demonstrate applications of it.
 
-These pages explain what KeplerMapper is, illustrate how to use it, and discuss
-and demonstrate applications of it.
+
+
 
 .. toctree::
+    :caption: User's Guide
     :maxdepth: 2
 
     theory
@@ -42,87 +49,21 @@ and demonstrate applications of it.
     case_studies
 
 
-API Reference
--------------
-
-These pages link to documentation for specific KeplerMapper classes and functions.
+.. API Reference
+.. -------------
+..
+.. These pages link to documentation for specific KeplerMapper classes and functions.
 
 .. toctree::
-    :maxdepth: 3
+    :caption: API Reference
+    :maxdepth: 2
 
     reference/index
 
 
-Citations
----------
+.. include:: citations.txt
+.. include:: contributions.txt
 
-To credit KeplerMapper in your work, please cite both the `JOSS paper`_
-and the `Zenodo archive`_. The former provides a high level description
-of the package, and the latter points to a permanent record of all KeplerMapper versions
-(we encourage you to cite the specific version you used).
-
-.. _JOSS paper: https://doi.org/10.21105/joss.01315
-.. _Zenodo archive: https://doi.org/10.5281/zenodo.1002377
-
-Example citations (for KeplerMapper 1.4.1):
-
-    van Veen et al., (2019). Kepler Mapper: A flexible Python implementation of the Mapper algorithm.
-    Journal of Open Source Software, 4(42), 1315, https://doi.org/10.21105/joss.01315
-
-    Hendrik Jacob van Veen, Nathaniel Saul, David Eargle, & Sam W. Mangham.
-    (2019, October 14). Kepler Mapper: A flexible Python implementation of the Mapper algorithm (Version 1.4.1).
-    Zenodo. http://doi.org/10.5281/zenodo.4077395
-
-Bibtex entry for JOSS article:
-
-::
-
-  @article{KeplerMapper_JOSS,
-      doi           = {10.21105/joss.01315},
-      url           = {https://doi.org/10.21105/joss.01315},
-      year          = {2019},
-      publisher     = {The Open Journal},
-      volume        = {4},
-      number        = {42},
-      pages         = {1315},
-      author        = {Hendrik Jacob van Veen and Nathaniel Saul and David Eargle and Sam W. Mangham},
-      title         = {Kepler Mapper: A flexible Python implementation of the Mapper algorithm.},
-      journal       = {Journal of Open Source Software}
-      }
-
-Bibtex entry for the Zenodo archive, version 1.4.1:
-
-::
-
-    @software{KeplerMapper_v1.4.1-Zenodo,
-        author       = {Hendrik Jacob van Veen and
-                        Nathaniel Saul and
-                        Eargle, David and
-                        Sam W. Mangham},
-        title        = {{Kepler Mapper: A flexible Python implementation of
-                         the Mapper algorithm}},
-        month        = oct,
-        year         = 2020,
-        publisher    = {Zenodo},
-        version      = {1.4.1},
-        doi          = {10.5281/zenodo.4077395},
-        url          = {https://doi.org/10.5281/zenodo.4077395}
-    }
-
-
-
-Contributions
--------------
-
-We welcome contributions of all shapes and sizes. There are lots of
-opportunities for potential projects, so please get in touch if you would like
-to help out. Everything from an implementation of your favorite distance,
-notebooks, examples, and documentation are all equally valuable so please don’t
-feel you can’t contribute.
-
-See `the contribution guideline page in the source code repository`__ for more details.
-
-__ https://github.com/scikit-tda/kepler-mapper/blob/master/CONTRIBUTING.md
 
 
 .. |Downloads| image:: https://img.shields.io/pypi/dm/kmapper

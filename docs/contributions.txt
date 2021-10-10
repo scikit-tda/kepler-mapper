@@ -1,0 +1,12 @@
+Contributions
+-------------
+
+We welcome contributions of all shapes and sizes. There are lots of
+opportunities for potential projects, so please get in touch if you would like
+to help out. Everything from an implementation of your favorite distance,
+notebooks, examples, and documentation are all equally valuable so please don’t
+feel you can’t contribute.
+
+See `the contributing page in the code repository`__ for more details.
+
+__ https://github.com/scikit-tda/kepler-mapper/blob/master/CONTRIBUTING.md

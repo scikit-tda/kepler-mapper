@@ -1,6 +1,6 @@
 
-API Reference
----------------
+API
+---
 
 .. currentmodule:: kmapper
 

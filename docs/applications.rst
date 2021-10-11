@@ -1,7 +1,8 @@
 Applications
 ---------------
 
-One of the beauties of Mapper is that it can be used on wide variety of data and problems. Here we highlight a few cases.
+One of the beauties of Mapper is that it can be used on wide variety of data and
+problems. Here we highlight a few cases.
 
 
 .. image:: http://i.imgur.com/N4YdyHS.png
@@ -9,30 +10,33 @@ One of the beauties of Mapper is that it can be used on wide variety of data and
    :alt: Mapper of Wisconsin Breast Cancer Data
    :align: right
 
-Anomaly Detection 
+Anomaly Detection
 ======================
 
+KeplerMapper can be used for anomaly detection. Anomaly detection is useful for
+fighting fraud and finding errors. Projecting with ``knn_distance_5`` can
+surface outliers. There are also specialized outlier detection algorithms, like
+the Isolation Forest and GLOSH, that make good projections for anomaly
+detection.
 
+Examples:
 
-KeplerMapper can be used for anomaly detection. Anomaly detection is useful for fighting fraud and finding errors. Projecting with ``knn_distance_5`` can surface outliers. There are also specialized outlier detection algorithms, like the Isolation Forest and GLOSH, that make good projections for anomaly detection.
-
-    - Notebooks: TDA Wisconsin Breast Cancer
-    - Demos: TDA Wisconsin Breast Cancer
-
-
+- Detecting breast cancer using the TDA Wisconsin dataset :doc:`[notebook] </notebooks/Cancer-demo>`
+- Detecting TOR network traffic :doc:`[notebook] </notebooks/TOR-XGB-TDA>` `[demo] <https://mlwave.github.io/tda/tor-tda.html>`_
 
 .. image:: https://i.imgur.com/CjUd2Of.png
    :width: 300 px
    :alt: Mapper of Word2Vec
    :align: right
 
+
 Natural Language Processing
 ===============================
 
-Mapper can be used to explore bias in Word2Vec models.
+Mapper can visualize the topography of categorized news articles. :doc:`[notebook] <notebooks/KeplerMapper-Newsgroup20-Pipeline>`
 
-    - Notebooks: Word Vector Gender Bias. 
-    - Demos: Word Vector Gender Bias 
+Mapper can be used to explore bias in Word2Vec models.
+`[demo] <http://mlwave.github.io/tda/word2vec-gender-bias.html>`__
 
 
 
@@ -80,8 +84,4 @@ Uses & Mentions
    topological data analysis for accurate prediction of manufacturing
    system
    outputs <https://www.researchgate.net/publication/314185934_Identification_of_Key_Features_Using_Topological_Data_Analysis_for_Accurate_Prediction_of_Manufacturing_System_Outputs>`__
--  **Christian Parsons** uses KeplerMapper in `Mapamundi <https://christian-parsons.com/mapamundi-wdvp/>`__: a world map based on a geometric interpretation of data, it takes socio-economic metrics for all countries and uses T-SNE as lens and DBSCAN as clusterer to make an alternative world map. Awarded on the `World Data Visualization Prize 2019 <https://informationisbeautiful.net/2019/winners-of-the-world-data-visualization-prize/>`__ 
-
-
-
-
+-  **Christian Parsons** uses KeplerMapper in `Mapamundi <https://christian-parsons.com/mapamundi-wdvp/>`__: a world map based on a geometric interpretation of data, it takes socio-economic metrics for all countries and uses T-SNE as lens and DBSCAN as clusterer to make an alternative world map. Awarded on the `World Data Visualization Prize 2019 <https://informationisbeautiful.net/2019/winners-of-the-world-data-visualization-prize/>`__

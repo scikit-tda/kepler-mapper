@@ -7,10 +7,6 @@ sys.path.insert(0, os.path.abspath("."))
 from kmapper import __version__
 from sktda_docs_config import *
 
-if 'sphinxcontrib.fulltoc' in extensions:
-    extensions.remove('sphinxcontrib.fulltoc')
-
-
 project = u"KeplerMapper"
 copyright = '2019-%s, Hendrik Jacob van Veen, Nathaniel Saul, David Eargle, and Sam Mangham' % time.strftime('%Y')
 author = u"Hendrik Jacob van Veen, Nathaniel Saul, David Eargle, and Sam Mangham"
@@ -19,11 +15,6 @@ version = __version__
 release = __version__
 
 html_static_path = ["../examples/output", "_static", "notebooks/output"]
-
-html_sidebars = {
-    # 'index': [ 'searchbox.html', 'githubbox.html', 'localtoc.html' ],
-    '**': [ 'searchbox.html', 'githubbox.html', 'globaltoc.html' ],
-}
 
 templates_path = ["_templates"]
 exclude_patterns.append("_templates")

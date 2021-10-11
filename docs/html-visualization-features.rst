@@ -55,7 +55,7 @@ new value uses javascript to perform the same logic as is done in python in
 ``.map``. The starting value for the html visualization is the value that was
 used to create the graph, which is read from metadata saved in the html file.
 
-.. image:: images/html-visualization-search-bar.gif
+.. image:: images/html-visualization-min-intersection-selector.gif
   :width: 600
 
 

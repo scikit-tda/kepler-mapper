@@ -7,6 +7,8 @@ import itertools
 import os
 import sys
 import warnings
+import networkx as nx
+import pandas as pd
 
 import numpy as np
 from sklearn import cluster, preprocessing, manifold, decomposition
@@ -1025,3 +1027,84 @@ class KeplerMapper(object):
         X = X_blend
 
         return X
+    
+    def digitize_relationship(self, graph, index):
+        """Let members a, b each in nodes n, m. And define path length r of a and b; least number of edges that connect a, b. 
+           If a and b is connected by same node, then r is 0. And if a and b is not connected, then r is -1
+           This function print out Dataframe that every path length of the data mapped. 
+
+        Parameters
+        ----------
+        graph : Dictionary
+            The data mapped
+        index : list
+            Index of original data 
+
+        Returns
+        -------
+        result : Dataframe
+            every path length of the data mapped.      
+            
+        Examples
+        --------
+        >>> from sklearn.datasets import load_iris
+        >>> import kmapper as km
+        >>> 
+        >>> # Data setting
+        >>> inverse_data = load_iris().get('data')
+        >>> index = []
+        >>> for name in load_iris().get('target_names'):
+        >>>     for x in range(50):
+        >>>        y = '%s_%s' % (name, x)
+        >>>        index.append(y)
+        >>> 
+        >>> # creating graph
+        >>> mapper = km.KeplerMapper(verbose=0)
+        >>> projected_data = mapper.project(inverse_data, projection="knn_distance_2", distance_matrix='euclidean')
+        >>> graph = mapper.map(projected_data, cover=km.Cover(n_cubes=3, perc_overlap=0.2))
+        >>> 
+        >>> # digitize_relationship
+        >>> km.digitize_relationship(graph, index)
+        
+        """
+        # Obtain information of node from graph; output from the `map` method.
+        nodes = graph.get('nodes')
+        nodes_k = list(nodes)
+        nodes_v = list(nodes.values())
+
+
+        # Creating MultiGraph for using networkx module
+        G = nx.MultiGraph()
+        for x in range(len(nodes_k)):
+            G.add_node(tuple(nodes_v[x]), nodes=nodes_k[x])
+
+        # Adding path between nodes
+        for node in nodes_k:
+            members = tuple(nodes.get(node))
+            other_nodes = links.get(node)
+            if not other_nodes == None:
+                for other_node in other_nodes:
+                    nx.add_path(G, [members, tuple(nodes.get(other_node))])
+
+        # Using a definition of path length, obtain the value between order pairs.
+        result = {}
+        for member in range(len(index)):
+            for other_member in range(len(index)):
+                try:
+                    if member == other_member:
+                        result[(member, other_member)] = 0
+                    else:
+                        result[(member, other_member)] = int(nx.shortest_path_length(G, 
+                                                                                     source=member, 
+                                                                                     target=other_member, 
+                                                                                     method='dijkstra')) - 1
+                except (nx.NetworkXNoPath):
+                    pass
+
+        # Creating dataframe. Note we use the data index for index, columns of result.  
+        result = pd.Series(result).unstack()
+        result = pd.DataFrame(result).fillna(-1)    # Nan means no relationship.
+        result.index, result.columns = index, index
+
+        return result
+

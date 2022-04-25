@@ -7,6 +7,7 @@ except:
 
 import warnings
 from itertools import product
+
 import numpy as np
 
 # TODO: Incorporate @pablodecm's cover API.
@@ -74,7 +75,6 @@ class Cover:
     def __init__(self, n_cubes=10, perc_overlap=0.5, limits=None, verbose=0):
         self.centers_ = None
         self.radius_ = None
-        self.inset_ = None
         self.inner_range_ = None
         self.bounds_ = None
         self.di_ = None
@@ -183,17 +183,12 @@ class Cover:
         bounds = self._compute_bounds(indexless_data)
         ranges = bounds[1] - bounds[0]
 
-        # (n-1)/n |range|
-        inner_range = ((n_cubes - 1) / n_cubes) * ranges
-        inset = (ranges - inner_range) / 2
-
-        # |range| / (2n ( 1 - p))
-        with np.errstate(divide='ignore'):
-            radius = ranges / (2 * (n_cubes) * (1 - perc_overlap))
+        # |range| / (2 (n - (n-1)p)
+        radius = ranges / (2 * ((n_cubes) - (n_cubes - 1) * perc_overlap))
 
         # centers are fixed w.r.t perc_overlap
         zip_items = list(bounds)  # work around 2.7,3.4 weird behavior
-        zip_items.extend([n_cubes, inset])
+        zip_items.extend([n_cubes, radius])
         centers_per_dimension = [
             np.linspace(b + r, c - r, num=n) for b, c, n, r in zip(*zip_items)
         ]
@@ -201,8 +196,6 @@ class Cover:
 
         self.centers_ = centers
         self.radius_ = radius
-        self.inset_ = inset
-        self.inner_range_ = inner_range
         self.bounds_ = bounds
         self.di_ = di
 

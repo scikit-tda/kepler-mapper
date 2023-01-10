@@ -27,6 +27,7 @@ from .visuals import (
 )
 from .utils import deprecated_alias
 
+
 # expose "cluster" to make examples and usage tidier
 __all__ = ["KeplerMapper", "cluster"]
 

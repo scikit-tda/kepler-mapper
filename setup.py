@@ -47,6 +47,7 @@ setup(
             "matplotlib",  # ~=3.3.4",
             "python-igraph",  # ~=0.9.6",
             "plotly",  # ~=5.3.1",
+            "ipykernel",
             "ipywidgets",  # ~=7.6.5",
             "ipython",  # ~=7.16.1",
             "nbsphinx",  # ~=0.8.7",

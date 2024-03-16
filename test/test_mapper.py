@@ -277,7 +277,7 @@ class TestLens:
     def test_sparse_array(self):
         mapper = KeplerMapper()
 
-        data = sparse.random_array(shape=(100, 10))
+        data = sparse.coo_array(sparse.random(100, 10))
         mapper.fit_transform(data)
 
     def test_lens_size(self):
@@ -427,6 +427,6 @@ class TestLens:
     def test_map_sparse(self):
         mapper = KeplerMapper()
 
-        data = sparse.random_array(shape=(100, 10), random_state=100101)
+        data = sparse.coo_array(sparse.random(100, 10, random_state=100101))
         lens = mapper.fit_transform(data)
-        mapping = mapper.map(lens, data)
+        mapper.map(lens, data)

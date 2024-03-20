@@ -1,15 +1,12 @@
-import pytest
 import numpy as np
 
 from collections import defaultdict
 
-import warnings
 from kmapper import KeplerMapper, Cover, cluster
 
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.linear_model import Lasso
-from sklearn.manifold import MDS
 from scipy import sparse
 from scipy.spatial import distance
 from sklearn import neighbors
@@ -210,7 +207,9 @@ class TestMap:
         X = np.random.rand(100, 2)
         lens = mapper.fit_transform(X)
 
-        graph = mapper.map(lens, X, clusterer=cluster.AffinityPropagation(random_state=0))
+        graph = mapper.map(
+            lens, X, clusterer=cluster.AffinityPropagation(random_state=0)
+        )
 
     def test_agglomerative_clustering(self):
         mapper = KeplerMapper()
@@ -278,8 +277,8 @@ class TestLens:
     def test_sparse_array(self):
         mapper = KeplerMapper()
 
-        data = sparse.random(100, 10)
-        lens = mapper.fit_transform(data)
+        data = sparse.coo_array(sparse.random(100, 10))
+        mapper.fit_transform(data)
 
     def test_lens_size(self):
         mapper = KeplerMapper()
@@ -428,6 +427,6 @@ class TestLens:
     def test_map_sparse(self):
         mapper = KeplerMapper()
 
-        data = sparse.random(100, 10, random_state=100101)
+        data = sparse.coo_array(sparse.random(100, 10, random_state=100101))
         lens = mapper.fit_transform(data)
-        mapping = mapper.map(lens, data)
+        mapper.map(lens, data)

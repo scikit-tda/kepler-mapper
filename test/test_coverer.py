@@ -11,7 +11,6 @@ from kmapper.cover import Cover
 @pytest.mark.parametrize("CoverClass", [Cover])
 class TestCoverBasic:
     def test_cube_dim(self, CoverClass):
-
         data = np.arange(30).reshape(10, 3)
         c = CoverClass(n_cubes=10)
         cubes = c.fit(data)
@@ -23,7 +22,7 @@ class TestCoverBasic:
         c = CoverClass(n_cubes=10)
         cubes = c.fit(data)
 
-        assert len(list(cubes)) == 10 ** 2, "idx column is ignored"
+        assert len(list(cubes)) == 10**2, "idx column is ignored"
 
     def test_single_dim(self, CoverClass):
         data = np.arange(20).reshape(10, 2)
@@ -122,14 +121,13 @@ class TestCover:
         _ = c.transform_single(data, cubes[0])
 
     def test_radius_dist(self):
-
         test_cases = [
-            {"cubes": 1, "range": [0, 4], "overlap": 0.4, "radius": 10.0 / 3},
-            {"cubes": 1, "range": [0, 4], "overlap": 0.9, "radius": 20.0},
-            {"cubes": 2, "range": [-4, 4], "overlap": 0.5, "radius": 4.0},
-            {"cubes": 3, "range": [-4, 4], "overlap": 0.5, "radius": 2.666666666},
-            {"cubes": 10, "range": [-4, 4], "overlap": 0.5, "radius": 0.8},
-            {"cubes": 10, "range": [-4, 4], "overlap": 1.0, "radius": np.inf},
+            {"cubes": 1, "range": (0, 4), "overlap": 0.4, "radius": 10.0 / 3},
+            {"cubes": 1, "range": (0, 4), "overlap": 0.9, "radius": 20.0},
+            {"cubes": 2, "range": (-4, 4), "overlap": 0.5, "radius": 4.0},
+            {"cubes": 3, "range": (-4, 4), "overlap": 0.5, "radius": 2.666666666},
+            {"cubes": 10, "range": (-4, 4), "overlap": 0.5, "radius": 0.8},
+            {"cubes": 10, "range": (-4, 4), "overlap": 1.0, "radius": np.inf},
         ]
 
         for test_case in test_cases:

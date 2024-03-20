@@ -39,9 +39,9 @@ setup(
         ],
         "docs": [  # `pip install -e ".[docs]"``
             "sktda_docs_config",  # latest
-            "sphinx",  # ~=4.2.0",
+            "sphinx~=4.2.0",  # ~=4.2.0",
             "pandas",  # ~=1.1.5",
-            "sphinx-gallery",  # ~=0.10.0",
+            "sphinx-gallery~=0.10.0",  # ~=0.10.0",
             # for building docs for plotlyviz stuff
             "networkx",  # ~=2.5.1",
             "matplotlib",  # ~=3.3.4",

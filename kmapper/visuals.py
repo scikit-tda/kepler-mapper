@@ -570,9 +570,12 @@ def _render_d3_vis(
 
     # Jinja default json serializer can't handle np arrays; provide custom encoding
     def my_dumper(obj, **kwargs):
-        def np_encoder(object, **kwargs):
+        def np_encoder(object):
             if isinstance(object, np.generic):
-                return np.asscalar(object)
+                return object.item()
+            if isinstance(object, np.ndarray):
+                return object.tolist()
+            return json.JSONEncoder().default(object)
 
         return json.dumps(obj, default=np_encoder, **kwargs)
 

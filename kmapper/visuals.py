@@ -572,7 +572,7 @@ def _render_d3_vis(
     def my_dumper(obj, **kwargs):
         def np_encoder(object, **kwargs):
             if isinstance(object, np.generic):
-                return np.asscalar(object)
+                return object.item()
 
         return json.dumps(obj, default=np_encoder, **kwargs)
 

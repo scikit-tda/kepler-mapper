@@ -31,6 +31,7 @@ The example code below demonstrates three ways this might be done. The rendered 
 # sphinx_gallery_thumbnail_path = '../examples/breast-cancer/breast-cancer-d3.png'
 
 import sys
+import os
 
 try:
     import pandas as pd
@@ -47,7 +48,13 @@ from sklearn import ensemble
 
 # For data we use the Wisconsin Breast Cancer Dataset
 # Via:
-df = pd.read_csv("data/breast-cancer.csv")
+if os.path.isfile("data/breast-cancer.csv"):
+    bc_path = "data/breast-cancer.csv"
+elif os.path.isfile("breast-cancer.csv"):
+    bc_path = "breast-cancer.csv"
+else:
+    raise FileNotFoundError
+df = pd.read_csv(bc_path)
 feature_names = [c for c in df.columns if c not in ["id", "diagnosis"]]
 df["diagnosis"] = df["diagnosis"].apply(lambda x: 1 if x == "M" else 0)
 X = np.array(df[feature_names].fillna(0))  # quick and dirty imputation

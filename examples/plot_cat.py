@@ -15,8 +15,15 @@ This example generates a Mapper built from a point-cloud sampled from a 3D model
 import numpy as np
 import sklearn
 import kmapper as km
+import os
 
-data = np.genfromtxt("data/cat-reference.csv", delimiter=",")
+if os.path.isfile("data/cat-reference.csv"):
+    cat_path = "data/cat-reference.csv"
+elif os.path.isfile("cat-reference.csv"):
+    cat_path = "cat-reference.csv"
+else:
+    raise FileNotFoundError
+data = np.genfromtxt(cat_path, delimiter=",")
 
 mapper = km.KeplerMapper(verbose=2)
 

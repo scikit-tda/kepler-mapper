@@ -18,11 +18,11 @@ import numpy as np
 import sklearn
 
 import kmapper as km
-import os
+from pathlib import Path
 
-if os.path.isfile("data/horse-reference.csv"):
+if Path("data/horse-reference.csv").exists():
     horse_path = "data/horse-reference.csv"
-elif os.path.isfile("horse-reference.csv"):
+elif Path("horse-reference.csv").exists():
     horse_path = "horse-reference.csv"
 else:
     raise FileNotFoundError
@@ -42,8 +42,13 @@ graph = mapper.map(
     cover=km.Cover(30, 0.2),
 )
 
+if Path("output/").is_dir():
+    prepend = "output/"
+else:
+    prepend = "./"
+
 mapper.visualize(
-    graph, path_html="output/horse.html", custom_tooltips=np.arange(len(lens))
+    graph, path_html=prepend + "horse.html", custom_tooltips=np.arange(len(lens))
 )
 
 

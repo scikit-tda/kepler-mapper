@@ -23,6 +23,7 @@ import sklearn
 from sklearn import datasets
 from sklearn.preprocessing import MinMaxScaler
 import kmapper as km
+from pathlib import Path
 
 try:
     from PIL import Image
@@ -71,10 +72,16 @@ graph = mapper.map(
 # Create the visualizations (increased the graph_gravity for a tighter graph-look.)
 print("Output graph examples to html")
 # Tooltips with image data for every cluster member
+
+if Path("output/").is_dir():
+    prepend = "output/"
+else:
+    prepend = "./"
+
 mapper.visualize(
     graph,
     title="Handwritten digits Mapper",
-    path_html="output/digits_custom_tooltips.html",
+    path_html=prepend + "digits_custom_tooltips.html",
     color_values=labels,
     color_function_name="labels",
     custom_tooltips=tooltip_s,
@@ -83,7 +90,7 @@ mapper.visualize(
 mapper.visualize(
     graph,
     title="Handwritten digits Mapper",
-    path_html="output/digits_ylabel_tooltips.html",
+    path_html=prepend + "digits_ylabel_tooltips.html",
     custom_tooltips=labels,
 )
 

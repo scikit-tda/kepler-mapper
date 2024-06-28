@@ -31,7 +31,7 @@ The example code below demonstrates three ways this might be done. The rendered 
 # sphinx_gallery_thumbnail_path = '../examples/breast-cancer/breast-cancer-d3.png'
 
 import sys
-import os
+from pathlib import Path
 
 try:
     import pandas as pd
@@ -48,9 +48,9 @@ from sklearn import ensemble
 
 # For data we use the Wisconsin Breast Cancer Dataset
 # Via:
-if os.path.isfile("data/breast-cancer.csv"):
+if Path("data/breast-cancer.csv").exists():
     bc_path = "data/breast-cancer.csv"
-elif os.path.isfile("breast-cancer.csv"):
+elif Path("breast-cancer.csv").exists():
     bc_path = "breast-cancer.csv"
 else:
     raise FileNotFoundError
@@ -80,10 +80,14 @@ graph = mapper.map(
     clusterer=sklearn.cluster.KMeans(n_clusters=2, random_state=1618033),
 )
 
+if Path("output/").is_dir():
+    prepend = "output/"
+else:
+    prepend = "./"
 # Visualization
 mapper.visualize(
     graph,
-    path_html="output/breast-cancer.html",
+    path_html=prepend + "breast-cancer.html",
     title="Wisconsin Breast Cancer Dataset",
     custom_tooltips=y,
 )
@@ -92,7 +96,7 @@ mapper.visualize(
 # Visualization with multiple color functions
 mapper.visualize(
     graph,
-    path_html="output/breast-cancer-multiple-color-functions.html",
+    path_html=prepend + "breast-cancer-multiple-color-functions.html",
     title="Wisconsin Breast Cancer Dataset",
     custom_tooltips=y,
     color_values=lens,
@@ -103,7 +107,7 @@ mapper.visualize(
 # Visualization with multiple node color functions
 mapper.visualize(
     graph,
-    path_html="output/breast-cancer-multiple-node-color-functions.html",
+    path_html=prepend + "breast-cancer-multiple-node-color-functions.html",
     title="Wisconsin Breast Cancer Dataset",
     custom_tooltips=y,
     node_color_function=["mean", "std", "median", "max"],
@@ -112,7 +116,8 @@ mapper.visualize(
 # Visualization showing both multiple color functions, and also multiple node color functions
 mapper.visualize(
     graph,
-    path_html="output/breast-cancer-multiple-color-functions-and-multiple-node-color-functions.html",
+    path_html=prepend
+    + "breast-cancer-multiple-color-functions-and-multiple-node-color-functions.html",
     title="Wisconsin Breast Cancer Dataset",
     custom_tooltips=y,
     color_values=lens,

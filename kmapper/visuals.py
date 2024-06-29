@@ -178,7 +178,7 @@ def _map_val2color(val, vmin, vmax, colorscale=None):
     # get the triplet of three values in [0,1] that represent the rgb color
     # corresponding to val
     val_color01 = colors_01[idx] + vv * (colors_01[idx + 1] - colors_01[idx])
-    val_color_0255 = list(map(np.uint8, 255 * val_color01))
+    val_color_0255 = list(map(int, 255 * val_color01))
 
     return "rgb" + str(tuple(val_color_0255))
 

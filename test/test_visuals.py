@@ -328,7 +328,7 @@ class TestVisualHelpers:
         )
 
     def test_visualize_multiple_color_functions(self):
-        """ convenience test for generating a vis with multiple color_values"""
+        """convenience test for generating a vis with multiple color_values"""
         mapper = KeplerMapper()
         data, labels = make_circles(1000, random_state=0)
         lens = mapper.fit_transform(data, projection=[0])
@@ -343,7 +343,7 @@ class TestVisualHelpers:
         )
 
     def test_visualize_multiple_node_color_functions(self):
-        """ convenience test for generating a vis with multiple node_color_values but 1d color_values"""
+        """convenience test for generating a vis with multiple node_color_values but 1d color_values"""
         mapper = KeplerMapper()
         data, labels = make_circles(1000, random_state=0)
         lens = mapper.fit_transform(data, projection=[0])
@@ -357,7 +357,7 @@ class TestVisualHelpers:
         )
 
     def test_visualize_multiple_color_function_and_node_color_functions(self):
-        """ convenience test for generating a vis with multiple color_values _and_ multiple node_color_values"""
+        """convenience test for generating a vis with multiple color_values _and_ multiple node_color_values"""
         mapper = KeplerMapper()
         data, labels = make_circles(1000, random_state=0)
         lens = mapper.fit_transform(data, projection=[0])
@@ -375,7 +375,7 @@ class TestVisualHelpers:
         )
 
     def test_visualize_search_bar(self):
-        """ convenience test for generating a vis with a search bar (and also with multiple color_values _and_ multiple node_color_values)"""
+        """convenience test for generating a vis with a search bar (and also with multiple color_values _and_ multiple node_color_values)"""
         mapper = KeplerMapper()
         data, labels = make_circles(1000, random_state=0)
         lens = mapper.fit_transform(data, projection=[0])
@@ -394,7 +394,7 @@ class TestVisualHelpers:
         )
 
     def test_visualize_min_intersection_selector(self):
-        """ convenience test for generating a vis with a min_intersection_selector
+        """convenience test for generating a vis with a min_intersection_selector
         (and also with multiple color_values _and_ multiple node_color_values)"""
         mapper = KeplerMapper()
         data, labels = make_circles(1000, random_state=0)
@@ -638,7 +638,7 @@ class TestVisualizeIntegration:
 
 class TestColorhandling:
     def test_map_val2color_on_point(self, default_colorscale):
-        """ This function takes a val, a min and max, and a color scale, and finds the color the val should be """
+        """This function takes a val, a min and max, and a color scale, and finds the color the val should be"""
 
         for v, color in default_colorscale:
             c = _map_val2color(v, 0.0, 1.0, default_colorscale)

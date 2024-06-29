@@ -3,12 +3,12 @@
   margin: 20px !important;
 }
 .sphx-glr-thumbcontainer .figure {
-  width: 250px !important;
+  width: 320px !important;
 }
 .sphx-glr-thumbcontainer img {
   max-height: 250px !important;
   width: 250px !important;
-  max-width: 280px;
+  max-width: 320px;
 }
 .sphx-glr-thumbcontainer a.internal {
   padding: 220px 10px 0 !important;

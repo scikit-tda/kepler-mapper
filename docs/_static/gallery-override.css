@@ -1,15 +1,19 @@
 .sphx-glr-thumbcontainer {
-    min-height: 280px !important;
-    margin: 20px !important;
+  min-height: 280px !important;
+  margin: 20px !important;
 }
 .sphx-glr-thumbcontainer .figure {
-    width: 280px !important;
+  width: 280px !important;
 }
 .sphx-glr-thumbcontainer img {
-    max-height: 280px !important;
-    width: 280px !important;
-    max-width: 280px;
+  max-height: 280px !important;
+  width: 280px !important;
+  max-width: 280px;
 }
 .sphx-glr-thumbcontainer a.internal {
-    padding: 220px 10px 0 !important;
+  padding: 220px 10px 0 !important;
+}
+
+.sphx-glr-thumbnails {
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 }

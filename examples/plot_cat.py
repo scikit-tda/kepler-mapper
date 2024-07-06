@@ -15,8 +15,16 @@ This example generates a Mapper built from a point-cloud sampled from a 3D model
 import numpy as np
 import sklearn
 import kmapper as km
+from pathlib import Path
+import matplotlib.pyplot as plt
 
-data = np.genfromtxt("data/cat-reference.csv", delimiter=",")
+if Path("data/cat-reference.csv").exists():
+    cat_path = "data/cat-reference.csv"
+elif Path("cat-reference.csv").exists():
+    cat_path = "cat-reference.csv"
+else:
+    raise FileNotFoundError
+data = np.genfromtxt(cat_path, delimiter=",")
 
 mapper = km.KeplerMapper(verbose=2)
 
@@ -29,10 +37,14 @@ graph = mapper.map(
     cover=km.Cover(n_cubes=15, perc_overlap=0.2),
 )
 
-mapper.visualize(graph, path_html="output/cat.html")
+if Path("output/").is_dir():
+    prepend = "output/"
+else:
+    prepend = "./"
+
+mapper.visualize(graph, path_html=prepend + "cat.html")
 
 km.draw_matplotlib(graph)
 
-import matplotlib.pyplot as plt
 
 plt.show()

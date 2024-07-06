@@ -7,9 +7,13 @@ sys.path.insert(0, os.path.abspath("."))
 from kmapper import __version__
 from sktda_docs_config import *
 
-project = u"KeplerMapper"
-copyright = '2019-%s, Hendrik Jacob van Veen, Nathaniel Saul, David Eargle, and Sam Mangham' % time.strftime('%Y')
-author = u"Hendrik Jacob van Veen, Nathaniel Saul, David Eargle, and Sam Mangham"
+project = "KeplerMapper"
+copyright = (
+    "2019-%s, Hendrik Jacob van Veen, Nathaniel Saul, David Eargle, and Sam Mangham"
+    % time.strftime("%Y")
+)
+author = "Hendrik Jacob van Veen, Nathaniel Saul, David Eargle, and Sam Mangham"
+language = "en"
 
 version = __version__
 release = __version__
@@ -34,6 +38,7 @@ sphinx_gallery_conf = {
     ),  # path where to save gallery generated examples
     "image_scrapers": ("matplotlib",),
     "abort_on_example_error": True,
+    "copyfile_regex": r".*\.csv",
     # 'run_stale_examples': True,
     # 'plot_gallery': True,
     "remove_config_comments": True,
@@ -52,7 +57,9 @@ html_theme_options.update(
 
 # sphinx 4 defaults to mathjax3, but that is not working with the theme right now.
 # manually set mathjax2.
-mathjax_path = "https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+mathjax_path = (
+    "https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+)
 
 nbsphinx_allow_errors = False
 
@@ -60,6 +67,7 @@ nbsphinx_allow_errors = False
 # Warning, some of the notebooks take a long time to run!
 #
 # nbsphinx_execute = 'always'
+
 
 def setup(app):
     app.add_css_file("gallery-override.css")

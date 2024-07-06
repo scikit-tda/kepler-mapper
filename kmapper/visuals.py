@@ -178,7 +178,7 @@ def _map_val2color(val, vmin, vmax, colorscale=None):
     # get the triplet of three values in [0,1] that represent the rgb color
     # corresponding to val
     val_color01 = colors_01[idx] + vv * (colors_01[idx + 1] - colors_01[idx])
-    val_color_0255 = list(map(np.uint8, 255 * val_color01))
+    val_color_0255 = list(map(int, 255 * val_color01))
 
     return "rgb" + str(tuple(val_color_0255))
 
@@ -354,7 +354,6 @@ def _build_histogram(data, colorscale=None, nbins=10):
 def _graph_data_distribution(
     graph, color_values, node_color_function, colorscale, nbins=10
 ):
-
     node_averages = []
     for node_id, member_ids in graph["nodes"].items():
         node_color = _node_color_function(member_ids, color_values, node_color_function)
@@ -411,7 +410,7 @@ def _format_cluster_statistics(member_ids, X, X_names):
 
         above_mean = cluster_X_mean > X_mean
 
-        with np.errstate(divide='ignore'):
+        with np.errstate(divide="ignore"):
             std_m = np.sqrt((cluster_X_mean - X_mean) ** 2) / X_std
 
         stat_zip = list(
@@ -550,7 +549,13 @@ def _format_tooltip(
 
 
 def _render_d3_vis(
-    title, mapper_summary, histogram, mapper_data, colorscale, include_searchbar, include_min_intersection_selector
+    title,
+    mapper_summary,
+    histogram,
+    mapper_data,
+    colorscale,
+    include_searchbar,
+    include_min_intersection_selector,
 ):
     # Find the module absolute path and locate templates
     module_root = os.path.join(os.path.dirname(__file__), "templates")
@@ -572,7 +577,7 @@ def _render_d3_vis(
     def my_dumper(obj, **kwargs):
         def np_encoder(object, **kwargs):
             if isinstance(object, np.generic):
-                return np.asscalar(object)
+                return object.item()
 
         return json.dumps(obj, default=np_encoder, **kwargs)
 
@@ -589,7 +594,7 @@ def _render_d3_vis(
         js_text=js_text,
         css_text=css_text,
         include_searchbar=include_searchbar,
-        include_min_intersection_selector=include_min_intersection_selector
+        include_min_intersection_selector=include_min_intersection_selector,
     )
 
     return html

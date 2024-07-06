@@ -11,14 +11,23 @@ This example generates a Mapper built from a point-cloud sampled from a 3D model
 
 
 """
+
 # sphinx_gallery_thumbnail_path = '../examples/horse/horse-reference.png'
 import matplotlib.pyplot as plt
 import numpy as np
 import sklearn
 
 import kmapper as km
+from pathlib import Path
 
-data = np.genfromtxt("data/horse-reference.csv", delimiter=",")
+if Path("data/horse-reference.csv").exists():
+    horse_path = "data/horse-reference.csv"
+elif Path("horse-reference.csv").exists():
+    horse_path = "horse-reference.csv"
+else:
+    raise FileNotFoundError
+
+data = np.genfromtxt(horse_path, delimiter=",")
 
 mapper = km.KeplerMapper(verbose=2)
 
@@ -33,8 +42,13 @@ graph = mapper.map(
     cover=km.Cover(30, 0.2),
 )
 
+if Path("output/").is_dir():
+    prepend = "output/"
+else:
+    prepend = "./"
+
 mapper.visualize(
-    graph, path_html="output/horse.html", custom_tooltips=np.arange(len(lens))
+    graph, path_html=prepend + "horse.html", custom_tooltips=np.arange(len(lens))
 )
 
 

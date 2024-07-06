@@ -6,14 +6,10 @@ import numpy as np
 from .visuals import (
     _scale_color_values,
     _size_node,
-    _format_projection_statistics,
     _format_cluster_statistics,
     _node_color_function,
     _format_meta,
-    _to_html_format,
-    _map_val2color,
     _graph_data_distribution,
-    _build_histogram,
     _tooltip_components,
 )
 

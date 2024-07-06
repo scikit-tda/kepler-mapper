@@ -33,7 +33,7 @@ setup(
             "pytest",  # ~=6.2.5",
             "networkx",  # ~=2.5.1",
             "matplotlib",  # ~=3.3.4",
-            "python-igraph",  # ~=0.9.6",
+            "igraph",
             "plotly",  # ~=5.3.1",
             "ipywidgets",  # ~=7.6.5",
         ],
@@ -45,7 +45,7 @@ setup(
             # for building docs for plotlyviz stuff
             "networkx",  # ~=2.5.1",
             "matplotlib",  # ~=3.3.4",
-            "python-igraph",  # ~=0.9.6",
+            "igraph",
             "plotly",  # ~=5.3.1",
             "ipykernel",
             "ipywidgets",  # ~=7.6.5",

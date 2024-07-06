@@ -9,12 +9,11 @@
 
 > Nature uses as little as possible of anything. - Johannes Kepler
 
-This is a Python implementation of the TDA Mapper algorithm  for visualization of high-dimensional data. For complete documentation, see [https://kepler-mapper.scikit-tda.org](https://kepler-mapper.scikit-tda.org).
+This is a Python implementation of the TDA Mapper algorithm for visualization of high-dimensional data. For complete documentation, see [https://kepler-mapper.scikit-tda.org](https://kepler-mapper.scikit-tda.org).
 
 KeplerMapper employs approaches based on the Mapper algorithm (Singh et al.) as first described in the paper "Topological Methods for the Analysis of High Dimensional Data Sets and 3D Object Recognition".
 
 KeplerMapper can make use of Scikit-Learn API compatible cluster and scaling algorithms.
-
 
 ## Install
 
@@ -22,21 +21,20 @@ KeplerMapper can make use of Scikit-Learn API compatible cluster and scaling alg
 
 KeplerMapper requires:
 
-  - Python (>= 3.6)
-  - NumPy
-  - Scikit-learn
+- Python (>= 3.6)
+- NumPy
+- Scikit-learn
 
 Using the plotly visualizations requires a few extra libraries:
 
-  - Python-Igraph
-  - Plotly
-  - Ipywidgets
+- igraph
+- Plotly
+- Ipywidgets
 
 Additionally, running some of the examples requires:
 
-  - matplotlib
-  - umap-learn
-
+- matplotlib
+- umap-learn
 
 ### Installation
 
@@ -47,6 +45,7 @@ pip install kmapper
 ```
 
 To install from source:
+
 ```
 git clone https://github.com/MLWave/kepler-mapper
 cd kepler-mapper
@@ -58,6 +57,7 @@ pip install -e .
 KeplerMapper adopts the scikit-learn API as much as possible, so it should feel very familiar to anyone who has used these libraries.
 
 ### Python code
+
 ```python
 # Import the class
 import kmapper as km

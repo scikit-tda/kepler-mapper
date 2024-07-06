@@ -3,6 +3,7 @@
 Tests to ensure the plotly data preparation functions work as intended.
 
 """
+
 import pytest
 
 import json
@@ -10,14 +11,13 @@ import numpy as np
 from sklearn.datasets import make_circles
 
 from kmapper import KeplerMapper
+from kmapper.visuals import _build_histogram
 from kmapper.plotlyviz import (
-    _build_histogram,
     default_colorscale,
     get_mapper_graph,
-    _map_val2color,
     plotly_graph,
     scomplex_to_graph,
-    node_hist_fig
+    node_hist_fig,
 )
 from kmapper.utils import _test_raised_deprecation_warning
 
@@ -32,7 +32,6 @@ def test_histogram_default_colorscale():
 
 
 def test_kepler_to_graph(sc):
-
     json_graph, mapper_summary, colorf_distribution = get_mapper_graph(sc)
 
     assert json.loads(json.dumps(json_graph)) == json_graph
@@ -41,7 +40,6 @@ def test_kepler_to_graph(sc):
 
 
 def test_kepler_to_graph_with_colorscale(sc):
-
     json_graph, mapper_summary, colorf_distribution = get_mapper_graph(
         sc, colorscale=default_colorscale
     )
@@ -93,6 +91,7 @@ def test_color_function_deprecated_replaced():
             colorscale=default_colorscale,
         )
         _test_raised_deprecation_warning(w)
+
 
 def test_hovering_widgets_node_hist_fig(sc):
     kmgraph, mapper_summary, n_color_distribution = get_mapper_graph(

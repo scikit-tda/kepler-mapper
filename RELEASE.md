@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2.1.0
+
 ### Added
 
 - ability to live-update the min-intersection threshold for edges on the d3 vis (#231)
@@ -9,8 +11,10 @@
 ### Fixed/Changed
 
 - Update docs and sphinx-gallery to build again.
-- Update CI/CD runners to test modern versions of python; drop python 3.7 compatibility.
+- Update CI/CD runners to test modern versions of python; drop python 3.6, 3.7 compatibility.
 - Change visual tests to use built-in `int` type rather than `np.uint8`.
+- Removed deprecated np.asscalar call (#247, #249, #252).
+- Removed `python-igraph` dependency in favor of `igraph` (#249)
 
 ## 2.0.1
 

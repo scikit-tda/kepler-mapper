@@ -33,7 +33,6 @@ __all__ = ["KeplerMapper", "cluster"]
 
 class KeplerMapper(object):
     """With this class you can build topological networks from (high-dimensional) data.
-
     1)          Fit a projection/lens/function to a dataset and transform it.
                 For instance "mean_of_row(x) for x in X"
     2)          Map this projection with overlapping intervals/hypercubes.
@@ -42,24 +41,17 @@ class KeplerMapper(object):
                 If two clusters/nodes have the same members (due to the overlap), then:
                 connect these with an edge.
     3)          Visualize the network using HTML and D3.js.
-
     KM has a number of nice features, some which get forgotten.
         - ``project``: Some projections it makes sense to use a distance matrix, such as knn_distance_#. Using ``distance_matrix = <metric>`` for a custom metric.
         - ``fit_transform``: Applies a sequence of projections. Currently, this API is a little confusing and might be changed in the future.
-
-
-
     """
 
     def __init__(self, verbose=0):
         """Constructor for KeplerMapper class.
-
         Parameters
         ===========
-
         verbose: int, default is 0
             Logging level. Currently 3 levels (0,1,2) are supported. For no logging, set `verbose=0`. For some logging, set `verbose=1`. For complete logging, set `verbose=2`.
-
         """
 
         # TODO: move as many of the arguments from fit_transform and map into here.
@@ -82,28 +74,21 @@ class KeplerMapper(object):
         distance_matrix=None,
     ):
         """Creates the projection/lens from a dataset. Input the data set. Specify a projection/lens type. Output the projected data/lens.
-
         Parameters
         ----------
-
         X : Numpy Array
             The data to fit a projection/lens to.
-
         projection :
             Projection parameter is either a string, a Scikit-learn class with fit_transform, like manifold.TSNE(), or a list of dimension indices. A string from ["sum", "mean", "median", "max", "min", "std", "dist_mean", "l2norm", "knn_distance_n"]. If using knn_distance_n write the number of desired neighbors in place of n: knn_distance_5 for summed distances to 5 nearest neighbors. Default = "sum".
-
         scaler : Scikit-Learn API compatible scaler.
             Scaler of the data applied after mapping. Use None for no scaling. Default = preprocessing.MinMaxScaler() if None, do no scaling, else apply scaling to the projection. Default: Min-Max scaling
-
         distance_matrix : Either str or None
             If not None, then any of ["braycurtis", "canberra", "chebyshev", "cityblock", "correlation", "cosine", "dice", "euclidean", "hamming", "jaccard", "kulsinski", "mahalanobis", "matching", "minkowski", "rogerstanimoto", "russellrao", "seuclidean", "sokalmichener", "sokalsneath", "sqeuclidean", "yule"].
             If False do nothing, else create a squared distance matrix with the chosen metric, before applying the projection.
-
         Returns
         -------
         lens : Numpy Array
             projected data.
-
         Examples
         --------
         >>> # Project by taking the first dimension and third dimension
@@ -111,51 +96,43 @@ class KeplerMapper(object):
         >>>     X_inverse,
         >>>     projection=[0,2]
         >>> )
-
         >>> # Project by taking the sum of row values
         >>> X_projected = mapper.project(
         >>>     X_inverse,
         >>>     projection="sum"
         >>> )
-
         >>> # Do not scale the projection (default is minmax-scaling)
         >>> X_projected = mapper.project(
         >>>     X_inverse,
         >>>     scaler=None
         >>> )
-
         >>> # Project by standard-scaled summed distance to 5 nearest neighbors
         >>> X_projected = mapper.project(
         >>>     X_inverse,
         >>>     projection="knn_distance_5",
         >>>     scaler=sklearn.preprocessing.StandardScaler()
         >>> )
-
         >>> # Project by first two PCA components
         >>> X_projected = mapper.project(
         >>>     X_inverse,
         >>>     projection=sklearn.decomposition.PCA()
         >>> )
-
         >>> # Project by first three UMAP components
         >>> X_projected = mapper.project(
         >>>     X_inverse,
         >>>     projection=umap.UMAP(n_components=3)
         >>> )
-
         >>> # Project by L2-norm on squared Pearson distance matrix
         >>> X_projected = mapper.project(
         >>>     X_inverse,
         >>>     projection="l2norm",
         >>>     distance_matrix="pearson"
         >>> )
-
         >>> # Mix and match different projections
         >>> X_projected = np.c_[
         >>>     mapper.project(X_inverse, projection=sklearn.decomposition.PCA()),
         >>>     mapper.project(X_inverse, projection="knn_distance_5")
         >>> ]
-
         """
 
         # Sae original values off so they can be referenced by later functions in the pipeline
@@ -293,7 +270,6 @@ class KeplerMapper(object):
         distance_matrix=False,
     ):
         """Same as .project() but accepts lists for arguments so you can chain.
-
         Examples
         --------
         >>> # Stack / chain projections. You could do this manually,
@@ -315,7 +291,6 @@ class KeplerMapper(object):
         >>>     distance_matrices=[False,
         >>>                        False,
         >>>                        False])
-
         """
 
         projections = projection
@@ -378,98 +353,71 @@ class KeplerMapper(object):
         remove_duplicate_nodes=False,
     ):
         """Apply Mapper algorithm on this projection and build a simplicial complex. Returns a dictionary with nodes and links.
-
         Parameters
         ----------
         lens: Numpy Array
             Lower dimensional representation of data. In general will be output of `fit_transform`.
-
         X: Numpy Array
             Original data or data to run clustering on. If `None`, then use `lens` as default. X can be a SciPy sparse matrix.
-
         clusterer: Default: DBSCAN
             Scikit-learn API compatible clustering algorithm. Must provide `fit` and `predict`.
-
         cover: kmapper.Cover
             Cover scheme for lens. Instance of kmapper.cover providing methods `fit` and `transform`.
-
         nerve: kmapper.Nerve
             Nerve builder implementing `__call__(nodes)` API
-
         precomputed : Boolean
             Tell Mapper whether the data that you are clustering on is a precomputed distance matrix. If set to
             `True`, the assumption is that you are also telling your `clusterer` that `metric='precomputed'` (which
             is an argument for DBSCAN among others), which
             will then cause the clusterer to expect a square distance matrix for each hypercube. `precomputed=True` will give a square matrix
             to the clusterer to fit on for each hypercube.
-
         remove_duplicate_nodes: Boolean
             Removes duplicate nodes before edges are determined. A node is considered to be duplicate
             if it has exactly the same set of points as another node.
-
         nr_cubes: Int
-
             .. deprecated:: 1.1.6
-
                 define Cover explicitly in future versions
-
             The number of intervals/hypercubes to create. Default = 10.
-
         overlap_perc: Float
             .. deprecated:: 1.1.6
-
                 define Cover explicitly in future versions
-
             The percentage of overlap "between" the intervals/hypercubes. Default = 0.1.
-
-
-
         Returns
         =======
         simplicial_complex : dict
             A dictionary with "nodes", "links" and "meta" information.
-
         Examples
         ========
-
         >>> # Default mapping.
         >>> graph = mapper.map(X_projected, X_inverse)
-
         >>> # Apply clustering on the projection instead of on inverse X
         >>> graph = mapper.map(X_projected)
-
         >>> # Use 20 cubes/intervals per projection dimension, with a 50% overlap
         >>> graph = mapper.map(X_projected, X_inverse,
         >>>                    cover=kmapper.Cover(n_cubes=20, perc_overlap=0.5))
-
         >>> # Use multiple different cubes/intervals per projection dimension,
         >>> # And vary the overlap
         >>> graph = mapper.map(X_projected, X_inverse,
         >>>                    cover=km.Cover(n_cubes=[10,20,5],
         >>>                                         perc_overlap=[0.1,0.2,0.5]))
-
         >>> # Use KMeans with 2 clusters
         >>> graph = mapper.map(X_projected, X_inverse,
         >>>     clusterer=sklearn.cluster.KMeans(2))
-
         >>> # Use DBSCAN with "cosine"-distance
         >>> graph = mapper.map(X_projected, X_inverse,
         >>>     clusterer=sklearn.cluster.DBSCAN(metric="cosine"))
-
         >>> # Use HDBSCAN as the clusterer
         >>> graph = mapper.map(X_projected, X_inverse,
         >>>     clusterer=hdbscan.HDBSCAN())
-
         >>> # Parametrize the nerve of the covering
         >>> graph = mapper.map(X_projected, X_inverse,
         >>>     nerve=km.GraphNerve(min_intersection=3))
-
-
         """
-
         start = datetime.now()
 
-        clusterer = clusterer or cluster.DBSCAN(eps=0.5, min_samples=3)
+        if not isinstance(clusterer, list):
+            clusterer = clusterer or cluster.DBSCAN(eps=0.5, min_samples=3)
+
         self.cover = cover or Cover(n_cubes=10, perc_overlap=0.1)
         nerve = nerve or GraphNerve()
 
@@ -501,14 +449,17 @@ class KeplerMapper(object):
         # Algo's like K-Means, have a set number of clusters. We need this number
         # to adjust for the minimal number of samples inside an interval before
         # we consider clustering or skipping it.
-        cluster_params = clusterer.get_params()
+        if not isinstance(clusterer, list):
+            cluster_params = clusterer.get_params()
 
         min_cluster_samples = None
-        for parameter in ["n_clusters", "min_cluster_size", "min_samples"]:
-            value = cluster_params.get(parameter)
-            if value and isinstance(value, int):
-                min_cluster_samples = value
-                break
+        if not isinstance(clusterer, list):
+            for parameter in ["n_clusters", "min_cluster_size", "min_samples"]:
+                value = cluster_params.get(parameter)
+                if value and isinstance(value, int):
+                    min_cluster_samples = value
+                    break
+                    
         if not min_cluster_samples:
             min_cluster_samples = 2
 
@@ -538,7 +489,10 @@ class KeplerMapper(object):
                 if precomputed:
                     fit_data = fit_data[:, ids]
 
-                cluster_predictions = clusterer.fit_predict(fit_data)
+                if isinstance(clusterer, list):
+                    cluster_predictions = clusterer[i].fit_predict(fit_data)
+                else:
+                    cluster_predictions = clusterer.fit_predict(fit_data)
 
                 if self.verbose > 1:
                     print(
@@ -643,83 +597,60 @@ class KeplerMapper(object):
         include_min_intersection_selector=False
     ):
         """Generate a visualization of the simplicial complex mapper output. Turns the complex dictionary into a HTML/D3.js visualization
-
         Parameters
         ----------
         graph : dict
             Simplicial complex output from the `map` method.
-
         color_function : list or 1d array
             .. deprecated:: 1.4.1
                Use `color_values` instead.
-
         color_values : list or 1d array, or list of 1d arrays
             color_values are sets (1d arrays) of values -- for each set, there should be
             one color value for each datapoint.
-
             These color values are used to compute the color value of a _node_ by applying `node_color_function` to
             the color values of each point within the node. The distribution of color_values for a given
             node can also be viewed in the visualization under the node details pane.
-
             A list of sets of color values (a list of 1d arrays) can be passed.
             If this is the case, then the visualization will have a toggle button
             for switching the visualization's currently active set of color values.
-
             If no color_values passed, then the data points' row positions are used as
             the set of color values.
-
         color_function_name : String or list
             A descriptor of the functions used to generate `color_values`.
             Will be used as labels in the visualization.
             If set, must be equal to the number of columns in color_values.
-
         node_color_function : String or 1d array, default is 'mean'
             Applied to the color_values of data points within a node to determine the color of the nodes.
             Will be applied column-wise to color_values.
             Must be a function available on numpy class object -- e.g., 'mean' => np.mean().
-
             If array, then 1d array of strings of np function names. Each node_color_function
             will be applied to each set of color_values (full permutation), and a toggle button will allow
             switching between the current active node_color_function for the visualization.
-
             See `visuals.py:_node_color_function()`
-
         colorscale : list
             Specify the colorscale to use. See visuals.colorscale_default.
-
         path_html : String
             file name for outputing the resulting html.
-
         custom_meta: dict
             Render (key, value) in the Mapper Summary pane.
-
         custom_tooltip: list or array like
             Value to display for each entry in the node. The cluster data pane will display entries for all values in the node. Default is index of data.
-
         save_file: bool, default is True
             Save file to `path_html`.
-
         X: numpy arraylike
             If supplied, compute statistics information about the original data source with respect to each node.
-
         X_names: list of strings
             Names of each variable in `X` to be displayed. If None, then display names by index.
-
         lens: numpy arraylike
             If supplied, compute statistics of each node based on the projection/lens
-
         lens_name: list of strings
             Names of each variable in `lens` to be displayed. In None, then display names by index.
-
         nbins: int, default is 10
             Number of bins shown in histogram of tooltip color distributions.
-
         include_searchbar: bool, default False
             Whether to include a search bar at the top of the visualization.
-
             The search functionality performs permits AND, OR, and EXACT
             methods, all against lowercased tooltips.
-
             * AND: the search query is split by whitespace. A data point's custom tooltip must
               match _each_ of the query terms in order to match overall. The base size of a node
               is multiplied by the number of datapoints matching the searchquery.
@@ -728,29 +659,22 @@ class KeplerMapper(object):
               is multiplied by the number of datapoints matching the searchquery.
             * EXACT: A data point's custom tooltip must exactly match the query. Any nodes
               with a matching datapoint are set to glow.
-
             To reset any search-induced visual alterations, submit an empty search query.
-
         include_min_intersection_selector: bool, default False
             Whether to include an input to dynamically change the min_intersection
             for an edge to be drawn.
-
         Returns
         --------
         html: string
             Returns the same html that is normally output to `path_html`. Complete graph and data ready for viewing.
-
         Examples
         ---------
-
         >>> # Basic creation of a `.html` file at `kepler-mapper-output.html`
         >>> html = mapper.visualize(graph, path_html="kepler-mapper-output.html")
-
         >>> # Jupyter Notebook support
         >>> from kmapper import jupyter
         >>> html = mapper.visualize(graph, path_html="kepler-mapper-output.html")
         >>> jupyter.display(path_html="kepler-mapper-output.html")
-
         >>> # Customizing the output text
         >>> html = mapper.visualize(
         >>>     graph,
@@ -759,20 +683,17 @@ class KeplerMapper(object):
         >>>     custom_meta={"Description":"A short description.",
         >>>                  "Cluster": "HBSCAN()"}
         >>> )
-
         >>> # Custom coloring data based on your 1d lens
         >>> html = mapper.visualize(
         >>>     graph,
         >>>     color_values=lens
         >>> )
-
         >>> # Custom coloring data based on the first variable
         >>> cf = mapper.project(X, projection=[0])
         >>> html = mapper.visualize(
         >>>     graph,
         >>>     color_values=cf
         >>> )
-
         >>> # Customizing the tooltips with binary target variables
         >>> X, y = split_data(df)
         >>> html = mapper.visualize(
@@ -781,7 +702,6 @@ class KeplerMapper(object):
         >>>     title="Fashion MNIST with UMAP",
         >>>     custom_tooltips=y
         >>> )
-
         >>> # Customizing the tooltips with html-strings: locally stored images of an image dataset
         >>> html = mapper.visualize(
         >>>     graph,
@@ -791,7 +711,6 @@ class KeplerMapper(object):
         >>>             ["<img src='img/%s.jpg'>"%i for i in range(inverse_X.shape[0])]
         >>>     )
         >>> )
-
         >>> # Using multiple datapoint color functions
         >>> # Uses a two-dimensional lens, so two `color_function_name`s are required
         >>> lens = np.c_[isolation_forest_lens, l2_norm_lens]
@@ -802,7 +721,6 @@ class KeplerMapper(object):
         >>>     color_values=lens,
         >>>     color_function_name=['Isolation Forest', 'L2-norm']
         >>> )
-
         >>> # Using multiple node color functions
         >>> html = mapper.visualize(
         >>>     graph,
@@ -810,7 +728,6 @@ class KeplerMapper(object):
         >>>     title="Wisconsin Breast Cancer Dataset",
         >>>     node_color_function=['mean', 'std', 'median', 'max']
         >>> )
-
         >>> # Combining both multiple datapoint color functions and multiple node color functions
         >>> lens = np.c_[isolation_forest_lens, l2_norm_lens]
         >>> html = mapper.visualize(
@@ -821,7 +738,6 @@ class KeplerMapper(object):
         >>>     color_function_name=['Isolation Forest', 'L2-norm']
         >>>     node_color_function=['mean', 'std', 'median', 'max']
         >>> )
-
         """
         if colorscale is None:
             colorscale = colorscale_default
@@ -936,7 +852,6 @@ class KeplerMapper(object):
 
     def data_from_cluster_id(self, cluster_id, graph, data):
         """Returns the original data of each cluster member for a given cluster ID
-
         Parameters
         ----------
         cluster_id : String
@@ -945,12 +860,10 @@ class KeplerMapper(object):
             The resulting dictionary after applying map()
         data : Numpy Array
             Original dataset. Accepts both 1-D and 2-D array.
-
         Returns
         -------
         entries:
             rows of cluster member data as Numpy array.
-
         """
         if cluster_id in graph["nodes"]:
             cluster_members = graph["nodes"][cluster_id]

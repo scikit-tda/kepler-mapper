@@ -30,6 +30,7 @@ setup(
     include_package_data=True,
     extras_require={
         "testing": [  # `pip install -e ".[testing]"``
+            "anywidget",
             "pytest",  # ~=6.2.5",
             "networkx",  # ~=2.5.1",
             "matplotlib",  # ~=3.3.4",

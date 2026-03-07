@@ -10,6 +10,7 @@ import warnings
 
 import numpy as np
 from sklearn import cluster, preprocessing, manifold, decomposition
+from sklearn.base import is_classifier, is_regressor
 from sklearn.model_selection import StratifiedKFold, KFold
 from scipy.spatial import distance
 from scipy.sparse import issparse, hstack
@@ -526,7 +527,6 @@ class KeplerMapper(object):
             print("Creating %s hypercubes." % total_bins)
 
         for i, hypercube in enumerate(self.cover.transform(lens)):
-
             # If at least min_cluster_samples samples inside the hypercube
             if hypercube.shape[0] >= min_cluster_samples:
                 # Cluster the data point(s) in the cube, skipping the id-column
@@ -578,7 +578,7 @@ class KeplerMapper(object):
             "perc_overlap": self.cover.perc_overlap,
             "clusterer": str(clusterer),
             "scaler": str(self.scaler),
-            "nerve_min_intersection": nerve.min_intersection
+            "nerve_min_intersection": nerve.min_intersection,
         }
         graph["meta_nodes"] = meta
 
@@ -588,7 +588,6 @@ class KeplerMapper(object):
         return graph
 
     def _remove_duplicate_nodes(self, nodes):
-
         # invert node list and merge duplicate nodes
         deduped_items = defaultdict(list)
         for node_id, items in nodes.items():
@@ -640,7 +639,7 @@ class KeplerMapper(object):
         lens_names=None,
         nbins=10,
         include_searchbar=False,
-        include_min_intersection_selector=False
+        include_min_intersection_selector=False,
     ):
         """Generate a visualization of the simplicial complex mapper output. Turns the complex dictionary into a HTML/D3.js visualization
 
@@ -923,7 +922,13 @@ class KeplerMapper(object):
         )
 
         html = _render_d3_vis(
-            title, mapper_summary, histogram, mapper_data, colorscale, include_searchbar, include_min_intersection_selector
+            title,
+            mapper_summary,
+            histogram,
+            mapper_data,
+            colorscale,
+            include_searchbar,
+            include_min_intersection_selector,
         )
 
         if save_file:
@@ -967,6 +972,8 @@ class KeplerMapper(object):
 
         # TODO: this seems like outside the purview of mapper. Can we add something like Mapper utils that can do this?
 
+        X_blend = None
+
         def blend(X_blend, pred_fun, folder, X_data, y):
             for train_index, test_index in folder.split(X_data, y):
                 fold_X_train = X_data[train_index]
@@ -984,11 +991,10 @@ class KeplerMapper(object):
         if len(projection) == 2:
             model, X_data = projection
             # Are we dealing with a classifier or a regressor?
-            estimator_type = getattr(model, "_estimator_type", None)
-            if estimator_type == "classifier":
+            if is_classifier(model):
                 # classifier probabilities
                 X_blend = model.predict_proba(X_data)
-            elif estimator_type == "regressor":
+            elif is_regressor(model):
                 X_blend = model.predict(X_data)
             else:
                 warnings.warn("Unknown estimator type for: %s" % (model))
@@ -998,14 +1004,13 @@ class KeplerMapper(object):
         # this is called "Stacked Generalization" (see: Wolpert 1992)
         elif len(projection) == 3:
             model, X_data, y = projection
-            estimator_type = getattr(model, "_estimator_type", None)
 
-            if estimator_type == "classifier":
+            if is_classifier(model):
                 X_blend = np.zeros((X_data.shape[0], np.unique(y).shape[0]))
                 skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=1729)
 
                 blend(X_blend, model.predict_proba, skf, X_data, y)
-            elif estimator_type == "regressor":
+            elif is_regressor(model):
                 X_blend = np.zeros(X_data.shape[0])
                 kf = KFold(n_splits=5, shuffle=True, random_state=1729)
                 blend(X_blend, model.predict, kf, X_data, y)
@@ -1018,6 +1023,9 @@ class KeplerMapper(object):
                 + "(model, X) or (model, X, y)."
                 + "Instead got %s" % (str(projection))
             )
+
+        if X_blend is None:
+            return None
         # Reshape 1-D arrays (regressor outputs) to 2-D arrays
         if X_blend.ndim == 1:
             X_blend = X_blend.reshape((X_blend.shape[0], 1))
